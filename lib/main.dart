@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -18,6 +19,7 @@ void main() async {
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+      await EasyLocalization.ensureInitialized();
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
       await Firebase.initializeApp(
@@ -46,7 +48,12 @@ void main() async {
         return ErrorWidget(error.exception);
       };
 
-      runApp(const MyApp());
+      runApp(
+        EasyLocalization(
+      supportedLocales: [Locale('en', 'US'), Locale('hi', 'IN')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en', 'US'),
+      child: MyApp()));
       FlutterNativeSplash.remove(); // Now remove splash screen
     },
     (exception, stackTrace) {
