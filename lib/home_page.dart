@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'models/post.dart';
@@ -6,7 +7,7 @@ import 'services/dummy_service.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static String routeName = 'home';
+  static String routeName = 'home'.tr();
 
   @override
   State<HomePage> createState() => _HomePageState();
