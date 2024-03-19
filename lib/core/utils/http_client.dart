@@ -5,9 +5,9 @@ import 'package:firebase_performance_dio/firebase_performance_dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import 'http_interceptors/auth_interceptor.dart';
-import 'http_interceptors/error_interceptor.dart';
-import 'http_interceptors/user_agent_interceptor.dart';
+import 'package:silver_genie/core/utils/http_interceptors/auth_interceptor.dart';
+import 'package:silver_genie/core/utils/http_interceptors/error_interceptor.dart';
+import 'package:silver_genie/core/utils/http_interceptors/user_agent_interceptor.dart';
 
 class HttpClient with DioMixin implements Dio {
   HttpClient({BaseOptions? baseOptions}) {

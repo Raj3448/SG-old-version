@@ -10,8 +10,8 @@ dependencies:
   dio: ^5.3.3
   dio_cache_interceptor: ^3.4.4
   dio_http2_adapter: ^2.3.1+1
-  envied: ^0.5.3
   easy_localization: ^3.0.5
+  envied: ^0.5.3
   firebase_analytics: ^10.6.3
   firebase_core: ^2.21.0
   firebase_crashlytics: ^3.4.3
@@ -48,7 +48,7 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "FFFFFF"
-  image: assets/splash/splash.png
+  image: assets/splash/sg_logo.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -61,6 +61,8 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/icon/
+    - assets/splash/
     - assets/translations/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
