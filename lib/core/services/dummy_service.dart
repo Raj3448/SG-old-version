@@ -1,8 +1,8 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:get_it/get_it.dart';
 
-import '../models/models.dart';
-import '../utils/http_client.dart';
+import 'package:silver_genie/core/models/models.dart';
+import 'package:silver_genie/core/utils/http_client.dart';
 
 class DummyService {
   // Send un-cached http request

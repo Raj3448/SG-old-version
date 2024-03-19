@@ -9,11 +9,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
-
-import 'app.dart';
-import 'env.dart';
-import 'firebase_options.dart';
-import 'utils/http_client.dart';
+import 'package:silver_genie/core/app/app.dart';
+import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/firebase_options.dart';
 
 void main() async {
   await runZonedGuarded(
@@ -50,10 +49,12 @@ void main() async {
 
       runApp(
         EasyLocalization(
-      supportedLocales: [Locale('en', 'US'), Locale('hi', 'IN')],
-      path: 'assets/translations',
-      fallbackLocale: Locale('en', 'US'),
-      child: MyApp()));
+          supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
+          path: 'assets/translations',
+          fallbackLocale: const Locale('en', 'US'),
+          child: const MyApp(),
+        ),
+      );
       FlutterNativeSplash.remove(); // Now remove splash screen
     },
     (exception, stackTrace) {

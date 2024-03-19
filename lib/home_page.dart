@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-import 'models/post.dart';
-import 'services/dummy_service.dart';
+import 'package:silver_genie/core/models/post.dart';
+import 'package:silver_genie/core/services/dummy_service.dart';
+import 'package:silver_genie/core/widgets/app_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,7 +17,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Boilerplate')),
+      // appBar: AppBar(title: const Text('Flutter Boilerplate')),
+      appBar: const Appbar(),
       body: FutureBuilder(
         future: DummyService.getPostsWithCaching(),
         builder: (context, AsyncSnapshot<List<Post>> snapshot) {
