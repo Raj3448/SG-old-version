@@ -12,7 +12,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _mobileController = TextEditingController();
+  //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -83,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => OTPScreen(
-                              phoneNumber: _mobileController.text,
+                             // phoneNumber: _mobileController.text,
                             ),
                           ),
                         );
@@ -99,7 +99,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),),
                     ),
                   ),
-                  SizedBox(height: screenHeight * 0.03),
                   SizedBox(height: screenHeight * 0.03),
                 ],
               ),

@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _mobileController = TextEditingController();
+  //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 TextField(
-                  controller: _mobileController,
+                  //controller: _mobileController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     hintText: 'Enter your email address or phone',
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OTPScreen(
-                            phoneNumber: _mobileController.text,
+                            //phoneNumber: _mobileController.text,
                           ),
                         ),
                       );
