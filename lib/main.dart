@@ -11,6 +11,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
+
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/firebase_options.dart';
 
