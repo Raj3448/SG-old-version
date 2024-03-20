@@ -72,3 +72,7 @@ flutter:
         - asset: assets/fonts/Inter-Bold.ttf
         - asset: assets/fonts/Inter-Medium.ttf
         - asset: assets/fonts/Inter-SemiBold.ttf
+
+    - family: AppIcons
+      fonts:
+        - asset: assets/app_icons/AppIcons.ttf
