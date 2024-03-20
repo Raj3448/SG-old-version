@@ -14,7 +14,8 @@ GoRouter appRouter() => GoRouter(
           path: '/',
           name: LoginPage.routeName,
           builder: (BuildContext context, GoRouterState state) =>
-              const LoginPage(),
+              // const LoginPage(),
+              const MainScreen(),
         ),
       ],
       observers: [
