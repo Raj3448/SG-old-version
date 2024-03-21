@@ -197,7 +197,7 @@ class SmallSecondaryButton extends StatelessWidget {
           : Text(
               title,
               style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.white),
+                  .copyWith(color: AppColors.primary),
             ),
     );
   }
@@ -245,8 +245,8 @@ class NormalSecondaryButton extends StatelessWidget {
             )
           : Text(
               title,
-              style:
-                  AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.white),
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(color: AppColors.primary),
             ),
     );
   }
@@ -294,8 +294,8 @@ class LargeSecondaryButton extends StatelessWidget {
             )
           : Text(
               title,
-              style:
-                  AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.white),
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(color: AppColors.primary),
             ),
     );
   }
@@ -335,7 +335,7 @@ class SmallTertiaryButton extends StatelessWidget {
           : Text(
               title,
               style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.white),
+                  .copyWith(color: AppColors.primary),
             ),
     );
   }
@@ -374,8 +374,8 @@ class NormalTertiaryButton extends StatelessWidget {
             )
           : Text(
               title,
-              style:
-                  AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.white),
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(color: AppColors.primary),
             ),
     );
   }
@@ -414,8 +414,8 @@ class LargeTertiaryButton extends StatelessWidget {
             )
           : Text(
               title,
-              style:
-                  AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.white),
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(color: AppColors.primary),
             ),
     );
   }
