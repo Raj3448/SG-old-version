@@ -55,14 +55,16 @@ class NormalPrimaryButton extends StatelessWidget {
     required this.ontap,
     required this.title,
     required this.showIcon,
-    required this.iconPath,
+    required this.fullWidth,
+    this.iconPath,
     super.key,
   });
 
   final VoidCallback ontap;
   final String title;
   final bool showIcon;
-  final String iconPath;
+  final String? iconPath;
+  final bool fullWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +90,19 @@ class NormalPrimaryButton extends StatelessWidget {
                 ),
               ],
             )
-          : Text(
-              title,
-              style:
-                  AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.white),
-            ),
+          : fullWidth
+              ? Center(
+                  child: Text(
+                    title,
+                    style: AppTextStyle.bodyLargeMedium
+                        .copyWith(color: AppColors.white),
+                  ),
+                )
+              : Text(
+                  title,
+                  style: AppTextStyle.bodyLargeMedium
+                      .copyWith(color: AppColors.white),
+                ),
     );
   }
 }
