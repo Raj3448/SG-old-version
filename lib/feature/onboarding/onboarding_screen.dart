@@ -17,6 +17,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController pageController = PageController();
+
   Timer? _timer;
   int _currentPageIndex = 0;
 
@@ -53,12 +54,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: const _Button(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 450,
-            width: MediaQuery.sizeOf(context).width,
+            height: 440,
             child: PageView(
               controller: pageController,
               children: const [
@@ -80,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 35),
+          // const SizedBox(height: 35),
           SmoothPageIndicator(
             controller: pageController,
             count: 3,
@@ -89,26 +91,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               dotColor: AppColors.grayscale300,
               dotHeight: 8,
               dotWidth: 8,
-            ),
-          ),
-          const SizedBox(height: 45),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: NormalPrimaryButton(
-              ontap: () {
-                //Using Navigator for the time being
-                // TODO(Aman): Change it to go_router
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ),
-                );
-              },
-              title: 'Get Started',
-              showIcon: false,
-              iconPath: '',
-              fullWidth: true,
             ),
           ),
         ],
@@ -138,6 +120,38 @@ class _PageView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _Button extends StatelessWidget {
+  const _Button();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 25),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NormalPrimaryButton(
+            ontap: () {
+              //Using Navigator for the time being
+              // TODO(Aman): Change it to go_router
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
+            },
+            title: 'Get Started',
+            showIcon: false,
+            iconPath: '',
+            fullWidth: true,
+          ),
+        ],
+      ),
     );
   }
 }
