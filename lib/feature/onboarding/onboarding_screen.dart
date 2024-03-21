@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 440,
+            height: 490,
             child: PageView(
               controller: pageController,
               children: const [
@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
           ),
-          // const SizedBox(height: 35),
+          const SizedBox(height: 20),
           SmoothPageIndicator(
             controller: pageController,
             count: 3,
@@ -109,14 +109,18 @@ class _PageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(imgPath),
-        const SizedBox(height: 25),
+        Image.asset(
+          imgPath,
+          scale: 0.85,
+        ),
+        const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             desc,
             textAlign: TextAlign.center,
-            style: AppTextStyle.bodyLargeMedium,
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale800, fontSize: 18),
           ),
         ),
       ],

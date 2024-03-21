@@ -207,9 +207,10 @@ abstract class AppTextStyle {
   static const bodyLargeMedium = TextStyle(
     fontWeight: FontWeight.w400,
     fontSize: 16,
+    // wordSpacing: 0.7,
     letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
-    height: 1.5,
+    height: 1.7,
   );
 
   static const bodyMediumMedium = TextStyle(
