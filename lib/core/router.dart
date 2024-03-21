@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 
-import 'package:silver_genie/home_page.dart';
 
 GoRouter appRouter() => GoRouter(
       debugLogDiagnostics: kDebugMode,
@@ -14,7 +13,8 @@ GoRouter appRouter() => GoRouter(
           path: '/',
           name: LoginPage.routeName,
           builder: (BuildContext context, GoRouterState state) =>
-              const LoginPage(),
+               const LoginPage(),
+              //const MainScreen(),
         ),
       ],
       observers: [

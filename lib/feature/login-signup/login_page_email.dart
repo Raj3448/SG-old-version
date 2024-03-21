@@ -3,19 +3,19 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/divider.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
-import 'package:silver_genie/feature/login-signup/login_page_email.dart';
+import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPageEmail extends StatefulWidget {
+  const LoginPageEmail({super.key});
   static String routeName = 'login';
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPageEmail> createState() => _LoginPageEmailState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageEmailState extends State<LoginPageEmail> {
   //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -40,16 +40,18 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    PhoneLableForm(
-                      title: 'Enter Mobile Number', text: 'Mobile Number'),
+                    InitialLabelForm(
+                      title: 'Enter email', 
+                      hintText: 'Enter e-mail', 
+                      keyboardType: TextInputType.emailAddress),
                     SizedBox(height: screenHeight * 0.02),
                     LargeTertiaryButton(
                       ontap: (){
                         Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context)=>const LoginPageEmail())
+                            MaterialPageRoute(builder: (context)=>const LoginPage())
                           );
-                      }, title: 'Use email instead',
+                      }, title: 'Use mobile number instead',
                        showIcon: false, iconPath: ''),
                        SizedBox(height: screenHeight * 0.02),
                   SizedBox(
