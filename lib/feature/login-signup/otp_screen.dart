@@ -1,47 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-
-// class OTPScreen extends StatelessWidget {
-//   //final String phoneNumber;
-
-//   OTPScreen({required this.phoneNumber});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
 class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});
+  static String routeName  = "/otp_screen";
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(Dimension.d5),
           child: Column(
             children: [
               SizedBox(
-                width: screenWidth * 0.5,
-                height: screenHeight * 0.3,
+                width: 240,
+                height: 240,
                 child: Image.asset('assets/splash/sg_logo.png'),
               ),
               const Text(
                 'Verify OTP',
                 style: AppTextStyle.heading4SemiBold,
               ),
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: Dimension.d6),
               const Text(
                 'We have just sent you 4 digit code to your email and phone number',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodyMediumMedium,
               ),
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: Dimension.d4),
               PinCodeTextField(
                 appContext: context,
                 length: 4,
@@ -62,7 +52,7 @@ class OTPScreen extends StatelessWidget {
                   selectedColor: Colors.black,
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: Dimension.d4),
               SizedBox(
                 width: double.infinity,
                 child: NormalPrimaryButton(
@@ -71,7 +61,7 @@ class OTPScreen extends StatelessWidget {
                   showIcon: false,
                   iconPath: ''),
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: Dimension.d6),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

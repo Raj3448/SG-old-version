@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:go_router/go_router.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
-import 'package:silver_genie/feature/login-signup/login_page.dart';
-import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
-
+  static String routeName  = "/signup";
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -17,54 +16,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(Dimension.d5),
           child: Column(
             children: [
               SizedBox(
-                  width: screenWidth * 0.5, 
-                  height: screenHeight * 0.3, 
+                  width: 240, 
+                  height: 240, 
                   child: Image.asset('assets/splash/sg_logo.png'), 
                 ),
                 const Text(
                     'Sign Up',
                     style: AppTextStyle.heading4SemiBold,
                   ),
-                  SizedBox(height: screenHeight * 0.02),
+                  const SizedBox(height: Dimension.d6),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const TextLabel(title: 'Enter Full Name'),
+                    const SizedBox(height:Dimension.d2),
                   InitialLabelForm(
-                    title: 'Enter Full Name',
                     hintText: 'Enter Name',
                     keyboardType: TextInputType.name),
-                  SizedBox(height: screenHeight * 0.02),
+                  const SizedBox(height: Dimension.d4),
+                  const TextLabel(title: 'Enter Email'),
+                    const SizedBox(height:Dimension.d2),
                   InitialLabelForm(
-                    title: 'Enter Email',
                     hintText: 'Enter E-mail',
                     keyboardType: TextInputType.emailAddress),
-                  SizedBox(height: screenHeight * 0.02),
-                  PhoneLableForm(
-                    title: 'Enter Mobile Number', text: 'Mobile Number'),
-                  SizedBox(height: screenHeight * 0.02),
+                  const SizedBox(height:Dimension.d4),
+                  const TextLabel(title: 'Mobile Number'),
+                    const SizedBox(height:Dimension.d2),
+                  const PhoneLableForm(
+                    title: 'Enter Mobile Number',),
+                  const SizedBox(height: Dimension.d4),
                   SizedBox(
                     width:double.infinity,
                     child: NormalPrimaryButton(
                       ontap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context)=>const OTPScreen())
-                        );
+                        GoRouter.of(context).go('/otp_screen');
                       },
                       title: 'Sign Up',
                       showIcon: false,
                       iconPath: ''),
                   ),
-                  SizedBox(height: screenHeight * 0.03),
+                  const SizedBox(height: Dimension.d6),
                 ],
               ),
               Row(
@@ -77,9 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                       NormalTertiaryButton(
                         ontap: (){
-                          Navigator.push(
-                            context, MaterialPageRoute(
-                              builder: (context)=>LoginPage()));
+                          GoRouter.of(context).go('/login');
                         }, title: 'Login', 
                         showIcon: false,
                          iconPath: '')

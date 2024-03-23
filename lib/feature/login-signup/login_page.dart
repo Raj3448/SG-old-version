@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/divider.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
-import 'package:silver_genie/feature/login-signup/login_page_email.dart';
-import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-  static String routeName = 'login';
+  static String routeName = '/login';
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,55 +18,48 @@ class _LoginPageState extends State<LoginPage> {
   //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(Dimension.d5),
           child: Column(
             children: [
               SizedBox(
-                    width: screenWidth * 0.5, 
-                    height: screenHeight * 0.3, 
+                    width: 240, 
+                    height: 240, 
                     child: Image.asset('assets/splash/sg_logo.png'), 
                   ),
                   const Text(
                       'Login',
                       style: AppTextStyle.heading4SemiBold,
                     ),
-                    SizedBox(height: screenHeight * 0.02),
+                    const SizedBox(height: Dimension.d6),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    PhoneLableForm(
-                      title: 'Enter Mobile Number', text: 'Mobile Number'),
-                    SizedBox(height: screenHeight * 0.02),
+                  const TextLabel(title: 'Mobile Number',),
+                   const SizedBox(height: Dimension.d2),
+                    const PhoneLableForm(
+                      title: 'Enter Mobile Number',),
+                    const SizedBox(height: Dimension.d4),
                     LargeTertiaryButton(
                       ontap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context)=>const LoginPageEmail())
-                          );
+                         GoRouter.of(context).go('/loginEmail');
                       }, title: 'Use email instead',
                        showIcon: false, iconPath: ''),
-                       SizedBox(height: screenHeight * 0.02),
+                      const SizedBox(height: Dimension.d4),
                   SizedBox(
                       width:double.infinity,
                       child: NormalPrimaryButton(
                         ontap: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context)=>const OTPScreen())
-                          );
+                          GoRouter.of(context).go('/otp_screen');
                         },
                         title: 'Login',
                         showIcon: false,
                         iconPath: ''),
                     ),
-                  SizedBox(height: screenHeight * 0.03),
-                  const DividerComponent(),
-                  SizedBox(height: screenHeight * 0.03),
+                  const SizedBox(height: Dimension.d6),
                 ],
               ),
               Row(
@@ -80,9 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                         NormalTertiaryButton(
                           ontap: (){
-                            Navigator.push(
-                              context, MaterialPageRoute(
-                                builder: (context)=>SignUpScreen()));
+                            GoRouter.of(context).go('/signup');
                           }, title: 'Sign Up', 
                           showIcon: false,
                            iconPath: '')
