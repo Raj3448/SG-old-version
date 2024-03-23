@@ -209,12 +209,14 @@ abstract class AppTextStyle {
     fontSize: 16,
     letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
+    height: 1.7,
   );
 
   static const bodyMediumMedium = TextStyle(
     fontWeight: FontWeight.w400,
     fontSize: 14,
     letterSpacing: 0.5,
+    height: 1.4,
     fontFamily: FontFamily.inter,
   );
 

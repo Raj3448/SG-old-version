@@ -8,6 +8,7 @@ import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 
 
+
 GoRouter appRouter() => GoRouter(
       debugLogDiagnostics: kDebugMode,
       initialLocation: '/login',
@@ -40,9 +41,4 @@ GoRouter appRouter() => GoRouter(
       observers: [
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
       ],
-      /*refreshListenable: GoRouterRefreshStream(),
-      redirect: (state) {
-        String? redirectRoute;
-        return state.subloc == redirectRoute ? null : redirectRoute;
-      },*/
     );
