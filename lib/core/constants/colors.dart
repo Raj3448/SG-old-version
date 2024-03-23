@@ -12,7 +12,7 @@ abstract class AppColors {
   static const warning2 = Color(0xFFFF784B);
 
   //--- Additional Colors ----------------------------
-  static const white = Color(0xFFFEFEFE);
+  static const white = Color(0xFFFFFFFF);
   static const line = Color(0xFFE3E7EC);
   static const lineDark = Color(0xFF4A4A65);
   static const black = Color(0xFF111111);
@@ -27,4 +27,11 @@ abstract class AppColors {
   static const grayscale700 = Color(0xFF5B646B);
   static const grayscale800 = Color(0xFF38444C);
   static const grayscale900 = Color(0xFF172025);
+
+  //--- Background colors ----------------------------
+  static const lightGreen = Color(0xFFE6F9F0);
+  static const lightRed = Color(0xFFFFEDED);
+  static const lightOrange = Color(0xFFFFF2ED);
+  static const lightYellow = Color(0xFFFFFAE8);
+  static const lightBlue = Color(0xFFF4F0FF);
 }

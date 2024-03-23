@@ -1,80 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
-import 'package:silver_genie/feature/profile/profile_screen.dart';
+import 'package:silver_genie/feature/main/store/main_store.dart';
+import 'package:silver_genie/feature/profile/screens/members_screen.dart';
 import 'package:silver_genie/feature/services/services_screen.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  final pages = [
-    const HomeScreen(),
-    const ServicesScreen(),
-    const BookingsScreen(),
-    const ProfileScreen(),
-  ];
-
-  int index = 0;
-
-  @override
   Widget build(BuildContext context) {
+    final pages = [
+      const HomeScreen(),
+      const ServicesScreen(),
+      const BookingsScreen(),
+      const MembersScreen(),
+    ];
+
+    final store = GetIt.I<MainStore>();
     return Scaffold(
       body: SafeArea(
-        child: pages[index],
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 70,
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          elevation: 8,
-          selectedLabelStyle:
-              TextStyle(color: Colors.grey.shade900, fontSize: 14),
-          currentIndex: index,
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          unselectedLabelStyle:
-              TextStyle(color: Colors.grey.shade400, fontSize: 14),
-          onTap: (value) {
-            setState(() {
-              index = value;
-            });
+        child: Observer(
+          builder: (_) {
+            return pages[store.currentIndex];
           },
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              label: 'Home',
-              icon: Icon(
-                Icons.home,
-                color: Colors.grey.shade400,
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Services',
-              icon: Icon(
-                Icons.home_repair_service_outlined,
-                color: Colors.grey.shade400,
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Bookings',
-              icon: Icon(
-                Icons.watch_later_outlined,
-                color: Colors.grey.shade400,
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Health profile',
-              icon: Icon(
-                Icons.person,
-                color: Colors.grey.shade400,
-              ),
-            ),
-          ],
         ),
+      ),
+      bottomNavigationBar: Observer(
+        builder: (context) {
+          return SizedBox(
+            height: 70,
+            child: DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(4),
+                  topRight: Radius.circular(4),
+                ),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: BottomNavigationBar(
+                backgroundColor: AppColors.white,
+                elevation: 10,
+                type: BottomNavigationBarType.fixed,
+                showUnselectedLabels: true,
+                selectedLabelStyle:
+                    AppTextStyle.bodyMediumBold.copyWith(height: 2),
+                currentIndex: store.currentIndex,
+                unselectedLabelStyle:
+                    AppTextStyle.bodyMediumMedium.copyWith(height: 2),
+                selectedItemColor: AppColors.primary,
+                selectedIconTheme:
+                    const IconThemeData(color: AppColors.primary),
+                onTap: (value) {
+                  store.currentIndex = value;
+                },
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    label: 'Home',
+                    icon: Icon(AppIcons.home),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Services',
+                    icon: Icon(AppIcons.medical_services),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Booking',
+                    icon: Icon(AppIcons.calendar),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Members',
+                    icon: Icon(AppIcons.family),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

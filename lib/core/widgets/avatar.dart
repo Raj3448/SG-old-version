@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+
+enum AvatarSize {
+  size24,
+  size32,
+  size44,
+  size48,
+  size56,
+}
+
+class Avatar extends StatelessWidget {
+  const Avatar({
+    required this.imgPath,
+    required this.maxRadius,
+    super.key,
+  });
+  factory Avatar.fromSize({
+    required String imgPath,
+    required AvatarSize size,
+  }) {
+    double radius;
+    switch (size) {
+      case AvatarSize.size24:
+        radius = 24;
+      case AvatarSize.size32:
+        radius = 32;
+      case AvatarSize.size44:
+        radius = 44;
+      case AvatarSize.size48:
+        radius = 48;
+      case AvatarSize.size56:
+        radius = 56;
+    }
+    return Avatar(imgPath: imgPath, maxRadius: radius);
+  }
+  final String imgPath;
+  final double maxRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      maxRadius: maxRadius,
+      backgroundImage: const AssetImage('assets/icon/headshot.png'),
+      // backgroundImage: NetworkImage(imgPath),
+    );
+  }
+}
