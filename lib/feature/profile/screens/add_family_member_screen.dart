@@ -7,6 +7,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/selector.dart';
 
 class AddFamilyMemberScreen extends StatelessWidget {
@@ -169,75 +170,6 @@ class _ChangePicDialog extends StatelessWidget {
               iconColor: AppColors.error,
               textColor: AppColors.error,
               ontap: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class InfoDialog extends StatelessWidget {
-  const InfoDialog({
-    required this.showIcon,
-    required this.title,
-    required this.desc,
-    required this.btnTitle,
-    required this.showBtnIcon,
-    required this.btnIconPath,
-    super.key,
-  });
-
-  final bool showIcon;
-  final String title;
-  final String desc;
-  final String btnTitle;
-  final bool showBtnIcon;
-  final IconData btnIconPath;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showIcon)
-              Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icon/success.svg',
-                    height: 88,
-                  ),
-                  const SizedBox(height: 30),
-                ],
-              )
-            else
-              const SizedBox(),
-            Text(
-              title,
-              style: AppTextStyle.bodyXLBold.copyWith(height: 1.5),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              desc,
-              textAlign: TextAlign.center,
-              style: AppTextStyle.bodyLargeMedium,
-            ),
-            const SizedBox(height: 30),
-            CustomButton(
-              ontap: () {},
-              title: btnTitle,
-              showIcon: showBtnIcon,
-              iconPath: btnIconPath,
-              size: ButtonSize.normal,
-              type: ButtonType.primary,
-              expanded: false,
             ),
           ],
         ),
