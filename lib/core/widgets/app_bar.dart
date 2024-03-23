@@ -1,35 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/widgets/avatar.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
   const Appbar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Hello, Username'),
-      automaticallyImplyLeading: false,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: CircleAvatar(
-          backgroundColor: Colors.grey.shade400,
-          // child: Image.asset('assets/splash/sg_logo.png'),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 12),
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Avatar.fromSize(imgPath: '', size: AvatarSize.size24),
+              const SizedBox(width: 12),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hi, Arun !',
+                    style: AppTextStyle.bodyXLBold.copyWith(
+                      color: AppColors.grayscale900,
+                      height: 1.4,
+                    ),
+                  ),
+                  Text(
+                    'How do you feel today?',
+                    style: AppTextStyle.bodyMediumMedium
+                        .copyWith(color: AppColors.grayscale600, height: 1.42),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              const _IconContainer(iconPath: 'assets/icon/wallet.svg'),
+              const SizedBox(width: 12),
+              const _IconContainer(iconPath: 'assets/icon/bell-Unread.svg'),
+            ],
+          ),
+        ],
       ),
-      actions: const [
-        Icon(
-          Icons.wallet,
-          color: Colors.grey,
-        ),
-        SizedBox(width: 15),
-        Icon(
-          Icons.notifications_none,
-          color: Colors.grey,
-        ),
-        SizedBox(width: 15),
-      ],
     );
   }
 
   @override
-  Size get preferredSize => AppBar().preferredSize;
+  Size get preferredSize => const Size.fromHeight(70);
+}
+
+class _IconContainer extends StatelessWidget {
+  const _IconContainer({required this.iconPath});
+
+  final String iconPath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 36,
+      width: 36,
+      decoration: const BoxDecoration(
+        color: AppColors.grayscale200,
+        shape: BoxShape.circle,
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Center(
+        child: SvgPicture.asset(
+          iconPath,
+          height: 20,
+        ),
+      ),
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -119,8 +120,8 @@ class _PageView extends StatelessWidget {
           child: Text(
             desc,
             textAlign: TextAlign.center,
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(color: AppColors.grayscale800, fontSize: 18),
+            style: AppTextStyle.bodyLargeMedium
+                .copyWith(color: AppColors.grayscale800),
           ),
         ),
       ],
@@ -138,9 +139,8 @@ class _Button extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          NormalPrimaryButton(
+          CustomButton(
             ontap: () {
-              //Using Navigator for the time being
               // TODO(Aman): Change it to go_router
               Navigator.push(
                 context,
@@ -151,8 +151,10 @@ class _Button extends StatelessWidget {
             },
             title: 'Get Started',
             showIcon: false,
-            iconPath: '',
-            fullWidth: true,
+            iconPath: AppIcons.add,
+            size: ButtonSize.normal,
+            type: ButtonType.primary,
+            expanded: true,
           ),
         ],
       ),

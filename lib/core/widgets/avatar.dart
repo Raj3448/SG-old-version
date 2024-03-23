@@ -1,77 +1,47 @@
 import 'package:flutter/material.dart';
 
-class Avatar24 extends StatelessWidget {
-  const Avatar24({required this.imgPath, super.key});
-
-  final String imgPath;
-
-  @override
-  Widget build(BuildContext context) {
-    return const CircleAvatar(
-      maxRadius: 24,
-      backgroundImage: AssetImage('assets/icon/headshot.png'),
-      /*
-      If it is a network image use this:
-
-      backgroundImage: NetworkImage('url'),
-      
-      */
-    );
-  }
+enum AvatarSize {
+  size24,
+  size32,
+  size44,
+  size48,
+  size56,
 }
 
-class Avatar32 extends StatelessWidget {
-  const Avatar32({required this.imgPath, super.key});
-
-  final String imgPath;
-
-  @override
-  Widget build(BuildContext context) {
-    return const CircleAvatar(
-      maxRadius: 32,
-      backgroundImage: AssetImage('assets/icon/headshot.png'),
-    );
+class Avatar extends StatelessWidget {
+  const Avatar({
+    required this.imgPath,
+    required this.maxRadius,
+    super.key,
+  });
+  factory Avatar.fromSize({
+    required String imgPath,
+    required AvatarSize size,
+  }) {
+    double radius;
+    switch (size) {
+      case AvatarSize.size24:
+        radius = 24;
+      case AvatarSize.size32:
+        radius = 32;
+      case AvatarSize.size44:
+        radius = 44;
+      case AvatarSize.size48:
+        radius = 48;
+      case AvatarSize.size56:
+        radius = 56;
+    }
+    return Avatar(imgPath: imgPath, maxRadius: radius);
   }
-}
-
-class Avatar44 extends StatelessWidget {
-  const Avatar44({required this.imgPath, super.key});
-
   final String imgPath;
+  final double maxRadius;
 
   @override
   Widget build(BuildContext context) {
-    return const CircleAvatar(
-      maxRadius: 44,
-      backgroundImage: AssetImage('assets/icon/headshot.png'),
-    );
-  }
-}
-
-class Avatar48 extends StatelessWidget {
-  const Avatar48({required this.imgPath, super.key});
-
-  final String imgPath;
-
-  @override
-  Widget build(BuildContext context) {
-    return const CircleAvatar(
-      maxRadius: 48,
-      backgroundImage: AssetImage('assets/icon/headshot.png'),
-    );
-  }
-}
-
-class Avatar56 extends StatelessWidget {
-  const Avatar56({required this.imgPath, super.key});
-
-  final String imgPath;
-
-  @override
-  Widget build(BuildContext context) {
-    return const CircleAvatar(
-      maxRadius: 56,
-      backgroundImage: AssetImage('assets/icon/headshot.png'),
+    return CircleAvatar(
+      maxRadius: maxRadius,
+      backgroundImage: const AssetImage('assets/icon/headshot.png'),
+      // backgroundImage: NetworkImage(imgPath),
     );
   }
 }

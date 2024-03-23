@@ -2,121 +2,96 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
-class SuccessChip extends StatelessWidget {
-  const SuccessChip({super.key});
+enum ChipType {
+  success,
+  failed,
+  pending,
+  refund,
+  unpaid,
+}
+
+class CustomChip extends StatelessWidget {
+  const CustomChip({
+    required this.chipType,
+    super.key,
+  });
+  final ChipType chipType;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 28,
-      width: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+      width: _getWidth(),
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE6F9F0),
+        color: _getBackgroundColor(),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Center(
         child: Text(
-          'Success',
-          style:
-              AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.success),
+          _getText(),
+          textAlign: TextAlign.center,
+          style: AppTextStyle.bodySmallMedium.copyWith(color: _getTextColor()),
         ),
       ),
     );
   }
-}
 
-class FailedChip extends StatelessWidget {
-  const FailedChip({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 28,
-      width: 67,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFEDED),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Center(
-        child: Text(
-          'Failed',
-          style: AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.error),
-        ),
-      ),
-    );
+  String _getText() {
+    switch (chipType) {
+      case ChipType.success:
+        return 'Success';
+      case ChipType.failed:
+        return 'Failed';
+      case ChipType.pending:
+        return 'Pending';
+      case ChipType.refund:
+        return 'Refund';
+      case ChipType.unpaid:
+        return 'Unpaid';
+    }
   }
-}
 
-class PendingChip extends StatelessWidget {
-  const PendingChip({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 28,
-      width: 79,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF2ED),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Center(
-        child: Text(
-          'Pending',
-          style:
-              AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.warning2),
-        ),
-      ),
-    );
+  Color _getBackgroundColor() {
+    switch (chipType) {
+      case ChipType.success:
+        return AppColors.lightGreen;
+      case ChipType.failed:
+        return AppColors.lightRed;
+      case ChipType.pending:
+        return AppColors.lightOrange;
+      case ChipType.refund:
+        return AppColors.lightYellow;
+      case ChipType.unpaid:
+        return AppColors.lightBlue;
+    }
   }
-}
 
-class RefundChip extends StatelessWidget {
-  const RefundChip({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 28,
-      width: 73,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFAE8),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Center(
-        child: Text(
-          'Refund',
-          style:
-              AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.warning),
-        ),
-      ),
-    );
+  Color _getTextColor() {
+    switch (chipType) {
+      case ChipType.success:
+        return AppColors.success;
+      case ChipType.failed:
+        return AppColors.error;
+      case ChipType.pending:
+        return AppColors.warning2;
+      case ChipType.refund:
+        return AppColors.warning;
+      case ChipType.unpaid:
+        return AppColors.primary;
+    }
   }
-}
 
-class UnpaidChip extends StatelessWidget {
-  const UnpaidChip({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 28,
-      width: 73,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF4F0FF),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Center(
-        child: Text(
-          'Unpaid',
-          style:
-              AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.primary),
-        ),
-      ),
-    );
+  double _getWidth() {
+    switch (chipType) {
+      case ChipType.success:
+        return 80;
+      case ChipType.failed:
+        return 67;
+      case ChipType.pending:
+        return 79;
+      case ChipType.refund || ChipType.unpaid:
+        return 73;
+    }
   }
 }
