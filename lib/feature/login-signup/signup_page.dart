@@ -36,30 +36,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   const TextLabel(title: 'Enter Full Name'),
                     const SizedBox(height:Dimension.d2),
-                  InitialLabelForm(
+                  CustomTextField(
                     hintText: 'Enter Name',
                     keyboardType: TextInputType.name),
                   const SizedBox(height: Dimension.d4),
                   const TextLabel(title: 'Enter Email'),
                     const SizedBox(height:Dimension.d2),
-                  InitialLabelForm(
+                  CustomTextField(
                     hintText: 'Enter E-mail',
                     keyboardType: TextInputType.emailAddress),
                   const SizedBox(height:Dimension.d4),
                   const TextLabel(title: 'Mobile Number'),
                     const SizedBox(height:Dimension.d2),
-                  const PhoneLableForm(
+                  const CustomPhoneField(
                     title: 'Enter Mobile Number',),
                   const SizedBox(height: Dimension.d4),
                   SizedBox(
                     width:double.infinity,
-                    child: NormalPrimaryButton(
+                    child: CustomButton(
+                      size: ButtonSize.normal,
+                      type: ButtonType.primary,
+                      expanded: true,
                       ontap: (){
                         GoRouter.of(context).go('/otp_screen');
                       },
                       title: 'Sign Up',
                       showIcon: false,
-                      iconPath: ''),
+                      iconPath: Icons.not_interested,
+                  ),
                   ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -70,14 +74,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const Text('Already have an account?',
                       style: AppTextStyle.bodyLargeMedium,),
                       SizedBox(
-                    width: 2,
+                    width:Dimension.d1,
                   ),
-                      NormalTertiaryButton(
-                        ontap: (){
+                      CustomButton(
+                          size: ButtonSize.normal,
+                          type: ButtonType.tertiary,
+                          expanded: true,
+                          ontap: (){
                           GoRouter.of(context).go('/login');
                         }, title: 'Login', 
                         showIcon: false,
-                         iconPath: '')
+                         iconPath: Icons.not_interested,)
                     ],
                   ),
             ],

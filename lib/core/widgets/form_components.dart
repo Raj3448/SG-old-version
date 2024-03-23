@@ -17,8 +17,8 @@ class TextLabel extends StatelessWidget {
   }
 }
 
-class InitialLabelForm extends StatelessWidget {
-  InitialLabelForm({
+class CustomTextField extends StatelessWidget {
+  CustomTextField({
     required this.hintText,
     required this.keyboardType,
     super.key,
@@ -44,8 +44,8 @@ class InitialLabelForm extends StatelessWidget {
   }
 }
 
-class PhoneLableForm extends StatelessWidget {
-  const PhoneLableForm({required this.title, super.key});
+class CustomPhoneField extends StatelessWidget {
+  const CustomPhoneField({required this.title, super.key});
 
   final String title;
   @override

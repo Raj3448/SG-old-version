@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
       return GestureDetector(
         onTap: ontap,
         child: Text(
-          'Tertiary',
+          title,
           style: _getTextStyle(),
         ),
       );

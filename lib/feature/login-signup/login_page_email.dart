@@ -23,59 +23,77 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
           child: Column(
             children: [
               SizedBox(
-                    width: 240, 
-                    height: 240, 
-                    child: Image.asset('assets/splash/sg_logo.png'), 
-                  ),
-                  const Text(
-                      'Login',
-                      style: AppTextStyle.heading4SemiBold,
-                    ),
-                    const SizedBox(height: Dimension.d6),
+                width: 240,
+                height: 240,
+                child: Image.asset('assets/splash/sg_logo.png'),
+              ),
+              const Text(
+                'Login',
+                style: AppTextStyle.heading4SemiBold,
+              ),
+              const SizedBox(height: Dimension.d6),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    const TextLabel(title: 'Enter email'),
-                    const SizedBox(height:Dimension.d2),
-                    InitialLabelForm( 
-                      hintText: 'Enter e-mail', 
-                      keyboardType: TextInputType.emailAddress,),
-                    const SizedBox(height: Dimension.d4),
-                    LargeTertiaryButton(
-                      ontap: (){
-                        GoRouter.of(context).go('/login');
-                      }, title: 'Use mobile number instead',
-                       showIcon: false, iconPath: '',),
-                       const SizedBox(height: Dimension.d4),
+                  const TextLabel(title: 'Enter email'),
+                  const SizedBox(height: Dimension.d2),
+                  CustomTextField(
+                    hintText: 'Enter e-mail',
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: Dimension.d4),
+                  CustomButton(
+                    size: ButtonSize.large,
+                    type: ButtonType.tertiary,
+                    expanded: false,
+                    ontap: () {
+                      GoRouter.of(context).go('/login');
+                    },
+                    title: 'Use mobile number instead',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
+                  const SizedBox(height: Dimension.d4),
                   SizedBox(
-                      width:double.infinity,
-                      child: NormalPrimaryButton(
-                        ontap: (){
-                          GoRouter.of(context).go('/otp_screen');
-                        },
-                        title: 'Login',
-                        showIcon: false,
-                        iconPath: '',),
+                    width: double.infinity,
+                    child: CustomButton(
+                      size: ButtonSize.normal,
+                      type: ButtonType.primary,
+                      expanded: true,
+                      ontap: () {
+                        GoRouter.of(context).go('/otp_screen');
+                      },
+                      title: 'Login',
+                      showIcon: false,
+                      iconPath: Icons.not_interested,
                     ),
+                  ),
                   const SizedBox(height: Dimension.d6),
                 ],
               ),
               Row(
-                    mainAxisAlignment: MainAxisAlignment.center,      
-                    children: [
-                      const Text("Don't have an account?",
-                      style: AppTextStyle.bodyLargeMedium,),
-                      SizedBox(
-                      width: 2,
-                    ),
-                        NormalTertiaryButton(
-                          ontap: (){
-                            GoRouter.of(context).go('/signup');
-                          }, title: 'Sign Up', 
-                          showIcon: false,
-                           iconPath: '',),
-                    ],
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account?",
+                    style: AppTextStyle.bodyLargeMedium,
                   ),
+                  SizedBox(
+                    width:Dimension.d1,
+                  ),
+                  CustomButton(
+                    size: ButtonSize.normal,
+                    type: ButtonType.tertiary,
+                    expanded: false,
+                    ontap: () {
+                      GoRouter.of(context).go('/signup');
+                    },
+                    title: 'Sign Up',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -83,6 +101,3 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
     );
   }
 }
-
-
-

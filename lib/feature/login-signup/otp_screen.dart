@@ -54,11 +54,14 @@ class OTPScreen extends StatelessWidget {
               const SizedBox(height: Dimension.d4),
               SizedBox(
                 width: double.infinity,
-                child: NormalPrimaryButton(
+                child: CustomButton(
+                  size: ButtonSize.normal,
+                  type: ButtonType.primary,
+                  expanded: true,
                   ontap: (){},
                   title: 'Continue',
                   showIcon: false,
-                  iconPath: ''),
+                  iconPath: Icons.not_interested,),
               ),
               const SizedBox(height: Dimension.d6),
               Row(
@@ -69,13 +72,16 @@ class OTPScreen extends StatelessWidget {
                     style: AppTextStyle.bodyLargeMedium,
                   ),
                   const SizedBox(
-                    width: 2,
+                    width:Dimension.d1,
                   ),
-                  NormalTertiaryButton(
+                  CustomButton(
+                    size: ButtonSize.normal,
+                    type: ButtonType.tertiary,
+                    expanded: true,
                     ontap: (){}, 
                     title: "Resend",
                      showIcon: false, 
-                     iconPath: '',),
+                     iconPath: Icons.not_interested,),
                 ],
               ),
             ],
