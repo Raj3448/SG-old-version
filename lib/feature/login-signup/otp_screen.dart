@@ -9,7 +9,6 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -25,13 +24,13 @@ class OTPScreen extends StatelessWidget {
                 'Verify OTP',
                 style: AppTextStyle.heading4SemiBold,
               ),
-              SizedBox(height: Dimension.d6),
+              const SizedBox(height: Dimension.d6),
               const Text(
                 'We have just sent you 4 digit code to your email and phone number',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodyMediumMedium,
               ),
-              SizedBox(height: Dimension.d4),
+              const SizedBox(height: Dimension.d4),
               PinCodeTextField(
                 appContext: context,
                 length: 4,
@@ -52,7 +51,7 @@ class OTPScreen extends StatelessWidget {
                   selectedColor: Colors.black,
                 ),
               ),
-              SizedBox(height: Dimension.d4),
+              const SizedBox(height: Dimension.d4),
               SizedBox(
                 width: double.infinity,
                 child: NormalPrimaryButton(
@@ -61,7 +60,7 @@ class OTPScreen extends StatelessWidget {
                   showIcon: false,
                   iconPath: ''),
               ),
-              SizedBox(height: Dimension.d6),
+              const SizedBox(height: Dimension.d6),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -69,14 +68,14 @@ class OTPScreen extends StatelessWidget {
                     "Didn't receive OTP?",
                     style: AppTextStyle.bodyLargeMedium,
                   ),
-                  SizedBox(
-                    width: screenWidth*0.01,
+                  const SizedBox(
+                    width: 2,
                   ),
                   NormalTertiaryButton(
                     ontap: (){}, 
                     title: "Resend",
                      showIcon: false, 
-                     iconPath: '',)
+                     iconPath: '',),
                 ],
               ),
             ],

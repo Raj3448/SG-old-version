@@ -4,7 +4,6 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
-import 'package:silver_genie/feature/login-signup/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,10 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -68,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Text("Don't have an account?",
                       style: AppTextStyle.bodyLargeMedium,),
                       SizedBox(
-                      width: screenWidth*0.01,
+                      width: 2,
                     ),
                         NormalTertiaryButton(
                           ontap: (){

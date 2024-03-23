@@ -14,10 +14,8 @@ class LoginPageEmail extends StatefulWidget {
 }
 
 class _LoginPageEmailState extends State<LoginPageEmail> {
-  //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -41,7 +39,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                     const SizedBox(height:Dimension.d2),
                     InitialLabelForm( 
                       hintText: 'Enter e-mail', 
-                      keyboardType: TextInputType.emailAddress),
+                      keyboardType: TextInputType.emailAddress,),
                     const SizedBox(height: Dimension.d4),
                     LargeTertiaryButton(
                       ontap: (){
@@ -68,14 +66,14 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                       const Text("Don't have an account?",
                       style: AppTextStyle.bodyLargeMedium,),
                       SizedBox(
-                      width: screenWidth*0.01,
+                      width: 2,
                     ),
                         NormalTertiaryButton(
                           ontap: (){
                             GoRouter.of(context).go('/signup');
                           }, title: 'Sign Up', 
                           showIcon: false,
-                           iconPath: ''),
+                           iconPath: '',),
                     ],
                   ),
             ],
@@ -85,5 +83,6 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
     );
   }
 }
+
 
 

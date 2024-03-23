@@ -13,10 +13,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  //TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -72,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const Text('Already have an account?',
                       style: AppTextStyle.bodyLargeMedium,),
                       SizedBox(
-                    width: screenWidth*0.01,
+                    width: 2,
                   ),
                       NormalTertiaryButton(
                         ontap: (){
