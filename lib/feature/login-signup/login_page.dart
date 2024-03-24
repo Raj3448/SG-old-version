@@ -5,6 +5,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   static String routeName = '/login';
