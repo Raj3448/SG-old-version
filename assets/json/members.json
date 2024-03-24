@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Rahul Arora",
+        "relation": "Father",
+        "hasCareSub": true
+    },
+    {
+        "name": "Vineeta Arora",
+        "relation": "Mother",
+        "hasCareSub": true
+    },
+    {
+        "name": "Saksham Arora",
+        "relation": "Self",
+        "hasCareSub": false
+    }
+]
