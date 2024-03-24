@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use, inference_failure_on_function_invocation, lines_longer_than_80_chars
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -29,7 +30,7 @@ class AddFamilyMemberScreen extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Add new family member',
+          'Add new family member'.tr(),
           style: AppTextStyle.bodyXLMedium.copyWith(height: 1.6),
         ),
       ),

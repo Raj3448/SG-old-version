@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -22,15 +23,33 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hi, Arun !',
-                    style: AppTextStyle.bodyXLBold.copyWith(
-                      color: AppColors.grayscale900,
-                      height: 1.4,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Hi'.tr(),
+                        style: AppTextStyle.bodyXLBold.copyWith(
+                          color: AppColors.grayscale900,
+                          height: 1.4,
+                        ),
+                      ),
+                      Text(
+                        ', Arun !',
+                        style: AppTextStyle.bodyXLBold.copyWith(
+                          color: AppColors.grayscale900,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
                   ),
+                  // Text(
+                  //   'Hi, Arun !'.tr(),
+                  //   style: AppTextStyle.bodyXLBold.copyWith(
+                  //     color: AppColors.grayscale900,
+                  //     height: 1.4,
+                  //   ),
+                  // ),
                   Text(
-                    'How do you feel today?',
+                    'How do you feel today?'.tr(),
                     style: AppTextStyle.bodyMediumMedium
                         .copyWith(color: AppColors.grayscale600, height: 1.42),
                   ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_lambdas
+
 import 'dart:async';
 
 import 'package:dio/dio.dart';
@@ -14,6 +16,7 @@ import 'package:silver_genie/core/env.dart';
 
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/firebase_options.dart';
 
 void main() async {
@@ -29,7 +32,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
-      GetIt.I.registerLazySingleton(MainStore.new);
+      GetIt.instance.registerLazySingleton(() => MainStore());
+      GetIt.instance.registerLazySingleton(() => MembersStore());
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance
@@ -54,7 +58,8 @@ void main() async {
         EasyLocalization(
           supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
           path: 'assets/translations',
-          fallbackLocale: const Locale('en', 'US'),
+          // fallbackLocale: const Locale('en', 'US'),
+          fallbackLocale: const Locale('hi', 'IN'),
           child: const MyApp(),
         ),
       );

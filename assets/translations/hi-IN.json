@@ -1,4 +1,19 @@
 {
-    "home": "Home",
-    "search": "Search"
+    "Hi": "नमस्ते",
+    "Home": "घर",
+    "Services": "सेवाएं",
+    "Booking": "बुकिंग",
+    "Members": "सदस्यों",
+    "Relationship: ": "संबंध: ",
+    "Father": "पिता",
+    "Mother": "माँ",
+    "Brother": "भाई",
+    "Sister": "बहन",
+    "Wife": "पत्नी",
+    "Self": "खुद",
+    "How do you feel today?": "आज आप कैसा महसूस कर रहे हैं?",
+    "Your Family Members": "आपके परिवार के सदस्य",
+    "Add new member": "नया सदस्य जोड़ें",
+    "Add new family member": "परिवार का नया सदस्य जोड़ें",
+    "Home Screen": "होम स्क्रीन"
 }

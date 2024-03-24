@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -9,8 +10,8 @@ import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/elder_care_sub.dart';
 import 'package:silver_genie/core/widgets/relationship.dart';
-import 'package:silver_genie/feature/main/store/main_store.dart';
-import 'package:silver_genie/feature/profile/screens/add_family_member_screen.dart';
+import 'package:silver_genie/feature/members/screens/add_family_member_screen.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class MembersScreen extends StatefulWidget {
   const MembersScreen({super.key});
@@ -20,7 +21,7 @@ class MembersScreen extends StatefulWidget {
 }
 
 class _MembersScreenState extends State<MembersScreen> {
-  final store = GetIt.I<MainStore>();
+  final store = GetIt.I<MembersStore>();
   @override
   void initState() {
     super.initState();
@@ -49,7 +50,7 @@ class _MembersScreenState extends State<MembersScreen> {
                         children: [
                           const SizedBox(height: 12),
                           Text(
-                            'Your Family Members',
+                            'Your Family Members'.tr(),
                             style: AppTextStyle.bodyLargeBold.copyWith(
                               height: 1.5,
                               fontWeight: FontWeight.w700,
@@ -90,7 +91,7 @@ class _MembersScreenState extends State<MembersScreen> {
                                 ),
                               );
                             },
-                            title: 'Add new member',
+                            title: 'Add new member'.tr(),
                             showIcon: false,
                             iconPath: AppIcons.add,
                             size: ButtonSize.normal,
