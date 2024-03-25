@@ -14,7 +14,8 @@ class HomeScreen extends StatelessWidget {
         child: const Text(
           'Home Screen',
           style: AppTextStyle.heading3Bold,
-        ).tr(),
+          // ).tr(),
+        ),
       ),
     );
   }

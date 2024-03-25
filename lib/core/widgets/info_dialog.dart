@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -58,7 +59,9 @@ class InfoDialog extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             CustomButton(
-              ontap: () {},
+              ontap: () {
+                GoRouter.of(context).pop();
+              },
               title: btnTitle,
               showIcon: showBtnIcon,
               iconPath: btnIconPath,

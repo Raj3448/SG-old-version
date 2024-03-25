@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_positional_boolean_parameters, library_private_types_in_public_api
+// ignore_for_file: avoid_positional_boolean_parameters, library_private_types_in_public_api, lines_longer_than_80_chars
 
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';

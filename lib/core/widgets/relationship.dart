@@ -12,12 +12,14 @@ class Relationship extends StatelessWidget {
     return Row(
       children: [
         Text(
-          'Relationship: '.tr(),
+          // 'Relationship: '.tr(),
+          'Relationship : ',
           style: AppTextStyle.bodyMediumMedium
               .copyWith(color: AppColors.grayscale700),
         ),
         Text(
-          relation.tr(),
+          // relation.tr(),
+          relation,
           style: AppTextStyle.bodyMediumMedium
               .copyWith(color: AppColors.grayscale700),
         ),

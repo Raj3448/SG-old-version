@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -58,81 +57,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        if (store.showOnboarding) {
-          return Scaffold(
-            floatingActionButton: const _Button(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 490,
-                  child: PageView(
-                    controller: pageController,
-                    children: const [
-                      _PageView(
-                        imgPath: 'assets/onboarding/img1.png',
-                        desc:
-                            'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
-                      ),
-                      _PageView(
-                        imgPath: 'assets/onboarding/img2.png',
-                        desc:
-                            'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
-                      ),
-                      _PageView(
-                        imgPath: 'assets/onboarding/img3.png',
-                        desc:
-                            'Instant access to emergency services, ensuring peace of mind for your loved ones.',
-                      ),
-                    ],
-                  ),
+    return Scaffold(
+      floatingActionButton: const _Button(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 490,
+            child: PageView(
+              controller: pageController,
+              children: const [
+                _PageView(
+                  imgPath: 'assets/onboarding/img1.png',
+                  desc:
+                      'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
                 ),
-                const SizedBox(height: 20),
-                SmoothPageIndicator(
-                  controller: pageController,
-                  count: 3,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColors.primary,
-                    dotColor: AppColors.grayscale300,
-                    dotHeight: 8,
-                    dotWidth: 8,
-                  ),
+                _PageView(
+                  imgPath: 'assets/onboarding/img2.png',
+                  desc:
+                      'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
+                ),
+                _PageView(
+                  imgPath: 'assets/onboarding/img3.png',
+                  desc:
+                      'Instant access to emergency services, ensuring peace of mind for your loved ones.',
                 ),
               ],
             ),
-          );
-        } else {
-          Future.delayed(const Duration(seconds: 1), () {
-            // TODO(Amanjot): Update with go_router
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const MainScreen(),
-              ),
-            );
-          });
-          return Scaffold(
-            backgroundColor: const Color(0xff0d0d0d),
-            body: Center(
-              child: Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: const Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
-                ),
-              ),
+          ),
+          const SizedBox(height: 20),
+          SmoothPageIndicator(
+            controller: pageController,
+            count: 3,
+            effect: const ExpandingDotsEffect(
+              activeDotColor: AppColors.primary,
+              dotColor: AppColors.grayscale300,
+              dotHeight: 8,
+              dotWidth: 8,
             ),
-          );
-        }
-      },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -179,6 +145,11 @@ class _Button extends StatelessWidget {
         children: [
           CustomButton(
             ontap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(),
+                ),
+              );
               store.setOnboardingStatus(false);
             },
             title: 'Get Started',

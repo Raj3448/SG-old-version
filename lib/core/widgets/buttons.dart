@@ -1,6 +1,5 @@
 // ignore_for_file: no_default_cases
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -71,7 +70,8 @@ class CustomButton extends StatelessWidget {
                         const Icon(Icons.add, color: Colors.black),
                         const SizedBox(width: 5),
                         Text(
-                          title.tr(),
+                          // title.tr(),
+                          title,
                           style: _getTextStyle(),
                         ),
                       ],
@@ -87,7 +87,8 @@ class CustomButton extends StatelessWidget {
                       ),
                       const SizedBox(width: 7.5),
                       Text(
-                        title.tr(),
+                        // title.tr(),
+                        title,
                         style: _getTextStyle(),
                       ),
                     ],
@@ -95,12 +96,14 @@ class CustomButton extends StatelessWidget {
             : expanded
                 ? Center(
                     child: Text(
-                      title.tr(),
+                      // title.tr(),
+                      title,
                       style: _getTextStyle(),
                     ),
                   )
                 : Text(
-                    title.tr(),
+                    // title.tr(),
+                    title,
                     style: _getTextStyle(),
                   ),
       );

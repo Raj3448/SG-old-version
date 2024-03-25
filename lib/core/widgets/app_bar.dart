@@ -26,7 +26,8 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                   Row(
                     children: [
                       Text(
-                        'Hi'.tr(),
+                        // 'Hi'.tr(),
+                        'Hi',
                         style: AppTextStyle.bodyXLBold.copyWith(
                           color: AppColors.grayscale900,
                           height: 1.4,
@@ -49,7 +50,8 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                   //   ),
                   // ),
                   Text(
-                    'How do you feel today?'.tr(),
+                    // 'How do you feel today?'.tr(),
+                    'How do you feel today?',
                     style: AppTextStyle.bodyMediumMedium
                         .copyWith(color: AppColors.grayscale600, height: 1.42),
                   ),
