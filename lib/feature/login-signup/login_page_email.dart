@@ -5,16 +5,15 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-  static String routeName = '/login';
+class LoginPageEmail extends StatefulWidget {
+  const LoginPageEmail({super.key});
+  static String routeName = '/loginEmail';
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPageEmail> createState() => _LoginPageEmailState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageEmailState extends State<LoginPageEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,24 +35,24 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextLabel(
-                    title: 'Mobile Number',
-                  ),
+                  const TextLabel(title: 'Enter email'),
                   const SizedBox(height: Dimension.d2),
-                  const CustomPhoneField(
-                    title: 'Enter Mobile Number',
+                  CustomTextField(
+                    hintText: 'Enter e-mail',
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: Dimension.d4),
                   CustomButton(
                     size: ButtonSize.large,
                     type: ButtonType.tertiary,
                     expanded: false,
-                      ontap: () {
-                        GoRouter.of(context).go('/loginEmail');
-                      },
-                      title: 'Use email instead',
-                      showIcon: false,
-                      iconPath: Icons.not_interested),
+                    ontap: () {
+                      GoRouter.of(context).go('/login');
+                    },
+                    title: 'Use mobile number instead',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
                   const SizedBox(height: Dimension.d4),
                   SizedBox(
                     width: double.infinity,
@@ -61,12 +60,13 @@ class _LoginPageState extends State<LoginPage> {
                       size: ButtonSize.normal,
                       type: ButtonType.primary,
                       expanded: true,
-                        ontap: () {
-                          GoRouter.of(context).go('/otp_screen');
-                        },
-                        title: 'Login',
-                        showIcon: false,
-                        iconPath: Icons.not_interested),
+                      ontap: () {
+                        GoRouter.of(context).go('/otp_screen');
+                      },
+                      title: 'Login',
+                      showIcon: false,
+                      iconPath: Icons.not_interested,
+                    ),
                   ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -79,18 +79,19 @@ class _LoginPageState extends State<LoginPage> {
                     style: AppTextStyle.bodyLargeMedium,
                   ),
                   SizedBox(
-                    width:Dimension.d1
+                    width:Dimension.d1,
                   ),
                   CustomButton(
                     size: ButtonSize.normal,
                     type: ButtonType.tertiary,
-                    expanded: true,
-                      ontap: () {
-                        GoRouter.of(context).go('/signup');
-                      },
-                      title: 'Sign Up',
-                      showIcon: false,
-                      iconPath: Icons.not_interested)
+                    expanded: false,
+                    ontap: () {
+                      GoRouter.of(context).go('/signup');
+                    },
+                    title: 'Sign Up',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
                 ],
               ),
             ],

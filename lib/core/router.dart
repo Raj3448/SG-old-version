@@ -15,9 +15,10 @@ final store = GetIt.I<OnboardingStore>();
 
 GoRouter appRouter() => GoRouter(
       debugLogDiagnostics: kDebugMode,
+      initialLocation: '/login',
       routes: <GoRoute>[
         GoRoute(
-          path: '/',
+          path: '/login',
           name: LoginPage.routeName,
           builder: (BuildContext context, GoRouterState state) {
             return Observer(
@@ -33,15 +34,28 @@ GoRouter appRouter() => GoRouter(
           path: '/main',
           name: MainScreen.routeName,
           builder: (BuildContext context, GoRouterState state) =>
-              const MainScreen(),
+              const LoginPage(),
+        ),
+        GoRoute(
+          path: '/loginEmail',
+          name: LoginPageEmail.routeName,
+          builder: (BuildContext context, GoRouterState state) =>
+              const LoginPageEmail(),
+        ),
+        GoRoute(
+          path: '/signup',
+          name: SignUpScreen.routeName,
+          builder: (BuildContext context, GoRouterState state) =>
+              const SignUpScreen(),
+        ),
+        GoRoute(
+          path: '/otp_screen',
+          name: OTPScreen.routeName,
+          builder: (BuildContext context, GoRouterState state) =>
+              const OTPScreen(),
         ),
       ],
       observers: [
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
       ],
-      /*refreshListenable: GoRouterRefreshStream(),
-      redirect: (state) {
-        String? redirectRoute;
-        return state.subloc == redirectRoute ? null : redirectRoute;
-      },*/
     );
