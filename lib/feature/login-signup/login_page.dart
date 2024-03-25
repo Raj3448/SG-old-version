@@ -5,7 +5,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   static String routeName = '/login';
@@ -48,12 +47,13 @@ class _LoginPageState extends State<LoginPage> {
                     size: ButtonSize.large,
                     type: ButtonType.tertiary,
                     expanded: false,
-                      ontap: () {
-                        GoRouter.of(context).go('/loginEmail');
-                      },
-                      title: 'Use email instead',
-                      showIcon: false,
-                      iconPath: Icons.not_interested),
+                    ontap: () {
+                      GoRouter.of(context).go('/loginEmail');
+                    },
+                    title: 'Use email instead',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
                   const SizedBox(height: Dimension.d4),
                   SizedBox(
                     width: double.infinity,
@@ -61,12 +61,13 @@ class _LoginPageState extends State<LoginPage> {
                       size: ButtonSize.normal,
                       type: ButtonType.primary,
                       expanded: true,
-                        ontap: () {
-                          GoRouter.of(context).go('/otp_screen');
-                        },
-                        title: 'Login',
-                        showIcon: false,
-                        iconPath: Icons.not_interested),
+                      ontap: () {
+                        GoRouter.of(context).go('/otp_screen');
+                      },
+                      title: 'Login',
+                      showIcon: false,
+                      iconPath: Icons.not_interested,
+                    ),
                   ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -78,19 +79,20 @@ class _LoginPageState extends State<LoginPage> {
                     "Don't have an account?",
                     style: AppTextStyle.bodyLargeMedium,
                   ),
-                  SizedBox(
-                    width:Dimension.d1
+                  const SizedBox(
+                    width: Dimension.d1,
                   ),
                   CustomButton(
                     size: ButtonSize.normal,
                     type: ButtonType.tertiary,
                     expanded: true,
-                      ontap: () {
-                        GoRouter.of(context).go('/signup');
-                      },
-                      title: 'Sign Up',
-                      showIcon: false,
-                      iconPath: Icons.not_interested)
+                    ontap: () {
+                      GoRouter.of(context).go('/signup');
+                    },
+                    title: 'Sign Up',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
                 ],
               ),
             ],

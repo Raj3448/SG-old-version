@@ -9,16 +9,17 @@ class CoachContact extends StatelessWidget {
   const CoachContact({
     required this.imgpath,
     required this.name,
-    super.key});
+    super.key,
+  });
 
-    final String imgpath;
-    final String name;
+  final String imgpath;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(Dimension.d3),
-      child: Row( 
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
@@ -27,31 +28,43 @@ class CoachContact extends StatelessWidget {
                 imgPath: imgpath,
                 maxRadius: 36,
               ),
-               const SizedBox(
-                              width: Dimension.d2,
-                            ),
+              const SizedBox(
+                width: Dimension.d2,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
-                    style:AppTextStyle.bodyLargeSemiBold),
+                    style: AppTextStyle.bodyLargeSemiBold,
+                  ),
                   const SizedBox(
                     height: Dimension.d1,
                   ),
-                  const Text('Health coach',style: AppTextStyle.bodyMediumMedium,)
-                ],),
+                  const Text(
+                    'Health coach',
+                    style: AppTextStyle.bodyMediumMedium,
+                  ),
+                ],
+              ),
             ],
           ),
           Row(
-                children: [
-                  const Icon(AppIcons.phone,color: AppColors.primary,),
-                  const SizedBox(
-                    width: Dimension.d1
-                  ),
-                  Text('Call',style:AppTextStyle.bodyLargeSemiBold.copyWith(color: AppColors.primary))
-                ],
+            children: [
+              const Icon(
+                AppIcons.phone,
+                color: AppColors.primary,
               ),
+              const SizedBox(
+                width: Dimension.d1,
+              ),
+              Text(
+                'Call',
+                style: AppTextStyle.bodyLargeSemiBold
+                    .copyWith(color: AppColors.primary),
+              ),
+            ],
+          ),
         ],
       ),
     );

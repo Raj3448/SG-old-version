@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';

@@ -3,9 +3,10 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+
 class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});
-  static String routeName  = "/otp_screen";
+  static String routeName = '/otp_screen';
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +59,11 @@ class OTPScreen extends StatelessWidget {
                   size: ButtonSize.normal,
                   type: ButtonType.primary,
                   expanded: true,
-                  ontap: (){},
+                  ontap: () {},
                   title: 'Continue',
                   showIcon: false,
-                  iconPath: Icons.not_interested,),
+                  iconPath: Icons.not_interested,
+                ),
               ),
               const SizedBox(height: Dimension.d6),
               Row(
@@ -72,16 +74,17 @@ class OTPScreen extends StatelessWidget {
                     style: AppTextStyle.bodyLargeMedium,
                   ),
                   const SizedBox(
-                    width:Dimension.d1,
+                    width: Dimension.d1,
                   ),
                   CustomButton(
                     size: ButtonSize.normal,
                     type: ButtonType.tertiary,
                     expanded: true,
-                    ontap: (){}, 
-                    title: "Resend",
-                     showIcon: false, 
-                     iconPath: Icons.not_interested,),
+                    ontap: () {},
+                    title: 'Resend',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                  ),
                 ],
               ),
             ],

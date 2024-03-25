@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation
 
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -6,8 +6,12 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/epr_card.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/members/screens/edit_member_details_screen.dart';
+import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
+import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
   const MemberDetailsScreen({
@@ -36,34 +40,74 @@ class MemberDetailsScreen extends StatelessWidget {
       appBar: const PageAppbar(title: 'Member Details'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: const _Button(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Basic details',
-              style: AppTextStyle.bodyXLMedium
-                  .copyWith(color: AppColors.grayscale900),
-            ),
-            const SizedBox(height: 16),
-            _BasicDetailsBox(
-              name: name,
-              age: age,
-              gender: gender,
-              relation: relation,
-              mobileNo: mobileNo,
-              address: address,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Health Records',
-              style: AppTextStyle.bodyXLMedium
-                  .copyWith(color: AppColors.grayscale900),
-            ),
-            const SizedBox(height: 16),
-            if (hasCareSub) Text("Hai") else Text("Nahi hai"),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Basic details',
+                style: AppTextStyle.bodyXLMedium
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+              const SizedBox(height: 16),
+              _BasicDetailsBox(
+                name: name,
+                age: age,
+                gender: gender,
+                relation: relation,
+                mobileNo: mobileNo,
+                address: address,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Health Records',
+                style: AppTextStyle.bodyXLMedium
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+              const SizedBox(height: 16),
+              if (hasCareSub)
+                Column(
+                  children: [
+                    HealthCard(
+                      isEpr: true,
+                      dateUpdated: '25/03/2024',
+                      ontap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EPRPHRViewScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    HealthCard(
+                      isEpr: false,
+                      dateUpdated: '25/03/2024',
+                      ontap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EPRPHRViewScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )
+              else
+                const Column(
+                  children: [
+                    SubscribeCard(),
+                    SizedBox(height: 16),
+                    PlanDetailsCard(),
+                    SizedBox(height: 55),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -143,7 +187,14 @@ class _BasicDetailsBox extends StatelessWidget {
               Text(name, style: AppTextStyle.bodyLargeMedium),
               const Spacer(),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditMemberScreen(),
+                    ),
+                  );
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),

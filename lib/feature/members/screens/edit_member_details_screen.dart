@@ -13,14 +13,14 @@ import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
-class AddFamilyMemberScreen extends StatelessWidget {
-  const AddFamilyMemberScreen({super.key});
+class EditMemberScreen extends StatelessWidget {
+  const EditMemberScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Add new family member'),
+      appBar: const PageAppbar(title: 'Member details'),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.fast,
@@ -174,7 +174,7 @@ class AddFamilyMemberScreen extends StatelessWidget {
                     },
                   );
                 },
-                title: 'Add new member',
+                title: 'Save details',
                 showIcon: false,
                 iconPath: AppIcons.add,
                 size: ButtonSize.normal,
