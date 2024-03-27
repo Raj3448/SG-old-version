@@ -1,50 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
-class EPRCard extends StatelessWidget {
-  const EPRCard({
+class HealthCard extends StatelessWidget {
+  const HealthCard({
+    required this.isEpr,
     required this.dateUpdated,
     required this.ontap,
-    super.key});
+    super.key,
+  });
 
+  final bool isEpr;
   final String dateUpdated;
   final VoidCallback ontap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Dimension.d3),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.line),
+      ),
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Emergency Patient record (EPR)',
+          Text(
+            isEpr
+                ? 'Emergency Patient Record (EPR)'
+                : 'Patient Health Record (PHR)',
             style: AppTextStyle.bodyLargeMedium,
           ),
-          const SizedBox(height: Dimension.d3,),
+          const SizedBox(
+            height: Dimension.d3,
+          ),
           Row(
             children: [
-              const Text('Last updated : ',
-              style:AppTextStyle.bodyMediumMedium),
-              const SizedBox(width:Dimension.d2),
+              Text(
+                'Last updated : ',
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(color: AppColors.grayscale600),
+              ),
+              const SizedBox(width: Dimension.d2),
               Text(
                 dateUpdated,
-                style: AppTextStyle.bodyMediumMedium,),
-              
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(color: AppColors.grayscale600),
+              ),
             ],
           ),
-          const SizedBox(height: Dimension.d3,),
+          const SizedBox(
+            height: Dimension.d3,
+          ),
           CustomButton(
-                ontap: ontap,
-                title: 'View EPR', 
-                showIcon: true, 
-                iconPath: AppIcons.add, 
-                size: ButtonSize.small, 
-                type: ButtonType.primary, 
-                expanded: false),
+            ontap: ontap,
+            title: isEpr ? 'View EPR' : 'View PHR',
+            showIcon: false,
+            iconPath: AppIcons.add,
+            size: ButtonSize.normal,
+            type: ButtonType.secondary,
+            expanded: false,
+          ),
         ],
       ),
     );

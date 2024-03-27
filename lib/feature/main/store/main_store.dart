@@ -8,18 +8,4 @@ class MainStore = _MainStoreBase with _$MainStore;
 abstract class _MainStoreBase with Store {
   @observable
   int currentIndex = 0;
-
-  @observable
-  bool isSelected = false;
-
-  @observable
-  bool isFetching = true;
-
-  @observable
-  bool dataAvailable = true;
-
-  @action
-  void disableFetching() {
-    isFetching = false;
-  }
 }

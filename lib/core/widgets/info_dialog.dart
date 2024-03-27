@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -30,7 +32,7 @@ class InfoDialog extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 24),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 25),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -47,19 +49,21 @@ class InfoDialog extends StatelessWidget {
             else
               const SizedBox(),
             Text(
-              title,
+              title.tr(),
               style: AppTextStyle.bodyXLBold.copyWith(height: 1.5),
             ),
             const SizedBox(height: 8),
             Text(
-              desc,
+              desc.tr(),
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyLargeMedium,
             ),
             const SizedBox(height: 30),
             CustomButton(
-              ontap: () {},
-              title: btnTitle,
+              ontap: () {
+                GoRouter.of(context).pop();
+              },
+              title: btnTitle.tr(),
               showIcon: showBtnIcon,
               iconPath: btnIconPath,
               size: ButtonSize.normal,

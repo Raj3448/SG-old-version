@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -11,34 +12,60 @@ class TextLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      title,
-      style: AppTextStyle.bodyMediumMedium,
+      title.tr(),
+      style:
+          AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.grayscale700),
     );
   }
 }
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({
+  const CustomTextField({
     required this.hintText,
     required this.keyboardType,
+    required this.large,
     super.key,
   });
 
   final String hintText;
   final TextInputType keyboardType;
+  final bool large;
+
   @override
   Widget build(BuildContext context) {
     return TextField(
       keyboardType: keyboardType,
+      style:
+          AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.grayscale900),
+      maxLines: 8,
+      minLines: large ? 5 : 1,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: hintText.tr(),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        hintMaxLines: 5,
         hintStyle: AppTextStyle.bodyLargeMedium,
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(Dimension.d2),
-            borderSide: const BorderSide(
-              color: AppColors.grayscale200,
-              width: 1.0,
-            )),
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.grayscale200,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.line,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.primary,
+            width: 2,
+          ),
+        ),
       ),
     );
   }
@@ -58,7 +85,18 @@ class CustomPhoneField extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimension.d2),
           borderSide: const BorderSide(
             color: AppColors.grayscale200,
-            width: 1.0,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.line,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.primary,
           ),
         ),
         prefixIcon: SizedBox(

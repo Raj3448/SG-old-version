@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -7,7 +8,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
-import 'package:silver_genie/feature/profile/screens/members_screen.dart';
+import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/services/services_screen.dart';
 
 class MainScreen extends StatelessWidget {
@@ -60,22 +61,22 @@ class MainScreen extends StatelessWidget {
                 onTap: (value) {
                   store.currentIndex = value;
                 },
-                items: const <BottomNavigationBarItem>[
+                items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    label: 'Home',
-                    icon: Icon(AppIcons.home),
+                    label: 'Home'.tr(),
+                    icon: const Icon(AppIcons.home),
                   ),
                   BottomNavigationBarItem(
-                    label: 'Services',
-                    icon: Icon(AppIcons.medical_services),
+                    label: 'Services'.tr(),
+                    icon: const Icon(AppIcons.medical_services),
                   ),
                   BottomNavigationBarItem(
-                    label: 'Booking',
-                    icon: Icon(AppIcons.calendar),
+                    label: 'Booking'.tr(),
+                    icon: const Icon(AppIcons.calendar),
                   ),
                   BottomNavigationBarItem(
-                    label: 'Members',
-                    icon: Icon(AppIcons.family),
+                    label: 'Members'.tr(),
+                    icon: const Icon(AppIcons.family),
                   ),
                 ],
               ),

@@ -7,7 +7,6 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 
 class LoginPageEmail extends StatefulWidget {
   const LoginPageEmail({super.key});
-  static String routeName = '/loginEmail';
 
   @override
   State<LoginPageEmail> createState() => _LoginPageEmailState();
@@ -37,9 +36,10 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                 children: [
                   const TextLabel(title: 'Enter email'),
                   const SizedBox(height: Dimension.d2),
-                  CustomTextField(
+                  const CustomTextField(
                     hintText: 'Enter e-mail',
                     keyboardType: TextInputType.emailAddress,
+                    large: false,
                   ),
                   const SizedBox(height: Dimension.d4),
                   CustomButton(
@@ -78,8 +78,8 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                     "Don't have an account?",
                     style: AppTextStyle.bodyLargeMedium,
                   ),
-                  SizedBox(
-                    width:Dimension.d1,
+                  const SizedBox(
+                    width: Dimension.d1,
                   ),
                   CustomButton(
                     size: ButtonSize.normal,

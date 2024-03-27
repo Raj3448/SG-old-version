@@ -13,12 +13,13 @@ class ProfileNav extends StatelessWidget {
     return Container(
       height: Dimension.d12,
       decoration: const BoxDecoration(
-          color: AppColors.grayscale100,
-          border: Border(
-              bottom: BorderSide(
+        color: AppColors.grayscale100,
+        border: Border(
+          bottom: BorderSide(
             color: AppColors.grayscale300,
-            width: 1.0,
-          ))),
+          ),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(Dimension.d3),
         child: Row(

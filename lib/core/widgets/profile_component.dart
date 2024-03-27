@@ -8,24 +8,32 @@ class CustomTextIcon extends StatelessWidget {
   const CustomTextIcon({
     required this.iconpath,
     required this.title,
-    super.key});
+    super.key,
+  });
 
-    final IconData iconpath;
-    final String title;
+  final IconData iconpath;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-      Icon(iconpath,),
-      const SizedBox(
-        width: Dimension.d3,
-      ),
-      Text(title,style: AppTextStyle.bodyLargeMedium,)
-    ],);
+        Icon(
+          iconpath,
+        ),
+        const SizedBox(
+          width: Dimension.d3,
+        ),
+        Text(
+          title,
+          style: AppTextStyle.bodyLargeMedium,
+        ),
+      ],
+    );
   }
 }
+
 class ProfileComponent extends StatelessWidget {
   const ProfileComponent({
     required this.imgPath,
@@ -33,13 +41,14 @@ class ProfileComponent extends StatelessWidget {
     required this.age,
     required this.phone,
     required this.address,
-    super.key});
+    super.key,
+  });
 
-    final String name;
-    final String age;
-    final String phone;
-    final String address;
-    final String imgPath;
+  final String name;
+  final String age;
+  final String phone;
+  final String address;
+  final String imgPath;
 
   @override
   Widget build(BuildContext context) {
@@ -48,35 +57,51 @@ class ProfileComponent extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            children:  [
-              Avatar(imgPath: imgPath, maxRadius: 56,),
-              const SizedBox(width: Dimension.d2,),
+            children: [
+              Avatar(imgPath: imgPath, maxRadius: 56),
+              const SizedBox(
+                width: Dimension.d2,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name
-                  ,style: AppTextStyle.bodyXLSemiBold,),
+                  Text(
+                    name,
+                    style: AppTextStyle.bodyXLSemiBold,
+                  ),
                   const SizedBox(
                     height: Dimension.d2,
                   ),
-                  Row(children: [
-                    const Text("Age :",style: AppTextStyle.bodyMediumMedium,),  
-                    const SizedBox(width: Dimension.d2,),
-                    Text(age,style: AppTextStyle.bodyMediumMedium,)
-                  ],),
+                  Row(
+                    children: [
+                      const Text(
+                        'Age :',
+                        style: AppTextStyle.bodyMediumMedium,
+                      ),
+                      const SizedBox(
+                        width: Dimension.d2,
+                      ),
+                      Text(
+                        age,
+                        style: AppTextStyle.bodyMediumMedium,
+                      ),
+                    ],
+                  ),
                 ],
-              )
+              ),
             ],
           ),
           CustomTextIcon(
             iconpath: AppIcons.phone,
-             title: phone),
+            title: phone,
+          ),
           const SizedBox(
             height: Dimension.d2,
           ),
           CustomTextIcon(
             iconpath: AppIcons.home,
-             title: address),
+            title: address,
+          ),
         ],
       ),
     );
