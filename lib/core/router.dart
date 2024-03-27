@@ -29,7 +29,7 @@ GoRouter appRouter() => GoRouter(
               builder: (context) {
                 return store.showOnboarding
                     ? const OnboardingScreen()
-                    : const OTPScreen();
+                    : const MainScreen();
               },
             );
           },
