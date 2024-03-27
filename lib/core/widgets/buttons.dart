@@ -1,5 +1,6 @@
 // ignore_for_file: no_default_cases
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -43,7 +44,7 @@ class CustomButton extends StatelessWidget {
       return GestureDetector(
         onTap: ontap,
         child: Text(
-          title,
+          title.tr(),
           style: _getTextStyle(),
         ),
       );
@@ -67,11 +68,10 @@ class CustomButton extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(iconPath, color:AppColors.white),
+                        Icon(iconPath, color: AppColors.white),
                         const SizedBox(width: 5),
                         Text(
-                          // title.tr(),
-                          title,
+                          title.tr(),
                           style: _getTextStyle(),
                         ),
                       ],
@@ -87,8 +87,7 @@ class CustomButton extends StatelessWidget {
                       ),
                       const SizedBox(width: 7.5),
                       Text(
-                        // title.tr(),
-                        title,
+                        title.tr(),
                         style: _getTextStyle(),
                       ),
                     ],
@@ -96,14 +95,12 @@ class CustomButton extends StatelessWidget {
             : expanded
                 ? Center(
                     child: Text(
-                      // title.tr(),
-                      title,
+                      title.tr(),
                       style: _getTextStyle(),
                     ),
                   )
                 : Text(
-                    // title.tr(),
-                    title,
+                    title.tr(),
                     style: _getTextStyle(),
                   ),
       );

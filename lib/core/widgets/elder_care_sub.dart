@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -56,7 +57,7 @@ class ElderCareSubscription extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             Text(
-              title,
+              'Elder care subscription'.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: _getIconColor()),
             ),

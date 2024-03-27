@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -12,7 +13,6 @@ import 'package:silver_genie/feature/services/services_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
-  static String routeName = 'main';
 
   @override
   Widget build(BuildContext context) {
@@ -61,26 +61,22 @@ class MainScreen extends StatelessWidget {
                 onTap: (value) {
                   store.currentIndex = value;
                 },
-                items: const <BottomNavigationBarItem>[
+                items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    // label: 'Home'.tr(),
-                    label: 'Home',
-                    icon: Icon(AppIcons.home),
+                    label: 'Home'.tr(),
+                    icon: const Icon(AppIcons.home),
                   ),
                   BottomNavigationBarItem(
-                    // label: 'Services'.tr(),
-                    label: 'Services',
-                    icon: Icon(AppIcons.medical_services),
+                    label: 'Services'.tr(),
+                    icon: const Icon(AppIcons.medical_services),
                   ),
                   BottomNavigationBarItem(
-                    // label: 'Booking'.tr(),
-                    label: 'Booking',
-                    icon: Icon(AppIcons.calendar),
+                    label: 'Booking'.tr(),
+                    icon: const Icon(AppIcons.calendar),
                   ),
                   BottomNavigationBarItem(
-                    // label: 'Members'.tr(),
-                    label: 'Members',
-                    icon: Icon(AppIcons.family),
+                    label: 'Members'.tr(),
+                    icon: const Icon(AppIcons.family),
                   ),
                 ],
               ),

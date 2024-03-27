@@ -5,7 +5,6 @@ import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
-import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 
 class HomeScreen extends StatelessWidget {

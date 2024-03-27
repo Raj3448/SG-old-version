@@ -7,7 +7,6 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 
 class LoginPageEmail extends StatefulWidget {
   const LoginPageEmail({super.key});
-  static String routeName = '/loginEmail';
 
   @override
   State<LoginPageEmail> createState() => _LoginPageEmailState();

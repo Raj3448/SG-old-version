@@ -129,7 +129,6 @@ class _BenefitTile extends StatelessWidget {
           child: Text(
             text,
             softWrap: true,
-            // overflow: TextOverflow.ellipsis,
             style: AppTextStyle.bodyMediumMedium.copyWith(
               color: AppColors.grayscale800,
             ),

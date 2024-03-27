@@ -1,4 +1,21 @@
 {
-    "home": "Home",
-    "search": "Search"
+    "Hi": "Hi, {} !",
+    "Home": "Home",
+    "Services": "Services",
+    "Booking": "Booking",
+    "Members": "Members",
+    "Relationship: ": "Relationship: ",
+    "Father": "Father",
+    "Mother": "Mother",
+    "Brother": "Brother",
+    "Sister": "Sister",
+    "Wife": "Wife",
+    "Self": "Self",
+    "How do you feel today?": "How do you feel today?",
+    "Your Family Members": "Your Family Members",
+    "Add new member": "Add new member",
+    "Add new family member": "Add new family member",
+    "Continue": "Continue",
+    "Login": "Login",
+    "Get Started": "Get Started"
 }

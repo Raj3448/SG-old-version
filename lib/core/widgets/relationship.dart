@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -11,14 +12,12 @@ class Relationship extends StatelessWidget {
     return Row(
       children: [
         Text(
-          // 'Relationship: '.tr(),
-          'Relationship : ',
+          'Relationship: '.tr(),
           style: AppTextStyle.bodyMediumMedium
               .copyWith(color: AppColors.grayscale700),
         ),
         Text(
-          // relation.tr(),
-          relation,
+          relation.tr(),
           style: AppTextStyle.bodyMediumMedium
               .copyWith(color: AppColors.grayscale700),
         ),
