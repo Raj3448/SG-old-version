@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
@@ -41,6 +42,8 @@ class OTPScreen extends StatelessWidget {
                 appContext: context,
                 length: 4,
                 keyboardType: TextInputType.number,
+                cursorWidth: 2,
+                cursorColor: AppColors.black,
                 onChanged: (value) {
                   // Handle OTP changes
                 },
@@ -52,9 +55,11 @@ class OTPScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                   fieldHeight: 56,
                   fieldWidth: 56,
-                  activeColor: Colors.blue,
-                  inactiveColor: Colors.grey,
-                  selectedColor: Colors.black,
+                  activeColor: AppColors.primary,
+                  inactiveColor: AppColors.line,
+                  selectedColor:AppColors.primary,
+                  activeFillColor: AppColors.grayscale900,
+                  selectedFillColor: AppColors.secondary,
                 ),
               ),
               const SizedBox(height: Dimension.d4),

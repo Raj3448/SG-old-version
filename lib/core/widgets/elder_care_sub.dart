@@ -5,12 +5,18 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 
-enum ElderCareColor { blue, green }
+enum ElderCareColor { blue, green, grey }
 
 class ElderCareSubscription extends StatelessWidget {
-  const ElderCareSubscription({required this.color, super.key});
+  const ElderCareSubscription({
+    required this.color,
+    required this.title,
+    required this.showIcon, 
+    super.key});
 
   final ElderCareColor color;
+  final String title;
+  final bool showIcon;
 
   Color _getIconColor() {
     switch (color) {
@@ -18,6 +24,8 @@ class ElderCareSubscription extends StatelessWidget {
         return AppColors.primary;
       case ElderCareColor.green:
         return AppColors.success;
+      case ElderCareColor.grey:
+        return AppColors.grayscale600;
     }
   }
 
@@ -27,6 +35,8 @@ class ElderCareSubscription extends StatelessWidget {
         return AppColors.secondary;
       case ElderCareColor.green:
         return const Color(0xFFE6F9F0);
+      case ElderCareColor.grey:
+        return AppColors.grayscale200;
     }
   }
 
@@ -52,11 +62,11 @@ class ElderCareSubscription extends StatelessWidget {
                   .copyWith(color: _getIconColor()),
             ),
             const SizedBox(width: 5),
-            Icon(
+            showIcon?Icon(
               AppIcons.check,
               size: 12,
               color: _getIconColor(),
-            ),
+            ):SizedBox(),
             const SizedBox(width: 5),
           ],
         ),
