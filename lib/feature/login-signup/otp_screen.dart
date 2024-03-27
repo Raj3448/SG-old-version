@@ -1,12 +1,16 @@
+// ignore_for_file: lines_longer_than_80_chars
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});
-  static String routeName = '/otp_screen';
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +25,14 @@ class OTPScreen extends StatelessWidget {
                 height: 240,
                 child: Image.asset('assets/splash/sg_logo.png'),
               ),
-              const Text(
-                'Verify OTP',
+              Text(
+                'Verify OTP'.tr(),
                 style: AppTextStyle.heading4SemiBold,
               ),
               const SizedBox(height: Dimension.d6),
-              const Text(
-                'We have just sent you 4 digit code to your email and phone number',
+              Text(
+                'We have just sent you 4 digit code to your email and phone number'
+                    .tr(),
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodyMediumMedium,
               ),
@@ -59,8 +64,10 @@ class OTPScreen extends StatelessWidget {
                   size: ButtonSize.normal,
                   type: ButtonType.primary,
                   expanded: true,
-                  ontap: () {},
-                  title: 'Continue',
+                  ontap: () {
+                    GoRouter.of(context).push(RoutesConstants.mainRoute);
+                  },
+                  title: 'Continue'.tr(),
                   showIcon: false,
                   iconPath: Icons.not_interested,
                 ),
@@ -69,8 +76,8 @@ class OTPScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Didn't receive OTP?",
+                  Text(
+                    "Didn't receive OTP?".tr(),
                     style: AppTextStyle.bodyLargeMedium,
                   ),
                   const SizedBox(
@@ -81,7 +88,7 @@ class OTPScreen extends StatelessWidget {
                     type: ButtonType.tertiary,
                     expanded: true,
                     ontap: () {},
-                    title: 'Resend',
+                    title: 'Resend'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
                   ),

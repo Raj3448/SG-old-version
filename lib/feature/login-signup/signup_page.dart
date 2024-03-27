@@ -1,13 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
-  static String routeName = '/signup';
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -26,34 +27,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 240,
                 child: Image.asset('assets/splash/sg_logo.png'),
               ),
-              const Text(
-                'Sign Up',
+              Text(
+                'Sign Up'.tr(),
                 style: AppTextStyle.heading4SemiBold,
               ),
               const SizedBox(height: Dimension.d6),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextLabel(title: 'Enter Full Name'),
+                  TextLabel(title: 'Enter Full Name'.tr()),
                   const SizedBox(height: Dimension.d2),
-                  const CustomTextField(
-                    hintText: 'Enter Name',
+                  CustomTextField(
+                    hintText: 'Enter Name'.tr(),
                     keyboardType: TextInputType.name,
                     large: false,
                   ),
                   const SizedBox(height: Dimension.d4),
-                  const TextLabel(title: 'Enter Email'),
+                  TextLabel(title: 'Enter Email'.tr()),
                   const SizedBox(height: Dimension.d2),
-                  const CustomTextField(
-                    hintText: 'Enter E-mail',
+                  CustomTextField(
+                    hintText: 'Enter E-mail'.tr(),
                     keyboardType: TextInputType.emailAddress,
                     large: false,
                   ),
                   const SizedBox(height: Dimension.d4),
-                  const TextLabel(title: 'Mobile Number'),
+                  TextLabel(title: 'Mobile Number'.tr()),
                   const SizedBox(height: Dimension.d2),
-                  const CustomPhoneField(
-                    title: 'Enter Mobile Number',
+                  CustomPhoneField(
+                    title: 'Enter Mobile Number'.tr(),
                   ),
                   const SizedBox(height: Dimension.d4),
                   SizedBox(
@@ -63,9 +64,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       type: ButtonType.primary,
                       expanded: true,
                       ontap: () {
-                        GoRouter.of(context).go('/otp_screen');
+                        GoRouter.of(context).push(RoutesConstants.otpRoute);
                       },
-                      title: 'Sign Up',
+                      title: 'Sign Up'.tr(),
                       showIcon: false,
                       iconPath: Icons.not_interested,
                     ),
@@ -76,8 +77,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Already have an account?',
+                  Text(
+                    'Already have an account?'.tr(),
                     style: AppTextStyle.bodyLargeMedium,
                   ),
                   const SizedBox(
@@ -88,9 +89,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     type: ButtonType.tertiary,
                     expanded: true,
                     ontap: () {
-                      GoRouter.of(context).go('/login');
+                      GoRouter.of(context).go(RoutesConstants.loginRoute);
                     },
-                    title: 'Login',
+                    title: 'Login'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
                   ),

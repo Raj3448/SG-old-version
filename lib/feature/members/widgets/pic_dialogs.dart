@@ -1,5 +1,6 @@
 // ignore_for_file: inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -61,8 +62,8 @@ class ChangePicDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Change your picture',
+            Text(
+              'Change your picture'.tr(),
               style: AppTextStyle.bodyXLBold,
             ),
             const SizedBox(height: 16),

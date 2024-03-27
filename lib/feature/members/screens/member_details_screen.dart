@@ -1,16 +1,18 @@
 // ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/epr_card.dart';
+import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/members/screens/edit_member_details_screen.dart';
-import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
@@ -37,17 +39,42 @@ class MemberDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Member Details'),
+      appBar: const PageAppbar(title: 'Member details'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const _Button(),
+      floatingActionButton: hasCareSub
+          ? FixedButton(
+              ontap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const InfoDialog(
+                      showIcon: false,
+                      title: 'Hi there!!',
+                      desc:
+                          'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                      btnTitle: 'Contact Genie',
+                      showBtnIcon: true,
+                      btnIconPath: AppIcons.phone,
+                    );
+                  },
+                );
+              },
+              btnTitle: 'Update health record',
+              showIcon: false,
+              iconPath: AppIcons.clinical_notes,
+            )
+          : null,
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+          decelerationRate: ScrollDecelerationRate.fast,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Basic details',
+                'Basic details'.tr(),
                 style: AppTextStyle.bodyXLMedium
                     .copyWith(color: AppColors.grayscale900),
               ),
@@ -74,12 +101,7 @@ class MemberDetailsScreen extends StatelessWidget {
                       isEpr: true,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EPRPHRViewScreen(),
-                          ),
-                        );
+                        GoRouter.of(context).push(RoutesConstants.eprPhrRoute);
                       },
                     ),
                     const SizedBox(height: 16),
@@ -87,14 +109,10 @@ class MemberDetailsScreen extends StatelessWidget {
                       isEpr: false,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EPRPHRViewScreen(),
-                          ),
-                        );
+                        GoRouter.of(context).push(RoutesConstants.eprPhrRoute);
                       },
                     ),
+                    const SizedBox(height: Dimension.d17),
                   ],
                 )
               else
@@ -103,52 +121,12 @@ class MemberDetailsScreen extends StatelessWidget {
                     SubscribeCard(),
                     SizedBox(height: 16),
                     PlanDetailsCard(),
-                    SizedBox(height: 55),
+                    SizedBox(height: 16),
                   ],
                 ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _Button extends StatelessWidget {
-  const _Button();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomButton(
-            ontap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const InfoDialog(
-                    showIcon: false,
-                    title: 'Hi there!!',
-                    desc:
-                        'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                    btnTitle: 'Contact Genie',
-                    showBtnIcon: true,
-                    btnIconPath: AppIcons.phone,
-                  );
-                },
-              );
-            },
-            title: 'Update health record',
-            showIcon: false,
-            iconPath: AppIcons.check,
-            size: ButtonSize.normal,
-            type: ButtonType.primary,
-            expanded: true,
-          ),
-        ],
       ),
     );
   }
@@ -188,11 +166,9 @@ class _BasicDetailsBox extends StatelessWidget {
               const Spacer(),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EditMemberScreen(),
-                    ),
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.addEditFamilyMemberRoute,
+                    pathParameters: {'edit': 'true'},
                   );
                 },
                 child: Container(
@@ -203,7 +179,7 @@ class _BasicDetailsBox extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
                   child: Text(
-                    'Edit',
+                    'Edit'.tr(),
                     style: AppTextStyle.bodyMediumMedium
                         .copyWith(color: AppColors.primary),
                   ),
@@ -212,7 +188,6 @@ class _BasicDetailsBox extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // const Relationship(relation: 'Father'),
           _Field(
             age: age,
             gender: gender,
@@ -250,31 +225,31 @@ class _Field extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Age',
+              'Age'.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale600),
             ),
             const SizedBox(height: 7),
             Text(
-              'Gender',
+              'Gender'.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale600),
             ),
             const SizedBox(height: 7),
             Text(
-              'Relationship',
+              'Relationship'.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale600),
             ),
             const SizedBox(height: 7),
             Text(
-              'Mobile number',
+              'Mobile number'.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale600),
             ),
             const SizedBox(height: 7),
             Text(
-              'Address',
+              'Address'.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale600),
             ),
@@ -310,7 +285,7 @@ class _Field extends StatelessWidget {
             ),
             const SizedBox(height: 7),
             SizedBox(
-              width: 230,
+              width: 220,
               child: Text(
                 ': $address',
                 style: AppTextStyle.bodyMediumMedium

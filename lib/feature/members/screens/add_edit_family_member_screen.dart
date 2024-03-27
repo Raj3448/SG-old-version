@@ -1,26 +1,64 @@
 // ignore_for_file: deprecated_member_use, inference_failure_on_function_invocation, lines_longer_than_80_chars, strict_raw_type
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
-class AddFamilyMemberScreen extends StatelessWidget {
-  const AddFamilyMemberScreen({super.key});
+class AddEditFamilyMemberScreen extends StatelessWidget {
+  const AddEditFamilyMemberScreen({required this.edit, super.key});
+
+  final bool edit;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Add new family member'),
+      appBar: PageAppbar(
+        title: edit ? 'Member details'.tr() : 'Add new family member'.tr(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: edit
+          ? FixedButton(
+              ontap: () {
+                GoRouter.of(context).pop();
+              },
+              btnTitle: 'Save details',
+              showIcon: false,
+              iconPath: AppIcons.check,
+            )
+          : FixedButton(
+              ontap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const InfoDialog(
+                      showIcon: true,
+                      title: 'New family member added',
+                      desc:
+                          'New family member successfully\nadded to the Health profile.',
+                      btnTitle: 'Continue',
+                      showBtnIcon: false,
+                      btnIconPath: AppIcons.check,
+                    );
+                  },
+                );
+              },
+              btnTitle: 'Add new member',
+              showIcon: false,
+              iconPath: AppIcons.check,
+            ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.fast,
@@ -42,11 +80,11 @@ class AddFamilyMemberScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const AsteriskLabel(label: 'Gender'),
               const SizedBox(height: 8),
-              const MultiDropdown(
+              MultiDropdown(
                 values: [
-                  ValueItem(label: 'Male', value: 'Male'),
-                  ValueItem(label: 'Female', value: 'Female'),
-                  ValueItem(label: 'Other', value: 'MaOtherle'),
+                  ValueItem(label: 'Male'.tr(), value: 'Male'),
+                  ValueItem(label: 'Female'.tr(), value: 'Female'),
+                  ValueItem(label: 'Other'.tr(), value: 'MaOtherle'),
                 ],
               ),
               const SizedBox(height: 16),
@@ -73,7 +111,7 @@ class AddFamilyMemberScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        'Select',
+                        'Select'.tr(),
                         style: AppTextStyle.bodyLargeMedium
                             .copyWith(color: AppColors.grayscale700),
                       ),
@@ -90,21 +128,21 @@ class AddFamilyMemberScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const AsteriskLabel(label: 'Relation'),
               const SizedBox(height: 8),
-              const MultiDropdown(
+              MultiDropdown(
                 values: [
-                  ValueItem(label: 'Father', value: 'Father'),
-                  ValueItem(label: 'Mother', value: 'Mother'),
-                  ValueItem(label: 'Sister', value: 'Sister'),
-                  ValueItem(label: 'Daughter', value: 'Daughter'),
-                  ValueItem(label: 'Wife', value: 'Wife'),
-                  ValueItem(label: 'Self', value: 'Self'),
+                  ValueItem(label: 'Father'.tr(), value: 'Father'),
+                  ValueItem(label: 'Mother'.tr(), value: 'Mother'),
+                  ValueItem(label: 'Sister'.tr(), value: 'Sister'),
+                  ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
+                  ValueItem(label: 'Wife'.tr(), value: 'Wife'),
+                  ValueItem(label: 'Self'.tr(), value: 'Self'),
                 ],
               ),
               const SizedBox(height: 16),
               const AsteriskLabel(label: 'Mobile number'),
               const SizedBox(height: 8),
               const CustomTextField(
-                hintText: 'Type here...',
+                hintText: 'Enter mobile number',
                 keyboardType: TextInputType.number,
                 large: false,
               ),
@@ -112,7 +150,7 @@ class AddFamilyMemberScreen extends StatelessWidget {
               const TextLabel(title: 'Member address'),
               const SizedBox(height: 8),
               const CustomTextField(
-                hintText: 'Type here...',
+                hintText: 'Enter address',
                 keyboardType: TextInputType.streetAddress,
                 large: true,
               ),
@@ -144,7 +182,7 @@ class AddFamilyMemberScreen extends StatelessWidget {
               const TextLabel(title: 'Postal code'),
               const SizedBox(height: 8),
               const CustomTextField(
-                hintText: 'Type here...',
+                hintText: 'Enter postal code',
                 keyboardType: TextInputType.number,
                 large: false,
               ),
@@ -152,36 +190,11 @@ class AddFamilyMemberScreen extends StatelessWidget {
               const AsteriskLabel(label: 'Email ID'),
               const SizedBox(height: 8),
               const CustomTextField(
-                hintText: 'Type here...',
+                hintText: 'Enter email address',
                 keyboardType: TextInputType.emailAddress,
                 large: false,
               ),
-              const SizedBox(height: 24),
-              CustomButton(
-                ontap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const InfoDialog(
-                        showIcon: true,
-                        title: 'New family member added',
-                        desc:
-                            'New Family member successfully\nadded to the Health profile.',
-                        btnTitle: 'Continue',
-                        showBtnIcon: false,
-                        btnIconPath: AppIcons.add,
-                      );
-                    },
-                  );
-                },
-                title: 'Add new member',
-                showIcon: false,
-                iconPath: AppIcons.add,
-                size: ButtonSize.normal,
-                type: ButtonType.primary,
-                expanded: true,
-              ),
-              const SizedBox(height: 50),
+              const SizedBox(height: Dimension.d20),
             ],
           ),
         ),

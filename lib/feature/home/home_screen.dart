@@ -13,7 +13,6 @@ class HomeScreen extends StatelessWidget {
         child: Text(
           'Home Screen',
           style: AppTextStyle.heading3Bold,
-          // ).tr(),
         ),
       ),
     );

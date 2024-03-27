@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -11,7 +12,7 @@ class TextLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      title,
+      title.tr(),
       style:
           AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.grayscale700),
     );
@@ -39,7 +40,7 @@ class CustomTextField extends StatelessWidget {
       maxLines: 8,
       minLines: large ? 5 : 1,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: hintText.tr(),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,

@@ -24,10 +24,7 @@ class CoachContact extends StatelessWidget {
         children: [
           Row(
             children: [
-              Avatar(
-                imgPath: imgpath,
-                maxRadius: 36,
-              ),
+              Avatar(imgPath: imgpath, maxRadius: 36),
               const SizedBox(
                 width: Dimension.d2,
               ),

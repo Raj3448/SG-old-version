@@ -58,10 +58,7 @@ class ProfileComponent extends StatelessWidget {
         children: [
           Row(
             children: [
-              Avatar(
-                imgPath: imgPath,
-                maxRadius: 56,
-              ),
+              Avatar(imgPath: imgPath, maxRadius: 56),
               const SizedBox(
                 width: Dimension.d2,
               ),

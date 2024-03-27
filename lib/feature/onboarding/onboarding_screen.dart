@@ -1,13 +1,13 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -60,44 +60,45 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       floatingActionButton: const _Button(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 490,
-            child: PageView(
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.8,
+              child: PageView(
+                controller: pageController,
+                children: const [
+                  _PageView(
+                    imgPath: 'assets/onboarding/img1.png',
+                    desc:
+                        'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
+                  ),
+                  _PageView(
+                    imgPath: 'assets/onboarding/img2.png',
+                    desc:
+                        'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
+                  ),
+                  _PageView(
+                    imgPath: 'assets/onboarding/img3.png',
+                    desc:
+                        'Instant access to emergency services, ensuring peace of mind for your loved ones.',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            SmoothPageIndicator(
               controller: pageController,
-              children: const [
-                _PageView(
-                  imgPath: 'assets/onboarding/img1.png',
-                  desc:
-                      'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
-                ),
-                _PageView(
-                  imgPath: 'assets/onboarding/img2.png',
-                  desc:
-                      'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
-                ),
-                _PageView(
-                  imgPath: 'assets/onboarding/img3.png',
-                  desc:
-                      'Instant access to emergency services, ensuring peace of mind for your loved ones.',
-                ),
-              ],
+              count: 3,
+              effect: const ExpandingDotsEffect(
+                activeDotColor: AppColors.primary,
+                dotColor: AppColors.grayscale300,
+                dotHeight: 8,
+                dotWidth: 8,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          SmoothPageIndicator(
-            controller: pageController,
-            count: 3,
-            effect: const ExpandingDotsEffect(
-              activeDotColor: AppColors.primary,
-              dotColor: AppColors.grayscale300,
-              dotHeight: 8,
-              dotWidth: 8,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -113,9 +114,15 @@ class _PageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          imgPath,
-          scale: 0.85,
+        Container(
+          height: MediaQuery.sizeOf(context).height * 0.65,
+          decoration: const BoxDecoration(
+            color: AppColors.secondary,
+          ),
+          child: Image.asset(
+            imgPath,
+            scale: 0.85,
+          ),
         ),
         const SizedBox(height: 20),
         Padding(
@@ -145,14 +152,9 @@ class _Button extends StatelessWidget {
         children: [
           CustomButton(
             ontap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const MainScreen(),
-                ),
-              );
               store.setOnboardingStatus(false);
             },
-            title: 'Get Started',
+            title: 'Get Started'.tr(),
             showIcon: false,
             iconPath: AppIcons.add,
             size: ButtonSize.normal,
