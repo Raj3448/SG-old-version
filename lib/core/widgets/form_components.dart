@@ -23,16 +23,19 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     required this.keyboardType,
     required this.large,
+    required this.enabled,
     super.key,
   });
 
   final String hintText;
   final TextInputType keyboardType;
   final bool large;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enabled: enabled,
       keyboardType: keyboardType,
       style:
           AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.grayscale900),
@@ -77,6 +80,7 @@ class CustomPhoneField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: 'Enter mobile number',
         hintStyle: AppTextStyle.bodyLargeMedium.copyWith(height: 1.5),

@@ -41,6 +41,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                     hintText: 'Enter e-mail',
                     keyboardType: TextInputType.emailAddress,
                     large: false,
+                    enabled: true,
                   ),
                   const SizedBox(height: Dimension.d4),
                   CustomButton(

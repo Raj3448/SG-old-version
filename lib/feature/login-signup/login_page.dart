@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -12,6 +14,7 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+
 
 class _LoginPageState extends State<LoginPage> {
   @override
@@ -32,23 +35,24 @@ class _LoginPageState extends State<LoginPage> {
                 style: AppTextStyle.heading4SemiBold,
               ),
               const SizedBox(height: Dimension.d6),
-              Column(
+              Observer(builder: (context){
+                return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const TextLabel(
                     title: 'Mobile Number',
                   ),
                   const SizedBox(height: Dimension.d2),
-                  const CustomPhoneField(
+                   CustomPhoneField(
                     title: 'Enter Mobile Number',
-                  ),
+                  ) ,
                   const SizedBox(height: Dimension.d4),
                   CustomButton(
                     size: ButtonSize.large,
                     type: ButtonType.tertiary,
                     expanded: false,
                     ontap: () {
-                      GoRouter.of(context).go('/loginEmail');
+                      
                     },
                     title: 'Use email instead',
                     showIcon: false,
@@ -71,7 +75,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: Dimension.d6),
                 ],
-              ),
+              );
+              }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 
 enum AvatarSize {
   size24,
@@ -42,6 +43,49 @@ class Avatar extends StatelessWidget {
       maxRadius: maxRadius,
       backgroundImage: const AssetImage('assets/icon/headshot.png'),
       // backgroundImage: NetworkImage(imgPath),
+    );
+  }
+}
+
+class SelectableAvatar extends Avatar {
+  final bool isSelected;
+  final VoidCallback ontap;
+
+  const SelectableAvatar({
+    required String imgPath,
+    required double maxRadius,
+    required this.isSelected,
+    required this.ontap,
+    Key? key,
+  }) : super(imgPath: imgPath, maxRadius: maxRadius, key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: ontap,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: isSelected
+              ? Border.all(color: AppColors.primary, width: 2)
+              : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.7),
+                    blurRadius: 8,
+                    spreadRadius: 0,
+                    offset: Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: CircleAvatar(
+          maxRadius: maxRadius,
+          backgroundImage: const AssetImage('assets/icon/headshot.png'),
+          // backgroundImage: NetworkImage(imgPath),
+        ),
+      ),
     );
   }
 }

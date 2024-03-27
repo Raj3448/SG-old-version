@@ -17,55 +17,64 @@ class CoachContact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Dimension.d3),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Avatar(
-                imgPath: imgpath,
-                maxRadius: 36,
-              ),
-              const SizedBox(
-                width: Dimension.d2,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: AppTextStyle.bodyLargeSemiBold,
-                  ),
-                  const SizedBox(
-                    height: Dimension.d1,
-                  ),
-                  const Text(
-                    'Health coach',
-                    style: AppTextStyle.bodyMediumMedium,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Icon(
-                AppIcons.phone,
-                color: AppColors.primary,
-              ),
-              const SizedBox(
-                width: Dimension.d1,
-              ),
-              Text(
-                'Call',
-                style: AppTextStyle.bodyLargeSemiBold
-                    .copyWith(color: AppColors.primary),
-              ),
-            ],
-          ),
-        ],
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: AppColors.line,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(Dimension.d2)
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(Dimension.d3),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Avatar(
+                  imgPath: imgpath,
+                  maxRadius: 36,
+                ),
+                const SizedBox(
+                  width: Dimension.d2,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: AppTextStyle.bodyLargeSemiBold,
+                    ),
+                    const SizedBox(
+                      height: Dimension.d1,
+                    ),
+                    const Text(
+                      'Health coach',
+                      style: AppTextStyle.bodyMediumMedium,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Icon(
+                  AppIcons.phone,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(
+                  width: Dimension.d1,
+                ),
+                Text(
+                  'Call',
+                  style: AppTextStyle.bodyLargeSemiBold
+                      .copyWith(color: AppColors.primary),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

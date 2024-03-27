@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/login_page_email.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
@@ -11,6 +12,8 @@ import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
+import 'package:silver_genie/feature/user%20profile/user_profile.dart';
+import 'package:silver_genie/home_page.dart';
 
 final store = GetIt.I<OnboardingStore>();
 
@@ -26,7 +29,7 @@ GoRouter appRouter() => GoRouter(
               builder: (context) {
                 return store.showOnboarding
                     ? const OnboardingScreen()
-                    : const MainScreen();
+                    : const OTPScreen();
               },
             );
           },
