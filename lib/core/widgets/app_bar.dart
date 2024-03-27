@@ -6,6 +6,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/feature/user%20profile/user_profile.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
   const Appbar({super.key});
