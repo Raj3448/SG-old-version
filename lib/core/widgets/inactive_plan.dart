@@ -28,7 +28,6 @@ class IconTextComponent extends StatelessWidget {
           child: Text(
             text,
             style: AppTextStyle.bodyMediumMedium,
-            overflow: TextOverflow.ellipsis,
           ),
         )
       ],
