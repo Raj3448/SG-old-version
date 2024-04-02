@@ -113,6 +113,9 @@ class InactivePlanComponent extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(
+            height: Dimension.d3,
+          ),
           CustomButton(ontap: (){}, 
           title: 'Upgrade to Care', 
           showIcon: false, 
