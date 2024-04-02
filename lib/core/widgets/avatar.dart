@@ -73,21 +73,19 @@ class SelectableAvatar extends Avatar {
               ? Border.all(color: AppColors.primary, width: 2)
               : null,
           boxShadow: isSelected
-              ? [
+              ? 
+              [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.7),
+                    color: Color.fromRGBO(181, 181, 181, 0.7),
                     blurRadius: 8,
                     spreadRadius: 0,
                     offset: Offset(0, 4),
                   ),
-                ]
-              : null,
+                ]:null,
         ),
-        child: CircleAvatar(
-          maxRadius: maxRadius,
-          backgroundImage: imageProvider
-          // backgroundImage: NetworkImage(imgPath),
-        ),
+        child: CircleAvatar(maxRadius: maxRadius, backgroundImage: imageProvider
+            // backgroundImage: NetworkImage(imgPath),
+            ),
       ),
     );
   }

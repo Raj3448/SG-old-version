@@ -29,7 +29,7 @@ final GoRouter routes = GoRouter(
         return Observer(
           builder: (context) {
             return store.showOnboarding
-                ? const OnboardingScreen()
+                ?  const OnboardingScreen()
                 : const LoginPage();
           },
         );
@@ -67,7 +67,14 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.homeRoute,
       name: 'home',
       pageBuilder: (context, state) {
-        return const MaterialPage(child: HomeScreen());
+        return  MaterialPage(child: HomeScreen());
+      },
+    ),
+    GoRoute(
+      path: RoutesConstants.userProfileRoute,
+      name: 'user-profile',
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(

@@ -59,6 +59,7 @@ class CustomComponent extends StatelessWidget {
                   const Icon(
                     AppIcons.ecg_heart,
                     color: AppColors.grayscale600,
+                    size:Dimension.d3
                   )
                 ],
               ),
@@ -165,24 +166,30 @@ class ActivePlanComponent extends StatelessWidget {
                 AnalogComponent(text1: 'Last Updated', text2: 'Today at 10:15AM'),
                 SizedBox(height: Dimension.d3),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CustomButton(
-                    ontap: onTap, 
-                    title: 'View PHR', 
-                    showIcon: false, 
-                    iconPath: Icons.not_interested, 
-                    size: ButtonSize.small, 
-                    type: ButtonType.secondary, 
-                    expanded: false),
-                    CustomButton(
-                    ontap: onTap, 
-                    title: 'View EPR', 
-                    showIcon: false, 
-                    iconPath: Icons.not_interested, 
-                    size: ButtonSize.small, 
-                    type: ButtonType.secondary, 
-                    expanded: false),
+                    Expanded(
+                      child: CustomButton(
+                      ontap: onTap, 
+                      title: 'View PHR', 
+                      showIcon: false, 
+                      iconPath: Icons.not_interested, 
+                      size: ButtonSize.small, 
+                      type: ButtonType.secondary, 
+                      expanded: true),
+                    ),
+                    SizedBox(
+                      width: Dimension.d4,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                      ontap: onTap, 
+                      title: 'View EPR', 
+                      showIcon: false, 
+                      iconPath: Icons.not_interested, 
+                      size: ButtonSize.small, 
+                      type: ButtonType.secondary, 
+                      expanded: true),
+                    ),
       
                   ],
                 )

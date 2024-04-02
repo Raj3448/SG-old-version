@@ -57,7 +57,7 @@ class ElderCareSubscription extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             Text(
-              'Elder care subscription'.tr(),
+              title.tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: _getIconColor()),
             ),

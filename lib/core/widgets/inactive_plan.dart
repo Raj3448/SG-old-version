@@ -16,16 +16,20 @@ class IconTextComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Icon(
+        Icon(
           AppIcons.check,
           color: AppColors.primary,
+          size: Dimension.d2,
         ),
         const SizedBox(
           width: Dimension.d3,
         ),
-        Text(
-          text,
-          style: AppTextStyle.bodyMediumMedium,
+        Flexible(
+          child: Text(
+            text,
+            style: AppTextStyle.bodyMediumMedium,
+            overflow: TextOverflow.ellipsis,
+          ),
         )
       ],
     );
@@ -87,7 +91,7 @@ class InactivePlanComponent extends StatelessWidget {
             child: const Padding(
               padding: EdgeInsets.symmetric(
                   vertical: Dimension.d2, horizontal: Dimension.d3),
-              child: const Column(
+              child: Column(
                 children: [
                   Text(
                     'Unlock regular health monitoring with our Care Plan',
@@ -115,8 +119,8 @@ class InactivePlanComponent extends StatelessWidget {
           iconPath: Icons.not_interested, 
           size: ButtonSize.normal, 
           type: ButtonType.primary, 
-          expanded: true)
-        ]),
+          expanded: true),
+        ],),
       ),
     );
   }

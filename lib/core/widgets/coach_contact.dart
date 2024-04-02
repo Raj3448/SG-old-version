@@ -34,7 +34,7 @@ class CoachContact extends StatelessWidget {
               children: [
                 Avatar(
                   imgPath: imgpath,
-                  maxRadius: 36,
+                  maxRadius: 24,
                 ),
                 const SizedBox(
                   width: Dimension.d2,
@@ -49,9 +49,9 @@ class CoachContact extends StatelessWidget {
                     const SizedBox(
                       height: Dimension.d1,
                     ),
-                    const Text(
+                    Text(
                       'Health coach',
-                      style: AppTextStyle.bodyMediumMedium,
+                      style: AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.grayscale700)
                     ),
                   ],
                 ),
@@ -62,6 +62,7 @@ class CoachContact extends StatelessWidget {
                 const Icon(
                   AppIcons.phone,
                   color: AppColors.primary,
+                  size: Dimension.d4,
                 ),
                 const SizedBox(
                   width: Dimension.d1,
