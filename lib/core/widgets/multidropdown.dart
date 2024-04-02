@@ -8,11 +8,13 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 
 class MultiDropdown extends StatelessWidget {
   const MultiDropdown({
+
     required this.values,
-    super.key,
+    super.key, this.controller,
   });
 
   final List<ValueItem> values;
+  final MultiSelectController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class MultiDropdown extends StatelessWidget {
       ),
       padding: const EdgeInsets.only(right: 10),
       child: MultiSelectDropDown(
+        controller: controller,
         onOptionSelected: (selectedOptions) {},
         options: values,
         selectionType: SelectionType.single,

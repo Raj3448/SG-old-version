@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes.dart';
+import 'package:silver_genie/feature/user%20profile/cubit/user_details_cubit.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -21,15 +23,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'SilverGenie',
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: router.routerDelegate,
-      routeInformationProvider: router.routeInformationProvider,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context)=> UserDetailsCubit())
+      ],
+      child: MaterialApp.router(
+        title: 'SilverGenie',
+        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+        routeInformationParser: router.routeInformationParser,
+        routerDelegate: router.routerDelegate,
+        routeInformationProvider: router.routeInformationProvider,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+      ),
     );
   }
 }

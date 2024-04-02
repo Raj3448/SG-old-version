@@ -21,6 +21,7 @@ dependencies:
   firebase_performance_dio: ^0.6.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.5
   flutter_mobx: ^2.2.0+2
   flutter_native_splash: ^2.3.5
   # dart run flutter_native_splash:create

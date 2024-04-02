@@ -25,6 +25,7 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.large,
     required this.enabled,
+    this.controller,
     super.key,
   });
 
@@ -32,10 +33,12 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool large;
   final bool enabled;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       enabled: enabled,
       keyboardType: keyboardType,
       style:
@@ -70,6 +73,7 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
       ),
+      onSubmitted: (value) {},
     );
   }
 }
