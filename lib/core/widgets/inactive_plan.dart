@@ -87,9 +87,9 @@ class InactivePlanComponent extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-            color: AppColors.line,
+            color: AppColors.secondary,
               border: Border.all(
-                color: AppColors.secondary,
+                color: AppColors.line,
                 width: Dimension.arbitary(1.0),
               ),
               borderRadius: BorderRadius.circular(Dimension.d1),
