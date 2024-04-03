@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
-part '../../user profile/model/user_details.g.dart';
+part 'user_details.g.dart';
 
 UserDetails userDetailsFromJson(String str) =>
     UserDetails.fromJson(json.decode(str) as Map<String, dynamic>);

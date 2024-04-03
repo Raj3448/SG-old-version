@@ -1,6 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-part '../../user profile/store/user_details_store.g.dart';
+part 'user_details_store.g.dart';
 
 class UserDetailStore = _UserDetailStoreBase with _$UserDetailStore;
 
