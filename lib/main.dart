@@ -19,6 +19,7 @@ import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
+import 'package:silver_genie/feature/user%20profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
 
 void main() async {
@@ -38,6 +39,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
+      GetIt.instance.registerLazySingleton(() => UserDetailStore());
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance
