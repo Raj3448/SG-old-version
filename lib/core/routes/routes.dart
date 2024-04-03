@@ -16,7 +16,6 @@ import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/services_screen.dart';
-import 'package:silver_genie/feature/user%20profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
 
@@ -82,13 +81,6 @@ final GoRouter routes = GoRouter(
       name: 'bookings',
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingsScreen());
-      },
-    ),
-    GoRoute(
-      path: '/userProfileScreen',
-      name: RoutesConstants.userProfileScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(

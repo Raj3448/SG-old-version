@@ -26,7 +26,7 @@ void main() async {
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
-      
+      // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
@@ -66,7 +66,7 @@ void main() async {
           child: const MyApp(),
         ),
       );
-      FlutterNativeSplash.remove();
+      FlutterNativeSplash.remove(); // Now remove splash screen
     },
     (exception, stackTrace) {
       FirebaseCrashlytics.instance.recordError(exception, stackTrace);
