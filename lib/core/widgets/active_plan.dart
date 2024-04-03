@@ -18,13 +18,13 @@ class AnalogComponent extends StatelessWidget {
       children: [
         Text(
           text1,
-          style: AppTextStyle.bodyMediumMedium,
+          style: AppTextStyle.bodyMediumMedium.copyWith(color:AppColors.grayscale700),
         ),
-        const Text(':', style: AppTextStyle.bodyMediumMedium),
+        Text(':', style: AppTextStyle.bodyMediumMedium.copyWith(color:AppColors.grayscale700)),
         const SizedBox(
           width: Dimension.d1,
         ),
-        Text(text2, style: AppTextStyle.bodyMediumMedium),
+        Text(text2, style: AppTextStyle.bodyMediumMedium.copyWith(color:AppColors.grayscale700)),
       ],
     );
   }
@@ -149,7 +149,7 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d2,
             ),
-             Row(
+             const Row(
               children: [
                 CustomComponent(text: 'Heart Rate', value: '106bpm'),
                 SizedBox(
@@ -162,9 +162,9 @@ class ActivePlanComponent extends StatelessWidget {
                 
               ],
             ),
-            SizedBox(height: Dimension.d2),
-                AnalogComponent(text1: 'Last Updated', text2: 'Today at 10:15AM'),
-                SizedBox(height: Dimension.d3),
+            const SizedBox(height: Dimension.d2),
+                const AnalogComponent(text1: 'Last Updated', text2: 'Today at 10:15AM'),
+                const SizedBox(height: Dimension.d3),
                 Row(
                   children: [
                     Expanded(
@@ -177,7 +177,7 @@ class ActivePlanComponent extends StatelessWidget {
                       type: ButtonType.secondary, 
                       expanded: true),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: Dimension.d4,
                     ),
                     Expanded(

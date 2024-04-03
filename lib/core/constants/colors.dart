@@ -14,7 +14,7 @@ abstract class AppColors {
   //--- Additional Colors ----------------------------
   static const white = Color(0xFFFFFFFF);
   static const line = Color(0xFFE3E7EC);
-  static const lineDark = Color(0xFF4A4A65);
+  static const lineDark = Color(0xFF282837);
   static const black = Color(0xFF111111);
 
   //--- Grayscale ----------------------------

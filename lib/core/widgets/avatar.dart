@@ -83,9 +83,12 @@ class SelectableAvatar extends Avatar {
                   ),
                 ]:null,
         ),
-        child: CircleAvatar(maxRadius: maxRadius, backgroundImage: imageProvider
-            // backgroundImage: NetworkImage(imgPath),
-            ),
+        child: Opacity(
+          opacity: isSelected?1.0:0.7,
+          child: CircleAvatar(maxRadius: maxRadius, backgroundImage: imageProvider
+              // backgroundImage: NetworkImage(imgPath),
+              ),
+        ),
       ),
     );
   }

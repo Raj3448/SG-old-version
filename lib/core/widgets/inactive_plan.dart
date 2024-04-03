@@ -15,19 +15,26 @@ class IconTextComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          AppIcons.check,
-          color: AppColors.primary,
-          size: Dimension.d2,
+        Padding(
+          padding: EdgeInsets.only(top: 6.0),
+          child: const Icon(
+            AppIcons.check,
+            color: AppColors.primary,
+            size: Dimension.d2,
+          ),
         ),
         const SizedBox(
           width: Dimension.d3,
         ),
-        Flexible(
+        Expanded(
           child: Text(
             text,
-            style: AppTextStyle.bodyMediumMedium,
+            style: AppTextStyle.bodyMediumMedium.copyWith(
+              color: AppColors.grayscale800,
+            ),
           ),
         )
       ],
@@ -57,7 +64,7 @@ class InactivePlanComponent extends StatelessWidget {
                 name,
                 style: AppTextStyle.bodyLargeBold,
               ),
-              const ElderCareSubscription(
+              ElderCareSubscription(
                   color: ElderCareColor.grey,
                   title: 'Care Inactive',
                   showIcon: false),
@@ -87,32 +94,32 @@ class InactivePlanComponent extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(Dimension.d1),
             ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
                   vertical: Dimension.d2, horizontal: Dimension.d3),
               child: Column(
                 children: [
                   Text(
                     'Unlock regular health monitoring with our Care Plan',
-                    style: AppTextStyle.bodyMediumSemiBold,
+                    style: AppTextStyle.bodyMediumSemiBold.copyWith(color:AppColors.grayscale900),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: Dimension.d2,
                   ),
-                  IconTextComponent(text: 'Dedicated Coaches'),
-                  SizedBox(
+                  const IconTextComponent(text: 'Dedicated Coaches'),
+                  const SizedBox(
                     height: Dimension.d2,
                   ),
-                  IconTextComponent(text: 'PHR,emergency support',),
-                  SizedBox(
+                  const IconTextComponent(text: 'PHR,emergency support',),
+                  const SizedBox(
                     height: Dimension.d2,
                   ),
-                  IconTextComponent(text: 'Vital monitoring,and community engagement',)
+                  const IconTextComponent(text: 'Vital monitoring,and community engagement',)
                 ],
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: Dimension.d3,
           ),
           CustomButton(ontap: (){}, 
