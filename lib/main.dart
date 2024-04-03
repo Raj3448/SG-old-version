@@ -19,7 +19,7 @@ import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
-import 'package:silver_genie/feature/user%20profile/store/user_details_store.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
 
 void main() async {

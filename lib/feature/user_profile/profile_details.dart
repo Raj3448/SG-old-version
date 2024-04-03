@@ -12,8 +12,8 @@ import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
-import 'package:silver_genie/feature/user%20profile/model/user_details.dart';
-import 'package:silver_genie/feature/user%20profile/store/user_details_store.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class ProfileDetails extends StatefulWidget {
   const ProfileDetails({super.key});

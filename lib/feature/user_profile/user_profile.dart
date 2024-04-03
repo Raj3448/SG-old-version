@@ -10,9 +10,9 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 
-import 'package:silver_genie/feature/user%20profile/model/user_details.dart';
-import 'package:silver_genie/feature/user%20profile/profile_details.dart';
-import 'package:silver_genie/feature/user%20profile/store/user_details_store.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/profile_details.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
