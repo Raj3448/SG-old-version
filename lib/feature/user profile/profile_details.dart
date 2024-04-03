@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:multi_dropdown/models/value_item.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -12,8 +13,9 @@ import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
-import 'package:silver_genie/feature/user%20profile/cubit/user_details_cubit.dart';
+
 import 'package:silver_genie/feature/user%20profile/model/user_details.dart';
+import 'package:silver_genie/feature/user%20profile/store/user_details_store.dart';
 
 class ProfileDetails extends StatefulWidget {
   const ProfileDetails({super.key});
@@ -60,19 +62,18 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   void initState() {
     super.initState();
-    final UserDetails userDetails =
-        context.read<UserDetailsCubit>().getCurrentUserDetails;
-    _fullNameController.text = userDetails.fullname;
-    dateBirth = userDetails.dateBirth;
+    final UserDetailStore userDetails = GetIt.instance.get<UserDetailStore>();
+    _fullNameController.text = userDetails.userDetails.fullname;
+    dateBirth = userDetails.userDetails.dateBirth;
 
     _genderController.selectedOptions.add(_genderItems[0]);
-    _mobileController.text = userDetails.mobileNum;
-    _emailController.text = userDetails.emailId;
-    _addressController.text = userDetails.address;
+    _mobileController.text = userDetails.userDetails.mobileNum;
+    _emailController.text = userDetails.userDetails.emailId;
+    _addressController.text = userDetails.userDetails.address;
     _countryController.selectedOptions.add(_countryItems[0]);
     _stateController.selectedOptions.add(_stateItems[0]);
     _cityController.selectedOptions.add(_cityItems[0]);
-    _postalController.text = userDetails.postalCode.toString();
+    _postalController.text = userDetails.userDetails.postalCode.toString();
   }
 
   @override
@@ -287,15 +288,14 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               ),
               CustomButton(
                   ontap: () {
-                    UserDetails userDetails =
-                        context.read<UserDetailsCubit>().getCurrentUserDetails;
+                    UserDetailStore userDetailsStore =
+                        GetIt.instance.get<UserDetailStore>();
+                    UserDetails userDetails = userDetailsStore.userDetails;
                     userDetails = userDetails.copyWith(
                         fullname: _fullNameController.text,
                         emailId: _emailController.text,
                         mobileNum: _mobileController.text);
-                    context
-                        .read<UserDetailsCubit>()
-                        .updateUserDetails(userDetails);
+                    userDetailsStore.updateUserDetails(userDetails);
                     Navigator.of(context).pop();
                   },
                   title: 'Save details',

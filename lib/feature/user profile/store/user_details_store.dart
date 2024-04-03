@@ -1,12 +1,13 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/user%20profile/model/user_details.dart';
+part 'user_details_store.g.dart';
 
-part 'user_details_state.dart';
+class UserDetailStore = _UserDetailStoreBase with _$UserDetailStore;
 
-class UserDetailsCubit extends Cubit<UserDetailsState> {
-  UserDetailsCubit() : super(UserDetailsInitial());
 
+abstract class _UserDetailStoreBase with Store {
+
+  @observable
   UserDetails userDetails = UserDetails(
       fullname: 'Rajkumar Chavan',
       gender: 'Male',
@@ -19,17 +20,13 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
       city: 'Pune',
       postalCode: 411041);
 
-  UserDetails get getCurrentUserDetails => userDetails;
-
+  @action
   Future<UserDetails> getUserDetails() async {
-    
     return userDetails;
   }
 
+  @action
   Future<void> updateUserDetails(UserDetails newInstance) async {
     userDetails = newInstance;
   }
 }
-
-
-//dd-MM-yyyy

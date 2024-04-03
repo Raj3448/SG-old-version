@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -9,9 +10,10 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
-import 'package:silver_genie/feature/user%20profile/cubit/user_details_cubit.dart';
+
 import 'package:silver_genie/feature/user%20profile/model/user_details.dart';
 import 'package:silver_genie/feature/user%20profile/profile_details.dart';
+import 'package:silver_genie/feature/user%20profile/store/user_details_store.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -25,12 +27,11 @@ class _UserProfileState extends State<UserProfile> {
   @override
   void initState() {
     super.initState();
-    
+    userDetails = GetIt.instance.get<UserDetailStore>().userDetails;
   }
 
   @override
   Widget build(BuildContext context) {
-    userDetails = context.read<UserDetailsCubit>().getCurrentUserDetails;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'User Profile'),
@@ -66,7 +67,8 @@ class _UserProfileState extends State<UserProfile> {
                       height: Dimension.d4,
                     ),
                     CustomTextIcon(
-                        iconpath: AppIcons.phone, title: userDetails!.mobileNum),
+                        iconpath: AppIcons.phone,
+                        title: userDetails!.mobileNum),
                     SizedBox(
                       height: Dimension.d2,
                     ),
@@ -74,7 +76,7 @@ class _UserProfileState extends State<UserProfile> {
                       iconpath: AppIcons.home,
                       title: userDetails!.emailId,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: Dimension.d4,
                     ),
                     CustomButton(
@@ -85,7 +87,11 @@ class _UserProfileState extends State<UserProfile> {
                               builder: (context) => const ProfileDetails(),
                             ),
                           ).then((value) {
-                            setState(() {});
+                            setState(() {
+                              userDetails = GetIt.instance
+                                  .get<UserDetailStore>()
+                                  .userDetails;
+                            });
                           });
                         },
                         title: 'Edit',
