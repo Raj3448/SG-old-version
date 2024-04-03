@@ -1,12 +1,10 @@
 import 'package:mobx/mobx.dart';
-import 'package:silver_genie/feature/user%20profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 part 'user_details_store.g.dart';
 
 class UserDetailStore = _UserDetailStoreBase with _$UserDetailStore;
 
-
 abstract class _UserDetailStoreBase with Store {
-
   @observable
   UserDetails userDetails = UserDetails(
       fullname: 'Rajkumar Chavan',
