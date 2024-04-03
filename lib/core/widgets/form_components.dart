@@ -73,7 +73,6 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
       ),
-      onSubmitted: (value) {},
     );
   }
 }

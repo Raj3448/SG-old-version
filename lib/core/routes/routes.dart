@@ -71,6 +71,13 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
+      path: '/userProfileScreen',
+      name: RoutesConstants.userProfileScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: UserProfile());
+      },
+    ),
+    GoRoute(
       path: RoutesConstants.serviceRoute,
       name: 'service',
       pageBuilder: (context, state) {
@@ -82,13 +89,6 @@ final GoRouter routes = GoRouter(
       name: 'bookings',
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingsScreen());
-      },
-    ),
-    GoRoute(
-      path: '/userProfileScreen',
-      name: RoutesConstants.userProfileScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

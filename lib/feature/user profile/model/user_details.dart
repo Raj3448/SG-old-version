@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final userDetails = userDetailsFromJson(jsonString);
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
