@@ -11,8 +11,9 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
-
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+
+
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 

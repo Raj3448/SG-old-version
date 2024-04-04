@@ -4,9 +4,7 @@ part 'user_details_store.g.dart';
 
 class UserDetailStore = _UserDetailStoreBase with _$UserDetailStore;
 
-
 abstract class _UserDetailStoreBase with Store {
-
   @observable
   UserDetails userDetails = UserDetails(
       fullname: 'Rajkumar Chavan',
