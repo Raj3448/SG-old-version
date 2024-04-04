@@ -40,7 +40,14 @@ class CustomComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        color: AppColors.secondary,
+        decoration:BoxDecoration(
+          color: AppColors.secondary,
+          border:Border.all(
+            width:1,
+            color:AppColors.line,
+          ),
+          borderRadius:BorderRadius.circular(Dimension.d1),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
               vertical: Dimension.d3, horizontal: Dimension.d2),
@@ -111,10 +118,10 @@ class ActivePlanComponent extends StatelessWidget {
                   style: AppTextStyle.bodyLargeBold,
                 ),
                 const ElderCareSubscription(
-                    color: ElderCareColor.blue, title: 'Care Member',showIcon: false,)
+                    color: ElderCareColor.blue, title: 'Care Member',showIcon: false,),
               ],
             ),
-            const SizedBox(
+            SizedBox(
               height: Dimension.d1,
             ),
             const Row(
@@ -166,29 +173,36 @@ class ActivePlanComponent extends StatelessWidget {
                 const AnalogComponent(text1: 'Last Updated', text2: 'Today at 10:15AM'),
                 const SizedBox(height: Dimension.d3),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: CustomButton(
-                      ontap: onTap, 
-                      title: 'View PHR', 
-                      showIcon: false, 
-                      iconPath: Icons.not_interested, 
-                      size: ButtonSize.small, 
-                      type: ButtonType.secondary, 
-                      expanded: true),
+                      child: SizedBox(
+                        height:28,
+                        child: CustomButton(
+                        ontap: onTap, 
+                        title: 'View PHR', 
+                        showIcon: false, 
+                        iconPath: Icons.not_interested, 
+                        size: ButtonSize.small, 
+                        type: ButtonType.secondary, 
+                        expanded: true),
+                      ),
                     ),
                     const SizedBox(
                       width: Dimension.d4,
                     ),
                     Expanded(
-                      child: CustomButton(
-                      ontap: onTap, 
-                      title: 'View EPR', 
-                      showIcon: false, 
-                      iconPath: Icons.not_interested, 
-                      size: ButtonSize.small, 
-                      type: ButtonType.secondary, 
-                      expanded: true),
+                      child: SizedBox(
+                        height:28,
+                        child: CustomButton(
+                        ontap: onTap, 
+                        title: 'View EPR', 
+                        showIcon: false, 
+                        iconPath: Icons.not_interested, 
+                        size: ButtonSize.small, 
+                        type: ButtonType.secondary, 
+                        expanded: true),
+                      ),
                     ),
       
                   ],
