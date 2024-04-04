@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
+import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
@@ -16,7 +17,7 @@ import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/services_screen.dart';
-import 'package:silver_genie/feature/user%20profile/user_profile.dart';
+import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
 
@@ -75,6 +76,13 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.userProfileScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
+      },
+    ),
+    GoRoute(
+      path: '/emergencyServiceScreen',
+      name: RoutesConstants.emergencyServiceScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: EmergencyServices());
       },
     ),
     GoRoute(
