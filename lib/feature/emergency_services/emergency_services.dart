@@ -11,10 +11,12 @@ import 'package:silver_genie/feature/emergency_services/store/emergency_service_
 import 'package:zapx/zapx.dart';
 
 class EmergencyServices extends StatelessWidget {
-  const EmergencyServices({Key? key}) : super(key: key);
+  EmergencyServices({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final String temp =
+        'jhsjhs ssjhsjhsjsd sdssjss s ssjshs sjhshjw wwkwjwkw wkjwkwj tgtgghtrr tttryty ttrtt ttt tggfgrgrgregergregregregregregreregree  gggrg rgrgre r rrsss segesge';
     final EmergencyServiceStore emergencyServiceStore =
         GetIt.instance.get<EmergencyServiceStore>();
     return Scaffold(
@@ -144,7 +146,7 @@ class EmergencyServices extends StatelessWidget {
               height: Dimension.d4,
             ),
             SizedBox(
-              height: 400,
+              height: 380,
               child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount:
@@ -155,7 +157,52 @@ class EmergencyServices extends StatelessWidget {
                                 .emergencyServiceModel.plans[index])
                         .paddingOnly(bottom: 10);
                   }),
-            )
+            ),
+            Text('How It works?',
+                style: AppTextStyle.bodyMediumMedium.copyWith(
+                  color: AppColors.grayscale700,
+                  fontSize: 20,
+                  fontFamily: FontFamily.inter,
+                  fontWeight: FontWeight.w600,
+                  height: 2.514,
+                )),
+            ExpandingWidget(
+                temp: temp, question: 'We will require some important'),
+            ExpandingWidget(
+                temp: temp,
+                question: 'Our genie can get on a call with you, or'),
+            ExpandingWidget(
+                temp: temp, question: 'Once we have set up the emergency '),
+            ExpandingWidget(
+                temp: temp, question: 'Please note that our emergency'),
+            const SizedBox(
+              height: Dimension.d4,
+            ),
+            Center(
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    fixedSize: const MaterialStatePropertyAll(Size(328, 50)),
+                    shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5))),
+                    backgroundColor:
+                        const MaterialStatePropertyAll(AppColors.primary),
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    'Contact Genie',
+                    style: AppTextStyle.bodyMediumMedium.copyWith(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: FontFamily.inter,
+                      fontWeight: FontWeight.w500,
+                      height: 2.514,
+                    ),
+                  )),
+            ),
+            const SizedBox(
+              height: Dimension.d4,
+            ),
           ],
         ).paddingSymmetric(horizontal: 20, vertical: 10),
       ),
@@ -163,3 +210,58 @@ class EmergencyServices extends StatelessWidget {
   }
 }
 
+class ExpandingWidget extends StatefulWidget {
+  final String question;
+  final String temp;
+  const ExpandingWidget({Key? key, required this.question, required this.temp})
+      : super(key: key);
+
+  @override
+  State<ExpandingWidget> createState() => _ExpandingWidgetState();
+}
+
+class _ExpandingWidgetState extends State<ExpandingWidget> {
+  bool isExpanding = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            setState(() {
+              isExpanding = !isExpanding;
+            });
+          },
+          child: AnimatedContainer(
+            duration: const Duration(seconds: 1),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 310,
+                  child: Text(
+                      isExpanding
+                          ? widget.question + widget.temp
+                          : widget.question,
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                          color: AppColors.grayscale700,
+                          fontSize: 16,
+                          fontFamily: FontFamily.inter,
+                          fontWeight: FontWeight.w400,
+                          overflow: isExpanding ? null : TextOverflow.ellipsis,
+                          height: 2.4)),
+                ),
+                const Spacer(),
+                Image.asset(
+                  'assets/icon/Frame.png',
+                  height: 20,
+                ).paddingOnly(top: 10),
+              ],
+            ),
+          ),
+        ),
+        const Divider()
+      ],
+    );
+  }
+}

@@ -82,7 +82,7 @@ final GoRouter routes = GoRouter(
       path: '/emergencyServiceScreen',
       name: RoutesConstants.emergencyServiceScreen,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: EmergencyServices());
+        return MaterialPage(child: EmergencyServices());
       },
     ),
     GoRoute(
