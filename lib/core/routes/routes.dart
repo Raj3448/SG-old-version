@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
+import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
@@ -75,6 +76,13 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.userProfileScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
+      },
+    ),
+    GoRoute(
+      path: '/emergencyServiceScreen',
+      name: RoutesConstants.emergencyServiceScreen,
+      pageBuilder: (context, state) {
+        return MaterialPage(child: EmergencyServices());
       },
     ),
     GoRoute(

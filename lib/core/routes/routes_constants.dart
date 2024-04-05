@@ -18,4 +18,5 @@ class RoutesConstants {
   static const eprPhrRoute = '/eprPhr';
   static const memberDetailsRoute = '/memberDetails';
   static const userProfileScreen = '/userProfileScreen';
+  static const emergencyServiceScreen = '/emergencyServiceScreen';
 }

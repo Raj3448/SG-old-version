@@ -22,6 +22,8 @@ import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
 
+import 'feature/emergency_services/store/emergency_service_store.dart';
+
 void main() async {
   await runZonedGuarded(
     () async {
@@ -40,6 +42,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
       GetIt.instance.registerLazySingleton(() => UserDetailStore());
+      GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

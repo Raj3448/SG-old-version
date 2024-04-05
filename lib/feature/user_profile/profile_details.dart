@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation, strict_raw_type
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
@@ -11,8 +13,9 @@ import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
-
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+
+
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class ProfileDetails extends StatefulWidget {

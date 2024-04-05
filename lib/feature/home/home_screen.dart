@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
@@ -32,36 +35,48 @@ class HomeScreen extends StatelessWidget {
                     SelectableAvatar(
                       imgPath: '',
                       maxRadius: 44,
-                      isSelected:true,
-                      ontap: (){
+                      isSelected: true,
+                      ontap: () {
                         ActivePlanComponent(
-                  name: 'Varun Nair',
-                  onTap: () {
-                  Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const EPRPHRViewScreen(),
-                            ),
-                          );
-                });
+                            name: 'Varun Nair',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                // ignore: inference_failure_on_instance_creation
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EPRPHRViewScreen(),
+                                ),
+                              );
+                            });
                       },
                     ),
                     SizedBox(
                       width: Dimension.d4,
                     ),
-                    SelectableAvatar(imgPath: '', maxRadius: 44, isSelected: false, ontap: (){})
+                    SelectableAvatar(
+                        imgPath: '',
+                        maxRadius: 44,
+                        isSelected: false,
+                        ontap: () {})
                   ],
                 ),
-                SizedBox(height: Dimension.d4,),
-                
-                //TODO: 
+                SizedBox(
+                  height: Dimension.d4,
+                ),
+
+                //TODO:
                 // InactivePlanComponent(
                 //   name: 'Shalini Nair',
                 // ),
                 SizedBox(
                   height: Dimension.d4,
                 ),
-                CoachContact(imgpath: '', name: 'Suma Latha')
+                GestureDetector(
+                    onTap: () {
+                      context.pushNamed(RoutesConstants.emergencyServiceScreen);
+                    },
+                    child: CoachContact(imgpath: '', name: 'Suma Latha'))
               ],
             ),
           ),
