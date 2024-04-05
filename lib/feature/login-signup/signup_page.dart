@@ -23,10 +23,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             children: [
               SizedBox(
-                width: 240,
-                height: 240,
+                height:52,
+              ),
+              SizedBox(
+                width: 130,
+                height: 60,
                 child: Image.asset('assets/splash/sg_logo.png'),
               ),
+              SizedBox(height: Dimension.d7,),
               Text(
                 'Sign Up'.tr(),
                 style: AppTextStyle.heading4SemiBold,
@@ -35,10 +39,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextLabel(title: 'Enter Full Name'.tr()),
+                  TextLabel(title: 'Enter First Name'.tr()),
                   const SizedBox(height: Dimension.d2),
                   CustomTextField(
-                    hintText: 'Enter Name'.tr(),
+                    hintText: 'Enter first name'.tr(),
+                    keyboardType: TextInputType.name,
+                    large: false,
+                    enabled: true,
+                  ),
+                  const SizedBox(height: Dimension.d4),
+                  TextLabel(title: 'Enter Last Name'.tr()),
+                  const SizedBox(height: Dimension.d2),
+                  CustomTextField(
+                    hintText: 'Enter last name'.tr(),
                     keyboardType: TextInputType.name,
                     large: false,
                     enabled: true,
