@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,7 +21,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  context.pushNamed(RoutesConstants.userProfileScreen);
+                  context.pushNamed(RoutesConstants.userProfileRoute);
                 },
                 child: Avatar.fromSize(
                   imgPath: '',
