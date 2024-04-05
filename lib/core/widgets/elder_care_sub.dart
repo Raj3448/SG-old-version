@@ -11,7 +11,7 @@ class ElderCareSubscription extends StatelessWidget {
   const ElderCareSubscription({
     required this.color,
     required this.title,
-    required this.showIcon, 
+    required this.showIcon,
     super.key});
 
   final ElderCareColor color;
