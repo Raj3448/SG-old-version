@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
-import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
@@ -59,147 +58,98 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               showIcon: false,
               iconPath: AppIcons.check,
             ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
+      body: const SingleChildScrollView(
+        physics: BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.fast,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(child: EditPic()),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Full name'),
-              const SizedBox(height: 8),
-              const CustomTextField(
+              Center(child: EditPic()),
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Full name'),
+              SizedBox(height: 8),
+              CustomTextField(
                 hintText: 'Enter your name',
                 keyboardType: TextInputType.name,
                 large: false,
                 enabled: true,
               ),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Gender'),
-              const SizedBox(height: 8),
-              MultiDropdown(
-                values: [
-                  ValueItem(label: 'Male'.tr(), value: 'Male'),
-                  ValueItem(label: 'Female'.tr(), value: 'Female'),
-                  ValueItem(label: 'Other'.tr(), value: 'MaOtherle'),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Date of birth'),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () {
-                  showDatePicker(
-                    context: context,
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime.now(),
-                    initialDate: DateTime.now(),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.line),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Select'.tr(),
-                        style: AppTextStyle.bodyLargeMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        AppIcons.calendar,
-                        color: AppColors.grayscale700,
-                        size: 18,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Relation'),
-              const SizedBox(height: 8),
-              MultiDropdown(
-                values: [
-                  ValueItem(label: 'Father'.tr(), value: 'Father'),
-                  ValueItem(label: 'Mother'.tr(), value: 'Mother'),
-                  ValueItem(label: 'Sister'.tr(), value: 'Sister'),
-                  ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
-                  ValueItem(label: 'Wife'.tr(), value: 'Wife'),
-                  ValueItem(label: 'Self'.tr(), value: 'Self'),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Mobile number'),
-              const SizedBox(height: 8),
-              const CustomTextField(
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Gender'),
+              SizedBox(height: 8),
+              GenderDropdown(),
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Date of birth'),
+              SizedBox(height: 8),
+              DateDropdown(),
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Relation'),
+              SizedBox(height: 8),
+              RelationDropdown(),
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Mobile number'),
+              SizedBox(height: 8),
+              CustomTextField(
                 hintText: 'Enter mobile number',
                 keyboardType: TextInputType.number,
                 large: false,
                 enabled: true,
               ),
-              const SizedBox(height: 16),
-              const TextLabel(title: 'Member address'),
-              const SizedBox(height: 8),
-              const CustomTextField(
+              SizedBox(height: 16),
+              TextLabel(title: 'Member address'),
+              SizedBox(height: 8),
+              CustomTextField(
                 hintText: 'Enter address',
                 keyboardType: TextInputType.streetAddress,
                 large: true,
                 enabled: true,
               ),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Country'),
-              const SizedBox(height: 8),
-              const MultiDropdown(
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Country'),
+              SizedBox(height: 8),
+              MultiDropdown(
                 values: [
                   ValueItem(label: 'Countries', value: 'Countries'),
                 ],
               ),
-              const SizedBox(height: 16),
-              const TextLabel(title: 'State'),
-              const SizedBox(height: 8),
-              const MultiDropdown(
+              SizedBox(height: 16),
+              TextLabel(title: 'State'),
+              SizedBox(height: 8),
+              MultiDropdown(
                 values: [
                   ValueItem(label: 'State', value: 'State'),
                 ],
               ),
-              const SizedBox(height: 16),
-              const TextLabel(title: 'City'),
-              const SizedBox(height: 8),
-              const MultiDropdown(
+              SizedBox(height: 16),
+              TextLabel(title: 'City'),
+              SizedBox(height: 8),
+              MultiDropdown(
                 values: [
                   ValueItem(label: 'City', value: 'City'),
                 ],
               ),
-              const SizedBox(height: 16),
-              const TextLabel(title: 'Postal code'),
-              const SizedBox(height: 8),
-              const CustomTextField(
+              SizedBox(height: 16),
+              TextLabel(title: 'Postal code'),
+              SizedBox(height: 8),
+              CustomTextField(
                 hintText: 'Enter postal code',
                 keyboardType: TextInputType.number,
                 large: false,
                 enabled: true,
               ),
-              const SizedBox(height: 16),
-              const AsteriskLabel(label: 'Email ID'),
-              const SizedBox(height: 8),
-              const CustomTextField(
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Email ID'),
+              SizedBox(height: 8),
+              CustomTextField(
                 hintText: 'Enter email address',
                 keyboardType: TextInputType.emailAddress,
                 large: false,
                 enabled: true,
               ),
-              const SizedBox(height: Dimension.d20),
+              SizedBox(height: Dimension.d20),
             ],
           ),
         ),

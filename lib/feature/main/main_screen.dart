@@ -9,7 +9,7 @@ import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
-import 'package:silver_genie/feature/services/services_screen.dart';
+import 'package:silver_genie/feature/services/screens/services_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
