@@ -1,20 +1,24 @@
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/feature/home/model/family_model.dart';
 
 part 'home_store.g.dart';
 
-class HomeScreenStore = _HomeScreenStoreBase with _$HomeScreenStore;
+class HomeScreenStore = _HomeScreenStore with _$HomeScreenStore;
 
-abstract class _HomeScreenStoreBase with Store {
+abstract class _HomeScreenStore with Store {
   @observable
-  bool isAvatar1Selected = false;
+  ObservableList<FamilyMember> familyMembers = ObservableList.of([
+    FamilyMember(name: 'Varun Nair', imagePath: '',isActive: true),
+    FamilyMember(name: 'Shalini Nair', imagePath: '',isActive:false),
+    //TODO :Add more family members here as needed
+  ]);
+
+  @observable
+  int selectedIndex = 0;
 
   @action
-  void selectAvatar1() {
-    isAvatar1Selected = true;
-  }
-
-  @action
-  void selectAvatar2() {
-    isAvatar1Selected = false;
+  void selectAvatar(int index) {
+    selectedIndex = index;
   }
 }
+

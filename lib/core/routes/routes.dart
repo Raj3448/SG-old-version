@@ -78,13 +78,6 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/userProfileScreen',
-      name: RoutesConstants.userProfileScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
-      },
-    ),
-    GoRoute(
       path: RoutesConstants.serviceRoute,
       name: 'service',
       pageBuilder: (context, state) {
