@@ -1,10 +1,16 @@
-class TimeSlotModel {
-  TimeSlotModel({required this.timeSlot});
+// ignore_for_file: invalid_annotation_target
 
-  factory TimeSlotModel.fromJson(Map<String, dynamic> json) {
-    return TimeSlotModel(
-      timeSlot: json['time_slot'] as String,
-    );
-  }
-  String timeSlot;
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'time_slots_model.freezed.dart';
+part 'time_slots_model.g.dart';
+
+@freezed
+class TimeSlotsModel with _$TimeSlotsModel {
+  const factory TimeSlotsModel({
+    @JsonKey(name: 'time_slot') required String timeSlot,
+  }) = _TimeSlotsModel;
+
+  factory TimeSlotsModel.fromJson(Map<String, dynamic> json) =>
+      _$TimeSlotsModelFromJson(json);
 }

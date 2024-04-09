@@ -11,10 +11,10 @@ Future<List<DoctorModel>> fetchDocDetails() async {
       .toList();
 }
 
-Future<List<TimeSlotModel>> fetchTimeSlots() async {
+Future<List<TimeSlotsModel>> fetchTimeSlots() async {
   final response = await rootBundle.loadString('assets/json/time_slots.json');
   final jsonData = json.decode(response) as List<dynamic>;
   return jsonData
-      .map((json) => TimeSlotModel.fromJson(json as Map<String, dynamic>))
+      .map((json) => TimeSlotsModel.fromJson(json as Map<String, dynamic>))
       .toList();
 }

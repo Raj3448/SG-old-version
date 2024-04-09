@@ -1,40 +1,22 @@
-class DoctorModel {
-  DoctorModel({
-    required this.name,
-    required this.yoe,
-    required this.type,
-    required this.info,
-    required this.hospital,
-    required this.charges,
-    required this.expertise,
-    required this.preferredLang,
-    required this.imgPath,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory DoctorModel.fromJson(Map<String, dynamic> json) {
-    return DoctorModel(
-      imgPath: json['imgPath'] as String,
-      name: json['name'] as String,
-      yoe: json['yoe'] as String,
-      type: json['type'] as String,
-      info: json['info'] as String,
-      hospital: json['hospital'] as String,
-      charges: json['charges'] as String,
-      expertise:
-          (json['expertise'] as List<dynamic>).map((e) => e as String).toList(),
-      preferredLang: (json['preferredLang'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-    );
-  }
+part 'doctor_model.freezed.dart';
+part 'doctor_model.g.dart';
 
-  final String imgPath;
-  final String name;
-  final String yoe;
-  final String type;
-  final String info;
-  final String hospital;
-  final String charges;
-  final List<String> expertise;
-  final List<String> preferredLang;
+@freezed
+class DoctorModel with _$DoctorModel {
+  const factory DoctorModel({
+    required String imgPath,
+    required String name,
+    required String yoe,
+    required String type,
+    required String info,
+    required String hospital,
+    required String charges,
+    required List<String> expertise,
+    required List<String> preferredLang,
+  }) = _DoctorModel;
+
+  factory DoctorModel.fromJson(Map<String, dynamic> json) =>
+      _$DoctorModelFromJson(json);
 }
