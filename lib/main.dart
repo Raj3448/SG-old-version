@@ -69,10 +69,7 @@ void main() async {
           supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
           path: 'assets/translations',
           fallbackLocale: const Locale('en', 'US'),
-          child: DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => MyApp(),
-  ),
+          child: const MyApp()
         ),
       );
       FlutterNativeSplash.remove();

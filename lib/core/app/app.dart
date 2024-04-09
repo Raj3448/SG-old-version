@@ -23,8 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
+      
       title: 'SilverGenie',
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
       routeInformationParser: router.routeInformationParser,
@@ -32,7 +31,7 @@ class _MyAppState extends State<MyApp> {
       routeInformationProvider: router.routeInformationProvider,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
-      //locale: context.locale,
+      locale: context.locale,
     );
   }
 }
