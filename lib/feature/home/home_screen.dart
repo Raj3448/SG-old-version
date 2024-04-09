@@ -323,7 +323,8 @@ class HomeScreenOfferCard extends StatelessWidget {
     return Container(
       height: 236,
       width: 235,
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
           color: AppColors.secondary,
           border: Border.all(width: 2, color: AppColors.grayscale300),

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:device_preview/device_preview.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -68,10 +69,13 @@ void main() async {
           supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
           path: 'assets/translations',
           fallbackLocale: const Locale('en', 'US'),
-          child: const MyApp(),
+          child: DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) => MyApp(),
+  ),
         ),
       );
-      FlutterNativeSplash.remove(); // Now remove splash screen
+      FlutterNativeSplash.remove();
     },
     (exception, stackTrace) {
       FirebaseCrashlytics.instance.recordError(exception, stackTrace);

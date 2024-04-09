@@ -52,8 +52,7 @@ class ServicesScreen extends StatelessWidget {
                     const Spacer(),
                     TextButton(
                       onPressed: () {
-                        context.pushNamed(
-                            RoutesConstants.servicesCareScreen,
+                        context.pushNamed(RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Home care services'
                             });
@@ -82,7 +81,6 @@ class ServicesScreen extends StatelessWidget {
                     imagePath: 'assets/icon/health-insurance 1.png',
                     title: 'Nurse',
                     subtitle: 'Discription of service will be shown in 2 line'),
-
                 Row(
                   children: [
                     Text(
@@ -97,8 +95,7 @@ class ServicesScreen extends StatelessWidget {
                     const Spacer(),
                     TextButton(
                       onPressed: () {
-                        context.pushNamed(
-                            RoutesConstants.servicesCareScreen,
+                        context.pushNamed(RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Health care services'
                             });
@@ -127,7 +124,6 @@ class ServicesScreen extends StatelessWidget {
                     imagePath: 'assets/icon/health-insurance 1.png',
                     title: 'Nurse',
                     subtitle: 'Discription of service will be shown in 2 line'),
-                
               ],
             ),
           ),
@@ -153,7 +149,7 @@ class ServicesListTileComponent extends StatelessWidget {
         alignment: const Alignment(0, 0),
         width: double.infinity,
         decoration: BoxDecoration(
-            border: Border.all(width: 2, color: const Color(0xffF6F8FF)),
+            border: Border.all(width: 2, color: AppColors.secondary),
             borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -161,9 +157,8 @@ class ServicesListTileComponent extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: const Color(0xffF6F8FF),
-                    border:
-                        Border.all(width: 2, color: const Color(0xffE3E9EC)),
+                    color: AppColors.secondary,
+                    border: Border.all(width: 2, color: AppColors.grayscale300),
                     borderRadius: BorderRadius.circular(10)),
                 height: 64,
                 width: 64,
@@ -172,30 +167,29 @@ class ServicesListTileComponent extends StatelessWidget {
               const SizedBox(
                 width: Dimension.d2,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                        color: AppColors.grayscale900,
-                        fontSize: 16,
-                        height: 2,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontFamily.inter),
-                  ),
-                  SizedBox(
-                    width: 250,
-                    child: Text(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                          color: AppColors.grayscale900,
+                          fontSize: 16,
+                          height: 2,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontFamily.inter),
+                    ),
+                    Text(
                       subtitle,
                       style: AppTextStyle.bodyMediumMedium.copyWith(
                           color: AppColors.grayscale600,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           fontFamily: FontFamily.inter),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               )
             ],
           ),
