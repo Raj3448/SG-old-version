@@ -16,8 +16,8 @@ import 'package:silver_genie/feature/members/screens/member_details_screen.dart'
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
-import 'package:silver_genie/feature/services/services_screen.dart';
-import 'package:silver_genie/feature/services/services_subcare_page.dart';
+import 'package:silver_genie/feature/services/screens/services_screen.dart';
+import 'package:silver_genie/feature/services/services_subcare_screen.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
@@ -88,11 +88,11 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
   path: '/servicesCareScreenDisplay/:pageTitle',
-  name: RoutesConstants.servicesCareScreenDisplay,
+  name: RoutesConstants.servicesCareScreen,
   pageBuilder: (context, state) {
     final pageTitle = state.pathParameters['pageTitle'];
     return MaterialPage(
-      child: ServicesCareScreenDisplay(pagetitle: pageTitle!),
+      child: ServicesCareScreen(pagetitle: pageTitle!),
     );
   },
 ),

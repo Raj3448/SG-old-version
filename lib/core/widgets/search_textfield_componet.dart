@@ -43,11 +43,11 @@ class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
                 const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             enabledBorder: OutlineInputBorder(
                 borderSide:
-                    const BorderSide(width: 2, color: Color(0xffF6F8FF)),
+                    const BorderSide(width: 2, color: AppColors.secondary),
                 borderRadius: BorderRadius.circular(10)),
             focusedBorder: OutlineInputBorder(
                 borderSide:
-                    const BorderSide(width: 2, color: Color(0xffF6F8FF)),
+                    const BorderSide(width: 2, color: AppColors.primary),
                 borderRadius: BorderRadius.circular(10))),
         onFieldSubmitted: (value) {
           _searchFocusNode.unfocus();
