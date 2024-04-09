@@ -1,0 +1,13 @@
+[
+    {
+        "imgPath": "assets/icon/doctor.png",
+        "name": "Chintan Dua",
+        "yoe": "15",
+        "type": "General Practitioner",
+        "info": "Experienced General Practitioner at Oakwood Medical Clinic, committed to providing personalized and holistic healthcare for patients of all ages.",
+        "hospital": "Apollo Hospital, Chennai",
+        "charges": "600",
+        "expertise": ["Physical Examination", "Medical diagnosis", "Patient Counselling", "Patient care"],
+        "preferredLang": ["English", "Tamil", "Hindi", "Bengali"]
+    }
+]

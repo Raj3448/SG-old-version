@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
-import 'package:silver_genie/feature/services/services_screen.dart';
+import 'package:silver_genie/feature/services/screens/services_screen.dart';
 import 'package:zapx/zapx.dart';
 
 class ServicesCareScreenDisplay extends StatelessWidget {
