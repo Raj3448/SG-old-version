@@ -49,3 +49,4 @@ app.*.map.json
 
 #generated
 **.g.dart
+**.freezed.dart

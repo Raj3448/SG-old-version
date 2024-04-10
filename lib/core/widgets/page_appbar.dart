@@ -14,6 +14,7 @@ class PageAppbar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: AppColors.white,
       backgroundColor: AppColors.white,
       automaticallyImplyLeading: false,
+      elevation: 5,
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(

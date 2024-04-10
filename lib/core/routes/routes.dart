@@ -11,13 +11,16 @@ import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
-import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
+import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
+import 'package:silver_genie/feature/services/screens/booking_details_screen.dart';
+import 'package:silver_genie/feature/services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
-import 'package:silver_genie/feature/services/services_subcare_screen.dart';
+import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
@@ -38,36 +41,36 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.mainRoute,
-      name: 'main',
+      path: '/main',
+      name: RoutesConstants.mainRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MainScreen());
       },
     ),
     GoRoute(
-      path: RoutesConstants.loginRoute,
-      name: 'login',
+      path: '/login',
+      name: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: LoginPage());
       },
     ),
     GoRoute(
-      path: RoutesConstants.signUpRoute,
-      name: 'signUp',
+      path: '/signUp',
+      name: RoutesConstants.signUpRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SignUpScreen());
       },
     ),
     GoRoute(
-      path: RoutesConstants.otpRoute,
-      name: 'otp',
+      path: '/otp',
+      name: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: OTPScreen());
       },
     ),
     GoRoute(
-      path: RoutesConstants.homeRoute,
-      name: 'home',
+      path: '/home',
+      name: RoutesConstants.homeRoute,
       pageBuilder: (context, state) {
         return MaterialPage(child: HomeScreen());
       },
@@ -87,33 +90,32 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-  path: '/servicesCareScreenDisplay/:pageTitle',
-  name: RoutesConstants.servicesCareScreen,
-  pageBuilder: (context, state) {
-    final pageTitle = state.pathParameters['pageTitle'];
-    return MaterialPage(
-      child: ServicesCareScreen(pagetitle: pageTitle!),
-    );
-  },
-),
-
+      path: '/servicesCareScreenDisplay/:pageTitle',
+      name: RoutesConstants.servicesCareScreen,
+      pageBuilder: (context, state) {
+        final pageTitle = state.pathParameters['pageTitle'];
+        return MaterialPage(
+          child: ServicesCareScreen(pagetitle: pageTitle!),
+        );
+      },
+    ),
     GoRoute(
-      path: RoutesConstants.serviceRoute,
-      name: 'service',
+      path: '/service',
+      name: RoutesConstants.serviceRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: ServicesScreen());
       },
     ),
     GoRoute(
-      path: RoutesConstants.bookingsRoute,
-      name: 'bookings',
+      path: '/bookings',
+      name: RoutesConstants.bookingsRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingsScreen());
       },
     ),
     GoRoute(
-      path: RoutesConstants.membersRoute,
-      name: 'members',
+      path: '/members',
+      name: RoutesConstants.membersRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MembersScreen());
       },
@@ -124,13 +126,6 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
         return MaterialPage(child: AddEditFamilyMemberScreen(edit: edit));
-      },
-    ),
-    GoRoute(
-      path: RoutesConstants.eprPhrRoute,
-      name: 'eprPhr',
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: EPRPHRViewScreen());
       },
     ),
     GoRoute(
@@ -151,6 +146,45 @@ final GoRouter routes = GoRouter(
             hasCareSub: hasCareSub,
           ),
         );
+      },
+    ),
+    GoRoute(
+      path:
+          '/serviceDetailsScreen/:imgPath/:name/:yoe/:type/:docInfo/:hospital/:charges',
+      name: RoutesConstants.serviceDetailsScreen,
+      pageBuilder: (context, state) {
+        return MaterialPage(
+          child: ServiceDetailsScreen(
+            imgPath: state.pathParameters['imgPath']!,
+            name: state.pathParameters['name']!,
+            yoe: state.pathParameters['yoe']!,
+            type: state.pathParameters['type']!,
+            docInfo: state.pathParameters['docInfo']!,
+            hospital: state.pathParameters['hospital']!,
+            charges: state.pathParameters['charges']!,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/bookServiceScreen',
+      name: RoutesConstants.bookServiceScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: BookServiceScreen());
+      },
+    ),
+    GoRoute(
+      path: '/paymentScreen',
+      name: RoutesConstants.paymentScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: PaymentScreen());
+      },
+    ),
+    GoRoute(
+      path: '/bookingDetailsScreen',
+      name: RoutesConstants.bookingDetailsScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: BookingDetailsScreen());
       },
     ),
   ],
