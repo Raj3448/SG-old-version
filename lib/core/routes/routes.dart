@@ -34,7 +34,7 @@ final GoRouter routes = GoRouter(
         return Observer(
           builder: (context) {
             return store.showOnboarding
-                ? const OnboardingScreen()
+                ?  const OnboardingScreen()
                 : const LoginPage();
           },
         );
@@ -72,12 +72,12 @@ final GoRouter routes = GoRouter(
       path: '/home',
       name: RoutesConstants.homeRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: HomeScreen());
+        return  MaterialPage(child: HomeScreen());
       },
     ),
     GoRoute(
-      path: '/userProfileScreen',
-      name: RoutesConstants.userProfileScreen,
+      path: RoutesConstants.userProfileRoute,
+      name: '/user-profile',
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
       },
@@ -126,6 +126,13 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
         return MaterialPage(child: AddEditFamilyMemberScreen(edit: edit));
+      },
+    ),
+    GoRoute(
+      path: RoutesConstants.eprPhrRoute,
+      name: '/eprPhr',
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: EPRPHRViewScreen());
       },
     ),
     GoRoute(

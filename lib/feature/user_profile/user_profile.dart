@@ -53,25 +53,24 @@ class _UserProfileState extends State<UserProfile> {
                   padding: const EdgeInsets.all(Dimension.d3),
                   child: Column(children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Avatar(imgPath: '', maxRadius: 44),
-                        SizedBox(
+                        const Avatar(imgPath: '', maxRadius: 44),
+                        const SizedBox(
                           width: Dimension.d2,
                         ),
                         Text(
                           userDetails!.fullname,
                           style: AppTextStyle.bodyXLSemiBold,
-                        )
+                        ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: Dimension.d4,
                     ),
                     CustomTextIcon(
                         iconpath: AppIcons.phone,
                         title: userDetails!.mobileNum),
-                    SizedBox(
+                    const SizedBox(
                       height: Dimension.d2,
                     ),
                     CustomTextIcon(
@@ -105,20 +104,20 @@ class _UserProfileState extends State<UserProfile> {
                   ]),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: Dimension.d6,
               ),
-              ProfileNav(
+              const ProfileNav(
                 title: 'Wallet',
               ),
-              ProfileNav(
+              const ProfileNav(
                 title: 'SG+ subscription',
               ),
-              ProfileNav(
+              const ProfileNav(
                 title: 'Emergency subscription',
               ),
-              ProfileNav(title: 'About'),
-              ProfileNav(title: 'Logout'),
+              const ProfileNav(title: 'About'),
+              const ProfileNav(title: 'Logout'),
             ],
           ),
         ),

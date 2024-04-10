@@ -21,7 +21,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  context.pushNamed(RoutesConstants.userProfileScreen);
+                  context.pushNamed(RoutesConstants.userProfileRoute);
                 },
                 child: Avatar.fromSize(
                   imgPath: '',
