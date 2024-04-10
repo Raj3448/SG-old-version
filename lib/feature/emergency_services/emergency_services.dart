@@ -5,6 +5,8 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/core/widgets/title_descript_component.dart';
@@ -169,27 +171,14 @@ class EmergencyServices extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d4,
               ),
-              Center(
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      fixedSize: const MaterialStatePropertyAll(Size(328, 50)),
-                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5))),
-                      backgroundColor:
-                          const MaterialStatePropertyAll(AppColors.primary),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      'Contact Genie',
-                      style: AppTextStyle.bodyMediumMedium.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: FontFamily.inter,
-                        fontWeight: FontWeight.w500,
-                        height: 2.514,
-                      ),
-                    )),
+              CustomButton(
+                ontap: () {},
+                title: 'Contact Genie',
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: ButtonType.primary,
+                expanded: true,
               ),
               const SizedBox(
                 height: Dimension.d4,
