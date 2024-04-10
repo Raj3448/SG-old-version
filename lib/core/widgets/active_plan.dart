@@ -18,13 +18,18 @@ class AnalogComponent extends StatelessWidget {
       children: [
         Text(
           text1,
-          style: AppTextStyle.bodyMediumMedium,
+          style: AppTextStyle.bodyMediumMedium
+              .copyWith(color: AppColors.grayscale700),
         ),
-        const Text(':', style: AppTextStyle.bodyMediumMedium),
+        Text(':',
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale700)),
         const SizedBox(
           width: Dimension.d1,
         ),
-        Text(text2, style: AppTextStyle.bodyMediumMedium),
+        Text(text2,
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale700)),
       ],
     );
   }
@@ -40,10 +45,18 @@ class CustomComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        color: AppColors.secondary,
+        decoration: BoxDecoration(
+          color: AppColors.secondary,
+          border: Border.all(
+            color: AppColors.line,
+          ),
+          borderRadius: BorderRadius.circular(Dimension.d1),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              vertical: Dimension.d3, horizontal: Dimension.d2),
+            vertical: Dimension.d3,
+            horizontal: Dimension.d2,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,7 +72,8 @@ class CustomComponent extends StatelessWidget {
                   const Icon(
                     AppIcons.ecg_heart,
                     color: AppColors.grayscale600,
-                  )
+                    size: Dimension.d3,
+                  ),
                 ],
               ),
               const SizedBox(
@@ -77,25 +91,87 @@ class CustomComponent extends StatelessWidget {
   }
 }
 
+class VitalInfoComponent extends StatelessWidget {
+
+  const VitalInfoComponent({
+    required this.customComponents,
+    super.key,
+  });
+  final List<CustomComponentData> customComponents;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Vital Info',
+          style: AppTextStyle.bodyMediumSemiBold,
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+        Column(
+          children: _buildRows(customComponents),
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildRows(List<CustomComponentData> customComponents) {
+    List<Widget> rows = [];
+     final int rowCount = (customComponents.length / 2).ceil();
+    for (int i = 0; i < rowCount; i++) {
+      List<CustomComponentData> rowData = customComponents.sublist(i*2, (i+1) * 2 > customComponents.length ? customComponents.length : (i +1)*2);
+      rows.add(Row(
+        children: rowData.asMap().entries.map((entry) {
+          int index = entry.key;
+          final CustomComponentData component = entry.value;
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
+              child: CustomComponent(
+                text: component.text,
+                value: component.value,
+              ),
+            ),
+          );
+        }).toList(),
+      ));
+       if (i < rowCount - 1) { 
+        rows.add(const SizedBox(height: Dimension.d2));
+      }
+    }
+    return rows;
+  }
+}
+
+class CustomComponentData {
+
+  const CustomComponentData({
+    required this.text,
+    required this.value,
+  });
+  final String text;
+  final String value;
+}
+
 class ActivePlanComponent extends StatelessWidget {
+
+  const ActivePlanComponent(
+      {required this.name, required this.onTap, super.key,});
   final String name;
   final VoidCallback onTap;
 
-  const ActivePlanComponent({
-  required this.name,
-  required this.onTap, 
-  super.key});
-
-  
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border:Border.all(
-          color: AppColors.line,
-          width: 1),
-        
-        borderRadius: BorderRadius.circular(Dimension.d2), 
+        border: Border.all(color: AppColors.line,),
+        borderRadius: BorderRadius.circular(Dimension.d2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Dimension.d3),
@@ -110,7 +186,10 @@ class ActivePlanComponent extends StatelessWidget {
                   style: AppTextStyle.bodyLargeBold,
                 ),
                 const ElderCareSubscription(
-                    color: ElderCareColor.blue, title: 'Care Member',showIcon: false,)
+                  color: ElderCareColor.blue,
+                  title: 'Care Member',
+                  showIcon: false,
+                ),
               ],
             ),
             const SizedBox(
@@ -128,64 +207,52 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d3,
             ),
-            const Text(
-              'Vital Info',
-              style: AppTextStyle.bodyMediumSemiBold,
-            ),
-            const SizedBox(
-              height: Dimension.d2,
-            ),
-            const Row(
-              children: [
-                CustomComponent(text: 'Blood Pressure', value: '73/140mmHg'),
-                SizedBox(width:Dimension.d2,),
-                CustomComponent(
-                  text: 'Blood Oxygen',
-                  value: '98%',
-                )
+            const VitalInfoComponent(
+              customComponents: [
+                CustomComponentData(text: 'Blood Pressure', value: '73/140mmHg'),
+                CustomComponentData(text: 'Blood Oxygen', value: '98%'),
+                CustomComponentData(text: 'Heart Rate', value: '106bpm'),
+                CustomComponentData(text: 'Fast Glucose', value: '103 mg/dl'),
               ],
             ),
-            const SizedBox(
-              height: Dimension.d2,
-            ),
-             Row(
+            const SizedBox(height: Dimension.d2),
+            const AnalogComponent(
+                text1: 'Last Updated', text2: 'Today at 10:15AM',),
+            const SizedBox(height: Dimension.d3),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomComponent(text: 'Heart Rate', value: '106bpm'),
-                SizedBox(
-                  width: Dimension.d2,
+                Expanded(
+                  child: SizedBox(
+                    height: 28,
+                    child: CustomButton(
+                        ontap: onTap,
+                        title: 'View PHR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: ButtonType.secondary,
+                        expanded: true,),
+                  ),
                 ),
-                CustomComponent(
-                  text: 'Fast Glucose',
-                  value: '103 mg/dl',
+                const SizedBox(
+                  width: Dimension.d4,
                 ),
-                
+                Expanded(
+                  child: SizedBox(
+                    height: 28,
+                    child: CustomButton(
+                        ontap: onTap,
+                        title: 'View EPR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: ButtonType.secondary,
+                        expanded: true,),
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: Dimension.d2),
-                AnalogComponent(text1: 'Last Updated', text2: 'Today at 10:15AM'),
-                SizedBox(height: Dimension.d3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomButton(
-                    ontap: onTap, 
-                    title: 'View PHR', 
-                    showIcon: false, 
-                    iconPath: Icons.not_interested, 
-                    size: ButtonSize.small, 
-                    type: ButtonType.secondary, 
-                    expanded: false),
-                    CustomButton(
-                    ontap: onTap, 
-                    title: 'View EPR', 
-                    showIcon: false, 
-                    iconPath: Icons.not_interested, 
-                    size: ButtonSize.small, 
-                    type: ButtonType.secondary, 
-                    expanded: false),
-      
-                  ],
-                )
           ],
         ),
       ),

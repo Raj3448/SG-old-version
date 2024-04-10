@@ -35,6 +35,7 @@ class MainScreen extends StatelessWidget {
       bottomNavigationBar: Observer(
         builder: (context) {
           return SizedBox(
+            height: 70,
             child: DecoratedBox(
               position: DecorationPosition.foreground,
               decoration: BoxDecoration(
@@ -42,18 +43,17 @@ class MainScreen extends StatelessWidget {
                   topLeft: Radius.circular(4),
                   topRight: Radius.circular(4),
                 ),
-                border: Border.all(color: AppColors.line),
+                border: Border.all(color: AppColors.line,width: 1),
               ),
               child: BottomNavigationBar(
                 backgroundColor: AppColors.white,
-                elevation: 10,
                 type: BottomNavigationBarType.fixed,
                 showUnselectedLabels: true,
                 selectedLabelStyle:
-                    AppTextStyle.bodyMediumBold.copyWith(height: 2),
+                    AppTextStyle.bodyMediumSemiBold,
                 currentIndex: store.currentIndex,
                 unselectedLabelStyle:
-                    AppTextStyle.bodyMediumMedium.copyWith(height: 2),
+                    AppTextStyle.bodyMediumMedium,
                 selectedItemColor: AppColors.primary,
                 selectedIconTheme:
                     const IconThemeData(color: AppColors.primary),
@@ -63,19 +63,31 @@ class MainScreen extends StatelessWidget {
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     label: 'Home'.tr(),
-                    icon: const Icon(AppIcons.home),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
+                      child: const Icon(AppIcons.home,size:16),
+                    ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Services'.tr(),
-                    icon: const Icon(AppIcons.medical_services),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
+                      child: const Icon(AppIcons.medical_services,size:16),
+                    ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Booking'.tr(),
-                    icon: const Icon(AppIcons.calendar),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
+                      child: const Icon(AppIcons.calendar,size:16),
+                    ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Members'.tr(),
-                    icon: const Icon(AppIcons.family),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
+                      child: const Icon(AppIcons.family,size:16),
+                    ),
                   ),
                 ],
               ),
