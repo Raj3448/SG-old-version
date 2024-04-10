@@ -10,6 +10,7 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
@@ -257,25 +258,15 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d4,
               ),
-              ElevatedButton(
-                  style: ButtonStyle(
-                      fixedSize: const MaterialStatePropertyAll(Size(360, 48)),
-                      backgroundColor: null,
-                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: const BorderSide(
-                                  width: 2, color: AppColors.primary)))),
-                  onPressed: () {},
-                  child: Text(
-                    'Subscribe',
-                    style: AppTextStyle.bodyXLSemiBold.copyWith(
-                      color: AppColors.primary,
-                      height: 2.4,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  )),
+              CustomButton(
+                ontap: () {},
+                title: 'Subscribe',
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: ButtonType.secondary,
+                expanded: true,
+              ),
               const SizedBox(
                 height: Dimension.d10,
               ),
