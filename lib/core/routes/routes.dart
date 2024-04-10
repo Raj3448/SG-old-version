@@ -74,7 +74,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: RoutesConstants.userProfileRoute,
-      name: 'user-profile',
+      name: '/user-profile',
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
       },
@@ -128,7 +128,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: RoutesConstants.eprPhrRoute,
-      name: 'eprPhr',
+      name: '/eprPhr',
       pageBuilder: (context, state) {
         return const MaterialPage(child: EPRPHRViewScreen());
       },

@@ -41,7 +41,8 @@ class HomeBody extends StatelessWidget {
                               SelectableAvatar(
                                 imgPath: store.familyMembers[i].imagePath,
                                 maxRadius: 24,
-                                isSelected: store.selectedIndex == i, ontap: () => store.selectAvatar(i),
+                                isSelected: store.selectedIndex == i,
+                                ontap: () => store.selectAvatar(i),
                               ),
                               const SizedBox(width: Dimension.d4),
                             ],
@@ -49,10 +50,13 @@ class HomeBody extends StatelessWidget {
                         SelectableAvatar(
                           imgPath: 'assets/icon/44Px.png',
                           maxRadius: 24,
-                          isSelected: false, ontap: () { context.pushNamed(
-                            RoutesConstants.addEditFamilyMemberRoute,
-                            pathParameters: {'edit': 'true'},
-                          ); },
+                          isSelected: false,
+                          ontap: () {
+                            context.pushNamed(
+                              RoutesConstants.addEditFamilyMemberRoute,
+                              pathParameters: {'edit': 'true'},
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -60,16 +64,19 @@ class HomeBody extends StatelessWidget {
                     if (store.selectedIndex != -1)
                       Observer(
                         builder: (_) {
-                          final selectedMember = store.familyMembers[store.selectedIndex];
+                          final selectedMember =
+                              store.familyMembers[store.selectedIndex];
                           return selectedMember != null
                               ? selectedMember.isActive
                                   ? ActivePlanComponent(
                                       name: selectedMember.name,
                                       onTap: () {
-                                        context.pushNamed(RoutesConstants.eprPhrRoute);
+                                        context.pushNamed(
+                                            RoutesConstants.eprPhrRoute);
                                       },
                                     )
-                                  : InactivePlanComponent(name: selectedMember.name)
+                                  : InactivePlanComponent(
+                                      name: selectedMember.name)
                               : const SizedBox();
                         },
                       ),
@@ -77,8 +84,10 @@ class HomeBody extends StatelessWidget {
                     if (store.selectedIndex != -1)
                       Observer(
                         builder: (_) {
-                          final selectedMember = store.familyMembers[store.selectedIndex];
-                          return selectedMember != null && selectedMember.isActive
+                          final selectedMember =
+                              store.familyMembers[store.selectedIndex];
+                          return selectedMember != null &&
+                                  selectedMember.isActive
                               ? CoachContact(imgpath: '', name: 'Suma Latha')
                               : const SizedBox();
                         },

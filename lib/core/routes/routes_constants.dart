@@ -18,7 +18,6 @@ class RoutesConstants {
   static const addEditFamilyMemberRoute = '/addEditFamilyMember';
   static const eprPhrRoute = '/eprPhr';
   static const memberDetailsRoute = '/memberDetails';
-  static const userProfileScreen = '/userProfileScreen';
   static const emergencyServiceScreen = '/emergencyServiceScreen';
   static const servicesCareScreenDisplay = '/servicesCareScreenDisplay';
 }
