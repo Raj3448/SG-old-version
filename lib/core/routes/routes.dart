@@ -69,7 +69,7 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.homeRoute,
       name: 'home',
       pageBuilder: (context, state) {
-        return const MaterialPage(child: HomeScreen());
+        return MaterialPage(child: HomeScreen());
       },
     ),
     GoRoute(

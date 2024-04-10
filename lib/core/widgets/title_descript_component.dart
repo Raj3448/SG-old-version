@@ -6,7 +6,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 class TitleDescriptComponent extends StatelessWidget {
   final String title;
   final String description;
-  const TitleDescriptComponent (
+  const TitleDescriptComponent(
       {Key? key, required this.title, required this.description})
       : super(key: key);
 
@@ -15,8 +15,8 @@ class TitleDescriptComponent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFC7CFD2), width: 1),
-          color: const Color(0xffE3E9EC),
+          border: Border.all(color: AppColors.grayscale400, width: 1),
+          color: AppColors.grayscale300,
           borderRadius: BorderRadius.circular(5)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

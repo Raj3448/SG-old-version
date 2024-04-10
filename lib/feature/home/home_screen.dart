@@ -1,27 +1,23 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  final PageController _pageController = PageController();
 
-class _HomeScreenState extends State<HomeScreen> {
-  final CarouselController _carouselController = CarouselController();
-  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,12 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     BookServiceButton(
                       iconImagePath: 'assets/icon/volunteer_activism.png',
-                      buttonName: 'HealthCare',
+                      buttonName: 'Health Care',
                       onTap: () {},
                     ),
                     BookServiceButton(
                       iconImagePath: 'assets/icon/home_health.png',
-                      buttonName: 'HomeCare',
+                      buttonName: 'Home Care',
                       onTap: () {},
                     ),
                     BookServiceButton(
@@ -132,53 +128,40 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: Dimension.d2,
+                  height: Dimension.d1,
                 ),
-                CarouselSlider(
-                  carouselController: _carouselController,
-                  options: CarouselOptions(
-                      height: 236,
-                      aspectRatio: 2,
-                      viewportFraction: 0.68,
-                      enableInfiniteScroll: false,
-                      pauseAutoPlayOnTouch: true,
-                      onScrolled: (double? offset) {},
-                      onPageChanged: (index, reason) {
-                        print(index);
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                      pageSnapping: false,
-                      padEnds: false),
-                  items: List.generate(
-                      4,
-                      (index) => const HomeScreenOfferCard(
-                          offerTitle: 'SG Workforce',
-                          content1: 'Trained critical care nursing staff',
-                          content2:
-                              'Trained nursing staff or attendants for senior citizens')),
+                SizedBox(
+                  height: 240,
+                  child: ListView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.only(right: 200),
+                    controller: _pageController,
+                    scrollDirection: Axis.horizontal,
+                    children: List.generate(
+                        4,
+                        (index) => const _HomeScreenOfferCard(
+                              offerTitle: 'SG Workforce',
+                              content1: 'Trained critical care nursing staff',
+                              content2:
+                                  'Trained nursing staff or attendants for senior citizens',
+                            )),
+                  ),
                 ),
                 const SizedBox(
                   height: Dimension.d4,
                 ),
                 Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                      4,
-                      (index) => AnimatedContainer(
-                            height: 8,
-                            width: _currentIndex == index ? 15 : 8,
-                            margin: const EdgeInsets.all(2),
-                            duration: const Duration(seconds: 1),
-                            decoration: BoxDecoration(
-                                color: _currentIndex == index
-                                    ? AppColors.primary
-                                    : AppColors.grayscale400,
-                                borderRadius: BorderRadius.circular(3)),
-                          )),
-                )),
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 4,
+                    effect: const ExpandingDotsEffect(
+                      activeDotColor: AppColors.primary,
+                      dotColor: AppColors.grayscale300,
+                      dotHeight: 8,
+                      dotWidth: 8,
+                    ),
+                  ),
+                ),
                 Text(
                   'Newsletter',
                   style: AppTextStyle.bodyXLSemiBold.copyWith(
@@ -202,7 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 52,
                   child: TextFormField(
-                    // focusNode: _searchFocusNode,
                     style: const TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
@@ -226,37 +208,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderSide: const BorderSide(
                                 width: 2, color: AppColors.primary),
                             borderRadius: BorderRadius.circular(10))),
-                    onFieldSubmitted: (value) {
-                      //_searchFocusNode.unfocus();
-                    },
+                    onFieldSubmitted: (value) {},
                   ),
                 ),
                 const SizedBox(
                   height: Dimension.d4,
                 ),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      alignment: Alignment(0, 0),
-                      height: 48,
-                      width: 360,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border:
-                              Border.all(width: 2, color: AppColors.primary)),
-                      child: Text(
-                        'Subscribe',
-                        style: AppTextStyle.bodyXLSemiBold.copyWith(
-                          color: AppColors.primary,
-                          height: 2.4,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        fixedSize:
+                            const MaterialStatePropertyAll(Size(360, 48)),
+                        backgroundColor: null,
+                        shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(
+                                    width: 2, color: AppColors.primary)))),
+                    onPressed: () {},
+                    child: Text(
+                      'Subscribe',
+                      style: AppTextStyle.bodyXLSemiBold.copyWith(
+                        color: AppColors.primary,
+                        height: 2.4,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
                       ),
-                    ),
-                  ),
-                ),
+                    )),
                 const SizedBox(
                   height: Dimension.d10,
                 ),
@@ -307,8 +284,8 @@ class BookServiceButton extends StatelessWidget {
   }
 }
 
-class HomeScreenOfferCard extends StatelessWidget {
-  const HomeScreenOfferCard(
+class _HomeScreenOfferCard extends StatelessWidget {
+  const _HomeScreenOfferCard(
       {required this.offerTitle,
       required this.content1,
       required this.content2,
@@ -344,9 +321,16 @@ class HomeScreenOfferCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/icon/verified.png',
-                height: 30,
+              const Padding(
+                padding: EdgeInsets.only(top: 7),
+                child: Icon(
+                  AppIcons.check,
+                  size: 12,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(
+                width: Dimension.d3,
               ),
               Expanded(
                 child: Text(
@@ -363,9 +347,16 @@ class HomeScreenOfferCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/icon/verified.png',
-                height: 30,
+              const Padding(
+                padding: EdgeInsets.only(top: 7),
+                child: Icon(
+                  AppIcons.check,
+                  size: 12,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(
+                width: Dimension.d3,
               ),
               Expanded(
                 child: Text(

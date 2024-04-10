@@ -5,10 +5,10 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/core/widgets/title_descript_component.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
-
 
 class EmergencyServices extends StatelessWidget {
   EmergencyServices({Key? key}) : super(key: key);
@@ -17,18 +17,12 @@ class EmergencyServices extends StatelessWidget {
   Widget build(BuildContext context) {
     final String temp =
         'jhsjhs ssjhsjhsjsd sdssjss s ssjshs sjhshjw wwkwjwkw wkjwkwj tgtgghtrr tttryty ttrtt ttt tggfgrgrgregergregregregregregreregree  gggrg rgrgre r rrsss segesge';
-    final EmergencyServiceStore emergencyServiceStore =
-        GetIt.instance.get<EmergencyServiceStore>();
+    final store = GetIt.instance.get<EmergencyServiceStore>();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.grayscale100,
-        title: const Text(
-          'Emergency services',
-        ),
-      ),
+      appBar: const PageAppbar(title: 'Emergency services'),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +67,7 @@ class EmergencyServices extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d1,
               ),
-              Text(emergencyServiceStore.emergencyServiceModel.defination,
+              Text(store.emergencyServiceModel.defination,
                   style: AppTextStyle.bodyMediumMedium.copyWith(
                     color: AppColors.grayscale700,
                     fontSize: 14,
@@ -94,36 +88,34 @@ class EmergencyServices extends StatelessWidget {
               ),
               TitleDescriptComponent(
                   title: 'Preparedness Support',
-                  description: emergencyServiceStore
-                      .emergencyServiceModel.support.preparedness),
+                  description:
+                      store.emergencyServiceModel.support.preparedness),
               const SizedBox(
                 height: Dimension.d2,
               ),
               TitleDescriptComponent(
                   title: 'Hospital Support',
-                  description: emergencyServiceStore
-                      .emergencyServiceModel.support.hospital),
+                  description: store.emergencyServiceModel.support.hospital),
               const SizedBox(
                 height: Dimension.d2,
               ),
               TitleDescriptComponent(
                   title: 'Post-discharge Support',
-                  description: emergencyServiceStore
-                      .emergencyServiceModel.support.postDischarge),
+                  description:
+                      store.emergencyServiceModel.support.postDischarge),
               const SizedBox(
                 height: Dimension.d2,
               ),
               TitleDescriptComponent(
                   title: 'Health-monitoring Support',
-                  description: emergencyServiceStore
-                      .emergencyServiceModel.support.healthMonitor),
+                  description:
+                      store.emergencyServiceModel.support.healthMonitor),
               const SizedBox(
                 height: Dimension.d2,
               ),
               TitleDescriptComponent(
                   title: 'Genie Care Support',
-                  description: emergencyServiceStore
-                      .emergencyServiceModel.support.genieCare),
+                  description: store.emergencyServiceModel.support.genieCare),
               const SizedBox(
                 height: Dimension.d5,
               ),
@@ -138,7 +130,7 @@ class EmergencyServices extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d5,
               ),
-              Text(emergencyServiceStore.emergencyServiceModel.plansDescription,
+              Text(store.emergencyServiceModel.plansDescription,
                   style: AppTextStyle.bodyMediumMedium.copyWith(
                     color: AppColors.grayscale700,
                     fontSize: 14,
@@ -151,13 +143,10 @@ class EmergencyServices extends StatelessWidget {
                 height: 380,
                 child: ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount:
-                        emergencyServiceStore.emergencyServiceModel.plans.length,
+                    itemCount: store.emergencyServiceModel.plans.length,
                     itemBuilder: (context, index) {
                       return PlanDisplayComponent(
-                              plan: emergencyServiceStore
-                                  .emergencyServiceModel.plans[index])
-                          ;
+                          plan: store.emergencyServiceModel.plans[index]);
                     }),
               ),
               Text('How It works?',

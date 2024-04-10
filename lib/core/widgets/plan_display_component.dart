@@ -13,7 +13,7 @@ class PlanDisplayComponent extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFC7CFD2), width: 1),
+          border: Border.all(color: AppColors.grayscale400, width: 1),
           color: AppColors.grayscale300,
           borderRadius: BorderRadius.circular(10)),
       child: Column(

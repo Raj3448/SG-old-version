@@ -17,7 +17,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      const HomeScreen(),
+      HomeScreen(),
       const ServicesScreen(),
       const BookingsScreen(),
       const MembersScreen(),
