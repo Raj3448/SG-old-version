@@ -1,5 +1,6 @@
 // ignore_for_file: strict_raw_type
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -31,7 +32,7 @@ class MultiDropdown extends StatelessWidget {
         selectionType: SelectionType.single,
         optionTextStyle: AppTextStyle.bodyLargeMedium,
         hintStyle: AppTextStyle.bodyLargeMedium
-            .copyWith(color: AppColors.grayscale700),
+            .copyWith(color: AppColors.grayscale600),
         singleSelectItemStyle: AppTextStyle.bodyLargeMedium
             .copyWith(color: AppColors.grayscale900),
         dropdownHeight: 160,
@@ -54,6 +55,82 @@ class MultiDropdown extends StatelessWidget {
           size: 7,
         ),
         inputDecoration: const BoxDecoration(),
+      ),
+    );
+  }
+}
+
+class RelationDropdown extends StatelessWidget {
+  const RelationDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiDropdown(
+      values: [
+        ValueItem(label: 'Father'.tr(), value: 'Father'),
+        ValueItem(label: 'Mother'.tr(), value: 'Mother'),
+        ValueItem(label: 'Sister'.tr(), value: 'Sister'),
+        ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
+        ValueItem(label: 'Wife'.tr(), value: 'Wife'),
+        ValueItem(label: 'Self'.tr(), value: 'Self'),
+      ],
+    );
+  }
+}
+
+class GenderDropdown extends StatelessWidget {
+  const GenderDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiDropdown(
+      values: [
+        ValueItem(label: 'Male'.tr(), value: 'Male'),
+        ValueItem(label: 'Female'.tr(), value: 'Female'),
+        ValueItem(label: 'Other'.tr(), value: 'Other'),
+      ],
+    );
+  }
+}
+
+class DateDropdown extends StatelessWidget {
+  const DateDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showDatePicker(
+          context: context,
+          firstDate: DateTime(1950),
+          lastDate: DateTime.now(),
+          initialDate: DateTime.now(),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.line),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        child: Row(
+          children: [
+            Text(
+              'Select'.tr(),
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(color: AppColors.grayscale600),
+            ),
+            const Spacer(),
+            const Icon(
+              AppIcons.calendar,
+              color: AppColors.grayscale700,
+              size: 18,
+            ),
+          ],
+        ),
       ),
     );
   }

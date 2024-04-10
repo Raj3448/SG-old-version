@@ -52,7 +52,8 @@ class CustomTextField extends StatelessWidget {
           vertical: 14,
         ),
         hintMaxLines: 5,
-        hintStyle: AppTextStyle.bodyLargeMedium,
+        hintStyle: AppTextStyle.bodyLargeMedium
+            .copyWith(color: AppColors.grayscale600),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimension.d2),
           borderSide: const BorderSide(
