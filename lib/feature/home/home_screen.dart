@@ -287,7 +287,7 @@ class BookServiceButton extends StatelessWidget {
 
   final String iconImagePath;
   final String buttonName;
-  final void Function() onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

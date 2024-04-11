@@ -19,7 +19,7 @@ class EmergencyServices extends StatelessWidget {
   Widget build(BuildContext context) {
     final String temp =
         'jhsjhs ssjhsjhsjsd sdssjss s ssjshs sjhshjw wwkwjwkw wkjwkwj tgtgghtrr tttryty ttrtt ttt tggfgrgrgregergregregregregregreregree  gggrg rgrgre r rrsss segesge';
-    final store = GetIt.instance.get<EmergencyServiceStore>();
+    final store = GetIt.I<EmergencyServiceStore>();
     return Scaffold(
       appBar: const PageAppbar(title: 'Emergency services'),
       body: SingleChildScrollView(
