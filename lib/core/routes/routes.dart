@@ -22,6 +22,7 @@ import 'package:silver_genie/feature/services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
+import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
@@ -88,6 +89,13 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.emergencyServiceScreen,
       pageBuilder: (context, state) {
         return MaterialPage(child: EmergencyServices());
+      },
+    ),
+    GoRoute(
+      path: '/subscriptionsScreen',
+      name: RoutesConstants.subscriptionsScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: SubscriptionsScreen());
       },
     ),
     GoRoute(
