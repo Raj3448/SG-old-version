@@ -131,7 +131,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             ),
             GestureDetector(
               onTap: () {
-                context.pushNamed(
+                GoRouter.of(context).pushNamed(
                   RoutesConstants.serviceDetailsScreen,
                   pathParameters: {
                     'imgPath': 'assets/icon/doctor.png',

@@ -41,57 +41,49 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/main',
-      name: RoutesConstants.mainRoute,
+      path: RoutesConstants.mainRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MainScreen());
       },
     ),
     GoRoute(
-      path: '/login',
-      name: RoutesConstants.loginRoute,
+      path: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: LoginPage());
       },
     ),
     GoRoute(
-      path: '/signUp',
-      name: RoutesConstants.signUpRoute,
+      path: RoutesConstants.signUpRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SignUpScreen());
       },
     ),
     GoRoute(
-      path: '/otp',
-      name: RoutesConstants.otpRoute,
+      path: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: OTPScreen());
       },
     ),
     GoRoute(
-      path: '/home',
-      name: RoutesConstants.homeRoute,
+      path: RoutesConstants.homeRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: HomeScreen());
       },
     ),
     GoRoute(
-      path: '/userProfileScreen',
-      name: RoutesConstants.userProfileScreen,
+      path: RoutesConstants.userProfileScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(
-      path: '/emergencyServiceScreen',
-      name: RoutesConstants.emergencyServiceScreen,
+      path: RoutesConstants.emergencyServiceScreen,
       pageBuilder: (context, state) {
         return MaterialPage(child: EmergencyServices());
       },
     ),
     GoRoute(
-      path: '/servicesCareScreenDisplay/:pageTitle',
-      name: RoutesConstants.servicesCareScreenDisplay,
+      path: RoutesConstants.servicesCareScreenDisplay,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'];
         return MaterialPage(
@@ -100,29 +92,25 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/service',
-      name: RoutesConstants.serviceRoute,
+      path: RoutesConstants.serviceRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: ServicesScreen());
       },
     ),
     GoRoute(
-      path: '/bookings',
-      name: RoutesConstants.bookingsRoute,
+      path: RoutesConstants.bookingsRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingsScreen());
       },
     ),
     GoRoute(
-      path: '/members',
-      name: RoutesConstants.membersRoute,
+      path: RoutesConstants.membersRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MembersScreen());
       },
     ),
     GoRoute(
-      path: '/addFamilyMember/:edit',
-      name: RoutesConstants.addEditFamilyMemberRoute,
+      path: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
         return MaterialPage(child: AddEditFamilyMemberScreen(edit: edit));
@@ -130,7 +118,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path:
-          '/members/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
+          '/memberDetails/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
       name: RoutesConstants.memberDetailsRoute,
       pageBuilder: (context, state) {
         final hasCareSub =
@@ -167,22 +155,19 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/bookServiceScreen',
-      name: RoutesConstants.bookServiceScreen,
+      path: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookServiceScreen());
       },
     ),
     GoRoute(
-      path: '/paymentScreen',
-      name: RoutesConstants.paymentScreen,
+      path: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: PaymentScreen());
       },
     ),
     GoRoute(
-      path: '/bookingDetailsScreen',
-      name: RoutesConstants.bookingDetailsScreen,
+      path: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingDetailsScreen());
       },
