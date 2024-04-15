@@ -12,7 +12,7 @@ abstract class _UserDetailStoreBase with Store {
       dateBirth: '16-02-2002',
       mobileNum: "+91 1234567890",
       emailId: 'example@gmail.com',
-      address: 'xyz address',
+      address: 'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
       country: 'India',
       state: 'Maharashtra',
       city: 'Pune',

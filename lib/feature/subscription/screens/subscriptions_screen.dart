@@ -7,6 +7,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
+import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
@@ -15,10 +16,10 @@ class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({Key? key}) : super(key: key);
 
   @override
-  State<SubscriptionsScreen> createState() => _IconTitleDetailsComponentState();
+  State<SubscriptionsScreen> createState() => IconTitleDetailsComponentState();
 }
 
-class _IconTitleDetailsComponentState extends State<SubscriptionsScreen>
+class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
     with SingleTickerProviderStateMixin {
   late TabController controller;
 
@@ -161,15 +162,15 @@ class _UserDetailsComponent extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _IconTitleDetailsComponent(
+                  IconTitleDetailsComponent(
                       icon: AppIcons.elderly_person,
                       title: 'Plan',
                       details: memberDetails.plan),
-                  _IconTitleDetailsComponent(
+                  IconTitleDetailsComponent(
                       icon: AppIcons.medical_services,
                       title: 'Status',
                       details: memberDetails.status),
-                  _IconTitleDetailsComponent(
+                  IconTitleDetailsComponent(
                       icon: AppIcons.calendar,
                       title: 'Plan ends on',
                       details: memberDetails.planEndsDate),
@@ -192,39 +193,4 @@ class _UserDetailsComponent extends StatelessWidget {
   }
 }
 
-class _IconTitleDetailsComponent extends StatelessWidget {
-  const _IconTitleDetailsComponent(
-      {required this.icon,
-      required this.title,
-      required this.details,
-      super.key});
-  final IconData icon;
-  final String title;
-  final String details;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 22,
-          color: AppColors.grayscale600,
-        ),
-        const SizedBox(
-          width: Dimension.d2,
-        ),
-        Text(
-          title,
-          style: AppTextStyle.bodyLargeMedium.copyWith(
-              fontWeight: FontWeight.w400, color: AppColors.grayscale600),
-        ),
-        const Spacer(),
-        Text(
-          details,
-          style: AppTextStyle.bodyMediumMedium
-              .copyWith(color: AppColors.grayscale900),
-        ),
-      ],
-    );
-  }
-}
+

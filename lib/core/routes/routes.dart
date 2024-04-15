@@ -36,7 +36,7 @@ final GoRouter routes = GoRouter(
         return Observer(
           builder: (context) {
             return store.showOnboarding
-                ?  const OnboardingScreen()
+                ? const OnboardingScreen()
                 : const LoginPage();
           },
         );
@@ -141,7 +141,7 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.eprPhrRoute,
       name: '/eprPhr',
       pageBuilder: (context, state) {
-        return const MaterialPage(child: EPRPHRViewScreen());
+        return MaterialPage(child: EPRPHRViewScreen());
       },
     ),
     GoRoute(
