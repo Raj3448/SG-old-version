@@ -11,6 +11,7 @@ import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
+import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
@@ -71,7 +72,7 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.userProfileScreen,
+      path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
       },
@@ -118,7 +119,6 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: RoutesConstants.eprPhrRoute,
-      name: '/eprPhr',
       pageBuilder: (context, state) {
         return const MaterialPage(child: EPRPHRViewScreen());
       },
