@@ -41,6 +41,7 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
       style:
@@ -85,10 +86,12 @@ class CustomPhoneField extends StatelessWidget {
   const CustomPhoneField({required this.title, super.key});
 
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.number,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: 'Enter mobile number',
         hintStyle: AppTextStyle.bodyLargeMedium.copyWith(height: 1.5),

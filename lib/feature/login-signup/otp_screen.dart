@@ -58,7 +58,7 @@ class OTPScreen extends StatelessWidget {
                   },
                   errorTextMargin: const EdgeInsets.only(left: Dimension.d14),
                   separatorBuilder: (context, index) {
-                    return const SizedBox(width: Dimension.d7);
+                    return const SizedBox(width: Dimension.d4);
                   },
                   errorTextSpace: 25,
                   pinTheme: PinTheme(
