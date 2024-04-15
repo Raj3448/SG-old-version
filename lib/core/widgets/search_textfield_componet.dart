@@ -4,7 +4,7 @@ import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 class SearchTextfieldComponet extends StatefulWidget {
-  const SearchTextfieldComponet({Key? key}) : super(key: key);
+  const SearchTextfieldComponet({super.key});
 
   @override
   State<SearchTextfieldComponet> createState() =>
@@ -22,33 +22,35 @@ class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
         style:
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
-            prefixIcon: Image.asset(
-              'assets/icon/Icon - Search.png',
-              width: 18,
-              height: 18,
-              fit: BoxFit.scaleDown,
-            ),
-            prefixIconColor: Colors.black,
-            fillColor: Colors.white24,
-            filled: true,
-            border: InputBorder.none,
-            hintText: 'Search...',
-            hintStyle: AppTextStyle.bodyMediumMedium.copyWith(
-                color: AppColors.grayscale600,
-                fontSize: 16,
-                height: 1.46,
-                fontWeight: FontWeight.w400,
-                fontFamily: FontFamily.inter),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(width: 2, color: Color(0xffF6F8FF)),
-                borderRadius: BorderRadius.circular(10)),
-            focusedBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(width: 2, color: Color(0xffF6F8FF)),
-                borderRadius: BorderRadius.circular(10))),
+          prefixIcon: Image.asset(
+            'assets/icon/Icon - Search.png',
+            width: 18,
+            height: 18,
+            fit: BoxFit.scaleDown,
+          ),
+          prefixIconColor: Colors.black,
+          fillColor: Colors.white24,
+          filled: true,
+          border: InputBorder.none,
+          hintText: 'Search...',
+          hintStyle: AppTextStyle.bodyMediumMedium.copyWith(
+            color: AppColors.grayscale600,
+            fontSize: 16,
+            height: 1.46,
+            fontWeight: FontWeight.w400,
+            fontFamily: FontFamily.inter,
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 2, color: Color(0xffF6F8FF)),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 2, color: Color(0xffF6F8FF)),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
         onFieldSubmitted: (value) {
           _searchFocusNode.unfocus();
         },

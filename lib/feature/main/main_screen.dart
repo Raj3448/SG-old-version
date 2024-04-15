@@ -43,17 +43,15 @@ class MainScreen extends StatelessWidget {
                   topLeft: Radius.circular(4),
                   topRight: Radius.circular(4),
                 ),
-                border: Border.all(color: AppColors.line,width: 1),
+                border: Border.all(color: AppColors.line),
               ),
               child: BottomNavigationBar(
                 backgroundColor: AppColors.white,
                 type: BottomNavigationBarType.fixed,
                 showUnselectedLabels: true,
-                selectedLabelStyle:
-                    AppTextStyle.bodyMediumSemiBold,
+                selectedLabelStyle: AppTextStyle.bodyMediumSemiBold,
                 currentIndex: store.currentIndex,
-                unselectedLabelStyle:
-                    AppTextStyle.bodyMediumMedium,
+                unselectedLabelStyle: AppTextStyle.bodyMediumMedium,
                 selectedItemColor: AppColors.primary,
                 selectedIconTheme:
                     const IconThemeData(color: AppColors.primary),
@@ -63,30 +61,30 @@ class MainScreen extends StatelessWidget {
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     label: 'Home'.tr(),
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.home,size:16),
+                    icon: const Padding(
+                      padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: Icon(AppIcons.home, size: 16),
                     ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Services'.tr(),
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.medical_services,size:16),
+                    icon: const Padding(
+                      padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: Icon(AppIcons.medical_services, size: 16),
                     ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Booking'.tr(),
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.calendar,size:16),
+                    icon: const Padding(
+                      padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: Icon(AppIcons.calendar, size: 16),
                     ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Members'.tr(),
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.family,size:16),
+                    icon: const Padding(
+                      padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: Icon(AppIcons.family, size: 16),
                     ),
                   ),
                 ],

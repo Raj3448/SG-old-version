@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/models/value_item.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -20,13 +22,13 @@ class ProfileDetails extends StatelessWidget {
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Personal Details'),
       body: SingleChildScrollView(
-         physics: const BouncingScrollPhysics(
+        physics: const BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.fast,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            crossAxisAlignment:CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Center(child: EditPic()),
               const SizedBox(
@@ -45,7 +47,9 @@ class ProfileDetails extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d4,
               ),
-              const TextLabel(title: 'Gender',),
+              const TextLabel(
+                title: 'Gender',
+              ),
               const SizedBox(
                 height: Dimension.d2,
               ),
@@ -59,7 +63,9 @@ class ProfileDetails extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d4,
               ),
-              const TextLabel(title: 'Date of birth',),
+              const TextLabel(
+                title: 'Date of birth',
+              ),
               const SizedBox(
                 height: Dimension.d2,
               ),
@@ -106,18 +112,21 @@ class ProfileDetails extends StatelessWidget {
                 height: Dimension.d2,
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   showDialog(
-                    context: context, 
-                    builder: (context){
-                      return InfoDialog(
-                        showIcon: false, 
-                        title: 'Want to Update mobile number?', 
-                        desc: 'Please contact the SilverGenie team for changing mobile number.', 
-                        btnTitle: 'Contact Genie', 
-                        showBtnIcon: false, 
-                        btnIconPath: AppIcons.add);
-                    });
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: false,
+                        title: 'Want to Update mobile number?',
+                        desc:
+                            'Please contact the SilverGenie team for changing mobile number.',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: false,
+                        btnIconPath: AppIcons.add,
+                      );
+                    },
+                  );
                 },
                 child: const CustomTextField(
                   hintText: 'Mobile Field',
@@ -134,18 +143,21 @@ class ProfileDetails extends StatelessWidget {
                 height: Dimension.d2,
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   showDialog(
-                    context: context, 
-                    builder: (context){
-                      return InfoDialog(
-                        showIcon: false, 
-                        title: 'Want to Update Email ID?', 
-                        desc: 'Please contact the SilverGenie team for changing Email ID.', 
-                        btnTitle: 'Contact Genie', 
-                        showBtnIcon: false, 
-                        btnIconPath: AppIcons.phone);
-                    });
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: false,
+                        title: 'Want to Update Email ID?',
+                        desc:
+                            'Please contact the SilverGenie team for changing Email ID.',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: false,
+                        btnIconPath: AppIcons.phone,
+                      );
+                    },
+                  );
                 },
                 child: const CustomTextField(
                   hintText: 'email address',
@@ -219,16 +231,18 @@ class ProfileDetails extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d10,
               ),
-              CustomButton(ontap: (){}, 
-              title: 'Save details', 
-              showIcon: false, 
-              iconPath: AppIcons.add, 
-              size: ButtonSize.normal, 
-              type: ButtonType.primary, 
-              expanded: true)
+              CustomButton(
+                ontap: () {},
+                title: 'Save details',
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: ButtonType.primary,
+                expanded: true,
+              ),
             ],
           ),
-          ),
+        ),
       ),
     );
   }

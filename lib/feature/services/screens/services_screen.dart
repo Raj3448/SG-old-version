@@ -170,21 +170,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
 }
 
 class ServicesListTileComponent extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String subtitle;
   const ServicesListTileComponent({
-    Key? key,
     required this.imagePath,
     required this.title,
     required this.subtitle,
-  }) : super(key: key);
+    super.key,
+  });
+  final String imagePath;
+  final String title;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      alignment: const Alignment(0, 0),
+      alignment: Alignment.center,
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(width: 2, color: const Color(0xffF6F8FF)),

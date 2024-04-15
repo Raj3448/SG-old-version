@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
@@ -12,9 +14,8 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 
 class HomeBody extends StatelessWidget {
+  const HomeBody({required this.store, super.key});
   final HomeScreenStore store;
-
-  const HomeBody({required this.store});
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +73,13 @@ class HomeBody extends StatelessWidget {
                                       name: selectedMember.name,
                                       onTap: () {
                                         context.pushNamed(
-                                            RoutesConstants.eprPhrRoute);
+                                          RoutesConstants.eprPhrRoute,
+                                        );
                                       },
                                     )
                                   : InactivePlanComponent(
-                                      name: selectedMember.name)
+                                      name: selectedMember.name,
+                                    )
                               : const SizedBox();
                         },
                       ),
@@ -88,7 +91,10 @@ class HomeBody extends StatelessWidget {
                               store.familyMembers[store.selectedIndex];
                           return selectedMember != null &&
                                   selectedMember.isActive
-                              ? CoachContact(imgpath: '', name: 'Suma Latha')
+                              ? const CoachContact(
+                                  imgpath: '',
+                                  name: 'Suma Latha',
+                                )
                               : const SizedBox();
                         },
                       ),
@@ -104,6 +110,8 @@ class HomeBody extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
+
   final HomeScreenStore store = HomeScreenStore();
 
   @override

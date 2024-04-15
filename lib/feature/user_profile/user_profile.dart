@@ -13,7 +13,6 @@ import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
-
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -44,43 +43,46 @@ class _UserProfileState extends State<UserProfile> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimension.d1),
-                    border: Border.all(
-                      color: AppColors.secondary,
-                      width: 2,
-                    )),
+                  borderRadius: BorderRadius.circular(Dimension.d1),
+                  border: Border.all(
+                    color: AppColors.secondary,
+                    width: 2,
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(Dimension.d3),
-                  child: Column(children: [
-                    Row(
-                      children: [
-                        const Avatar(imgPath: '', maxRadius: 44),
-                        const SizedBox(
-                          width: Dimension.d2,
-                        ),
-                        Text(
-                          userDetails!.fullname,
-                          style: AppTextStyle.bodyXLSemiBold,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: Dimension.d4,
-                    ),
-                    CustomTextIcon(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Avatar(imgPath: '', maxRadius: 44),
+                          const SizedBox(
+                            width: Dimension.d2,
+                          ),
+                          Text(
+                            userDetails!.fullname,
+                            style: AppTextStyle.bodyXLSemiBold,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: Dimension.d4,
+                      ),
+                      CustomTextIcon(
                         iconpath: AppIcons.phone,
-                        title: userDetails!.mobileNum),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
-                    CustomTextIcon(
-                      iconpath: AppIcons.home,
-                      title: userDetails!.emailId,
-                    ),
-                    const SizedBox(
-                      height: Dimension.d4,
-                    ),
-                    CustomButton(
+                        title: userDetails!.mobileNum,
+                      ),
+                      const SizedBox(
+                        height: Dimension.d2,
+                      ),
+                      CustomTextIcon(
+                        iconpath: AppIcons.home,
+                        title: userDetails!.emailId,
+                      ),
+                      const SizedBox(
+                        height: Dimension.d4,
+                      ),
+                      CustomButton(
                         ontap: () {
                           Navigator.push(
                             context,
@@ -100,8 +102,10 @@ class _UserProfileState extends State<UserProfile> {
                         iconPath: Icons.not_interested,
                         size: ButtonSize.small,
                         type: ButtonType.secondary,
-                        expanded: true)
-                  ]),
+                        expanded: true,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(

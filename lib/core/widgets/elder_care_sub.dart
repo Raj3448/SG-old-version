@@ -13,7 +13,8 @@ class ElderCareSubscription extends StatelessWidget {
     required this.color,
     required this.title,
     required this.showIcon,
-    super.key});
+    super.key,
+  });
 
   final ElderCareColor color;
   final String title;
@@ -61,14 +62,17 @@ class ElderCareSubscription extends StatelessWidget {
             Text(
               title.tr(),
               style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: _getIconColor(),fontSize: 14),
+                  .copyWith(color: _getIconColor(), fontSize: 14),
             ),
             const SizedBox(width: 5),
-            showIcon?Icon(
-              AppIcons.check,
-              size: 12,
-              color: _getIconColor(),
-            ):SizedBox(),
+            if (showIcon)
+              Icon(
+                AppIcons.check,
+                size: 12,
+                color: _getIconColor(),
+              )
+            else
+              const SizedBox(),
             const SizedBox(width: 5),
           ],
         ),

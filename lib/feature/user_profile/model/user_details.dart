@@ -1,6 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_details.g.dart';
 
@@ -11,29 +11,6 @@ String userDetailsToJson(UserDetails data) => json.encode(data.toJson());
 
 @JsonSerializable()
 class UserDetails {
-  @JsonKey(name: "fullname")
-  final String fullname;
-  @JsonKey(name: "gender")
-  final String gender;
-  @JsonKey(name: "dateBirth")
-  final String dateBirth;
-  @JsonKey(name: "mobileNum")
-  @Default("+91 1234567890")
-  final String mobileNum;
-  @JsonKey(name: "emailId")
-  @Default("example@gmail.com")
-  final String emailId;
-  @JsonKey(name: "address")
-  final String address;
-  @JsonKey(name: "country")
-  final String country;
-  @JsonKey(name: "state")
-  final String state;
-  @JsonKey(name: "city")
-  final String city;
-  @JsonKey(name: "postalCode")
-  final int postalCode;
-
   UserDetails({
     required this.fullname,
     required this.gender,
@@ -46,6 +23,31 @@ class UserDetails {
     required this.city,
     required this.postalCode,
   });
+
+  factory UserDetails.fromJson(Map<String, dynamic> json) =>
+      _$UserDetailsFromJson(json);
+  @JsonKey(name: 'fullname')
+  final String fullname;
+  @JsonKey(name: 'gender')
+  final String gender;
+  @JsonKey(name: 'dateBirth')
+  final String dateBirth;
+  @JsonKey(name: 'mobileNum')
+  @Default('+91 1234567890')
+  final String mobileNum;
+  @JsonKey(name: 'emailId')
+  @Default('example@gmail.com')
+  final String emailId;
+  @JsonKey(name: 'address')
+  final String address;
+  @JsonKey(name: 'country')
+  final String country;
+  @JsonKey(name: 'state')
+  final String state;
+  @JsonKey(name: 'city')
+  final String city;
+  @JsonKey(name: 'postalCode')
+  final int postalCode;
 
   UserDetails copyWith({
     String? fullname,
@@ -71,9 +73,6 @@ class UserDetails {
         city: city ?? this.city,
         postalCode: postalCode ?? this.postalCode,
       );
-
-  factory UserDetails.fromJson(Map<String, dynamic> json) =>
-      _$UserDetailsFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserDetailsToJson(this);
 }

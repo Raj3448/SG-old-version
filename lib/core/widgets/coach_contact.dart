@@ -21,9 +21,8 @@ class CoachContact extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: AppColors.line,
-          width: 1,
         ),
-        borderRadius: BorderRadius.circular(Dimension.d2)
+        borderRadius: BorderRadius.circular(Dimension.d2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Dimension.d3),
@@ -51,7 +50,8 @@ class CoachContact extends StatelessWidget {
                     ),
                     Text(
                       'Health coach',
-                      style: AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.grayscale700)
+                      style: AppTextStyle.bodyMediumMedium
+                          .copyWith(color: AppColors.grayscale700),
                     ),
                   ],
                 ),

@@ -80,7 +80,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.emergencyServiceScreen,
       pageBuilder: (context, state) {
-        return MaterialPage(child: EmergencyServices());
+        return const MaterialPage(child: EmergencyServices());
       },
     ),
     GoRoute(
