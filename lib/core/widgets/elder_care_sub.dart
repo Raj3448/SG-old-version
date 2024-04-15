@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 
@@ -48,18 +49,19 @@ class ElderCareSubscription extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        padding: const EdgeInsets.all(Dimension.d1),
         child: Row(
           children: [
             Icon(
               AppIcons.elderly_person,
               color: _getIconColor(),
+              size: Dimension.d3,
             ),
             const SizedBox(width: 5),
             Text(
-              'Elder care subscription'.tr(),
+              title.tr(),
               style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: _getIconColor()),
+                  .copyWith(color: _getIconColor(),fontSize: 14),
             ),
             const SizedBox(width: 5),
             showIcon?Icon(

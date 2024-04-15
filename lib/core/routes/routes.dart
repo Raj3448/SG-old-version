@@ -67,7 +67,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.homeRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: HomeScreen());
+        return MaterialPage(child: HomeScreen());
       },
     ),
     GoRoute(
@@ -114,6 +114,13 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
         return MaterialPage(child: AddEditFamilyMemberScreen(edit: edit));
+      },
+    ),
+    GoRoute(
+      path: RoutesConstants.eprPhrRoute,
+      name: '/eprPhr',
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: EPRPHRViewScreen());
       },
     ),
     GoRoute(
