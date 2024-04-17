@@ -11,6 +11,7 @@ import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
+import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
@@ -72,7 +73,7 @@ final GoRouter routes = GoRouter(
       path: '/home',
       name: RoutesConstants.homeRoute,
       pageBuilder: (context, state) {
-        return  MaterialPage(child: HomeScreen());
+        return MaterialPage(child: HomeScreen());
       },
     ),
     GoRoute(
@@ -91,11 +92,11 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: '/servicesCareScreenDisplay/:pageTitle',
-      name: RoutesConstants.servicesCareScreenDisplay,
+      name: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'];
         return MaterialPage(
-          child: ServicesCareScreenDisplay(pagetitle: pageTitle!),
+          child: ServicesCareScreen(pagetitle: pageTitle!),
         );
       },
     ),
