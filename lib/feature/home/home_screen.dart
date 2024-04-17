@@ -202,7 +202,7 @@ class HomeScreen extends StatelessWidget {
                     activeDotColor: AppColors.primary,
                     dotColor: AppColors.grayscale300,
                     dotHeight: 8,
-                    dotWidth: 8,
+                    dotWidth: 6,
                   ),
                 ),
               ),

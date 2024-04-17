@@ -4,6 +4,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -36,29 +37,16 @@ class _BookingsScreenState extends State<BookingsScreen>
                 style: AppTextStyle.bodyXLSemiBold
                     .copyWith(color: AppColors.grayscale900, height: 2.6),
               ),
-              DefaultTabController(
-                  length: 3,
-                  child: Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                        color: AppColors.secondary,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: SizedBox(
-                      height: 48,
-                      width: double.infinity,
-                      child: TabBar(
-                        controller: controller,
-                        dividerColor: AppColors.secondary,
-                        indicatorColor: AppColors.primary,
-                        labelColor: AppColors.grayscale900,
-                        tabs: const [
-                          Tab(icon: Text('Upcoming')),
-                          Tab(icon: Text('In Progress')),
-                          Tab(icon: Text('Completed')),
-                        ],
-                      ),
-                    ),
-                  )),
+              CustomizeTabviewComponent(
+                controller: controller,
+                tabCount: 3,
+                widgetList: const [
+                  Tab(icon: Text('Upcoming')),
+                  Tab(icon: Text('In Progress')),
+                  Tab(icon: Text('Completed')),
+                ],
+              ),
+              
               const SizedBox(
                 height: Dimension.d2,
               ),
