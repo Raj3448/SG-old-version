@@ -36,7 +36,7 @@ class ElderCareSubscription extends StatelessWidget {
       case ElderCareColor.blue:
         return AppColors.secondary;
       case ElderCareColor.green:
-        return const Color(0xFFE6F9F0);
+        return AppColors.lightGreen;
       case ElderCareColor.grey:
         return AppColors.grayscale200;
     }

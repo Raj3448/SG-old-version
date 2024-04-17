@@ -21,7 +21,8 @@ import 'package:silver_genie/feature/services/screens/booking_details_screen.dar
 import 'package:silver_genie/feature/services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
-import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
+import 'package:silver_genie/feature/services/services_subcare_screen.dart';
+import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
@@ -84,11 +85,23 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.servicesCareScreenDisplay,
+      path: RoutesConstants.subscriptionsScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: SubscriptionsScreen());
+      },
+    ),
+    GoRoute(
+      path: RoutesConstants.subscriptionsScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: SubscriptionsScreen());
+      },
+    ),
+    GoRoute(
+      path: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'];
         return MaterialPage(
-          child: ServicesCareScreenDisplay(pagetitle: pageTitle!),
+          child: ServicesCareScreen(pagetitle: pageTitle!),
         );
       },
     ),
@@ -120,7 +133,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.eprPhrRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: EPRPHRViewScreen());
+        return MaterialPage(child: EPRPHRViewScreen());
       },
     ),
     GoRoute(

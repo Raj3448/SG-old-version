@@ -35,7 +35,7 @@ class MainScreen extends StatelessWidget {
       bottomNavigationBar: Observer(
         builder: (context) {
           return SizedBox(
-            height: 56,
+            height: 70,
             child: DecoratedBox(
               position: DecorationPosition.foreground,
               decoration: BoxDecoration(

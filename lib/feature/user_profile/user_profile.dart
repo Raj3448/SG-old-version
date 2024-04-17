@@ -2,17 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -111,17 +112,28 @@ class _UserProfileState extends State<UserProfile> {
               const SizedBox(
                 height: Dimension.d6,
               ),
-              const ProfileNav(
+              ProfileNav(
                 title: 'Wallet',
+                onTap: () {},
               ),
-              const ProfileNav(
+              ProfileNav(
                 title: 'SG+ subscription',
+                onTap: () {
+                  context.pushNamed(RoutesConstants.subscriptionsScreen);
+                },
               ),
-              const ProfileNav(
+              ProfileNav(
                 title: 'Emergency subscription',
+                onTap: () {},
               ),
-              const ProfileNav(title: 'About'),
-              const ProfileNav(title: 'Logout'),
+              ProfileNav(
+                title: 'About',
+                onTap: () {},
+              ),
+              ProfileNav(
+                title: 'Logout',
+                onTap: () {},
+              ),
             ],
           ),
         ),

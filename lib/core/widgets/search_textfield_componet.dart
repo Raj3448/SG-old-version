@@ -43,11 +43,11 @@ class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2, color: Color(0xffF6F8FF)),
+            borderSide: const BorderSide(width: 2, color: AppColors.secondary),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2, color: Color(0xffF6F8FF)),
+            borderSide: const BorderSide(width: 2, color: AppColors.primary),
             borderRadius: BorderRadius.circular(10),
           ),
         ),

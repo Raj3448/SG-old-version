@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:device_preview/device_preview.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +21,11 @@ import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/store/services_store.dart';
+import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
+
+import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 
 void main() async {
   await runZonedGuarded(
@@ -43,6 +47,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => UserDetailStore());
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
+      GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance
@@ -65,13 +70,12 @@ void main() async {
 
       runApp(
         EasyLocalization(
-          supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
-          path: 'assets/translations',
-          fallbackLocale: const Locale('en', 'US'),
-          child: const MyApp(),
-        ),
+            supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
+            path: 'assets/translations',
+            fallbackLocale: const Locale('en', 'US'),
+            child: const MyApp()),
       );
-      FlutterNativeSplash.remove(); // Now remove splash screen
+      FlutterNativeSplash.remove();
     },
     (exception, stackTrace) {
       FirebaseCrashlytics.instance.recordError(exception, stackTrace);
