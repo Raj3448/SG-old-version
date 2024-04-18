@@ -63,7 +63,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      store.userDetails.fullname,
+                                      store.userDetails!.fullname,
                                       style:
                                           AppTextStyle.bodyLargeMedium.copyWith(
                                         color: AppColors.grayscale900,
@@ -85,15 +85,15 @@ class EPRPHRViewScreen extends StatelessWidget {
                             IconTitleDetailsComponent(
                                 icon: Icons.email_outlined,
                                 title: 'Email',
-                                details: store.userDetails.emailId),
+                                details: store.userDetails!.emailId),
                             IconTitleDetailsComponent(
                                 icon: Icons.phone_outlined,
                                 title: 'Contact',
-                                details: store.userDetails.mobileNum),
+                                details: store.userDetails!.mobileNum),
                             IconTitleDetailsComponent(
                                 icon: AppIcons.home,
                                 title: 'Address',
-                                details: store.userDetails.address),
+                                details: store.userDetails!.address),
                           ],
                         ),
                       ),
@@ -180,7 +180,7 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
               ),
               const Spacer(),
               Padding(
-                padding: EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: Dimension.d2),
                 child: Icon(
                   _isExpand ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
                   size: 8,

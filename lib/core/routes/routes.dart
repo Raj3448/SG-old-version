@@ -81,7 +81,7 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.userProfileRoute,
       name: '/user-profile',
       pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
+        return MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(

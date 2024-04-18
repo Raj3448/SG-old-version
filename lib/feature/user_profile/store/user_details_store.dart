@@ -1,30 +1,42 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/services/user_services.dart';
+
 part 'user_details_store.g.dart';
 
 class UserDetailStore = _UserDetailStoreBase with _$UserDetailStore;
 
 abstract class _UserDetailStoreBase with Store {
+  final UserDetailServices _userDetailServices = UserDetailServices();
   @observable
-  UserDetails userDetails = UserDetails(
-      fullname: 'Rajkumar Chavan',
-      gender: 'Male',
-      dateBirth: '16-02-2002',
-      mobileNum: "+91 1234567890",
-      emailId: 'example@gmail.com',
-      address: 'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
-      country: 'India',
-      state: 'Maharashtra',
-      city: 'Pune',
-      postalCode: 411041);
+  UserDetails? userDetails;
 
   @action
-  Future<UserDetails> getUserDetails() async {
-    return userDetails;
+  Future<Either<Failure, Success>> getUserDetails() async {
+    
+      final userDetailsResult = await _userDetailServices.fetchUserDetailsFromApi();
+      return userDetailsResult.fold(
+        (failure) => Left(failure),
+        (success) {
+          userDetails = success.userDetails;
+          return Right(success);
+        },
+      );
+    
   }
 
   @action
-  Future<void> updateUserDetails(UserDetails newInstance) async {
-    userDetails = newInstance;
+  Future<Either<Failure, Success>> updateUserDetails(UserDetails newInstance) async {
+    
+      final userDetailsResult = await _userDetailServices.updateUserDetails(newInstance);
+      return userDetailsResult.fold(
+        (failure) => Left(failure),
+        (success) {
+          userDetails = success.userDetails;
+          return Right(success);
+        },
+      );
+    
   }
 }

@@ -14,7 +14,8 @@ import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-
+import 'package:fpdart/fpdart.dart' as fp;
+import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -61,254 +62,276 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     const ValueItem(label: 'Mumbai', value: 'Mumbai'),
   ];
 
-  void initState() {
-    super.initState();
-    final UserDetailStore userDetails = GetIt.instance.get<UserDetailStore>();
-    _fullNameController.text = userDetails.userDetails.fullname;
-    dateBirth = userDetails.userDetails.dateBirth;
-
-    _genderController.selectedOptions.add(_genderItems[0]);
-    _mobileController.text = userDetails.userDetails.mobileNum;
-    _emailController.text = userDetails.userDetails.emailId;
-    _addressController.text = userDetails.userDetails.address;
-    _countryController.selectedOptions.add(_countryItems[0]);
-    _stateController.selectedOptions.add(_stateItems[0]);
-    _cityController.selectedOptions.add(_cityItems[0]);
-    _postalController.text = userDetails.userDetails.postalCode.toString();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final store = GetIt.I<UserDetailStore>();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Personal Details'),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-          decelerationRate: ScrollDecelerationRate.fast,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Center(child: EditPic()),
-              const SizedBox(
-                height: Dimension.d5,
-              ),
-              const TextLabel(title: 'Full Name'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              CustomTextField(
-                hintText: 'Enter your name',
-                keyboardType: TextInputType.name,
-                large: false,
-                enabled: true,
-                controller: _fullNameController,
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(
-                title: 'Gender',
-              ),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              MultiDropdown(
-                values: _genderItems,
-                controller: _genderController,
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(
-                title: 'Date of birth',
-              ),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              GestureDetector(
-                onTap: () {
-                  showDatePicker(
-                    context: context,
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime.now(),
-                    initialDate: DateTime.now(),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.line),
+      body: FutureBuilder(
+        future: store.getUserDetails(),
+        builder:
+            (context, AsyncSnapshot<fp.Either<Failure, Success>> snapShot) {
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapShot.hasData) {
+            return const SizedBox();
+          }
+          _initializeControllers(snapShot.data!);
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(
+              decelerationRate: ScrollDecelerationRate.fast,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Center(child: EditPic()),
+                  const SizedBox(
+                    height: Dimension.d5,
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
+                  const TextLabel(title: 'Full Name'),
+                  const SizedBox(
+                    height: Dimension.d2,
                   ),
-                  child: Row(
-                    children: [
-                      Text(
-                        dateBirth,
-                        style: AppTextStyle.bodyLargeMedium
-                            .copyWith(color: AppColors.grayscale700),
+                  CustomTextField(
+                    hintText: 'Enter your name',
+                    keyboardType: TextInputType.name,
+                    large: false,
+                    enabled: true,
+                    controller: _fullNameController,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(
+                    title: 'Gender',
+                  ),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  MultiDropdown(
+                    values: _genderItems,
+                    controller: _genderController,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(
+                    title: 'Date of birth',
+                  ),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime.now(),
+                        initialDate: DateTime.now(),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.line),
                       ),
-                      const Spacer(),
-                      const Icon(
-                        AppIcons.calendar,
-                        color: AppColors.grayscale700,
-                        size: 18,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
                       ),
-                    ],
+                      child: Row(
+                        children: [
+                          Text(
+                            dateBirth,
+                            style: AppTextStyle.bodyLargeMedium
+                                .copyWith(color: AppColors.grayscale700),
+                          ),
+                          const Spacer(),
+                          const Icon(
+                            AppIcons.calendar,
+                            color: AppColors.grayscale700,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'Mobile Field'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const InfoDialog(
+                                showIcon: true,
+                                title: 'Want to Update mobile number?',
+                                desc:
+                                    'Please contact the SilverGenie team for changing mobile number.',
+                                btnTitle: 'Contact Genie',
+                                showBtnIcon: true,
+                                btnIconPath: AppIcons.phone);
+                          });
+                    },
+                    child: CustomTextField(
+                      hintText: 'Mobile Field',
+                      keyboardType: TextInputType.number,
+                      large: false,
+                      enabled: false,
+                      controller: _mobileController,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'Email ID'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const InfoDialog(
+                                showIcon: true,
+                                title: 'Want to Update Email ID?',
+                                desc:
+                                    'Please contact the SilverGenie team for changing Email ID.',
+                                btnTitle: 'Contact Genie',
+                                showBtnIcon: true,
+                                btnIconPath: AppIcons.phone);
+                          });
+                    },
+                    child: CustomTextField(
+                      hintText: 'email address',
+                      keyboardType: TextInputType.emailAddress,
+                      large: false,
+                      enabled: false,
+                      controller: _emailController,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'Address'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  CustomTextField(
+                    hintText: 'Address',
+                    keyboardType: TextInputType.emailAddress,
+                    large: false,
+                    enabled: true,
+                    controller: _addressController,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'Country'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  MultiDropdown(
+                    controller: _countryController,
+                    values: _countryItems,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'State'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  MultiDropdown(
+                    values: _stateItems,
+                    controller: _stateController,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'City'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  MultiDropdown(
+                    values: _cityItems,
+                    controller: _cityController,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  const TextLabel(title: 'Postal Code'),
+                  const SizedBox(
+                    height: Dimension.d2,
+                  ),
+                  CustomTextField(
+                    hintText: 'Postal Code',
+                    keyboardType: TextInputType.number,
+                    large: false,
+                    enabled: true,
+                    controller: _postalController,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d10,
+                  ),
+                  CustomButton(
+                      ontap: () async {
+                        UserDetailStore store = GetIt.I<UserDetailStore>();
+                        UserDetails userDetails = store.userDetails!;
+                        userDetails = userDetails.copyWith(
+                            fullname: _fullNameController.text,
+                            emailId: _emailController.text,
+                            mobileNum: _mobileController.text);
+                        await store.updateUserDetails(userDetails);
+                        Navigator.of(context).pop();
+                      },
+                      title: 'Save details',
+                      showIcon: false,
+                      iconPath: AppIcons.add,
+                      size: ButtonSize.normal,
+                      type: ButtonType.primary,
+                      expanded: true)
+                ],
               ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'Mobile Field'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return InfoDialog(
-                            showIcon: true,
-                            title: 'Want to Update mobile number?',
-                            desc:
-                                'Please contact the SilverGenie team for changing mobile number.',
-                            btnTitle: 'Contact Genie',
-                            showBtnIcon: true,
-                            btnIconPath: AppIcons.phone);
-                      });
-                },
-                child: CustomTextField(
-                  hintText: 'Mobile Field',
-                  keyboardType: TextInputType.number,
-                  large: false,
-                  enabled: false,
-                  controller: _mobileController,
-                ),
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'Email ID'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return InfoDialog(
-                            showIcon: true,
-                            title: 'Want to Update Email ID?',
-                            desc:
-                                'Please contact the SilverGenie team for changing Email ID.',
-                            btnTitle: 'Contact Genie',
-                            showBtnIcon: true,
-                            btnIconPath: AppIcons.phone);
-                      });
-                },
-                child: CustomTextField(
-                  hintText: 'email address',
-                  keyboardType: TextInputType.emailAddress,
-                  large: false,
-                  enabled: false,
-                  controller: _emailController,
-                ),
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'Address'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              CustomTextField(
-                hintText: 'Address',
-                keyboardType: TextInputType.emailAddress,
-                large: false,
-                enabled: true,
-                controller: _addressController,
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'Country'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              MultiDropdown(
-                controller: _countryController,
-                values: _countryItems,
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'State'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              MultiDropdown(
-                values: _stateItems,
-                controller: _stateController,
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'City'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              MultiDropdown(
-                values: _cityItems,
-                controller: _cityController,
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              const TextLabel(title: 'Postal Code'),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              CustomTextField(
-                hintText: 'Postal Code',
-                keyboardType: TextInputType.number,
-                large: false,
-                enabled: true,
-                controller: _postalController,
-              ),
-              const SizedBox(
-                height: Dimension.d10,
-              ),
-              CustomButton(
-                  ontap: () {
-                    UserDetailStore userDetailsStore =
-                        GetIt.instance.get<UserDetailStore>();
-                    UserDetails userDetails = userDetailsStore.userDetails;
-                    userDetails = userDetails.copyWith(
-                        fullname: _fullNameController.text,
-                        emailId: _emailController.text,
-                        mobileNum: _mobileController.text);
-                    userDetailsStore.updateUserDetails(userDetails);
-                    Navigator.of(context).pop();
-                  },
-                  title: 'Save details',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: ButtonType.primary,
-                  expanded: true)
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  void _initializeControllers(fp.Either<Failure, Success> snapshot) {
+    snapshot.fold(
+      (failure) {
+        print('API call failed: ${failure.errormessage}');
+      },
+      (success) {
+        print('API call successful');
+        
+        
+        _fullNameController.text = success.userDetails.fullname;
+    dateBirth = success.userDetails.dateBirth;
+
+    _genderController.selectedOptions.add(_genderItems[0]);
+    _mobileController.text = success.userDetails.mobileNum;
+    _emailController.text = success.userDetails.emailId;
+    _addressController.text = success.userDetails.address;
+    _countryController.selectedOptions.add(_countryItems[0]);
+    _stateController.selectedOptions.add(_stateItems[0]);
+    _cityController.selectedOptions.add(_cityItems[0]);
+    _postalController.text = success.userDetails.postalCode.toString();
+
+      },
     );
   }
 }

@@ -160,6 +160,7 @@ class HomeScreen extends StatelessWidget {
                 style: AppTextStyle.bodyLargeMedium.copyWith(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
+                    height: 1.5,
                     color: AppColors.grayscale700),
               ),
               Text(
