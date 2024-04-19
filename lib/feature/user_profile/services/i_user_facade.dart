@@ -1,0 +1,9 @@
+import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/services/user_failure_or_success.dart';
+
+abstract class IUserFacades {
+  Future<Either<UserFailure, UserSuccess>> fetchUserDetailsFromApi();
+  Future<Either<UserFailure,UserSuccess>> updateUserDetails({@required UserDetails userDetails});
+}

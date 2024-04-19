@@ -48,6 +48,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
+      
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

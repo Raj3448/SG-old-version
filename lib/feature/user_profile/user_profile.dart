@@ -16,7 +16,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
-import 'package:silver_genie/feature/user_profile/services/user_services.dart';
+import 'package:silver_genie/feature/user_profile/services/user_failure_or_success.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class UserProfile extends StatelessWidget {
@@ -30,15 +30,15 @@ class UserProfile extends StatelessWidget {
       appBar: const PageAppbar(title: 'User Profile'),
       body: FutureBuilder(
         future: store.getUserDetails(),
-        builder:
-            (context, AsyncSnapshot<fp.Either<Failure, Success>> snapShot) {
+        builder: (context,
+            AsyncSnapshot<fp.Either<UserFailure, UserSuccess>> snapShot) {
           if (snapShot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapShot.hasData) {
             return const SizedBox();
           }
-          _initializeControllers(snapShot.data!);
+          _tempMethod(snapShot.data!);
           return Observer(
             builder: (_) {
               return SingleChildScrollView(
@@ -140,13 +140,22 @@ class UserProfile extends StatelessWidget {
     );
   }
 
-  void _initializeControllers(fp.Either<Failure, Success> snapshot) {
+  void _tempMethod(fp.Either<UserFailure, UserSuccess> snapshot) {
     snapshot.fold(
       (failure) {
-        print('API call failed: ${failure.errormessage}');
+        failure.map(
+            socketException: (value) {
+              print(value);
+            },
+            someThingWentWrong: (value) {
+              print(value);
+            },
+            badResponse: (value) {
+              print(value);
+            });
       },
       (success) {
-        print('API call successful');
+        print('API call successful $success');
       },
     );
   }

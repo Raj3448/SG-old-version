@@ -1,10 +1,13 @@
 //import 'dart:convert';
 import 'dart:io';
-import 'package:fpdart/fpdart.dart';
-// import 'package:silver_genie/core/utils/http_client.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
-class UserDetailServices {
+import 'package:fpdart/fpdart.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/services/user_failure_or_success.dart';
+
+class UserDetailServices implements IUserFacades{
   UserDetailServices();
 
   UserDetails _userDetails = UserDetails(
@@ -20,7 +23,8 @@ class UserDetailServices {
       city: 'Pune',
       postalCode: 411041);
 
-  Future<Either<Failure, Success>> fetchUserDetailsFromApi() async {
+  @override
+  Future<Either<UserFailure, UserSuccess>> fetchUserDetailsFromApi() async {
     //  API call here to fetch user details
     try {
       // final response = await HttpClient().get<String>('/UserDetails');
@@ -31,19 +35,18 @@ class UserDetailServices {
       //   return Right(Success(
       //       userDetails: UserDetails.fromJson(json as Map<String, dynamic>)));
       // } else {
-      //   return Left(Failure(errormessage: 'Bad Response'));
+      //   return Left(UserFailure.badResponse());
       // }
-      return Right(Success(userDetails: _userDetails));
+      return Right(UserSuccess.success(_userDetails));
     } on SocketException {
-      return Left(Failure(errormessage: 'No internet connection'));
+      return const Left(UserFailure.socketException());
     } catch (error) {
-      return Left(Failure(errormessage: 'Something went wrong'));
+      return const Left(UserFailure.someThingWentWrong());
     }
   }
-
-  // Update user details through API
-  Future<Either<Failure, Success>> updateUserDetails(
-      UserDetails userDetails) async {
+  
+  @override
+  Future<Either<UserFailure, UserSuccess>> updateUserDetails({@required UserDetails? userDetails}) async{
     try {
       // final response = await HttpClient().post<String>('/UserDetails/id',
       //     data: jsonEncode(userDetails.toJson()));
@@ -55,16 +58,19 @@ class UserDetailServices {
       //       userDetails: UserDetails.fromJson(json as Map<String, dynamic>),
       //       successMsg: 'User Details Update Successfully'));
       // } else {
-      //   return Left(Failure(errormessage: 'Bad Response'));
+      //   return Left(UserFailure.badResponse());
       // }
-      _userDetails = userDetails;
-      return Right(Success(userDetails: _userDetails));
+      _userDetails = userDetails!;
+      return Right(UserSuccess.success(_userDetails));
     } on SocketException {
-      return Left(Failure(errormessage: 'No internet connection'));
+      return const Left(UserFailure.socketException());
     } catch (error) {
-      return Left(Failure(errormessage: 'Something went wrong'));
+      return const Left(UserFailure.someThingWentWrong());
     }
   }
+
+  // Update user details through API
+  
 }
 
 class Failure {

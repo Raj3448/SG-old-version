@@ -15,9 +15,8 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:fpdart/fpdart.dart' as fp;
-import 'package:silver_genie/feature/user_profile/services/user_services.dart';
-
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
+import 'package:silver_genie/feature/user_profile/services/user_failure_or_success.dart';
 
 class ProfileDetails extends StatefulWidget {
   const ProfileDetails({super.key});
@@ -71,7 +70,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       body: FutureBuilder(
         future: store.getUserDetails(),
         builder:
-            (context, AsyncSnapshot<fp.Either<Failure, Success>> snapShot) {
+            (context, AsyncSnapshot<fp.Either<UserFailure, UserSuccess>> snapShot) {
           if (snapShot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -310,10 +309,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     );
   }
 
-  void _initializeControllers(fp.Either<Failure, Success> snapshot) {
+  void _initializeControllers(fp.Either<UserFailure, UserSuccess> snapshot) {
     snapshot.fold(
       (failure) {
-        print('API call failed: ${failure.errormessage}');
+        failure.map(
+            socketException: (value) {
+              print(value);
+            },
+            someThingWentWrong: (value) {
+              print(value);
+            },
+            badResponse: (value) {
+              print(value);
+            });
       },
       (success) {
         print('API call successful');
