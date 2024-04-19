@@ -15,6 +15,7 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -37,45 +38,62 @@ class OTPScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodyMediumMedium,
               ),
-              const SizedBox(height: Dimension.d4),
-              PinCodeTextField(
-                appContext: context,
-                length: 4,
-                keyboardType: TextInputType.number,
-                cursorWidth: 2,
-                cursorColor: AppColors.black,
-                onChanged: (value) {
-                  // Handle OTP changes
-                },
-                onCompleted: (value) {
-                  // Handle successful OTP entry
-                },
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(5),
-                  fieldHeight: 56,
-                  fieldWidth: 56,
-                  activeColor: AppColors.primary,
-                  inactiveColor: AppColors.line,
-                  selectedColor:AppColors.primary,
-                  activeFillColor: AppColors.grayscale900,
-                  selectedFillColor: AppColors.secondary,
+              const SizedBox(height: Dimension.d6),
+              Form(
+                key: formKey,
+                child: PinCodeTextField(
+                  appContext: context,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  length: 4,
+                  keyboardType: TextInputType.number,
+                  cursorColor: AppColors.black,
+                  animationCurve: Curves.easeIn,
+                  animationType: AnimationType.fade,
+                  onChanged: (value) {
+                    // Handle OTP changes
+                  },
+                  onCompleted: (value) {
+                    // Handle successful OTP entry
+                  },
+                  errorTextMargin: const EdgeInsets.only(left: Dimension.d14),
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: Dimension.d4);
+                  },
+                  errorTextSpace: 25,
+                  pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(8),
+                    fieldHeight: 56,
+                    fieldWidth: 56,
+                    activeColor: AppColors.primary,
+                    inactiveColor: AppColors.line,
+                    selectedColor: AppColors.primary,
+                    activeFillColor: AppColors.grayscale900,
+                    selectedFillColor: AppColors.secondary,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your OTP';
+                    } else if (value.length > 4 || value.length < 4) {
+                      return 'Please enter 4 digits OTP';
+                    }
+                    return null;
+                  },
                 ),
               ),
               const SizedBox(height: Dimension.d4),
-              SizedBox(
-                width: double.infinity,
-                child: CustomButton(
-                  size: ButtonSize.normal,
-                  type: ButtonType.primary,
-                  expanded: true,
-                  ontap: () {
+              CustomButton(
+                size: ButtonSize.normal,
+                type: ButtonType.primary,
+                expanded: true,
+                ontap: () {
+                  if (formKey.currentState!.validate()) {
                     GoRouter.of(context).push(RoutesConstants.mainRoute);
-                  },
-                  title: 'Continue'.tr(),
-                  showIcon: false,
-                  iconPath: Icons.not_interested,
-                ),
+                  }
+                },
+                title: 'Continue'.tr(),
+                showIcon: false,
+                iconPath: Icons.not_interested,
               ),
               const SizedBox(height: Dimension.d6),
               Row(

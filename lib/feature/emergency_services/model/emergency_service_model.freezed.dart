@@ -21,13 +21,13 @@ EmergencyServiceModel _$EmergencyServiceModelFromJson(
 
 /// @nodoc
 mixin _$EmergencyServiceModel {
-  @JsonKey(name: "defination")
+  @JsonKey(name: 'defination')
   String get defination => throw _privateConstructorUsedError;
-  @JsonKey(name: "support")
+  @JsonKey(name: 'support')
   Support get support => throw _privateConstructorUsedError;
-  @JsonKey(name: "plansDescription")
+  @JsonKey(name: 'plansDescription')
   String get plansDescription => throw _privateConstructorUsedError;
-  @JsonKey(name: "plans")
+  @JsonKey(name: 'plans')
   List<Plan> get plans => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,10 +43,10 @@ abstract class $EmergencyServiceModelCopyWith<$Res> {
       _$EmergencyServiceModelCopyWithImpl<$Res, EmergencyServiceModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: "defination") String defination,
-      @JsonKey(name: "support") Support support,
-      @JsonKey(name: "plansDescription") String plansDescription,
-      @JsonKey(name: "plans") List<Plan> plans});
+      {@JsonKey(name: 'defination') String defination,
+      @JsonKey(name: 'support') Support support,
+      @JsonKey(name: 'plansDescription') String plansDescription,
+      @JsonKey(name: 'plans') List<Plan> plans});
 
   $SupportCopyWith<$Res> get support;
 }
@@ -109,10 +109,10 @@ abstract class _$$EmergencyServiceModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "defination") String defination,
-      @JsonKey(name: "support") Support support,
-      @JsonKey(name: "plansDescription") String plansDescription,
-      @JsonKey(name: "plans") List<Plan> plans});
+      {@JsonKey(name: 'defination') String defination,
+      @JsonKey(name: 'support') Support support,
+      @JsonKey(name: 'plansDescription') String plansDescription,
+      @JsonKey(name: 'plans') List<Plan> plans});
 
   @override
   $SupportCopyWith<$Res> get support;
@@ -160,27 +160,27 @@ class __$$EmergencyServiceModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EmergencyServiceModelImpl implements _EmergencyServiceModel {
   const _$EmergencyServiceModelImpl(
-      {@JsonKey(name: "defination") required this.defination,
-      @JsonKey(name: "support") required this.support,
-      @JsonKey(name: "plansDescription") required this.plansDescription,
-      @JsonKey(name: "plans") required final List<Plan> plans})
+      {@JsonKey(name: 'defination') required this.defination,
+      @JsonKey(name: 'support') required this.support,
+      @JsonKey(name: 'plansDescription') required this.plansDescription,
+      @JsonKey(name: 'plans') required final List<Plan> plans})
       : _plans = plans;
 
   factory _$EmergencyServiceModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$EmergencyServiceModelImplFromJson(json);
 
   @override
-  @JsonKey(name: "defination")
+  @JsonKey(name: 'defination')
   final String defination;
   @override
-  @JsonKey(name: "support")
+  @JsonKey(name: 'support')
   final Support support;
   @override
-  @JsonKey(name: "plansDescription")
+  @JsonKey(name: 'plansDescription')
   final String plansDescription;
   final List<Plan> _plans;
   @override
-  @JsonKey(name: "plans")
+  @JsonKey(name: 'plans')
   List<Plan> get plans {
     if (_plans is EqualUnmodifiableListView) return _plans;
     // ignore: implicit_dynamic_type
@@ -227,26 +227,26 @@ class _$EmergencyServiceModelImpl implements _EmergencyServiceModel {
 
 abstract class _EmergencyServiceModel implements EmergencyServiceModel {
   const factory _EmergencyServiceModel(
-      {@JsonKey(name: "defination") required final String defination,
-      @JsonKey(name: "support") required final Support support,
-      @JsonKey(name: "plansDescription") required final String plansDescription,
-      @JsonKey(name: "plans")
+      {@JsonKey(name: 'defination') required final String defination,
+      @JsonKey(name: 'support') required final Support support,
+      @JsonKey(name: 'plansDescription') required final String plansDescription,
+      @JsonKey(name: 'plans')
       required final List<Plan> plans}) = _$EmergencyServiceModelImpl;
 
   factory _EmergencyServiceModel.fromJson(Map<String, dynamic> json) =
       _$EmergencyServiceModelImpl.fromJson;
 
   @override
-  @JsonKey(name: "defination")
+  @JsonKey(name: 'defination')
   String get defination;
   @override
-  @JsonKey(name: "support")
+  @JsonKey(name: 'support')
   Support get support;
   @override
-  @JsonKey(name: "plansDescription")
+  @JsonKey(name: 'plansDescription')
   String get plansDescription;
   @override
-  @JsonKey(name: "plans")
+  @JsonKey(name: 'plans')
   List<Plan> get plans;
   @override
   @JsonKey(ignore: true)
@@ -260,15 +260,15 @@ Plan _$PlanFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Plan {
-  @JsonKey(name: "title")
+  @JsonKey(name: 'title')
   String get title => throw _privateConstructorUsedError;
-  @JsonKey(name: "duration")
+  @JsonKey(name: 'duration')
   String get duration => throw _privateConstructorUsedError;
-  @JsonKey(name: "descrip")
+  @JsonKey(name: 'descrip')
   String get descrip => throw _privateConstructorUsedError;
-  @JsonKey(name: "amount")
+  @JsonKey(name: 'amount')
   double get amount => throw _privateConstructorUsedError;
-  @JsonKey(name: "discountamount")
+  @JsonKey(name: 'discountamount')
   double get discountamount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -282,11 +282,11 @@ abstract class $PlanCopyWith<$Res> {
       _$PlanCopyWithImpl<$Res, Plan>;
   @useResult
   $Res call(
-      {@JsonKey(name: "title") String title,
-      @JsonKey(name: "duration") String duration,
-      @JsonKey(name: "descrip") String descrip,
-      @JsonKey(name: "amount") double amount,
-      @JsonKey(name: "discountamount") double discountamount});
+      {@JsonKey(name: 'title') String title,
+      @JsonKey(name: 'duration') String duration,
+      @JsonKey(name: 'descrip') String descrip,
+      @JsonKey(name: 'amount') double amount,
+      @JsonKey(name: 'discountamount') double discountamount});
 }
 
 /// @nodoc
@@ -341,11 +341,11 @@ abstract class _$$PlanImplCopyWith<$Res> implements $PlanCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "title") String title,
-      @JsonKey(name: "duration") String duration,
-      @JsonKey(name: "descrip") String descrip,
-      @JsonKey(name: "amount") double amount,
-      @JsonKey(name: "discountamount") double discountamount});
+      {@JsonKey(name: 'title') String title,
+      @JsonKey(name: 'duration') String duration,
+      @JsonKey(name: 'descrip') String descrip,
+      @JsonKey(name: 'amount') double amount,
+      @JsonKey(name: 'discountamount') double discountamount});
 }
 
 /// @nodoc
@@ -393,29 +393,29 @@ class __$$PlanImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PlanImpl implements _Plan {
   const _$PlanImpl(
-      {@JsonKey(name: "title") required this.title,
-      @JsonKey(name: "duration") required this.duration,
-      @JsonKey(name: "descrip") required this.descrip,
-      @JsonKey(name: "amount") required this.amount,
-      @JsonKey(name: "discountamount") required this.discountamount});
+      {@JsonKey(name: 'title') required this.title,
+      @JsonKey(name: 'duration') required this.duration,
+      @JsonKey(name: 'descrip') required this.descrip,
+      @JsonKey(name: 'amount') required this.amount,
+      @JsonKey(name: 'discountamount') required this.discountamount});
 
   factory _$PlanImpl.fromJson(Map<String, dynamic> json) =>
       _$$PlanImplFromJson(json);
 
   @override
-  @JsonKey(name: "title")
+  @JsonKey(name: 'title')
   final String title;
   @override
-  @JsonKey(name: "duration")
+  @JsonKey(name: 'duration')
   final String duration;
   @override
-  @JsonKey(name: "descrip")
+  @JsonKey(name: 'descrip')
   final String descrip;
   @override
-  @JsonKey(name: "amount")
+  @JsonKey(name: 'amount')
   final double amount;
   @override
-  @JsonKey(name: "discountamount")
+  @JsonKey(name: 'discountamount')
   final double discountamount;
 
   @override
@@ -458,29 +458,29 @@ class _$PlanImpl implements _Plan {
 
 abstract class _Plan implements Plan {
   const factory _Plan(
-      {@JsonKey(name: "title") required final String title,
-      @JsonKey(name: "duration") required final String duration,
-      @JsonKey(name: "descrip") required final String descrip,
-      @JsonKey(name: "amount") required final double amount,
-      @JsonKey(name: "discountamount")
+      {@JsonKey(name: 'title') required final String title,
+      @JsonKey(name: 'duration') required final String duration,
+      @JsonKey(name: 'descrip') required final String descrip,
+      @JsonKey(name: 'amount') required final double amount,
+      @JsonKey(name: 'discountamount')
       required final double discountamount}) = _$PlanImpl;
 
   factory _Plan.fromJson(Map<String, dynamic> json) = _$PlanImpl.fromJson;
 
   @override
-  @JsonKey(name: "title")
+  @JsonKey(name: 'title')
   String get title;
   @override
-  @JsonKey(name: "duration")
+  @JsonKey(name: 'duration')
   String get duration;
   @override
-  @JsonKey(name: "descrip")
+  @JsonKey(name: 'descrip')
   String get descrip;
   @override
-  @JsonKey(name: "amount")
+  @JsonKey(name: 'amount')
   double get amount;
   @override
-  @JsonKey(name: "discountamount")
+  @JsonKey(name: 'discountamount')
   double get discountamount;
   @override
   @JsonKey(ignore: true)
@@ -494,15 +494,15 @@ Support _$SupportFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Support {
-  @JsonKey(name: "preparedness")
+  @JsonKey(name: 'preparedness')
   String get preparedness => throw _privateConstructorUsedError;
-  @JsonKey(name: "Hospital")
+  @JsonKey(name: 'Hospital')
   String get hospital => throw _privateConstructorUsedError;
-  @JsonKey(name: "postDischarge")
+  @JsonKey(name: 'postDischarge')
   String get postDischarge => throw _privateConstructorUsedError;
-  @JsonKey(name: "healthMonitor")
+  @JsonKey(name: 'healthMonitor')
   String get healthMonitor => throw _privateConstructorUsedError;
-  @JsonKey(name: "genieCare")
+  @JsonKey(name: 'genieCare')
   String get genieCare => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -516,11 +516,11 @@ abstract class $SupportCopyWith<$Res> {
       _$SupportCopyWithImpl<$Res, Support>;
   @useResult
   $Res call(
-      {@JsonKey(name: "preparedness") String preparedness,
-      @JsonKey(name: "Hospital") String hospital,
-      @JsonKey(name: "postDischarge") String postDischarge,
-      @JsonKey(name: "healthMonitor") String healthMonitor,
-      @JsonKey(name: "genieCare") String genieCare});
+      {@JsonKey(name: 'preparedness') String preparedness,
+      @JsonKey(name: 'Hospital') String hospital,
+      @JsonKey(name: 'postDischarge') String postDischarge,
+      @JsonKey(name: 'healthMonitor') String healthMonitor,
+      @JsonKey(name: 'genieCare') String genieCare});
 }
 
 /// @nodoc
@@ -575,11 +575,11 @@ abstract class _$$SupportImplCopyWith<$Res> implements $SupportCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: "preparedness") String preparedness,
-      @JsonKey(name: "Hospital") String hospital,
-      @JsonKey(name: "postDischarge") String postDischarge,
-      @JsonKey(name: "healthMonitor") String healthMonitor,
-      @JsonKey(name: "genieCare") String genieCare});
+      {@JsonKey(name: 'preparedness') String preparedness,
+      @JsonKey(name: 'Hospital') String hospital,
+      @JsonKey(name: 'postDischarge') String postDischarge,
+      @JsonKey(name: 'healthMonitor') String healthMonitor,
+      @JsonKey(name: 'genieCare') String genieCare});
 }
 
 /// @nodoc
@@ -628,29 +628,29 @@ class __$$SupportImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SupportImpl implements _Support {
   const _$SupportImpl(
-      {@JsonKey(name: "preparedness") required this.preparedness,
-      @JsonKey(name: "Hospital") required this.hospital,
-      @JsonKey(name: "postDischarge") required this.postDischarge,
-      @JsonKey(name: "healthMonitor") required this.healthMonitor,
-      @JsonKey(name: "genieCare") required this.genieCare});
+      {@JsonKey(name: 'preparedness') required this.preparedness,
+      @JsonKey(name: 'Hospital') required this.hospital,
+      @JsonKey(name: 'postDischarge') required this.postDischarge,
+      @JsonKey(name: 'healthMonitor') required this.healthMonitor,
+      @JsonKey(name: 'genieCare') required this.genieCare});
 
   factory _$SupportImpl.fromJson(Map<String, dynamic> json) =>
       _$$SupportImplFromJson(json);
 
   @override
-  @JsonKey(name: "preparedness")
+  @JsonKey(name: 'preparedness')
   final String preparedness;
   @override
-  @JsonKey(name: "Hospital")
+  @JsonKey(name: 'Hospital')
   final String hospital;
   @override
-  @JsonKey(name: "postDischarge")
+  @JsonKey(name: 'postDischarge')
   final String postDischarge;
   @override
-  @JsonKey(name: "healthMonitor")
+  @JsonKey(name: 'healthMonitor')
   final String healthMonitor;
   @override
-  @JsonKey(name: "genieCare")
+  @JsonKey(name: 'genieCare')
   final String genieCare;
 
   @override
@@ -696,29 +696,29 @@ class _$SupportImpl implements _Support {
 
 abstract class _Support implements Support {
   const factory _Support(
-          {@JsonKey(name: "preparedness") required final String preparedness,
-          @JsonKey(name: "Hospital") required final String hospital,
-          @JsonKey(name: "postDischarge") required final String postDischarge,
-          @JsonKey(name: "healthMonitor") required final String healthMonitor,
-          @JsonKey(name: "genieCare") required final String genieCare}) =
+          {@JsonKey(name: 'preparedness') required final String preparedness,
+          @JsonKey(name: 'Hospital') required final String hospital,
+          @JsonKey(name: 'postDischarge') required final String postDischarge,
+          @JsonKey(name: 'healthMonitor') required final String healthMonitor,
+          @JsonKey(name: 'genieCare') required final String genieCare}) =
       _$SupportImpl;
 
   factory _Support.fromJson(Map<String, dynamic> json) = _$SupportImpl.fromJson;
 
   @override
-  @JsonKey(name: "preparedness")
+  @JsonKey(name: 'preparedness')
   String get preparedness;
   @override
-  @JsonKey(name: "Hospital")
+  @JsonKey(name: 'Hospital')
   String get hospital;
   @override
-  @JsonKey(name: "postDischarge")
+  @JsonKey(name: 'postDischarge')
   String get postDischarge;
   @override
-  @JsonKey(name: "healthMonitor")
+  @JsonKey(name: 'healthMonitor')
   String get healthMonitor;
   @override
-  @JsonKey(name: "genieCare")
+  @JsonKey(name: 'genieCare')
   String get genieCare;
   @override
   @JsonKey(ignore: true)

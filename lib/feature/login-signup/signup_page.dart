@@ -16,78 +16,92 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final nameContr = TextEditingController();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Dimension.d5),
           child: Column(
             children: [
-              SizedBox(
-                height:52,
+              const SizedBox(
+                height: 52,
               ),
               SizedBox(
                 width: 130,
                 height: 60,
                 child: Image.asset('assets/splash/sg_logo.png'),
               ),
-              SizedBox(height: Dimension.d7,),
+              const SizedBox(
+                height: Dimension.d7,
+              ),
               Text(
                 'Sign Up'.tr(),
                 style: AppTextStyle.heading4SemiBold,
               ),
               const SizedBox(height: Dimension.d6),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextLabel(title: 'Enter First Name'.tr()),
-                  const SizedBox(height: Dimension.d2),
-                  CustomTextField(
-                    hintText: 'Enter first name'.tr(),
-                    keyboardType: TextInputType.name,
-                    large: false,
-                    enabled: true,
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  TextLabel(title: 'Enter Last Name'.tr()),
-                  const SizedBox(height: Dimension.d2),
-                  CustomTextField(
-                    hintText: 'Enter last name'.tr(),
-                    keyboardType: TextInputType.name,
-                    large: false,
-                    enabled: true,
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  TextLabel(title: 'Enter Email'.tr()),
-                  const SizedBox(height: Dimension.d2),
-                  CustomTextField(
-                    hintText: 'Enter E-mail'.tr(),
-                    keyboardType: TextInputType.emailAddress,
-                    large: false,
-                    enabled: true,
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  TextLabel(title: 'Mobile Number'.tr()),
-                  const SizedBox(height: Dimension.d2),
-                  CustomPhoneField(
-                    title: 'Enter Mobile Number'.tr(),
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
+              Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextLabel(title: 'Enter Full Name'.tr()),
+                    const SizedBox(height: Dimension.d2),
+                    CustomTextField(
+                      hintText: 'Enter Name'.tr(),
+                      keyboardType: TextInputType.name,
+                      large: false,
+                      enabled: true,
+                      controller: nameContr,
+                      validationLogic: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                    TextLabel(title: 'Enter Email'.tr()),
+                    const SizedBox(height: Dimension.d2),
+                    CustomTextField(
+                      hintText: 'Enter E-mail'.tr(),
+                      keyboardType: TextInputType.emailAddress,
+                      large: false,
+                      enabled: true,
+                      validationLogic: (value) {
+                        const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
+                        if (value!.isEmpty) {
+                          return 'Please enter your email address';
+                        } else if (!RegExp(regex).hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                    TextLabel(title: 'Mobile Number'.tr()),
+                    const SizedBox(height: Dimension.d2),
+                    CustomPhoneField(
+                      title: 'Enter Mobile Number'.tr(),
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                    CustomButton(
                       size: ButtonSize.normal,
                       type: ButtonType.primary,
                       expanded: true,
                       ontap: () {
-                        GoRouter.of(context).push(RoutesConstants.otpRoute);
+                        if (formKey.currentState!.validate() &&
+                            nameContr.text.isNotEmpty) {
+                          GoRouter.of(context).push(RoutesConstants.otpRoute);
+                        }
                       },
                       title: 'Sign Up'.tr(),
                       showIcon: false,
                       iconPath: Icons.not_interested,
                     ),
-                  ),
-                  const SizedBox(height: Dimension.d6),
-                ],
+                    const SizedBox(height: Dimension.d6),
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
