@@ -97,11 +97,12 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.servicesCareScreen,
+      path: '/servicesCareScreen/:pageTitle',
+      name: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'];
         return MaterialPage(
-          child: ServicesCareScreen(pagetitle: pageTitle!),
+          child: ServicesCareScreen(pageTitle: pageTitle!),
         );
       },
     ),
@@ -124,7 +125,8 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.addEditFamilyMemberRoute,
+      path: '/addEditFamilyMember/:edit',
+      name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
         return MaterialPage(child: AddEditFamilyMemberScreen(edit: edit));

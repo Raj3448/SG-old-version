@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:device_preview/device_preview.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +15,7 @@ import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
+import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
@@ -24,8 +24,6 @@ import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
-
-import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 
 void main() async {
   await runZonedGuarded(
@@ -48,6 +46,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
+      GetIt.instance.registerLazySingleton(() => HomeStore());
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance
