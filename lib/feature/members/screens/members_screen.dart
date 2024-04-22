@@ -8,12 +8,16 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/feature/main/repo/main_repo.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_repo.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
 
 class MembersScreen extends StatefulWidget {
-  const MembersScreen({super.key});
+  const MembersScreen({required this.membersService, super.key});
+
+  final IMembersService membersService;
 
   @override
   State<MembersScreen> createState() => _MembersScreenState();
@@ -21,6 +25,14 @@ class MembersScreen extends StatefulWidget {
 
 class _MembersScreenState extends State<MembersScreen> {
   final store = GetIt.I<MembersStore>();
+
+  late Future<List<Member>> _memberData;
+
+  @override
+  void initState() {
+    super.initState();
+    _memberData = widget.membersService.getMembers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +45,8 @@ class _MembersScreenState extends State<MembersScreen> {
           child: Column(
             children: [
               FutureBuilder(
-                future: fetchMembers(),
+                // future: fetchMembers(),
+                future: _memberData,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(

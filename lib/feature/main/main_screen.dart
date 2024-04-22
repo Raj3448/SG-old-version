@@ -7,6 +7,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
+import 'package:silver_genie/feature/main/repo/main_repo.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
@@ -20,7 +21,7 @@ class MainScreen extends StatelessWidget {
       HomeScreen(),
       const ServicesScreen(),
       const BookingsScreen(),
-      const MembersScreen(),
+      MembersScreen(membersService: MockMemberService()),
     ];
 
     final store = GetIt.I<MainStore>();
@@ -43,17 +44,15 @@ class MainScreen extends StatelessWidget {
                   topLeft: Radius.circular(4),
                   topRight: Radius.circular(4),
                 ),
-                border: Border.all(color: AppColors.line,width: 1),
+                border: Border.all(color: AppColors.line, width: 1),
               ),
               child: BottomNavigationBar(
                 backgroundColor: AppColors.white,
                 type: BottomNavigationBarType.fixed,
                 showUnselectedLabels: true,
-                selectedLabelStyle:
-                    AppTextStyle.bodyMediumSemiBold,
+                selectedLabelStyle: AppTextStyle.bodyMediumSemiBold,
                 currentIndex: store.currentIndex,
-                unselectedLabelStyle:
-                    AppTextStyle.bodyMediumMedium,
+                unselectedLabelStyle: AppTextStyle.bodyMediumMedium,
                 selectedItemColor: AppColors.primary,
                 selectedIconTheme:
                     const IconThemeData(color: AppColors.primary),
@@ -64,29 +63,33 @@ class MainScreen extends StatelessWidget {
                   BottomNavigationBarItem(
                     label: 'Home'.tr(),
                     icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.home,size:16),
+                      padding:
+                          const EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: const Icon(AppIcons.home, size: 16),
                     ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Services'.tr(),
                     icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.medical_services,size:16),
+                      padding:
+                          const EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: const Icon(AppIcons.medical_services, size: 16),
                     ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Booking'.tr(),
                     icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.calendar,size:16),
+                      padding:
+                          const EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: const Icon(AppIcons.calendar, size: 16),
                     ),
                   ),
                   BottomNavigationBarItem(
                     label: 'Members'.tr(),
                     icon: Padding(
-                      padding: const EdgeInsets.only(top: 4,left: 20,right: 20),
-                      child: const Icon(AppIcons.family,size:16),
+                      padding:
+                          const EdgeInsets.only(top: 4, left: 20, right: 20),
+                      child: const Icon(AppIcons.family, size: 16),
                     ),
                   ),
                 ],
