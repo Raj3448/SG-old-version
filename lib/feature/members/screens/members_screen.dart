@@ -10,7 +10,6 @@ import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/main/repo/main_repo.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
-import 'package:silver_genie/feature/members/repo/member_repo.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
 

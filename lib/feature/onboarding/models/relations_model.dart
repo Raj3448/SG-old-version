@@ -1,13 +1,17 @@
-class Relations {
-  Relations({
-    required this.id,
-    required this.name,
-    required this.rank,
-    required this.active,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final int id;
-  final String name;
-  final int rank;
-  final bool active;
+part 'relations_model.freezed.dart';
+part 'relations_model.g.dart';
+
+@freezed
+class Relations with _$Relations {
+  factory Relations({
+    required int id,
+    required String name,
+    required int rank,
+    required bool active,
+  }) = _Relations;
+
+  factory Relations.fromJson(Map<String, dynamic> json) =>
+      _$RelationsFromJson(json);
 }
