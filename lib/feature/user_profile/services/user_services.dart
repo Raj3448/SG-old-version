@@ -1,6 +1,4 @@
 //import 'dart:convert';
-import 'dart:io';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
@@ -68,17 +66,5 @@ class UserDetailServices implements IUserFacades{
       return const Left(UserFailure.someThingWentWrong());
     }
   }
-
   // Update user details through API
-  
-}
-
-class Failure {
-  Failure({required this.errormessage});
-  final String errormessage;
-}
-
-class Success {
-  Success({required this.userDetails, String? successMsg});
-  final UserDetails userDetails;
 }

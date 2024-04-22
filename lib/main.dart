@@ -1,8 +1,6 @@
 // ignore_for_file: unnecessary_lambdas
 
 import 'dart:async';
-
-import 'package:device_preview/device_preview.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +22,7 @@ import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
-
+import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 
 void main() async {
@@ -44,7 +42,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
-      GetIt.instance.registerLazySingleton(() => UserDetailStore());
+      GetIt.instance.registerLazySingleton(() => UserDetailStore(UserDetailServices()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
