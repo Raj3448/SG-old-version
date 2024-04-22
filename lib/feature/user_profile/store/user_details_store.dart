@@ -1,8 +1,6 @@
-import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
-import 'package:silver_genie/feature/user_profile/services/user_failure_or_success.dart';
 
 part 'user_details_store.g.dart';
 
@@ -14,31 +12,38 @@ abstract class _UserDetailStoreBase with Store {
   @observable
   UserDetails? userDetails;
 
+  @observable
+  bool isLoading = false;
+
   @action
-  Future<Either<UserFailure,UserSuccess>> getUserDetails() async {
-    
-      final userDetailsResult = await userDetailServices.fetchUserDetailsFromApi();
-      return userDetailsResult.fold(
-        (failure) => Left(failure),
-        (success) {
-          userDetails = success.userDetails;
-          return Right(success);
-        },
-      );
-    
+  Future<void> getUserDetails() async {
+    isLoading = true;
+    final userDetailsResult =
+        await userDetailServices.fetchUserDetailsFromApi();
+    userDetailsResult.fold(
+      (failure) {
+        print('Error : $failure');
+      },
+      (success) {
+        userDetails = success;
+      },
+    );
+    isLoading = false;
   }
 
   @action
-  Future<Either<UserFailure, UserSuccess>> updateUserDetails(UserDetails newInstance) async {
-    
-      final userDetailsResult = await userDetailServices.updateUserDetails(userDetails: newInstance);
-      return userDetailsResult.fold(
-        (failure) => Left(failure),
-        (success) {
-          userDetails = success.userDetails;
-          return Right(success);
-        },
-      );
-    
+  Future<void> updateUserDetails(UserDetails newInstance) async {
+    isLoading = true;
+    final userDetailsResult =
+        await userDetailServices.updateUserDetails(userDetails: newInstance);
+    userDetailsResult.fold(
+      (failure) {
+        print('Error : $failure');
+      },
+      (success) {
+        userDetails = success;
+      },
+    );
+    isLoading = false;
   }
 }

@@ -100,9 +100,9 @@ final GoRouter routes = GoRouter(
       path: '/servicesCareScreen/:pageTitle',
       name: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
-        final pageTitle = state.pathParameters['pageTitle'];
+        final pageTitle = state.pathParameters['pageTitle'] ?? 'Care';
         return MaterialPage(
-          child: ServicesCareScreen(pagetitle: pageTitle!,),
+          child: ServicesCareScreen(pagetitle: pageTitle,),
         );
       },
     ),

@@ -22,7 +22,7 @@ class UserDetailServices implements IUserFacades{
       postalCode: 411041);
 
   @override
-  Future<Either<UserFailure, UserSuccess>> fetchUserDetailsFromApi() async {
+  Future<Either<UserFailure, UserDetails>> fetchUserDetailsFromApi() async {
     //  API call here to fetch user details
     try {
       // final response = await HttpClient().get<String>('/UserDetails');
@@ -35,7 +35,7 @@ class UserDetailServices implements IUserFacades{
       // } else {
       //   return Left(UserFailure.badResponse());
       // }
-      return Right(UserSuccess.success(_userDetails));
+      return Right(_userDetails);
     } on SocketException {
       return const Left(UserFailure.socketException());
     } catch (error) {
@@ -44,7 +44,7 @@ class UserDetailServices implements IUserFacades{
   }
   
   @override
-  Future<Either<UserFailure, UserSuccess>> updateUserDetails({@required UserDetails? userDetails}) async{
+  Future<Either<UserFailure, UserDetails>> updateUserDetails({@required UserDetails? userDetails}) async{
     try {
       // final response = await HttpClient().post<String>('/UserDetails/id',
       //     data: jsonEncode(userDetails.toJson()));
@@ -59,7 +59,7 @@ class UserDetailServices implements IUserFacades{
       //   return Left(UserFailure.badResponse());
       // }
       _userDetails = userDetails!;
-      return Right(UserSuccess.success(_userDetails));
+      return Right(_userDetails);
     } on SocketException {
       return const Left(UserFailure.socketException());
     } catch (error) {
