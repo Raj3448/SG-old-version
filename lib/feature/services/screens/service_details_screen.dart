@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -133,7 +135,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                       const SizedBox(height: Dimension.d2),
                       Row(
                         children: [
-                          // TODO(Amanjot)L Update the icons consts file once all icons are added and replace this icon.
+                          // TODO(Amanjot): Update the icons consts file once all icons are added and replace this icon.
                           const Icon(
                             Icons.share_location,
                             color: AppColors.grayscale700,
@@ -155,7 +157,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                       const SizedBox(height: Dimension.d2),
                       Row(
                         children: [
-                          // TODO(Amanjot)L Update the icons consts file once all icons are added and replace this icon.
+                          // TODO(Amanjot): Update the icons consts file once all icons are added and replace this icon.
                           const Icon(
                             Icons.money_rounded,
                             color: AppColors.grayscale700,

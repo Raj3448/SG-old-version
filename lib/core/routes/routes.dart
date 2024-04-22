@@ -22,7 +22,7 @@ import 'package:silver_genie/feature/services/screens/booking_details_screen.dar
 import 'package:silver_genie/feature/services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
-import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
+import 'package:silver_genie/feature/services/services_subcare_screen.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
@@ -44,88 +44,83 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/main',
-      name: RoutesConstants.mainRoute,
+      path: RoutesConstants.mainRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MainScreen());
       },
     ),
     GoRoute(
-      path: '/login',
-      name: RoutesConstants.loginRoute,
+      path: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: LoginPage());
       },
     ),
     GoRoute(
-      path: '/signUp',
-      name: RoutesConstants.signUpRoute,
+      path: RoutesConstants.signUpRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SignUpScreen());
       },
     ),
     GoRoute(
-      path: '/otp',
-      name: RoutesConstants.otpRoute,
+      path: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: OTPScreen());
       },
     ),
     GoRoute(
-      path: '/home',
-      name: RoutesConstants.homeRoute,
+      path: RoutesConstants.homeRoute,
       pageBuilder: (context, state) {
         return MaterialPage(child: HomeScreen());
       },
     ),
     GoRoute(
       path: RoutesConstants.userProfileRoute,
-      name: '/user-profile',
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(
-      path: '/emergencyServiceScreen',
-      name: RoutesConstants.emergencyServiceScreen,
+      path: RoutesConstants.emergencyServiceScreen,
       pageBuilder: (context, state) {
-        return MaterialPage(child: EmergencyServices());
+        return const MaterialPage(child: EmergencyServices());
       },
     ),
     GoRoute(
-      path: '/subscriptionsScreen',
-      name: RoutesConstants.subscriptionsScreen,
+      path: RoutesConstants.subscriptionsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SubscriptionsScreen());
       },
     ),
     GoRoute(
-      path: '/servicesCareScreenDisplay/:pageTitle',
+      path: RoutesConstants.subscriptionsScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: SubscriptionsScreen());
+      },
+    ),
+    GoRoute(
+      path: '/servicesCareScreen/:pageTitle',
       name: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'];
         return MaterialPage(
-          child: ServicesCareScreen(pagetitle: pageTitle!),
+          child: ServicesCareScreen(pageTitle: pageTitle!),
         );
       },
     ),
     GoRoute(
-      path: '/service',
-      name: RoutesConstants.serviceRoute,
+      path: RoutesConstants.serviceRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: ServicesScreen());
       },
     ),
     GoRoute(
-      path: '/bookings',
-      name: RoutesConstants.bookingsRoute,
+      path: RoutesConstants.bookingsRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingsScreen());
       },
     ),
     GoRoute(
-      path: '/members',
-      name: RoutesConstants.membersRoute,
+      path: RoutesConstants.membersRoute,
       pageBuilder: (context, state) {
         return MaterialPage(
           child: MembersScreen(
@@ -135,7 +130,7 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/addFamilyMember/:edit',
+      path: '/addEditFamilyMember/:edit',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
@@ -144,14 +139,13 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: RoutesConstants.eprPhrRoute,
-      name: '/eprPhr',
       pageBuilder: (context, state) {
         return MaterialPage(child: EPRPHRViewScreen());
       },
     ),
     GoRoute(
       path:
-          '/members/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
+          '/memberDetails/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
       name: RoutesConstants.memberDetailsRoute,
       pageBuilder: (context, state) {
         final hasCareSub =
@@ -188,22 +182,19 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/bookServiceScreen',
-      name: RoutesConstants.bookServiceScreen,
+      path: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookServiceScreen());
       },
     ),
     GoRoute(
-      path: '/paymentScreen',
-      name: RoutesConstants.paymentScreen,
+      path: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: PaymentScreen());
       },
     ),
     GoRoute(
-      path: '/bookingDetailsScreen',
-      name: RoutesConstants.bookingDetailsScreen,
+      path: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingDetailsScreen());
       },

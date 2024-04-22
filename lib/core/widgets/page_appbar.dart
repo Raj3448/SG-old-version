@@ -15,27 +15,31 @@ class PageAppbar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.white,
       automaticallyImplyLeading: false,
       elevation: 5,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                GoRouter.of(context).pop();
-              },
+      title: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              GoRouter.of(context).pop();
+            },
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+              ),
+              padding: const EdgeInsets.all(15),
               child: const Icon(
                 AppIcons.arrow_backward,
                 color: AppColors.grayscale900,
                 size: 18,
               ),
             ),
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: AppTextStyle.bodyXLMedium.copyWith(height: 1.5),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            title,
+            style: AppTextStyle.bodyXLMedium.copyWith(height: 1.5),
+          ),
+        ],
       ),
     );
   }

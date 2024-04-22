@@ -5,14 +5,14 @@ import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
 
 class ServicesCareScreen extends StatelessWidget {
-  final String pagetitle;
-  const ServicesCareScreen({Key? key, required this.pagetitle})
+  final String pageTitle;
+  const ServicesCareScreen({Key? key, required this.pageTitle})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(title: pagetitle),
+      appBar: PageAppbar(title: pageTitle),
       body: const SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.0),

@@ -109,7 +109,7 @@ class _MembersScreenState extends State<MembersScreen> {
                           const SizedBox(height: 24),
                           CustomButton(
                             ontap: () {
-                              GoRouter.of(context).pushNamed(
+                              context.pushNamed(
                                 RoutesConstants.addEditFamilyMemberRoute,
                                 pathParameters: {'edit': 'false'},
                               );

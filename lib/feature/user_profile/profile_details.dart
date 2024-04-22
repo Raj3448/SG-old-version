@@ -1,4 +1,4 @@
-// ignore_for_file: inference_failure_on_function_invocation, strict_raw_type
+// ignore_for_file: inference_failure_on_function_invocation, strict_raw_type, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -13,8 +13,6 @@ import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-
 
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -61,9 +59,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     const ValueItem(label: 'Mumbai', value: 'Mumbai'),
   ];
 
+  @override
   void initState() {
     super.initState();
-    final UserDetailStore userDetails = GetIt.instance.get<UserDetailStore>();
+    final userDetails = GetIt.instance.get<UserDetailStore>();
     _fullNameController.text = userDetails.userDetails.fullname;
     dateBirth = userDetails.userDetails.dateBirth;
 
@@ -173,17 +172,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               GestureDetector(
                 onTap: () {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return InfoDialog(
-                            showIcon: true,
-                            title: 'Want to Update mobile number?',
-                            desc:
-                                'Please contact the SilverGenie team for changing mobile number.',
-                            btnTitle: 'Contact Genie',
-                            showBtnIcon: true,
-                            btnIconPath: AppIcons.phone);
-                      });
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: true,
+                        title: 'Want to Update mobile number?',
+                        desc:
+                            'Please contact the SilverGenie team for changing mobile number.',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: true,
+                        btnIconPath: AppIcons.phone,
+                      );
+                    },
+                  );
                 },
                 child: CustomTextField(
                   hintText: 'Mobile Field',
@@ -203,17 +204,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               GestureDetector(
                 onTap: () {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return InfoDialog(
-                            showIcon: true,
-                            title: 'Want to Update Email ID?',
-                            desc:
-                                'Please contact the SilverGenie team for changing Email ID.',
-                            btnTitle: 'Contact Genie',
-                            showBtnIcon: true,
-                            btnIconPath: AppIcons.phone);
-                      });
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: true,
+                        title: 'Want to Update Email ID?',
+                        desc:
+                            'Please contact the SilverGenie team for changing Email ID.',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: true,
+                        btnIconPath: AppIcons.phone,
+                      );
+                    },
+                  );
                 },
                 child: CustomTextField(
                   hintText: 'email address',
@@ -288,23 +291,25 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 height: Dimension.d10,
               ),
               CustomButton(
-                  ontap: () {
-                    UserDetailStore userDetailsStore =
-                        GetIt.instance.get<UserDetailStore>();
-                    UserDetails userDetails = userDetailsStore.userDetails;
-                    userDetails = userDetails.copyWith(
-                        fullname: _fullNameController.text,
-                        emailId: _emailController.text,
-                        mobileNum: _mobileController.text);
-                    userDetailsStore.updateUserDetails(userDetails);
-                    Navigator.of(context).pop();
-                  },
-                  title: 'Save details',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: ButtonType.primary,
-                  expanded: true)
+                ontap: () {
+                  final userDetailsStore =
+                      GetIt.instance.get<UserDetailStore>();
+                  var userDetails = userDetailsStore.userDetails;
+                  userDetails = userDetails.copyWith(
+                    fullname: _fullNameController.text,
+                    emailId: _emailController.text,
+                    mobileNum: _mobileController.text,
+                  );
+                  userDetailsStore.updateUserDetails(userDetails);
+                  Navigator.of(context).pop();
+                },
+                title: 'Save details',
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: ButtonType.primary,
+                expanded: true,
+              ),
             ],
           ),
         ),

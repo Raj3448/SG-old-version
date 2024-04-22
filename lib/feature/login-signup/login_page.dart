@@ -17,11 +17,12 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<LoginStore>();
+    final emailFormKey = GlobalKey<FormState>();
+    final numberFormKey = GlobalKey<FormState>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -50,15 +51,30 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: Dimension.d2),
                       if (store.isEmail)
-                        const CustomTextField(
-                          hintText: 'Enter e-mail',
-                          keyboardType: TextInputType.emailAddress,
-                          large: false,
-                          enabled:true,
+                        Form(
+                          key: emailFormKey,
+                          child: CustomTextField(
+                            hintText: 'Enter e-mail',
+                            keyboardType: TextInputType.emailAddress,
+                            large: false,
+                            enabled: true,
+                            validationLogic: (value) {
+                              const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
+                              if (value!.isEmpty) {
+                                return 'Please enter your email address';
+                              } else if (!RegExp(regex).hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
                         )
                       else
-                        CustomPhoneField(
-                          title: 'Enter Mobile Number'.tr(),
+                        Form(
+                          key: numberFormKey,
+                          child: CustomPhoneField(
+                            title: 'Enter Mobile Number'.tr(),
+                          ),
                         ),
                       const SizedBox(height: Dimension.d4),
                       CustomButton(
@@ -82,7 +98,17 @@ class _LoginPageState extends State<LoginPage> {
                           type: ButtonType.primary,
                           expanded: true,
                           ontap: () {
-                            GoRouter.of(context).push(RoutesConstants.otpRoute);
+                            if (store.isEmail) {
+                              if (emailFormKey.currentState!.validate()) {
+                                GoRouter.of(context)
+                                    .push(RoutesConstants.otpRoute);
+                              }
+                            } else {
+                              if (numberFormKey.currentState!.validate()) {
+                                GoRouter.of(context)
+                                    .push(RoutesConstants.otpRoute);
+                              }
+                            }
                           },
                           title: 'Login'.tr(),
                           showIcon: false,

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 
 class CustomizeTabviewComponent extends StatelessWidget {
-  const CustomizeTabviewComponent({required this.controller, required this.tabCount, required this.widgetList, Key? key})
+  const CustomizeTabviewComponent(
+      {required this.controller,
+      required this.tabCount,
+      required this.widgetList,
+      Key? key})
       : super(key: key);
   final TabController controller;
   final int tabCount;
@@ -21,12 +25,11 @@ class CustomizeTabviewComponent extends StatelessWidget {
             height: 48,
             width: double.infinity,
             child: TabBar(
-              controller: controller,
-              dividerColor: AppColors.secondary,
-              indicatorColor: AppColors.primary,
-              labelColor: AppColors.grayscale900,
-              tabs: widgetList
-            ),
+                controller: controller,
+                dividerColor: AppColors.secondary,
+                indicatorColor: AppColors.primary,
+                labelColor: AppColors.grayscale900,
+                tabs: widgetList),
           ),
         ));
   }

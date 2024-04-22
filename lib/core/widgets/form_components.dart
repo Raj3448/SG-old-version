@@ -25,6 +25,7 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.large,
     required this.enabled,
+    this.validationLogic,
     this.controller,
     super.key,
   });
@@ -34,11 +35,13 @@ class CustomTextField extends StatelessWidget {
   final bool large;
   final bool enabled;
   final TextEditingController? controller;
+  final String? Function(String?)? validationLogic;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
       style:
@@ -74,6 +77,7 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
       ),
+      validator: validationLogic,
     );
   }
 }
@@ -82,10 +86,12 @@ class CustomPhoneField extends StatelessWidget {
   const CustomPhoneField({required this.title, super.key});
 
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.number,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: 'Enter mobile number',
         hintStyle: AppTextStyle.bodyLargeMedium.copyWith(height: 1.5),
@@ -119,6 +125,14 @@ class CustomPhoneField extends StatelessWidget {
           ),
         ),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your phone number';
+        } else if (value.length > 10 || value.length < 10) {
+          return 'Please enter 10 digits phone number';
+        }
+        return null;
+      },
     );
   }
 }

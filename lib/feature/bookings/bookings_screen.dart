@@ -46,7 +46,6 @@ class _BookingsScreenState extends State<BookingsScreen>
                   Tab(icon: Text('Completed')),
                 ],
               ),
-              
               const SizedBox(
                 height: Dimension.d2,
               ),
@@ -69,6 +68,7 @@ class BookingsStateComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Column(
         children: List.generate(6, (index) => const BookingListTileComponent()),
       ),
