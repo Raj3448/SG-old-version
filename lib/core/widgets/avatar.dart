@@ -61,16 +61,15 @@ class Avatar extends StatelessWidget {
 }
 
 class SelectableAvatar extends Avatar {
-  final bool isSelected;
-  final VoidCallback ontap;
-
   const SelectableAvatar({
-    required String imgPath,
-    required double maxRadius,
+    required super.imgPath,
+    required super.maxRadius,
     required this.isSelected,
     required this.ontap,
-    Key? key,
-  }) : super(imgPath: imgPath, maxRadius: maxRadius, key: key);
+    super.key,
+  });
+  final bool isSelected;
+  final VoidCallback ontap;
 
   @override
   Widget build(BuildContext context) {
@@ -86,21 +85,21 @@ class SelectableAvatar extends Avatar {
               ? Border.all(color: AppColors.primary, width: 2)
               : null,
           boxShadow: isSelected
-              ? 
-              [
-                  BoxShadow(
+              ? [
+                  const BoxShadow(
                     color: Color.fromRGBO(181, 181, 181, 0.7),
                     blurRadius: 8,
-                    spreadRadius: 0,
                     offset: Offset(0, 4),
                   ),
-                ]:null,
+                ]
+              : null,
         ),
         child: Opacity(
-          opacity: isSelected?1.0:0.7,
-          child: CircleAvatar(maxRadius: maxRadius, backgroundImage: imageProvider
-              // backgroundImage: NetworkImage(imgPath),
-              ),
+          opacity: isSelected ? 1.0 : 0.7,
+          child: CircleAvatar(
+            maxRadius: maxRadius, backgroundImage: imageProvider,
+            // backgroundImage: NetworkImage(imgPath),
+          ),
         ),
       ),
     );

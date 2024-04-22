@@ -12,14 +12,14 @@ class RoutesConstants {
   static const serviceRoute = '/service';
   static const bookingsRoute = '/bookings';
   static const membersRoute = '/members';
-  static const userProfileRoute = '/user-profile';
+  static const userProfileRoute = '/userProfile';
 
   //---- Screens ------------------//
   static const addEditFamilyMemberRoute = '/addEditFamilyMember';
   static const eprPhrRoute = '/eprPhr';
   static const memberDetailsRoute = '/memberDetails';
   static const emergencyServiceScreen = '/emergencyServiceScreen';
-  static const servicesCareScreen = '/servicesCareScreenDisplay';
+  static const servicesCareScreen = '/servicesCareScreen';
   static const serviceDetailsScreen = '/serviceDetailsScreen';
   static const bookServiceScreen = '/bookServiceScreen';
   static const paymentScreen = '/paymentScreen';

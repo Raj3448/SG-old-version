@@ -56,7 +56,11 @@ class MemberCard extends StatelessWidget {
             const Column(
               children: [
                 SizedBox(height: 8),
-                ElderCareSubscription(color: ElderCareColor.blue, title: 'Elder Care Subscription',showIcon: true,),
+                ElderCareSubscription(
+                  color: ElderCareColor.blue,
+                  title: 'Elder Care Subscription',
+                  showIcon: true,
+                ),
               ],
             ),
         ],

@@ -1,5 +1,8 @@
+// ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -16,96 +19,9 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomeBody extends StatelessWidget {
-  final HomeScreenStore store;
-
-  const HomeBody({required this.store});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Family Members health info',
-            style: AppTextStyle.bodyXLSemiBold,
-          ),
-          const SizedBox(height: Dimension.d4),
-          Observer(
-            builder: (_) {
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      for (var i = 0; i < store.familyMembers.length; i++)
-                        Row(
-                          children: [
-                            SelectableAvatar(
-                              imgPath: store.familyMembers[i].imagePath,
-                              maxRadius: 24,
-                              isSelected: store.selectedIndex == i,
-                              ontap: () => store.selectAvatar(i),
-                            ),
-                            const SizedBox(width: Dimension.d4),
-                          ],
-                        ),
-                      SelectableAvatar(
-                        imgPath: 'assets/icon/44Px.png',
-                        maxRadius: 24,
-                        isSelected: false,
-                        ontap: () {
-                          context.pushNamed(
-                            RoutesConstants.addEditFamilyMemberRoute,
-                            pathParameters: {'edit': 'true'},
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  if (store.selectedIndex != -1)
-                    Observer(
-                      builder: (_) {
-                        final selectedMember =
-                            store.familyMembers[store.selectedIndex];
-                        return selectedMember != null
-                            ? selectedMember.isActive
-                                ? ActivePlanComponent(
-                                    name: selectedMember.name,
-                                    onTap: () {
-                                      context.pushNamed(
-                                          RoutesConstants.eprPhrRoute);
-                                    },
-                                  )
-                                : InactivePlanComponent(
-                                    name: selectedMember.name)
-                            : const SizedBox();
-                      },
-                    ),
-                  const SizedBox(height: Dimension.d4),
-                  if (store.selectedIndex != -1)
-                    Observer(
-                      builder: (_) {
-                        final selectedMember =
-                            store.familyMembers[store.selectedIndex];
-                        return selectedMember != null && selectedMember.isActive
-                            ? CoachContact(imgpath: '', name: 'Suma Latha')
-                            : const SizedBox();
-                      },
-                    ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class HomeScreen extends StatelessWidget {
-  final HomeScreenStore store = HomeScreenStore();
+  HomeScreen({super.key});
+
   final PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
@@ -117,7 +33,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeBody(store: store),
+              const _MemberInfo(),
               Text(
                 'Book services',
                 style: AppTextStyle.bodyXLSemiBold
@@ -145,7 +61,8 @@ class HomeScreen extends StatelessWidget {
                     iconImagePath: 'assets/icon/ambulance.png',
                     buttonName: 'Emergency',
                     onTap: () {
-                      context.pushNamed(RoutesConstants.emergencyServiceScreen);
+                      GoRouter.of(context)
+                          .push(RoutesConstants.emergencyServiceScreen);
                     },
                   ),
                 ],
@@ -183,13 +100,14 @@ class HomeScreen extends StatelessWidget {
                   controller: _pageController,
                   scrollDirection: Axis.horizontal,
                   children: List.generate(
-                      4,
-                      (index) => const _HomeScreenOfferCard(
-                            offerTitle: 'SG Workforce',
-                            content1: 'Trained critical care nursing staff',
-                            content2:
-                                'Trained nursing staff or attendants for senior citizens',
-                          )),
+                    4,
+                    (index) => const _HomeScreenOfferCard(
+                      offerTitle: 'SG Workforce',
+                      content1: 'Trained critical care nursing staff',
+                      content2:
+                          'Trained nursing staff or attendants for senior citizens',
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -219,10 +137,11 @@ class HomeScreen extends StatelessWidget {
               Text(
                 'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
                 style: AppTextStyle.bodyLargeMedium.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    height: 1.4,
-                    color: AppColors.grayscale700),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  height: 1.4,
+                  color: AppColors.grayscale700,
+                ),
               ),
               const SizedBox(
                 height: Dimension.d3,
@@ -231,28 +150,40 @@ class HomeScreen extends StatelessWidget {
                 height: 52,
                 child: TextFormField(
                   style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                   decoration: InputDecoration(
-                      fillColor: Colors.white24,
-                      filled: true,
-                      border: InputBorder.none,
-                      hintText: 'Enter Your Email',
-                      hintStyle: AppTextStyle.bodyMediumMedium.copyWith(
-                          color: AppColors.grayscale600,
-                          fontSize: 16,
-                          height: 1.46,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: FontFamily.inter),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 10.0),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              width: 2, color: AppColors.secondary),
-                          borderRadius: BorderRadius.circular(10)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              width: 2, color: AppColors.primary),
-                          borderRadius: BorderRadius.circular(10))),
+                    fillColor: Colors.white24,
+                    filled: true,
+                    border: InputBorder.none,
+                    hintText: 'Enter Your Email',
+                    hintStyle: AppTextStyle.bodyMediumMedium.copyWith(
+                      color: AppColors.grayscale600,
+                      fontSize: 16,
+                      height: 1.46,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: FontFamily.inter,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15,
+                      horizontal: 10,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 2,
+                        color: AppColors.secondary,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 2,
+                        color: AppColors.primary,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onFieldSubmitted: (value) {},
                 ),
               ),
@@ -279,12 +210,104 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class _MemberInfo extends StatelessWidget {
+  const _MemberInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    final store = GetIt.I<HomeStore>();
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Family Members health info',
+            style: AppTextStyle.bodyXLSemiBold,
+          ),
+          const SizedBox(height: Dimension.d4),
+          Observer(
+            builder: (_) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      for (var i = 0; i < store.familyMembers.length; i++)
+                        Row(
+                          children: [
+                            SelectableAvatar(
+                              imgPath: store.familyMembers[i].imagePath,
+                              maxRadius: 24,
+                              isSelected: store.selectedIndex == i,
+                              ontap: () => store.selectAvatar(i),
+                            ),
+                            const SizedBox(width: Dimension.d4),
+                          ],
+                        ),
+                      SelectableAvatar(
+                        imgPath: 'assets/icon/44Px.png',
+                        maxRadius: 24,
+                        isSelected: false,
+                        ontap: () {
+                          context.pushNamed(
+                            RoutesConstants.addEditFamilyMemberRoute,
+                            pathParameters: {'edit': 'false'},
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: Dimension.d4),
+                  if (store.selectedIndex != -1)
+                    Observer(
+                      builder: (_) {
+                        final selectedMember =
+                            store.familyMembers[store.selectedIndex];
+                        return selectedMember != null
+                            ? selectedMember.isActive
+                                ? ActivePlanComponent(
+                                    name: selectedMember.name,
+                                    onTap: () {
+                                      GoRouter.of(context)
+                                          .push(RoutesConstants.eprPhrRoute);
+                                    },
+                                  )
+                                : InactivePlanComponent(
+                                    name: selectedMember.name,
+                                  )
+                            : const SizedBox();
+                      },
+                    ),
+                  const SizedBox(height: Dimension.d4),
+                  if (store.selectedIndex != -1)
+                    Observer(
+                      builder: (_) {
+                        final selectedMember =
+                            store.familyMembers[store.selectedIndex];
+                        return selectedMember != null && selectedMember.isActive
+                            ? const CoachContact(
+                                imgpath: '',
+                                name: 'Suma Latha',
+                              )
+                            : const SizedBox();
+                      },
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class BookServiceButton extends StatelessWidget {
-  const BookServiceButton(
-      {required this.iconImagePath,
-      required this.buttonName,
-      required this.onTap,
-      super.key});
+  const BookServiceButton({
+    required this.iconImagePath,
+    required this.buttonName,
+    required this.onTap,
+    super.key,
+  });
 
   final String iconImagePath;
   final String buttonName;
@@ -295,24 +318,25 @@ class BookServiceButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             height: 64,
             width: 64,
             decoration: BoxDecoration(
-                color: AppColors.secondary,
-                border: Border.all(width: 2, color: AppColors.grayscale300),
-                borderRadius: BorderRadius.circular(10)),
+              color: AppColors.secondary,
+              border: Border.all(width: 2, color: AppColors.grayscale300),
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Image.asset(iconImagePath),
           ),
           Text(
             buttonName,
             style: AppTextStyle.bodySmallMedium.copyWith(
-                color: AppColors.grayscale700,
-                fontWeight: FontWeight.w500,
-                height: 2.6),
-          )
+              color: AppColors.grayscale700,
+              fontWeight: FontWeight.w500,
+              height: 2.6,
+            ),
+          ),
         ],
       ),
     );
@@ -320,11 +344,11 @@ class BookServiceButton extends StatelessWidget {
 }
 
 class _HomeScreenOfferCard extends StatelessWidget {
-  const _HomeScreenOfferCard(
-      {required this.offerTitle,
-      required this.content1,
-      required this.content2,
-      super.key});
+  const _HomeScreenOfferCard({
+    required this.offerTitle,
+    required this.content1,
+    required this.content2,
+  });
 
   final String offerTitle;
   final String content1;
@@ -338,9 +362,10 @@ class _HomeScreenOfferCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
-          color: AppColors.secondary,
-          border: Border.all(width: 2, color: AppColors.grayscale300),
-          borderRadius: BorderRadius.circular(10)),
+        color: AppColors.secondary,
+        border: Border.all(width: 2, color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -401,7 +426,7 @@ class _HomeScreenOfferCard extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

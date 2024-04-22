@@ -35,10 +35,10 @@ class InfoDialog extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: Dimension.d4,
-          vertical: Dimension.d6,),
+          vertical: Dimension.d6,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (showIcon)
               Column(

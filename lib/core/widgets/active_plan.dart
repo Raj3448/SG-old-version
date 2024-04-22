@@ -21,15 +21,19 @@ class AnalogComponent extends StatelessWidget {
           style: AppTextStyle.bodyMediumMedium
               .copyWith(color: AppColors.grayscale700),
         ),
-        Text(':',
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(color: AppColors.grayscale700)),
+        Text(
+          ':',
+          style: AppTextStyle.bodyMediumMedium
+              .copyWith(color: AppColors.grayscale700),
+        ),
         const SizedBox(
           width: Dimension.d1,
         ),
-        Text(text2,
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(color: AppColors.grayscale700)),
+        Text(
+          text2,
+          style: AppTextStyle.bodyMediumMedium
+              .copyWith(color: AppColors.grayscale700),
+        ),
       ],
     );
   }
@@ -230,17 +234,14 @@ class ActivePlanComponent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: SizedBox(
-                    //height: 28,
-                    child: CustomButton(
-                      ontap: onTap,
-                      title: 'View PHR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: ButtonType.secondary,
-                      expanded: true,
-                    ),
+                  child: CustomButton(
+                    ontap: onTap,
+                    title: 'View PHR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type: ButtonType.secondary,
+                    expanded: true,
                   ),
                 ),
                 const SizedBox(

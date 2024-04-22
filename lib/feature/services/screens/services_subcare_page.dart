@@ -9,9 +9,8 @@ import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
 
 class ServicesCareScreen extends StatelessWidget {
+  const ServicesCareScreen({required this.pagetitle, super.key});
   final String pagetitle;
-  const ServicesCareScreen({Key? key, required this.pagetitle})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
