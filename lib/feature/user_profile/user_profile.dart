@@ -51,7 +51,7 @@ class UserProfile extends StatelessWidget {
                               width: Dimension.d2,
                             ),
                             Text(
-                              store.userDetails!.fullname,
+                              store.userDetails!.fold((l) => '', (r) => r.fullname),
                               style: AppTextStyle.bodyXLSemiBold,
                             ),
                           ],
@@ -61,13 +61,13 @@ class UserProfile extends StatelessWidget {
                         ),
                         CustomTextIcon(
                             iconpath: AppIcons.phone,
-                            title: store.userDetails!.mobileNum),
+                            title: store.userDetails!.fold((l) => '', (r) => r.mobileNum)),
                         const SizedBox(
                           height: Dimension.d2,
                         ),
                         CustomTextIcon(
                           iconpath: AppIcons.home,
-                          title: store.userDetails!.emailId,
+                          title: store.userDetails!.fold((l) => '', (r) => r.emailId),
                         ),
                         const SizedBox(
                           height: Dimension.d4,

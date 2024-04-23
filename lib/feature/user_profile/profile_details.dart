@@ -287,12 +287,15 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               ontap: () async {
                                 UserDetailStore store =
                                     GetIt.I<UserDetailStore>();
-                                UserDetails userDetails = store.userDetails!;
-                                userDetails = userDetails.copyWith(
+                                UserDetails? userDetails;
+                                store.userDetails!.map((a) {
+                                  userDetails = a;
+                                });
+                                userDetails = userDetails!.copyWith(
                                     fullname: _fullNameController.text,
                                     emailId: _emailController.text,
                                     mobileNum: _mobileController.text);
-                                await store.updateUserDetails(userDetails);
+                                await store.updateUserDetails(userDetails!);
                                 Navigator.of(context).pop();
                               },
                               title: 'Save details',
@@ -312,16 +315,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   void _initializeControllers(UserDetailStore store) {
     print('API call successful');
 
-    _fullNameController.text = store.userDetails!.fullname;
-    dateBirth = store.userDetails!.dateBirth;
+    store.userDetails!.map((userDetails) {
+      _fullNameController.text = userDetails.fullname;
+    dateBirth = userDetails.dateBirth;
 
     _genderController.selectedOptions.add(_genderItems[0]);
-    _mobileController.text = store.userDetails!.mobileNum;
-    _emailController.text = store.userDetails!.emailId;
-    _addressController.text = store.userDetails!.address;
+    _mobileController.text = userDetails.mobileNum;
+    _emailController.text = userDetails.emailId;
+    _addressController.text = userDetails.address;
     _countryController.selectedOptions.add(_countryItems[0]);
     _stateController.selectedOptions.add(_stateItems[0]);
     _cityController.selectedOptions.add(_cityItems[0]);
-    _postalController.text = store.userDetails!.postalCode.toString();
+    _postalController.text = userDetails.postalCode.toString();
+    } );
+    
   }
 }

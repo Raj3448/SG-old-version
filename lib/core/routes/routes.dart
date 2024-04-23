@@ -85,7 +85,8 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.subscriptionsScreen,
+      path: '/subscriptionsScreen',
+      name: RoutesConstants.subscriptionsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SubscriptionsScreen());
       },
@@ -102,7 +103,9 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Care';
         return MaterialPage(
-          child: ServicesCareScreen(pagetitle: pageTitle,),
+          child: ServicesCareScreen(
+            pagetitle: pageTitle,
+          ),
         );
       },
     ),
@@ -195,4 +198,5 @@ final GoRouter routes = GoRouter(
       },
     ),
   ],
+  
 );

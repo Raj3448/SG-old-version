@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-import 'package:silver_genie/feature/user_profile/services/user_failure_or_success.dart';
+import 'package:silver_genie/feature/user_profile/services/user_failure.dart';
 
 class UserDetailServices implements IUserFacades{
   UserDetailServices();

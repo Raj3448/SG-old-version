@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-part 'user_failure_or_success.freezed.dart';
+part 'user_failure.freezed.dart';
 
 @freezed
 abstract class UserFailure with _$UserFailure {

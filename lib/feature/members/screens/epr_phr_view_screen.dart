@@ -75,7 +75,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          store.userDetails!.fullname,
+                                          store.userDetails!.fold((l) => '', (r) => r.fullname),
                                           style:
                                               AppTextStyle.bodyLargeMedium.copyWith(
                                             color: AppColors.grayscale900,
@@ -98,15 +98,15 @@ class EPRPHRViewScreen extends StatelessWidget {
                                 IconTitleDetailsComponent(
                                     icon: Icons.email_outlined,
                                     title: 'Email',
-                                    details: store.userDetails!.emailId),
+                                    details: store.userDetails!.fold((l) => '', (r) => r.emailId)),
                                 IconTitleDetailsComponent(
                                     icon: Icons.phone_outlined,
                                     title: 'Contact',
-                                    details: store.userDetails!.mobileNum),
+                                    details: store.userDetails!.fold((l) => '', (r) => r.mobileNum)),
                                 IconTitleDetailsComponent(
                                     icon: AppIcons.home,
                                     title: 'Address',
-                                    details: store.userDetails!.address),
+                                    details: store.userDetails!.fold((l) => '', (r) => r.address)),
                               ],
                             ),
                           ),

@@ -34,6 +34,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const _MemberInfo(),
+              _EmergencyActivation(),
               Text(
                 'Book services',
                 style: AppTextStyle.bodyXLSemiBold
@@ -205,6 +206,52 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EmergencyActivation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: Dimension.d2),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimension.d2, vertical: Dimension.d3),
+      height: 170,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Emergency',
+            style: AppTextStyle.bodyXLMedium.copyWith(
+                fontWeight: FontWeight.w500, color: AppColors.grayscale900),
+          ),
+          Text(
+            'When the button is pressed, all emergency services will be activated.',
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale900),
+          ),
+          SizedBox(
+            height: 48,
+            child: CustomButton(
+              ontap: () {
+                
+              },
+              title: 'Activate Emergency',
+              showIcon: false,
+              iconPath: Icons.not_interested,
+              size: ButtonSize.large,
+              type: ButtonType.activation,
+              expanded: true,
+            ),
+          ),
+        ],
       ),
     );
   }
