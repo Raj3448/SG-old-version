@@ -7,7 +7,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
-import 'package:silver_genie/feature/main/repo/main_repo.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
@@ -21,7 +20,7 @@ class MainScreen extends StatelessWidget {
       HomeScreen(),
       const ServicesScreen(),
       const BookingsScreen(),
-      MembersScreen(membersService: MockMemberService()),
+      const MembersScreen(),
     ];
 
     final store = GetIt.I<MainStore>();

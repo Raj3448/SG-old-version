@@ -10,7 +10,6 @@ import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
-import 'package:silver_genie/feature/main/repo/main_repo.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
 import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
@@ -122,11 +121,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.membersRoute,
       pageBuilder: (context, state) {
-        return MaterialPage(
-          child: MembersScreen(
-            membersService: MockMemberService(),
-          ),
-        );
+        return const MaterialPage(child: MembersScreen());
       },
     ),
     GoRoute(
