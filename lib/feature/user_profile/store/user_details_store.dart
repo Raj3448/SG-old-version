@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
-import 'package:silver_genie/feature/user_profile/services/user_failure.dart';
 
 part 'user_details_store.g.dart';
 
@@ -14,7 +14,7 @@ abstract class _UserDetailStoreBase with Store {
   final IUserFacades userDetailServices;
 
   @observable
-  Either<UserFailure, UserDetails>? userDetails;
+  Either<Failure, UserDetails>? userDetails;
 
   @observable
   bool isLoading = false;
@@ -29,7 +29,7 @@ abstract class _UserDetailStoreBase with Store {
   @action
   Future<void> updateUserDetails(UserDetails newInstance) async {
     isLoading = true;
-    final Either<UserFailure, UserDetails> userDetailsResult =
+    final Either<Failure, UserDetails> userDetailsResult =
         await userDetailServices.updateUserDetails(userDetails: newInstance);
     userDetailsResult.fold((l) {}, (r) {
       userDetails = userDetailsResult;

@@ -25,4 +25,5 @@ class RoutesConstants {
   static const paymentScreen = '/paymentScreen';
   static const bookingDetailsScreen = '/bookingDetailsScreen';
   static const subscriptionsScreen = '/subscriptionsScreen';
+  static const notificationScreen = '/notificationScreen';
 }

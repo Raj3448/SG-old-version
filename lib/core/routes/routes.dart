@@ -14,6 +14,7 @@ import 'package:silver_genie/feature/members/screens/add_edit_family_member_scre
 import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
+import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
@@ -82,6 +83,13 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.emergencyServiceScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: EmergencyServices());
+      },
+    ),
+    GoRoute(
+      path: '/notificationScreen',
+      name: RoutesConstants.notificationScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: NotificationScreen());
       },
     ),
     GoRoute(
@@ -198,5 +206,4 @@ final GoRouter routes = GoRouter(
       },
     ),
   ],
-  
 );

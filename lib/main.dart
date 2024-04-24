@@ -20,6 +20,8 @@ import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
+import 'package:silver_genie/feature/notification/services/notification_service.dart';
+import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
@@ -48,6 +50,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
+      GetIt.instance.registerLazySingleton(() => NotificationStore(NotificationServices()));
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

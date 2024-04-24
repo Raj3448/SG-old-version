@@ -1,9 +1,9 @@
 //import 'dart:convert';
 import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-import 'package:silver_genie/feature/user_profile/services/user_failure.dart';
 
 class UserDetailServices implements IUserFacades{
   UserDetailServices();
@@ -22,7 +22,7 @@ class UserDetailServices implements IUserFacades{
       postalCode: 411041);
 
   @override
-  Future<Either<UserFailure, UserDetails>> fetchUserDetailsFromApi() async {
+  Future<Either<Failure, UserDetails>> fetchUserDetailsFromApi() async {
     //  API call here to fetch user details
     try {
       // final response = await HttpClient().get<String>('/UserDetails');
@@ -33,18 +33,18 @@ class UserDetailServices implements IUserFacades{
       //   return Right(Success(
       //       userDetails: UserDetails.fromJson(json as Map<String, dynamic>)));
       // } else {
-      //   return Left(UserFailure.badResponse());
+      //   return Left(Failure.badResponse());
       // }
       return Right(_userDetails);
     } on SocketException {
-      return const Left(UserFailure.socketException());
+      return const Left(Failure.socketException());
     } catch (error) {
-      return const Left(UserFailure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong());
     }
   }
   
   @override
-  Future<Either<UserFailure, UserDetails>> updateUserDetails({@required UserDetails? userDetails}) async{
+  Future<Either<Failure, UserDetails>> updateUserDetails({@required UserDetails? userDetails}) async{
     try {
       // final response = await HttpClient().post<String>('/UserDetails/id',
       //     data: jsonEncode(userDetails.toJson()));
@@ -56,14 +56,14 @@ class UserDetailServices implements IUserFacades{
       //       userDetails: UserDetails.fromJson(json as Map<String, dynamic>),
       //       successMsg: 'User Details Update Successfully'));
       // } else {
-      //   return Left(UserFailure.badResponse());
+      //   return Left(Failure.badResponse());
       // }
       _userDetails = userDetails!;
       return Right(_userDetails);
     } on SocketException {
-      return const Left(UserFailure.socketException());
+      return const Left(Failure.socketException());
     } catch (error) {
-      return const Left(UserFailure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong());
     }
   }
   // Update user details through API

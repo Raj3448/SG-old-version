@@ -11,7 +11,15 @@ enum ButtonSize {
   large,
 }
 
-enum ButtonType { primary, secondary, tertiary, disable, state, activation }
+enum ButtonType {
+  primary,
+  secondary,
+  tertiary,
+  disable,
+  state,
+  activation,
+  warnActivate
+}
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -126,6 +134,8 @@ class CustomButton extends StatelessWidget {
         return AppColors.success;
       case ButtonType.activation:
         return AppColors.error;
+      case ButtonType.warnActivate:
+        return AppColors.warning2;
     }
   }
 
@@ -168,6 +178,8 @@ class CustomButton extends StatelessWidget {
       case ButtonType.state:
         return AppColors.grayscale100;
       case ButtonType.activation:
+        return AppColors.secondary;
+      case ButtonType.warnActivate:
         return AppColors.secondary;
     }
   }
