@@ -1,7 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -34,6 +36,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const _MemberInfo(),
+              _EmergencyActivation(),
               Text(
                 'Book services',
                 style: AppTextStyle.bodyXLSemiBold
@@ -75,10 +78,10 @@ class HomeScreen extends StatelessWidget {
               Text(
                 'SilverGenie: Your trusted senior healthcare platform. We empower seniors for independent living, leveraging technology for real-time monitoring and improved health outcomes.',
                 style: AppTextStyle.bodyLargeMedium.copyWith(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: AppColors.grayscale700,
-                ),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    height: 1.5,
+                    color: AppColors.grayscale700),
               ),
               Text(
                 'What we offer',
@@ -205,6 +208,229 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EmergencyActivation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: Dimension.d2),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimension.d2, vertical: Dimension.d3),
+      height: 170,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Emergency',
+            style: AppTextStyle.bodyXLMedium.copyWith(
+                fontWeight: FontWeight.w500, color: AppColors.grayscale900),
+          ),
+          Text(
+            'When the button is pressed, all emergency services will be activated.',
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale900),
+          ),
+          SizedBox(
+            height: 48,
+            child: CustomButton(
+              ontap: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return _EmergencyActivateBottomSheet();
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Dimension.d3)),
+                    constraints: const BoxConstraints(maxHeight: 320));
+              },
+              title: 'Activate Emergency',
+              showIcon: false,
+              iconPath: Icons.not_interested,
+              size: ButtonSize.large,
+              type: ButtonType.activation,
+              expanded: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmergencyActivateBottomSheet extends StatefulWidget {
+  @override
+  State<_EmergencyActivateBottomSheet> createState() =>
+      _EmergencyActivateBottomSheetState();
+}
+
+class _EmergencyActivateBottomSheetState
+    extends State<_EmergencyActivateBottomSheet> {
+  bool isActivate = false;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimension.d4, vertical: Dimension.d3),
+      child: isActivate
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/icon/success.svg',
+                  height: 92,
+                ),
+                const SizedBox(
+                  height: Dimension.d4,
+                ),
+                Text(
+                  'Emergency Alert Activated',
+                  style: AppTextStyle.bodyLargeMedium.copyWith(
+                      color: AppColors.grayscale900,
+                      fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: Dimension.d2,
+                ),
+                Text(
+                  'You will get a Callback from our team very soon',
+                  style: AppTextStyle.bodyMediumMedium.copyWith(
+                    color: AppColors.grayscale700,
+                  ),
+                ),
+                const SizedBox(
+                  height: Dimension.d6,
+                ),
+                CustomButton(
+                  ontap: () {
+                    Navigator.of(context).pop();
+                  },
+                  title: 'Back to Home',
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                  size: ButtonSize.normal,
+                  type: ButtonType.primary,
+                  expanded: true,
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Emergency',
+                      style: AppTextStyle.bodyXLSemiBold.copyWith(
+                          fontSize: 20,
+                          color: AppColors.grayscale900,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      child: Text(
+                        'Cancel',
+                        style: AppTextStyle.bodyMediumMedium.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+                Text(
+                  'Please select the member who require emergency assistance',
+                  style: AppTextStyle.bodyMediumMedium.copyWith(
+                    color: AppColors.grayscale700,
+                  ),
+                ),
+                const SizedBox(
+                  height: Dimension.d2,
+                ),
+                _ActivateListileComponent(
+                  onPressed: () {
+                    setState(() {
+                      isActivate = true;
+                    });
+                  },
+                ),
+                _ActivateListileComponent(
+                  onPressed: () {
+                    setState(() {
+                      isActivate = true;
+                    });
+                  },
+                )
+              ],
+            ),
+    );
+  }
+}
+
+class _ActivateListileComponent extends StatelessWidget {
+  final VoidCallback onPressed;
+  const _ActivateListileComponent({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: Dimension.d2),
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2)),
+      padding: const EdgeInsets.all(Dimension.d3),
+      child: Row(
+        children: [
+          const CircleAvatar(
+            maxRadius: 22,
+            backgroundImage: AssetImage(
+              'assets/icon/Profile.png',
+            ),
+          ),
+          const SizedBox(
+            width: Dimension.d2,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Shalini Nair',
+                style: AppTextStyle.bodyLargeMedium
+                    .copyWith(fontWeight: FontWeight.w500),
+              ),
+              Text(
+                'Mother',
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(color: AppColors.grayscale700),
+              )
+            ],
+          ),
+          const Spacer(),
+          SizedBox(
+            height: 48,
+            width: 120,
+            child: CustomButton(
+              ontap: onPressed,
+              title: 'Activate',
+              showIcon: false,
+              iconPath: AppIcons.add,
+              size: ButtonSize.normal,
+              type: ButtonType.warnActivate,
+              expanded: true,
+            ),
+          ),
+        ],
       ),
     );
   }

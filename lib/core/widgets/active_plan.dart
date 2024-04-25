@@ -47,48 +47,46 @@ class CustomComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.secondary,
-          border: Border.all(
-            color: AppColors.line,
-          ),
-          borderRadius: BorderRadius.circular(Dimension.d1),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        border: Border.all(
+          color: AppColors.line,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: Dimension.d3,
-            horizontal: Dimension.d2,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    text,
-                    style: AppTextStyle.bodySmallSemiBold,
-                  ),
-                  const SizedBox(
-                    width: Dimension.d1,
-                  ),
-                  const Icon(
-                    AppIcons.ecg_heart,
-                    color: AppColors.grayscale600,
-                    size: Dimension.d3,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: Dimension.d1,
-              ),
-              Text(
-                value,
-                style: AppTextStyle.bodyMediumBold,
-              ),
-            ],
-          ),
+        borderRadius: BorderRadius.circular(Dimension.d1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: Dimension.d3,
+          horizontal: Dimension.d2,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  text,
+                  style: AppTextStyle.bodySmallSemiBold,
+                ),
+                const SizedBox(
+                  width: Dimension.d1,
+                ),
+                const Icon(
+                  AppIcons.ecg_heart,
+                  color: AppColors.grayscale600,
+                  size: Dimension.d3,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: Dimension.d1,
+            ),
+            Text(
+              value,
+              style: AppTextStyle.bodyMediumBold,
+            ),
+          ],
         ),
       ),
     );
@@ -125,32 +123,29 @@ class VitalInfoComponent extends StatelessWidget {
   }
 
   List<Widget> _buildRows(List<CustomComponentData> customComponents) {
-    final rows = <Widget>[];
-    final rowCount = (customComponents.length / 2).ceil();
-    for (var i = 0; i < rowCount; i++) {
-      final rowData = customComponents.sublist(
-        i * 2,
-        (i + 1) * 2 > customComponents.length
-            ? customComponents.length
-            : (i + 1) * 2,
-      );
-      rows.add(
-        Row(
-          children: rowData.asMap().entries.map((entry) {
-            final index = entry.key;
-            final component = entry.value;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
-                child: CustomComponent(
-                  text: component.text,
-                  value: component.value,
-                ),
+    List<Widget> rows = [];
+    final int rowCount = (customComponents.length / 2).ceil();
+    for (int i = 0; i < rowCount; i++) {
+      List<CustomComponentData> rowData = customComponents.sublist(
+          i * 2,
+          (i + 1) * 2 > customComponents.length
+              ? customComponents.length
+              : (i + 1) * 2);
+      rows.add(Row(
+        children: rowData.asMap().entries.map((entry) {
+          int index = entry.key;
+          final CustomComponentData component = entry.value;
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
+              child: CustomComponent(
+                text: component.text,
+                value: component.value,
               ),
-            );
-          }).toList(),
-        ),
-      );
+            ),
+          );
+        }).toList(),
+      ));
       if (i < rowCount - 1) {
         rows.add(const SizedBox(height: Dimension.d2));
       }
@@ -223,9 +218,7 @@ class ActivePlanComponent extends StatelessWidget {
             const VitalInfoComponent(
               customComponents: [
                 CustomComponentData(
-                  text: 'Blood Pressure',
-                  value: '73/140mmHg',
-                ),
+                    text: 'Blood Pressure', value: '73/140mmHg'),
                 CustomComponentData(text: 'Blood Oxygen', value: '98%'),
                 CustomComponentData(text: 'Heart Rate', value: '106bpm'),
                 CustomComponentData(text: 'Fast Glucose', value: '103 mg/dl'),
@@ -236,39 +229,33 @@ class ActivePlanComponent extends StatelessWidget {
               text1: 'Last Updated',
               text2: 'Today at 10:15AM',
             ),
-            const SizedBox(height: Dimension.d3),
+            const SizedBox(height: Dimension.d2),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: SizedBox(
-                    height: 28,
-                    child: CustomButton(
-                      ontap: onTap,
-                      title: 'View PHR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: ButtonType.secondary,
-                      expanded: true,
-                    ),
+                  child: CustomButton(
+                    ontap: onTap,
+                    title: 'View PHR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type: ButtonType.secondary,
+                    expanded: true,
                   ),
                 ),
                 const SizedBox(
                   width: Dimension.d4,
                 ),
                 Expanded(
-                  child: SizedBox(
-                    height: 28,
-                    child: CustomButton(
-                      ontap: onTap,
-                      title: 'View EPR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: ButtonType.secondary,
-                      expanded: true,
-                    ),
+                  child: CustomButton(
+                    ontap: onTap,
+                    title: 'View EPR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type: ButtonType.secondary,
+                    expanded: true,
                   ),
                 ),
               ],

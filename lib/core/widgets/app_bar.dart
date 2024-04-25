@@ -48,9 +48,17 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
               const Spacer(),
-              const _IconContainer(iconPath: 'assets/icon/wallet.svg'),
+              _IconContainer(
+                iconPath: 'assets/icon/wallet.svg',
+                onPressed: () {},
+              ),
               const SizedBox(width: 12),
-              const _IconContainer(iconPath: 'assets/icon/bell-Unread.svg'),
+              _IconContainer(
+                iconPath: 'assets/icon/bell-Unread.svg',
+                onPressed: () {
+                  context.pushNamed(RoutesConstants.notificationScreen);
+                },
+              ),
             ],
           ),
         ],
@@ -63,24 +71,27 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _IconContainer extends StatelessWidget {
-  const _IconContainer({required this.iconPath});
+  const _IconContainer({required this.iconPath, required this.onPressed});
 
   final String iconPath;
-
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 36,
-      width: 36,
-      decoration: const BoxDecoration(
-        color: AppColors.grayscale200,
-        shape: BoxShape.circle,
-      ),
-      padding: const EdgeInsets.all(8),
-      child: Center(
-        child: SvgPicture.asset(
-          iconPath,
-          height: 20,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 36,
+        width: 36,
+        decoration: const BoxDecoration(
+          color: AppColors.grayscale200,
+          shape: BoxShape.circle,
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Center(
+          child: SvgPicture.asset(
+            iconPath,
+            height: 20,
+          ),
         ),
       ),
     );

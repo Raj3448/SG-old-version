@@ -4,14 +4,9 @@
 
 import 'package:meta/meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
 
 part 'subscription_member_model.freezed.dart';
 part 'subscription_member_model.g.dart';
-
-SubscriptionMemberModel subscriptionMemberModelFromJson(String str) => SubscriptionMemberModel.fromJson(json.decode(str) as Map<String,dynamic>);
-
-String subscriptionMemberModelToJson(SubscriptionMemberModel data) => json.encode(data.toJson());
 
 @freezed
 class SubscriptionMemberModel with _$SubscriptionMemberModel {
