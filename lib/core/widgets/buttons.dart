@@ -17,6 +17,8 @@ enum ButtonType {
   tertiary,
   disable,
   state,
+  activation,
+  warnActivate
 }
 
 class CustomButton extends StatelessWidget {
@@ -130,6 +132,10 @@ class CustomButton extends StatelessWidget {
         return AppColors.grayscale200;
       case ButtonType.state:
         return AppColors.success;
+      case ButtonType.activation:
+        return AppColors.error;
+      case ButtonType.warnActivate:
+        return AppColors.warning2;
     }
   }
 
@@ -171,6 +177,10 @@ class CustomButton extends StatelessWidget {
         return AppColors.grayscale600;
       case ButtonType.state:
         return AppColors.grayscale100;
+      case ButtonType.activation:
+        return AppColors.secondary;
+      case ButtonType.warnActivate:
+        return AppColors.secondary;
     }
   }
 }

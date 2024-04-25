@@ -14,6 +14,7 @@ import 'package:silver_genie/feature/members/screens/add_edit_family_member_scre
 import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
+import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
@@ -21,7 +22,7 @@ import 'package:silver_genie/feature/services/screens/booking_details_screen.dar
 import 'package:silver_genie/feature/services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
-import 'package:silver_genie/feature/services/services_subcare_screen.dart';
+import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
@@ -75,7 +76,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
+        return MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(
@@ -85,7 +86,15 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.subscriptionsScreen,
+      path: '/notificationScreen',
+      name: RoutesConstants.notificationScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: NotificationScreen());
+      },
+    ),
+    GoRoute(
+      path: '/subscriptionsScreen',
+      name: RoutesConstants.subscriptionsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SubscriptionsScreen());
       },
@@ -100,9 +109,11 @@ final GoRouter routes = GoRouter(
       path: '/servicesCareScreen/:pageTitle',
       name: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
-        final pageTitle = state.pathParameters['pageTitle'];
+        final pageTitle = state.pathParameters['pageTitle'] ?? 'Care';
         return MaterialPage(
-          child: ServicesCareScreen(pageTitle: pageTitle!),
+          child: ServicesCareScreen(
+            pagetitle: pageTitle,
+          ),
         );
       },
     ),

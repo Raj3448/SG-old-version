@@ -5,7 +5,7 @@ import 'package:silver_genie/feature/home/model/family_model.dart';
 
 part 'home_store.g.dart';
 
-class HomeStore = _HomeScreenStore with _$HomeScreenStore;
+class HomeStore = _HomeScreenStore with _$HomeStore;
 
 abstract class _HomeScreenStore with Store {
   @observable
