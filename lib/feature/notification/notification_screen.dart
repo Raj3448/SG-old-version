@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -39,6 +38,7 @@ class NotificationScreen extends StatelessWidget {
                         SizedBox(
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
+                              //physics: const NeverScrollableScrollPhysics(),
                               itemCount: store.notifications!
                                   .fold((l) => null, (r) => r.length),
                               itemBuilder: (context, index) {
@@ -79,7 +79,7 @@ class NotificationScreen extends StatelessWidget {
                               }),
                         ),
                         const SizedBox(
-                          height: Dimension.d2,
+                          height: Dimension.d20,
                         )
                       ],
                     ),
@@ -126,8 +126,13 @@ class NotificationComponent extends StatelessWidget {
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale700)),
           if (notificationModel.imageUrl != null)
-            SvgPicture.asset(
-              notificationModel.imageUrl!,
+            Column(
+              children: [
+                const SizedBox(
+                  height: Dimension.d2,
+                ),
+                Image.asset(notificationModel.imageUrl!,height: 170,)
+              ],
             ),
         ],
       ),
