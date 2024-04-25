@@ -1,13 +1,8 @@
-import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'user_details.g.dart';
 
-UserDetails userDetailsFromJson(String str) =>
-    UserDetails.fromJson(json.decode(str) as Map<String, dynamic>);
-
-String userDetailsToJson(UserDetails data) => json.encode(data.toJson());
 
 @JsonSerializable()
 class UserDetails {

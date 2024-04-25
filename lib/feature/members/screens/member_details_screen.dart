@@ -218,83 +218,55 @@ class _Field extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _InitializeComponent(name: 'Age'.tr(), initializeElement: age),
+        _InitializeComponent(name: 'Gender'.tr(), initializeElement: gender),
+        _InitializeComponent(
+            name: 'Relationship'.tr(), initializeElement: relation),
+        _InitializeComponent(
+            name: 'Mobile number'.tr(), initializeElement: mobileNo),
+        _InitializeComponent(name: 'Address'.tr(), initializeElement: address),
+      ],
+    );
+  }
+}
+
+class _InitializeComponent extends StatelessWidget {
+  _InitializeComponent(
+      {required this.name, required this.initializeElement, super.key});
+
+  final String name;
+  final String initializeElement;
+  final textStyle = AppTextStyle.bodyMediumMedium
+      .copyWith(color: AppColors.grayscale600, height: 2);
+  @override
+  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
+        Expanded(
+            child: Text(
+          name,
+          style: textStyle,
+        )),
+        Expanded(
+            child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Age'.tr(),
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
+              ': ',
+              style: textStyle,
             ),
-            const SizedBox(height: 7),
-            Text(
-              'Gender'.tr(),
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              'Relationship'.tr(),
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              'Mobile number'.tr(),
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              'Address'.tr(),
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-          ],
-        ),
-        const SizedBox(width: 30),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              ': $age',
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              ': $gender',
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              ': $relation',
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              ': $mobileNo',
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale600),
-            ),
-            const SizedBox(height: 7),
-            SizedBox(
-              width: 220,
+            Expanded(
               child: Text(
-                ': $address',
-                style: AppTextStyle.bodyMediumMedium
-                    .copyWith(color: AppColors.grayscale600),
+                initializeElement,
+                style: textStyle,
               ),
-            ),
-            const SizedBox(height: 7),
+            )
           ],
-        ),
+        )),
       ],
     );
   }

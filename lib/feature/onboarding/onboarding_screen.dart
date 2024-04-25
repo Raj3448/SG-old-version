@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -124,9 +125,9 @@ class _PageView extends StatelessWidget {
             scale: 0.85,
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             desc,
             textAlign: TextAlign.center,

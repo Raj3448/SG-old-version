@@ -33,9 +33,7 @@ class IconTitleDetailsComponent extends StatelessWidget {
           style: AppTextStyle.bodyLargeMedium.copyWith(
               fontWeight: FontWeight.w400, color: AppColors.grayscale600),
         ),
-        const Spacer(),
-        Container(
-          width: 197,
+        Expanded(
           child: Text(
             details,
             textAlign: TextAlign.end,
