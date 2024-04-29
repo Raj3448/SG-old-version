@@ -26,4 +26,5 @@ class RoutesConstants {
   static const bookingDetailsScreen = '/bookingDetailsScreen';
   static const subscriptionsScreen = '/subscriptionsScreen';
   static const notificationScreen = '/notificationScreen';
+  static const eprPhrPdfViewPage = '/eprPhrPdfViewPage';
 }
