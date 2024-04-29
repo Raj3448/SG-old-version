@@ -38,7 +38,7 @@ class NotificationScreen extends StatelessWidget {
                         SizedBox(
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
-                              //physics: const NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: store.notifications!
                                   .fold((l) => null, (r) => r.length),
                               itemBuilder: (context, index) {
@@ -131,7 +131,15 @@ class NotificationComponent extends StatelessWidget {
                 const SizedBox(
                   height: Dimension.d2,
                 ),
-                Image.asset(notificationModel.imageUrl!,height: 170,)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(Dimension.d2),
+                  child: Image.asset(
+                    notificationModel.imageUrl!,
+                    height: 170,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                )
               ],
             ),
         ],
