@@ -6,7 +6,7 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/onboarding/models/master_data_model.dart';
 
 abstract class IMasterService {
-  Future<Either<Failure, MasterDataModel>> getAllMasterData();
+  Future<Either<Failure, MasterDataModel>> getMasterData();
 }
 
 class MasterDataService implements IMasterService {
@@ -15,7 +15,7 @@ class MasterDataService implements IMasterService {
   final HttpClient httpClient;
 
   @override
-  Future<Either<Failure, MasterDataModel>> getAllMasterData() async {
+  Future<Either<Failure, MasterDataModel>> getMasterData() async {
     try {
       final response =
           await httpClient.get('https://silvergenie.com/api/v1/masterData');

@@ -17,4 +17,15 @@ abstract class _MasterStoreBase with Store {
 
   @observable
   bool isLoading = false;
+
+  @action
+  Future<void> fetchMasterData() async {
+    isLoading = true;
+    try {
+      masterData = await masterDataService.getMasterData();
+    } catch (error) {
+    } finally {
+      isLoading = false;
+    }
+  }
 }
