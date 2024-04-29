@@ -1,50 +1,49 @@
-// ignore_for_file: inference_failure_on_function_invocation
+// ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation
 
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
-import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 
 abstract class IAuthService {
-  Future<Either<Failure, void>> loginWithNumber(String number);
-  Future<Either<Failure, void>> loginWithEmail(String email);
-  Future<Either<Failure, void>> signup(
+  Future<Either<AuthFailure, void>> loginWithNumber(String number);
+  Future<Either<AuthFailure, void>> loginWithEmail(String email);
+  Future<Either<AuthFailure, void>> signup(
     String firstName,
     String lastName,
     String email,
     String phoneNumber,
     String dob,
   );
-  Future<Either<Failure, void>> verifyOtp(String otp);
+  Future<Either<AuthFailure, void>> verifyOtp(String otp);
 }
 
 class AuthService implements IAuthService {
-  @override
-  Future<Either<Failure, void>> loginWithNumber(String number) async {
-    try {
-      final dio = GetIt.I<HttpClient>();
+  AuthService({required this.httpClient});
 
-      final response = dio.post('https://silvergenie.com/api/v1/login');
+  final HttpClient httpClient;
+
+  @override
+  Future<Either<AuthFailure, void>> loginWithNumber(String number) async {
+    try {
+      final response = httpClient.post('https://silvergenie.com/api/v1/login');
       return const Right(null);
     } catch (e) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(AuthFailure.invalidPhoneNumber());
     }
   }
 
   @override
-  Future<Either<Failure, void>> loginWithEmail(String email) async {
+  Future<Either<AuthFailure, void>> loginWithEmail(String email) async {
     try {
-      final dio = GetIt.I<HttpClient>();
-
-      final response = dio.post('https://silvergenie.com/api/v1/login');
+      final response = httpClient.post('https://silvergenie.com/api/v1/login');
       return const Right(null);
     } catch (e) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(AuthFailure.invalidEmail());
     }
   }
 
   @override
-  Future<Either<Failure, void>> signup(
+  Future<Either<AuthFailure, void>> signup(
     String firstName,
     String lastName,
     String email,
@@ -52,24 +51,20 @@ class AuthService implements IAuthService {
     String dob,
   ) async {
     try {
-      final dio = GetIt.I<HttpClient>();
-
-      final response = dio.post('https://silvergenie.com/api/v1/login');
+      final response = httpClient.post('https://silvergenie.com/api/v1/login');
       return const Right(null);
     } catch (e) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(AuthFailure.tooManyRequests());
     }
   }
 
   @override
-  Future<Either<Failure, void>> verifyOtp(String otp) async {
+  Future<Either<AuthFailure, void>> verifyOtp(String otp) async {
     try {
-      final dio = GetIt.I<HttpClient>();
-
-      final response = dio.post('https://silvergenie.com/api/v1/login');
+      final response = httpClient.post('https://silvergenie.com/api/v1/login');
       return const Right(null);
     } catch (e) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(AuthFailure.otpInvalid());
     }
   }
 }
