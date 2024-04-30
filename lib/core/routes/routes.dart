@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
@@ -198,6 +199,13 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookServiceScreen());
+      },
+    ),
+    GoRoute(
+      path: '/bookingServiceStatusDetailsPage',
+      name: RoutesConstants.bookingServiceStatusDetailsPage,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: BookingSeviceStatusPage());
       },
     ),
     GoRoute(
