@@ -9,6 +9,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
+import 'package:silver_genie/core/widgets/initialize_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -263,16 +264,16 @@ class _InsuranceDetailsComponent extends StatelessWidget {
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
-          _InitializeComponent(name: 'Policy No', initializeElement: policyNo),
-          _InitializeComponent(
+          InitializeComponent(name: 'Policy No', initializeElement: policyNo),
+          InitializeComponent(
             name: 'Contact Person',
             initializeElement: contactPerson,
           ),
-          _InitializeComponent(
+          InitializeComponent(
             name: 'Contact Of Ambulance',
             initializeElement: contactAmbulance,
           ),
-          _InitializeComponent(
+          InitializeComponent(
             name: 'Contact Of Address',
             initializeElement: contactAddress,
           ),
@@ -285,46 +286,3 @@ class _InsuranceDetailsComponent extends StatelessWidget {
   }
 }
 
-class _InitializeComponent extends StatelessWidget {
-  const _InitializeComponent({
-    required this.name,
-    required this.initializeElement,
-  });
-
-  final String name;
-  final String initializeElement;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            name,
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(height: 2, color: AppColors.grayscale900),
-          ),
-        ),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                ': ',
-                style: AppTextStyle.bodyMediumMedium
-                    .copyWith(height: 2, color: AppColors.grayscale900),
-              ),
-              Expanded(
-                child: Text(
-                  initializeElement,
-                  style: AppTextStyle.bodyMediumMedium
-                      .copyWith(height: 2, color: AppColors.grayscale700),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
