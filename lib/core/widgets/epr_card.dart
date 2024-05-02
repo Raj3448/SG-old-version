@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
 class HealthCard extends StatelessWidget {
@@ -59,9 +58,9 @@ class HealthCard extends StatelessWidget {
           CustomButton(
             ontap: ontap,
             title: isEpr ? 'View EPR' : 'View PHR',
-            showIcon: false,
-            iconPath: AppIcons.add,
-            size: ButtonSize.normal,
+            showIcon: true,
+            iconPath: Icons.remove_red_eye_outlined,
+            size: ButtonSize.small,
             type: ButtonType.secondary,
             expanded: false,
           ),

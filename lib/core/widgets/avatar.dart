@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 
 enum AvatarSize {
+  size12,
+  size14,
   size16,
   size18,
   size20,
@@ -28,7 +30,7 @@ class Avatar extends StatelessWidget {
       case AvatarSize.size16:
         radius = 16;
       case AvatarSize.size18:
-      radius = 18;
+        radius = 18;
       case AvatarSize.size20:
         radius = 20;
       case AvatarSize.size22:
@@ -43,7 +45,10 @@ class Avatar extends StatelessWidget {
         radius = 48;
       case AvatarSize.size56:
         radius = 56;
-    
+      case AvatarSize.size14:
+        radius = 14;
+      case AvatarSize.size12:
+        radius = 12;
     }
     return Avatar(imgPath: imgPath, maxRadius: radius);
   }
