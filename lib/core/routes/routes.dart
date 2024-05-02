@@ -6,6 +6,8 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
+import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
+import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
@@ -155,6 +157,28 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.eprPhrRoute,
       pageBuilder: (context, state) {
         return MaterialPage(child: EPRPHRViewScreen());
+      },
+    ),
+    GoRoute(
+      path: '/couplePlanPage/:pageTitle',
+      name: RoutesConstants.couplePlanPage,
+      pageBuilder: (context, state) {
+        final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
+        return MaterialPage(
+          child: CouplePlanPage(
+            pageTitle: pageTitle,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/geniePage/:pageTitle/:defination/:headline',
+      name: RoutesConstants.geniePage,
+      pageBuilder: (context, state) {
+        final String pageTitle = state.pathParameters['pageTitle'] ?? '';
+        final String defination = state.pathParameters['defination'] ?? '';
+        final String headline = state.pathParameters['headline'] ?? '';
+        return MaterialPage(child: GeniePage(pageTitle: pageTitle, defination: defination, headline: headline,));
       },
     ),
     GoRoute(

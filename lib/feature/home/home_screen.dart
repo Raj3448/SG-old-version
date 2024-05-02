@@ -549,6 +549,7 @@ class _MemberInfo extends StatelessWidget {
                             : const SizedBox();
                       },
                     ),
+                  
                   const SizedBox(height: Dimension.d4),
                   if (store.selectedIndex != -1)
                     Observer(

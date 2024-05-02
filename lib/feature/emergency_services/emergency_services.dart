@@ -9,6 +9,7 @@ import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/core/widgets/title_descript_component.dart';
@@ -58,6 +59,7 @@ class EmergencyServices extends StatelessWidget {
                   'assets/emergency/rafiki.svg',
                   height: 206,
                   width: 277,
+                  
                 ),
               ),
               const SizedBox(
@@ -179,19 +181,19 @@ class EmergencyServices extends StatelessWidget {
                   height: 2.514,
                 ),
               ),
-              const ExpandingWidget(
+              const ExpandingQuestionComponent(
                 temp: temp,
                 question: 'We will require some important',
               ),
-              const ExpandingWidget(
+              const ExpandingQuestionComponent(
                 temp: temp,
                 question: 'Our genie can get on a call with you, or',
               ),
-              const ExpandingWidget(
+              const ExpandingQuestionComponent(
                 temp: temp,
                 question: 'Once we have set up the emergency ',
               ),
-              const ExpandingWidget(
+              const ExpandingQuestionComponent(
                 temp: temp,
                 question: 'Please note that our emergency',
               ),
@@ -218,66 +220,4 @@ class EmergencyServices extends StatelessWidget {
   }
 }
 
-class ExpandingWidget extends StatefulWidget {
-  const ExpandingWidget({
-    required this.question,
-    required this.temp,
-    super.key,
-  });
-  final String question;
-  final String temp;
 
-  @override
-  State<ExpandingWidget> createState() => _ExpandingWidgetState();
-}
-
-class _ExpandingWidgetState extends State<ExpandingWidget> {
-  bool isExpanding = false;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              isExpanding = !isExpanding;
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(seconds: 1),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 310,
-                  child: Text(
-                    isExpanding
-                        ? widget.question + widget.temp
-                        : widget.question,
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale700,
-                      fontSize: 16,
-                      fontFamily: FontFamily.inter,
-                      fontWeight: FontWeight.w400,
-                      overflow: isExpanding ? null : TextOverflow.ellipsis,
-                      height: 2.4,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Image.asset(
-                    'assets/icon/Frame.png',
-                    height: 20,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const Divider(),
-      ],
-    );
-  }
-}
