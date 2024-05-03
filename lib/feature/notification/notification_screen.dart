@@ -9,7 +9,7 @@ import 'package:silver_genie/feature/notification/model/notification_model.dart'
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class NotificationScreen extends StatelessWidget {
       builder: (context) {
         return Scaffold(
           appBar: const PageAppbar(title: 'Notification'),
+          backgroundColor: AppColors.white,
           body: store.isLoading
               ? const Center(
                   child: CircularProgressIndicator(),
@@ -32,55 +33,59 @@ class NotificationScreen extends StatelessWidget {
                         Text(
                           'Today',
                           style: AppTextStyle.bodyMediumMedium.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary,
+                          ),
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: store.notifications!
-                                  .fold((l) => null, (r) => r.length),
-                              itemBuilder: (context, index) {
-                                if (index == 3) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Earlier',
-                                        style: AppTextStyle.bodyMediumMedium
-                                            .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.primary),
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: store.notifications!
+                                .fold((l) => null, (r) => r.length),
+                            itemBuilder: (context, index) {
+                              if (index == 3) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Earlier',
+                                      style: AppTextStyle.bodyMediumMedium
+                                          .copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.primary,
                                       ),
-                                      NotificationComponent(
-                                          notificationModel:
-                                              store.notifications!.fold(
-                                                  (l) => NotificationModel(
-                                                      title: '',
-                                                      description: '',
-                                                      datetime: DateTime.now()),
-                                                  (r) {
+                                    ),
+                                    NotificationComponent(
+                                      notificationModel:
+                                          store.notifications!.fold(
+                                              (l) => NotificationModel(
+                                                    title: '',
+                                                    description: '',
+                                                    datetime: DateTime.now(),
+                                                  ), (r) {
                                         return r[index];
-                                      }))
-                                    ],
-                                  );
-                                }
-                                return NotificationComponent(
-                                    notificationModel: store.notifications!
-                                        .fold(
-                                            (l) => NotificationModel(
-                                                title: '',
-                                                description: '',
-                                                datetime: DateTime.now()), (r) {
+                                      }),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return NotificationComponent(
+                                notificationModel: store.notifications!.fold(
+                                    (l) => NotificationModel(
+                                          title: '',
+                                          description: '',
+                                          datetime: DateTime.now(),
+                                        ), (r) {
                                   return r[index];
-                                }));
-                              }),
+                                }),
+                              );
+                            },
+                          ),
                         ),
                         const SizedBox(
                           height: Dimension.d20,
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -102,29 +107,36 @@ class NotificationComponent extends StatelessWidget {
       padding: const EdgeInsets.all(Dimension.d3),
       decoration: BoxDecoration(
         color: AppColors.secondary,
-        border: Border.all(width: 1, color: AppColors.grayscale300),
+        border: Border.all(color: AppColors.grayscale300),
         borderRadius: BorderRadius.circular(Dimension.d2),
       ),
       child: Column(
         children: [
           Row(
             children: [
-              Text(notificationModel.title,
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.grayscale900)),
+              Text(
+                notificationModel.title,
+                style: AppTextStyle.bodyMediumMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grayscale900,
+                ),
+              ),
               const Spacer(),
-              Text('12 min ago',
-                  style: AppTextStyle.bodyMediumMedium
-                      .copyWith(fontSize: 12, color: AppColors.grayscale700))
+              Text(
+                '12 min ago',
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(fontSize: 12, color: AppColors.grayscale700),
+              ),
             ],
           ),
           const SizedBox(
             height: Dimension.d2,
           ),
-          Text(notificationModel.description,
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale700)),
+          Text(
+            notificationModel.description,
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale700),
+          ),
           if (notificationModel.imageUrl != null)
             Column(
               children: [
@@ -139,7 +151,7 @@ class NotificationComponent extends StatelessWidget {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
-                )
+                ),
               ],
             ),
         ],

@@ -4,7 +4,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/elder_care_sub.dart';
+import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 
 class AnalogComponent extends StatelessWidget {
   const AnalogComponent({required this.text1, required this.text2, super.key});
@@ -123,29 +123,32 @@ class VitalInfoComponent extends StatelessWidget {
   }
 
   List<Widget> _buildRows(List<CustomComponentData> customComponents) {
-    List<Widget> rows = [];
-    final int rowCount = (customComponents.length / 2).ceil();
-    for (int i = 0; i < rowCount; i++) {
-      List<CustomComponentData> rowData = customComponents.sublist(
-          i * 2,
-          (i + 1) * 2 > customComponents.length
-              ? customComponents.length
-              : (i + 1) * 2);
-      rows.add(Row(
-        children: rowData.asMap().entries.map((entry) {
-          int index = entry.key;
-          final CustomComponentData component = entry.value;
-          return Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
-              child: CustomComponent(
-                text: component.text,
-                value: component.value,
+    final rows = <Widget>[];
+    final rowCount = (customComponents.length / 2).ceil();
+    for (var i = 0; i < rowCount; i++) {
+      final rowData = customComponents.sublist(
+        i * 2,
+        (i + 1) * 2 > customComponents.length
+            ? customComponents.length
+            : (i + 1) * 2,
+      );
+      rows.add(
+        Row(
+          children: rowData.asMap().entries.map((entry) {
+            final index = entry.key;
+            final component = entry.value;
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
+                child: CustomComponent(
+                  text: component.text,
+                  value: component.value,
+                ),
               ),
-            ),
-          );
-        }).toList(),
-      ));
+            );
+          }).toList(),
+        ),
+      );
       if (i < rowCount - 1) {
         rows.add(const SizedBox(height: Dimension.d2));
       }
@@ -193,10 +196,9 @@ class ActivePlanComponent extends StatelessWidget {
                   name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
-                const ElderCareSubscription(
-                  color: ElderCareColor.blue,
-                  title: 'Care Member',
-                  showIcon: false,
+                const SubscriptionPkg(
+                  expanded: false,
+                  type: SubscriptionType.wellness,
                 ),
               ],
             ),
@@ -218,7 +220,9 @@ class ActivePlanComponent extends StatelessWidget {
             const VitalInfoComponent(
               customComponents: [
                 CustomComponentData(
-                    text: 'Blood Pressure', value: '73/140mmHg'),
+                  text: 'Blood Pressure',
+                  value: '73/140mmHg',
+                ),
                 CustomComponentData(text: 'Blood Oxygen', value: '98%'),
                 CustomComponentData(text: 'Heart Rate', value: '106bpm'),
                 CustomComponentData(text: 'Fast Glucose', value: '103 mg/dl'),
@@ -259,6 +263,17 @@ class ActivePlanComponent extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const Divider(color: AppColors.line),
+            const SizedBox(height: Dimension.d3),
+            const Text(
+              'Upgrade to Companion genie to benefit more',
+              style: AppTextStyle.bodySmallMedium,
+            ),
+            const SizedBox(height: Dimension.d3),
+            const SubscriptionPkg(
+              expanded: true,
+              type: SubscriptionType.companion,
             ),
           ],
         ),

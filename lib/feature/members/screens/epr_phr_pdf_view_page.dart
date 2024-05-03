@@ -1,9 +1,11 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class EprPhrPdfViewPage extends StatefulWidget {
-  const EprPhrPdfViewPage({Key? key}) : super(key: key);
+  const EprPhrPdfViewPage({super.key});
 
   @override
   _EprPhrPdfViewPageState createState() => _EprPhrPdfViewPageState();
@@ -21,7 +23,7 @@ class _EprPhrPdfViewPageState extends State<EprPhrPdfViewPage> {
               child: Text(
                 'Failed to load PDF. Please check your internet connection and try again.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 16),
               ),
             )
           : SfPdfViewer.network(

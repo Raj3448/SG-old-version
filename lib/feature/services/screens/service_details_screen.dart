@@ -56,8 +56,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: FixedButton(
                 ontap: () {
-                  GoRouter.of(context)
-                      .pushNamed(RoutesConstants.bookServiceScreen);
+                  GoRouter.of(context).push(RoutesConstants.bookServiceScreen);
                 },
                 btnTitle: 'Book appointment',
                 showIcon: false,
