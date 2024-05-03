@@ -177,6 +177,7 @@ class BookingSeviceStatusPage extends StatelessWidget {
                   size: ButtonSize.normal,
                   type: ButtonType.secondary,
                   expanded: true,
+                  iconColor: AppColors.primary,
                 ),
               ),
               const SizedBox(
@@ -192,6 +193,7 @@ class BookingSeviceStatusPage extends StatelessWidget {
                   size: ButtonSize.normal,
                   type: ButtonType.secondary,
                   expanded: true,
+                  iconColor: AppColors.primary,
                 ),
               ),
               const SizedBox(

@@ -15,7 +15,7 @@ class PlanDisplayComponent extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.grayscale400),
-        color: AppColors.grayscale300,
+        color: AppColors.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -36,14 +36,15 @@ class PlanDisplayComponent extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(Dimension.d1),
                 decoration: BoxDecoration(
-                    color: AppColors.warning2,
-                    borderRadius: BorderRadius.circular(Dimension.d2)),
+                  color: AppColors.warning2,
+                  borderRadius: BorderRadius.circular(Dimension.d2),
+                ),
                 child: Text(
                   '10% off',
                   style: AppTextStyle.bodySmallBold
                       .copyWith(height: 1.6, color: AppColors.grayscale100),
                 ),
-              )
+              ),
             ],
           ),
           Row(

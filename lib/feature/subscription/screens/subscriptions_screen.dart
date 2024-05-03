@@ -37,6 +37,7 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PageAppbar(title: 'Subscriptions'),
+      backgroundColor: AppColors.white,
       body: Column(
         children: [
           Expanded(
@@ -96,6 +97,7 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
               size: ButtonSize.normal,
               type: ButtonType.primary,
               expanded: true,
+              iconColor: AppColors.white,
             ),
           ),
         ],
@@ -201,6 +203,7 @@ class _UserDetailsComponent extends StatelessWidget {
               size: ButtonSize.small,
               type: ButtonType.secondary,
               expanded: true,
+              iconColor: AppColors.primary,
             ),
           ],
         ),

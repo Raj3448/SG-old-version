@@ -81,56 +81,62 @@ class UserProfile extends StatelessWidget {
                                   height: Dimension.d4,
                                 ),
                                 CustomButton(
-                                    ontap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ProfileDetails(),
-                                        ),
-                                      );
-                                    },
-                                    title: 'Edit',
-                                    showIcon: false,
-                                    iconPath: Icons.not_interested,
-                                    size: ButtonSize.small,
-                                    type: ButtonType.secondary,
-                                    expanded: true)
-                              ]),
+                                  ontap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileDetails(),
+                                      ),
+                                    );
+                                  },
+                                  title: 'Edit',
+                                  showIcon: false,
+                                  iconPath: Icons.not_interested,
+                                  size: ButtonSize.small,
+                                  type: ButtonType.secondary,
+                                  expanded: true,
+                                  iconColor: AppColors.primary,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(
-                            height: Dimension.d6,
-                          ),
-                          ProfileNav(
-                            title: 'SG+ subscription',
-                            onTap: () {
-                              context.pushNamed(
-                                  RoutesConstants.subscriptionsScreen);
-                            },
-                          ),
-                          ProfileNav(
-                            title: 'Emergency subscription',
-                            onTap: () {},
-                          ),
-                          ProfileNav(
-                            title: 'About',
-                            onTap: () {},
-                          ),
-                          ProfileNav(
-                            title: 'Logout',
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return _LogOutComponent();
-                                  });
-                            },
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: Dimension.d6,
+                        ),
+                        ProfileNav(
+                          title: 'SG+ subscription',
+                          onTap: () {
+                            context.pushNamed(
+                              RoutesConstants.subscriptionsScreen,
+                            );
+                          },
+                        ),
+                        ProfileNav(
+                          title: 'Emergency subscription',
+                          onTap: () {},
+                        ),
+                        ProfileNav(
+                          title: 'About',
+                          onTap: () {},
+                        ),
+                        ProfileNav(
+                          title: 'Logout',
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return _LogOutComponent();
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ));
+                  ),
+                ),
+        );
       },
     );
   }
@@ -187,6 +193,7 @@ class _LogOutComponent extends StatelessWidget {
                       size: ButtonSize.normal,
                       type: ButtonType.secondary,
                       expanded: true,
+                      iconColor: AppColors.primary,
                     ),
                   ),
                 ),
@@ -204,6 +211,7 @@ class _LogOutComponent extends StatelessWidget {
                       size: ButtonSize.normal,
                       type: ButtonType.primary,
                       expanded: true,
+                      iconColor: AppColors.white,
                     ),
                   ),
                 ),

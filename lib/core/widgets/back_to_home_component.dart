@@ -53,6 +53,7 @@ class BackToHomeComponent extends StatelessWidget {
                   ontap: () {
                     Navigator.of(context).pop();
                   },
+                  iconColor: AppColors.black,
                   title: 'Back to Home',
                   showIcon: false,
                   iconPath: AppIcons.add,
