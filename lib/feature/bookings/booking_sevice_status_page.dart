@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
@@ -5,12 +6,17 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/initialize_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 
 class BookingSeviceStatusPage extends StatelessWidget {
-  const BookingSeviceStatusPage({super.key});
+  final BookingServiceStatus bookingServiceStatus;
+  const BookingSeviceStatusPage({
+    Key? key,
+    required this.bookingServiceStatus,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,18 +61,37 @@ class BookingSeviceStatusPage extends StatelessWidget {
                         style: AppTextStyle.bodyMediumMedium),
                     Row(
                       children: [
-                        const Icon(
-                          AppIcons.check,
-                          size: 10,
-                          color: AppColors.grayscale800,
+                        Icon(
+                          bookingServiceStatus == BookingServiceStatus.active
+                              ? AppIcons.medical_services
+                              : bookingServiceStatus ==
+                                      BookingServiceStatus.requested
+                                  ? Icons.error_outline_outlined
+                                  : AppIcons.check,
+                          size: bookingServiceStatus ==
+                                  BookingServiceStatus.requested
+                              ? 16
+                              : 14,
+                          color: bookingServiceStatus ==
+                                  BookingServiceStatus.requested
+                              ? AppColors.warning2
+                              : AppColors.grayscale800,
                         ),
                         const SizedBox(
                           width: Dimension.d2,
                         ),
                         Text(
-                          'Service Completed',
-                          style: AppTextStyle.bodyMediumBold
-                              .copyWith(color: AppColors.grayscale800),
+                          bookingServiceStatus == BookingServiceStatus.active
+                              ? 'Service In progress'
+                              : bookingServiceStatus ==
+                                      BookingServiceStatus.requested
+                                  ? 'Payment Pending'
+                                  : 'Service Completed',
+                          style: AppTextStyle.bodyMediumBold.copyWith(
+                              color: bookingServiceStatus ==
+                                      BookingServiceStatus.requested
+                                  ? AppColors.warning2
+                                  : AppColors.grayscale800),
                         ),
                       ],
                     )
