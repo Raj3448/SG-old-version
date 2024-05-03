@@ -16,6 +16,7 @@ class ServicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Appbar(),
+      backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -74,20 +75,68 @@ class ServicesScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const ServicesListTileComponent(
-                imagePath: 'assets/icon/doctor 1.png',
-                title: 'Critical nurse care',
-                subtitle: 'Discription of service will be shown in 2 line',
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.serviceDetailsScreen,
+                    pathParameters: {
+                      'imgPath': 'cdsc',
+                      'name': 'Critical nurse care',
+                      'yoe': 'Critical nurse care',
+                      'type': 'Critical nurse care',
+                      'docInfo': 'Critical nurse care',
+                      'hospital': 'Critical nurse care',
+                      'charges': 'Critical nurse care',
+                    },
+                  );
+                },
+                child: const ServicesListTileComponent(
+                  imagePath: 'assets/icon/doctor 1.png',
+                  title: 'Critical nurse care',
+                  subtitle: 'Discription of service will be shown in 2 line',
+                ),
               ),
-              const ServicesListTileComponent(
-                imagePath: 'assets/icon/doctor-consultation 1.png',
-                title: 'General duty attendant',
-                subtitle: 'Discription of service will be shown in 2 line',
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.serviceDetailsScreen,
+                    pathParameters: {
+                      'imgPath': 'cdsc',
+                      'name': 'Critical nurse care',
+                      'yoe': 'Critical nurse care',
+                      'type': 'Critical nurse care',
+                      'docInfo': 'Critical nurse care',
+                      'hospital': 'Critical nurse care',
+                      'charges': 'Critical nurse care',
+                    },
+                  );
+                },
+                child: const ServicesListTileComponent(
+                  imagePath: 'assets/icon/doctor-consultation 1.png',
+                  title: 'General duty attendant',
+                  subtitle: 'Discription of service will be shown in 2 line',
+                ),
               ),
-              const ServicesListTileComponent(
-                imagePath: 'assets/icon/health-insurance 1.png',
-                title: 'Nurse',
-                subtitle: 'Discription of service will be shown in 2 line',
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.serviceDetailsScreen,
+                    pathParameters: {
+                      'imgPath': 'cdsc',
+                      'name': 'Critical nurse care',
+                      'yoe': 'Critical nurse care',
+                      'type': 'Critical nurse care',
+                      'docInfo': 'Critical nurse care',
+                      'hospital': 'Critical nurse care',
+                      'charges': 'Critical nurse care',
+                    },
+                  );
+                },
+                child: const ServicesListTileComponent(
+                  imagePath: 'assets/icon/health-insurance 1.png',
+                  title: 'Nurse',
+                  subtitle: 'Discription of service will be shown in 2 line',
+                ),
               ),
               Row(
                 children: [
@@ -124,20 +173,68 @@ class ServicesScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const ServicesListTileComponent(
-                imagePath: 'assets/icon/doctor 1.png',
-                title: 'Doctor Consultation',
-                subtitle: 'Discription of service will be shown in 2 line',
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.serviceDetailsScreen,
+                    pathParameters: {
+                      'imgPath': 'cdsc',
+                      'name': 'Critical nurse care',
+                      'yoe': 'Critical nurse care',
+                      'type': 'Critical nurse care',
+                      'docInfo': 'Critical nurse care',
+                      'hospital': 'Critical nurse care',
+                      'charges': 'Critical nurse care',
+                    },
+                  );
+                },
+                child: const ServicesListTileComponent(
+                  imagePath: 'assets/icon/doctor 1.png',
+                  title: 'Doctor Consultation',
+                  subtitle: 'Discription of service will be shown in 2 line',
+                ),
               ),
-              const ServicesListTileComponent(
-                imagePath: 'assets/icon/doctor-consultation 1.png',
-                title: 'General duty attendant',
-                subtitle: 'Discription of service will be shown in 2 line',
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.serviceDetailsScreen,
+                    pathParameters: {
+                      'imgPath': 'cdsc',
+                      'name': 'Critical nurse care',
+                      'yoe': 'Critical nurse care',
+                      'type': 'Critical nurse care',
+                      'docInfo': 'Critical nurse care',
+                      'hospital': 'Critical nurse care',
+                      'charges': 'Critical nurse care',
+                    },
+                  );
+                },
+                child: const ServicesListTileComponent(
+                  imagePath: 'assets/icon/doctor-consultation 1.png',
+                  title: 'General duty attendant',
+                  subtitle: 'Discription of service will be shown in 2 line',
+                ),
               ),
-              const ServicesListTileComponent(
-                imagePath: 'assets/icon/health-insurance 1.png',
-                title: 'Nurse',
-                subtitle: 'Discription of service will be shown in 2 line',
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.serviceDetailsScreen,
+                    pathParameters: {
+                      'imgPath': 'cdsc',
+                      'name': 'Critical nurse care',
+                      'yoe': 'Critical nurse care',
+                      'type': 'Critical nurse care',
+                      'docInfo': 'Critical nurse care',
+                      'hospital': 'Critical nurse care',
+                      'charges': 'Critical nurse care',
+                    },
+                  );
+                },
+                child: const ServicesListTileComponent(
+                  imagePath: 'assets/icon/health-insurance 1.png',
+                  title: 'Nurse',
+                  subtitle: 'Discription of service will be shown in 2 line',
+                ),
               ),
             ],
           ),

@@ -25,6 +25,7 @@ class MainScreen extends StatelessWidget {
 
     final store = GetIt.I<MainStore>();
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Observer(
           builder: (_) {

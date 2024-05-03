@@ -21,7 +21,7 @@ class HealthCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.secondary,
+        color: AppColors.grayscale100,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: AppColors.line),
       ),
@@ -59,9 +59,9 @@ class HealthCard extends StatelessWidget {
           CustomButton(
             ontap: ontap,
             title: isEpr ? 'View EPR' : 'View PHR',
-            showIcon: false,
-            iconPath: AppIcons.add,
-            size: ButtonSize.normal,
+            showIcon: true,
+            iconPath: AppIcons.visibility_on,
+            size: ButtonSize.small,
             type: ButtonType.secondary,
             expanded: false,
           ),
