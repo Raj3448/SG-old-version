@@ -73,6 +73,7 @@ class InfoDialog extends StatelessWidget {
               size: ButtonSize.normal,
               type: ButtonType.primary,
               expanded: false,
+              iconColor: AppColors.lightRed,
             ),
           ],
         ),

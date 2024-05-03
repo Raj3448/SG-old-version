@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
@@ -98,6 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       title: 'Sign Up'.tr(),
                       showIcon: false,
                       iconPath: Icons.not_interested,
+                      iconColor: AppColors.white,
                     ),
                     const SizedBox(height: Dimension.d6),
                   ],
@@ -123,6 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     title: 'Login'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
+                    iconColor: AppColors.primary,
                   ),
                 ],
               ),

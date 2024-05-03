@@ -15,9 +15,8 @@ class CouplePlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(
-        title: pageTitle,
-      ),
+      appBar: PageAppbar(title: pageTitle),
+      backgroundColor: AppColors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
         child: SingleChildScrollView(
@@ -44,14 +43,16 @@ class CouplePlanPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
                 child: CustomButton(
-                    ontap: () {},
-                    title: 'Book care',
-                    showIcon: false,
-                    iconPath: AppIcons.add,
-                    size: ButtonSize.normal,
-                    type: ButtonType.disable,
-                    expanded: true),
-              )
+                  ontap: () {},
+                  title: 'Book care',
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                  size: ButtonSize.normal,
+                  type: ButtonType.disable,
+                  expanded: true,
+                  iconColor: AppColors.primary,
+                ),
+              ),
             ],
           ),
         ),

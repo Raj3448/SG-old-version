@@ -55,13 +55,13 @@ class MemberDetailsScreen extends StatelessWidget {
                       desc:
                           'In order to update the Health record\nof a family member, please contact\nSilvergenie',
                       btnTitle: 'Contact Genie',
-                      showBtnIcon: false,
+                      showBtnIcon: true,
                       btnIconPath: AppIcons.phone,
                     );
                   },
                 );
               },
-              btnTitle: 'Update health record',
+              btnTitle: 'Update Health record',
               showIcon: false,
               iconPath: AppIcons.clinical_notes,
             )
@@ -274,6 +274,7 @@ class _BasicDetailsBox extends StatelessWidget {
             size: ButtonSize.small,
             type: ButtonType.secondary,
             expanded: true,
+            iconColor: AppColors.primary,
           ),
         ],
       ),

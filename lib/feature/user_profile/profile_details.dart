@@ -308,6 +308,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           size: ButtonSize.normal,
                           type: ButtonType.primary,
                           expanded: true,
+                          iconColor: AppColors.white,
                         ),
                       ],
                     ),

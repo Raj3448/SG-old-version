@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -5,6 +7,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
+import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/dummy_variables.dart';
 
@@ -49,24 +52,19 @@ class GeniePage extends StatelessWidget {
               CustomButton(
                 ontap: () {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Dialog(
-                          insetPadding: const EdgeInsets.symmetric(
-                              horizontal: Dimension.d2),
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(Dimension.d2)),
-                          child: Container(
-                              height: 300,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimension.d2),
-                              child: const BackToHomeComponent(
-                                  title: 'Your request has been received',
-                                  description:
-                                      'Thank you for your interest. The SG team will be in touch with you shortly')),
-                        );
-                      });
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: true,
+                        title: 'Your request has been received',
+                        desc:
+                            'Thank you for your interest. The SG team will be in touch with you shortly.',
+                        btnTitle: 'Back to Home',
+                        showBtnIcon: false,
+                        btnIconPath: AppIcons.arrow_back_ios,
+                      );
+                    },
+                  );
                 },
                 title: 'Book Care',
                 showIcon: false,
@@ -74,6 +72,7 @@ class GeniePage extends StatelessWidget {
                 size: ButtonSize.normal,
                 type: ButtonType.primary,
                 expanded: true,
+                iconColor: AppColors.white,
               ),
               ExploreNowComponent(
                 pageTitle: pageTitle,

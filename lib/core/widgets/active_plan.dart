@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 
@@ -240,7 +242,8 @@ class ActivePlanComponent extends StatelessWidget {
                 Expanded(
                   child: CustomButton(
                     ontap: () {
-                      context.pushNamed(RoutesConstants.eprPhrPdfViewPage);
+                      GoRouter.of(context)
+                          .pushNamed(RoutesConstants.eprPhrPdfViewPage);
                     },
                     title: 'View PHR',
                     showIcon: false,
@@ -248,6 +251,7 @@ class ActivePlanComponent extends StatelessWidget {
                     size: ButtonSize.small,
                     type: ButtonType.secondary,
                     expanded: true,
+                    iconColor: AppColors.primary,
                   ),
                 ),
                 const SizedBox(
@@ -262,6 +266,7 @@ class ActivePlanComponent extends StatelessWidget {
                     size: ButtonSize.small,
                     type: ButtonType.secondary,
                     expanded: true,
+                    iconColor: AppColors.primary,
                   ),
                 ),
               ],
