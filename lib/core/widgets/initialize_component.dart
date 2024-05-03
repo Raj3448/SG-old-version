@@ -6,6 +6,7 @@ class InitializeComponent extends StatelessWidget {
   const InitializeComponent({
     required this.name,
     required this.initializeElement,
+    super.key,
   });
 
   final String name;

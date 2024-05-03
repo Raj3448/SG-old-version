@@ -6,7 +6,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/elder_care_sub.dart';
+import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 
 class AnalogComponent extends StatelessWidget {
   const AnalogComponent({required this.text1, required this.text2, super.key});
@@ -125,29 +125,32 @@ class VitalInfoComponent extends StatelessWidget {
   }
 
   List<Widget> _buildRows(List<CustomComponentData> customComponents) {
-    List<Widget> rows = [];
-    final int rowCount = (customComponents.length / 2).ceil();
-    for (int i = 0; i < rowCount; i++) {
-      List<CustomComponentData> rowData = customComponents.sublist(
-          i * 2,
-          (i + 1) * 2 > customComponents.length
-              ? customComponents.length
-              : (i + 1) * 2);
-      rows.add(Row(
-        children: rowData.asMap().entries.map((entry) {
-          int index = entry.key;
-          final CustomComponentData component = entry.value;
-          return Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
-              child: CustomComponent(
-                text: component.text,
-                value: component.value,
+    final rows = <Widget>[];
+    final rowCount = (customComponents.length / 2).ceil();
+    for (var i = 0; i < rowCount; i++) {
+      final rowData = customComponents.sublist(
+        i * 2,
+        (i + 1) * 2 > customComponents.length
+            ? customComponents.length
+            : (i + 1) * 2,
+      );
+      rows.add(
+        Row(
+          children: rowData.asMap().entries.map((entry) {
+            final index = entry.key;
+            final component = entry.value;
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
+                child: CustomComponent(
+                  text: component.text,
+                  value: component.value,
+                ),
               ),
-            ),
-          );
-        }).toList(),
-      ));
+            );
+          }).toList(),
+        ),
+      );
       if (i < rowCount - 1) {
         rows.add(const SizedBox(height: Dimension.d2));
       }
@@ -195,10 +198,9 @@ class ActivePlanComponent extends StatelessWidget {
                   name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
-                const ElderCareSubscription(
-                  color: ElderCareColor.blue,
-                  title: 'Care Member',
-                  showIcon: false,
+                const SubscriptionPkg(
+                  expanded: false,
+                  type: SubscriptionType.wellness,
                 ),
               ],
             ),
@@ -220,7 +222,9 @@ class ActivePlanComponent extends StatelessWidget {
             const VitalInfoComponent(
               customComponents: [
                 CustomComponentData(
-                    text: 'Blood Pressure', value: '73/140mmHg'),
+                  text: 'Blood Pressure',
+                  value: '73/140mmHg',
+                ),
                 CustomComponentData(text: 'Blood Oxygen', value: '98%'),
                 CustomComponentData(text: 'Heart Rate', value: '106bpm'),
                 CustomComponentData(text: 'Fast Glucose', value: '103 mg/dl'),
@@ -262,56 +266,17 @@ class ActivePlanComponent extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(
-              color: AppColors.grayscale300,
+            const Divider(color: AppColors.line),
+            const SizedBox(height: Dimension.d3),
+            const Text(
+              'Upgrade to Companion genie to benefit more',
+              style: AppTextStyle.bodySmallMedium,
             ),
-            Text(
-              'Upgrade to Wellness genie to benefit more',
-              style: AppTextStyle.bodySmallMedium.copyWith(
-                  fontWeight: FontWeight.w500,
-                  height: 1.6,
-                  color: AppColors.black),
+            const SizedBox(height: Dimension.d3),
+            const SubscriptionPkg(
+              expanded: true,
+              type: SubscriptionType.companion,
             ),
-            const SizedBox(
-              height: Dimension.d2,
-            ),
-            GestureDetector(
-              onTap: () {
-                
-                context.pushNamed(RoutesConstants.geniePage, pathParameters: {'pageTitle':'Wellness Genie','defination':'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver','headline':'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'});
-              },
-              child: Container(
-                  height: 48,
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
-                  decoration: BoxDecoration(
-                      color: AppColors.secondary,
-                      border: Border.all(width: 1, color: AppColors.primary),
-                      borderRadius: BorderRadius.circular(Dimension.d2)),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/icon/avg_time.png',
-                        height: 21,
-                      ),
-                      const SizedBox(
-                        width: Dimension.d3,
-                      ),
-                      Text(
-                        'Wellness Genie',
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        AppIcons.arrow_forward,
-                        size: 20,
-                        color: AppColors.primary,
-                      ),
-                    ],
-                  )),
-            )
           ],
         ),
       ),

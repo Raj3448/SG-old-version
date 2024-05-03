@@ -80,7 +80,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
-        return MaterialPage(child: UserProfile());
+        return const MaterialPage(child: UserProfile());
       },
     ),
     GoRoute(

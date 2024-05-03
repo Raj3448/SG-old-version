@@ -26,7 +26,7 @@ class BookServiceScreen extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FixedButton(
         ontap: () {
-          store.paymentEnabled = !store.paymentEnabled;
+          // store.paymentEnabled = !store.paymentEnabled;
         },
         btnTitle: 'Submit & next',
         showIcon: false,

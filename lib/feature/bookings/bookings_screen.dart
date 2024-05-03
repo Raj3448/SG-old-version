@@ -28,49 +28,53 @@ class _BookingsScreenState extends State<BookingsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const Appbar(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Bookings',
-                style: AppTextStyle.bodyXLSemiBold
-                    .copyWith(color: AppColors.grayscale900, height: 2.6),
-              ),
-              CustomizeTabviewComponent(
+      appBar: const Appbar(),
+      backgroundColor: AppColors.white,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Bookings',
+              style: AppTextStyle.bodyXLSemiBold
+                  .copyWith(color: AppColors.grayscale900, height: 2.6),
+            ),
+            CustomizeTabviewComponent(
+              controller: controller,
+              tabCount: 3,
+              widgetList: const [
+                Tab(icon: Text('Upcoming')),
+                Tab(icon: Text('In Progress')),
+                Tab(icon: Text('Completed')),
+              ],
+            ),
+            const SizedBox(
+              height: Dimension.d2,
+            ),
+            Expanded(
+              child: TabBarView(
                 controller: controller,
-                tabCount: 3,
-                widgetList: const [
-                  Tab(icon: Text('Upcoming')),
-                  Tab(icon: Text('In Progress')),
-                  Tab(icon: Text('Completed')),
-                ],
-              ),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: controller,
-                  children: List.generate(
-                      3, (index) => const BookingsStateComponent()),
+                children: List.generate(
+                  3,
+                  (index) => const BookingsStateComponent(),
                 ),
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class BookingsStateComponent extends StatelessWidget {
-  const BookingsStateComponent({Key? key}) : super(key: key);
+  const BookingsStateComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       child: Column(
         children: List.generate(6, (index) => const BookingListTileComponent()),
       ),
@@ -79,7 +83,7 @@ class BookingsStateComponent extends StatelessWidget {
 }
 
 class BookingListTileComponent extends StatelessWidget {
-  const BookingListTileComponent({Key? key}) : super(key: key);
+  const BookingListTileComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -92,22 +96,25 @@ class BookingListTileComponent extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
         height: 110,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(width: 2, color: AppColors.grayscale300)),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(width: 2, color: AppColors.grayscale300),
+        ),
         child: Row(
           children: [
             Container(
               width: 8,
               height: double.infinity,
               decoration: const BoxDecoration(
-                  color: AppColors.secondary,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomLeft: Radius.circular(8))),
+                color: AppColors.secondary,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+              ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,10 +137,11 @@ class BookingListTileComponent extends StatelessWidget {
                         Container(
                           height: 24,
                           width: 105,
-                          alignment: const Alignment(0, 0),
+                          alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: AppColors.lightBlue,
-                              borderRadius: BorderRadius.circular(5)),
+                            color: AppColors.lightBlue,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           child: Text(
                             'Today at 1PM',
                             style: AppTextStyle.bodyMediumMedium
@@ -148,8 +156,9 @@ class BookingListTileComponent extends StatelessWidget {
                     Text(
                       'Nutrition -Tele-consultation ',
                       style: AppTextStyle.bodyLargeMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grayscale900),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grayscale900,
+                      ),
                     ),
                     Text(
                       'Consultant: Dr.Vijay Bharvag',

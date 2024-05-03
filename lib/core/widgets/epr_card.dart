@@ -20,7 +20,7 @@ class HealthCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.secondary,
+        color: AppColors.grayscale100,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: AppColors.line),
       ),
@@ -59,7 +59,7 @@ class HealthCard extends StatelessWidget {
             ontap: ontap,
             title: isEpr ? 'View EPR' : 'View PHR',
             showIcon: true,
-            iconPath: Icons.remove_red_eye_outlined,
+            iconPath: AppIcons.visibility_on,
             size: ButtonSize.small,
             type: ButtonType.secondary,
             expanded: false,

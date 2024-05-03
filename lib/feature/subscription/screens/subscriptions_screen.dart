@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -13,7 +15,7 @@ import 'package:silver_genie/feature/subscription/model/subscription_member_mode
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
-  const SubscriptionsScreen({Key? key}) : super(key: key);
+  const SubscriptionsScreen({super.key});
 
   @override
   State<SubscriptionsScreen> createState() => IconTitleDetailsComponentState();
@@ -55,7 +57,9 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
                     child: TabBarView(
                       controller: controller,
                       children: List.generate(
-                          2, (index) => _SubscriptionUserComponent()),
+                        2,
+                        (index) => _SubscriptionUserComponent(),
+                      ),
                     ),
                   ),
                 ],
@@ -64,18 +68,22 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
           ),
           Container(
             height: 76,
-            alignment: Alignment(0, 0),
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
-                color: AppColors.grayscale100,
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, -4),
-                      color: AppColors.grayscale300,
-                      blurRadius: 8)
-                ]),
+              color: AppColors.grayscale100,
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, -4),
+                  color: AppColors.grayscale300,
+                  blurRadius: 8,
+                ),
+              ],
+            ),
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
-                vertical: Dimension.d3, horizontal: Dimension.d5),
+              vertical: Dimension.d3,
+              horizontal: Dimension.d5,
+            ),
             child: CustomButton(
               ontap: () {},
               title: 'Buy new subscription',
@@ -93,26 +101,26 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
 }
 
 class _SubscriptionUserComponent extends StatelessWidget {
-  _SubscriptionUserComponent({Key? key}) : super(key: key);
+  _SubscriptionUserComponent();
   final store = GetIt.I<SubscriptionStore>();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: List.generate(
-            store.subscriptionMemberList.length,
-            (index) => _UserDetailsComponent(
-                  memberDetails: store.subscriptionMemberList[index],
-                )),
+          store.subscriptionMemberList.length,
+          (index) => _UserDetailsComponent(
+            memberDetails: store.subscriptionMemberList[index],
+          ),
+        ),
       ),
     );
   }
 }
 
 class _UserDetailsComponent extends StatelessWidget {
+  const _UserDetailsComponent({required this.memberDetails});
   final SubscriptionMemberModel memberDetails;
-  const _UserDetailsComponent({required this.memberDetails, Key? key})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +129,9 @@ class _UserDetailsComponent extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
       height: 248,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 1, color: AppColors.grayscale300)),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.grayscale300),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Column(
@@ -163,17 +172,20 @@ class _UserDetailsComponent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconTitleDetailsComponent(
-                      icon: AppIcons.elderly_person,
-                      title: 'Plan',
-                      details: memberDetails.plan),
+                    icon: AppIcons.elderly_person,
+                    title: 'Plan',
+                    details: memberDetails.plan,
+                  ),
                   IconTitleDetailsComponent(
-                      icon: AppIcons.medical_services,
-                      title: 'Status',
-                      details: memberDetails.status),
+                    icon: AppIcons.medical_services,
+                    title: 'Status',
+                    details: memberDetails.status,
+                  ),
                   IconTitleDetailsComponent(
-                      icon: AppIcons.calendar,
-                      title: 'Plan ends on',
-                      details: memberDetails.planEndsDate),
+                    icon: AppIcons.calendar,
+                    title: 'Plan ends on',
+                    details: memberDetails.planEndsDate,
+                  ),
                 ],
               ),
             ),
@@ -192,5 +204,3 @@ class _UserDetailsComponent extends StatelessWidget {
     );
   }
 }
-
-
