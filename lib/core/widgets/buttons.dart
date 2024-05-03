@@ -31,6 +31,7 @@ class CustomButton extends StatelessWidget {
     required this.size,
     required this.type,
     required this.expanded,
+    required this.iconColor,
     super.key,
   });
   final VoidCallback ontap;
@@ -40,6 +41,7 @@ class CustomButton extends StatelessWidget {
   final ButtonSize size;
   final ButtonType type;
   final bool expanded;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class CustomButton extends StatelessWidget {
                     children: [
                       Icon(
                         iconPath,
-                        color: AppColors.primary,
+                        color: iconColor,
                         size: 17,
                       ),
                       const SizedBox(width: Dimension.d4),

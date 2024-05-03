@@ -64,6 +64,7 @@ class HealthCard extends StatelessWidget {
             size: ButtonSize.small,
             type: ButtonType.secondary,
             expanded: false,
+            iconColor: AppColors.primary,
           ),
         ],
       ),

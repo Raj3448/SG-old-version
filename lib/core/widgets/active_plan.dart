@@ -242,7 +242,8 @@ class ActivePlanComponent extends StatelessWidget {
                 Expanded(
                   child: CustomButton(
                     ontap: () {
-                      context.pushNamed(RoutesConstants.eprPhrPdfViewPage);
+                      GoRouter.of(context)
+                          .pushNamed(RoutesConstants.eprPhrPdfViewPage);
                     },
                     title: 'View PHR',
                     showIcon: false,
@@ -250,6 +251,7 @@ class ActivePlanComponent extends StatelessWidget {
                     size: ButtonSize.small,
                     type: ButtonType.secondary,
                     expanded: true,
+                    iconColor: AppColors.primary,
                   ),
                 ),
                 const SizedBox(
@@ -264,6 +266,7 @@ class ActivePlanComponent extends StatelessWidget {
                     size: ButtonSize.small,
                     type: ButtonType.secondary,
                     expanded: true,
+                    iconColor: AppColors.primary,
                   ),
                 ),
               ],

@@ -60,7 +60,6 @@ class EmergencyServices extends StatelessWidget {
                   'assets/emergency/rafiki.svg',
                   height: 206,
                   width: 277,
-                  
                 ),
               ),
               const SizedBox(
@@ -209,6 +208,7 @@ class EmergencyServices extends StatelessWidget {
                 size: ButtonSize.normal,
                 type: ButtonType.primary,
                 expanded: true,
+                iconColor: AppColors.white,
               ),
               const SizedBox(
                 height: Dimension.d4,
@@ -220,5 +220,3 @@ class EmergencyServices extends StatelessWidget {
     );
   }
 }
-
-

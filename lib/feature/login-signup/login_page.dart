@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
@@ -89,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                             : 'Use email instead'.tr(),
                         showIcon: false,
                         iconPath: Icons.not_interested,
+                        iconColor: AppColors.white,
                       ),
                       const SizedBox(height: Dimension.d4),
                       SizedBox(
@@ -113,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                           title: 'Login'.tr(),
                           showIcon: false,
                           iconPath: Icons.not_interested,
+                          iconColor: AppColors.white,
                         ),
                       ),
                       const SizedBox(height: Dimension.d6),
@@ -140,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                     title: 'Sign Up'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
+                    iconColor: AppColors.primary,
                   ),
                 ],
               ),

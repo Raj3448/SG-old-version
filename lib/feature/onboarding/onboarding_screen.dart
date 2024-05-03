@@ -161,6 +161,7 @@ class _Button extends StatelessWidget {
             size: ButtonSize.normal,
             type: ButtonType.primary,
             expanded: true,
+            iconColor: AppColors.white,
           ),
         ],
       ),

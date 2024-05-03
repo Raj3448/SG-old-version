@@ -181,13 +181,19 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/geniePage/:pageTitle/:defination/:headline',
+      path: '/geniePage/:pageTitle/:definition/:headline',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
-        final String pageTitle = state.pathParameters['pageTitle'] ?? '';
-        final String defination = state.pathParameters['defination'] ?? '';
-        final String headline = state.pathParameters['headline'] ?? '';
-        return MaterialPage(child: GeniePage(pageTitle: pageTitle, defination: defination, headline: headline,));
+        final pageTitle = state.pathParameters['pageTitle'] ?? '';
+        final definition = state.pathParameters['definition'] ?? '';
+        final headline = state.pathParameters['headline'] ?? '';
+        return MaterialPage(
+          child: GeniePage(
+            pageTitle: pageTitle,
+            definition: definition,
+            headline: headline,
+          ),
+        );
       },
     ),
     GoRoute(

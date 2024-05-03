@@ -9,6 +9,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
+import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/initialize_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -175,13 +176,29 @@ class EPRPHRViewScreen extends StatelessWidget {
                         horizontal: Dimension.d5,
                       ),
                       child: CustomButton(
-                        ontap: () {},
+                        ontap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const InfoDialog(
+                                showIcon: false,
+                                title: 'Hi there!!',
+                                desc:
+                                    'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                                btnTitle: 'Contact Genie',
+                                showBtnIcon: true,
+                                btnIconPath: AppIcons.phone,
+                              );
+                            },
+                          );
+                        },
                         title: 'Update EPR',
                         showIcon: false,
                         iconPath: AppIcons.add,
                         size: ButtonSize.normal,
                         type: ButtonType.primary,
                         expanded: true,
+                        iconColor: AppColors.white,
                       ),
                     ),
                   ],

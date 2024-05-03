@@ -155,6 +155,7 @@ class SGSubcscriptionPage extends StatelessWidget {
                 size: ButtonSize.normal,
                 type: ButtonType.primary,
                 expanded: true,
+                iconColor: AppColors.white,
               ),
               const SizedBox(
                 height: Dimension.d4,

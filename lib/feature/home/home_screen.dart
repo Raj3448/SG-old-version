@@ -86,13 +86,14 @@ class HomeScreen extends StatelessWidget {
                     iconImagePath: 'assets/icon/ambulance.png',
                     buttonName: 'Emergency',
                     onTap: () {
-                      context.pushNamed(RoutesConstants.geniePage, pathParameters: {
-                  'pageTitle': 'Emergency Genie',
-                  'defination':
-                      'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
-                  'headline':
-                      'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
-                });
+                      context.pushNamed(RoutesConstants.geniePage,
+                          pathParameters: {
+                            'pageTitle': 'Emergency Genie',
+                            'defination':
+                                'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                            'headline':
+                                'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
+                          });
                     },
                   ),
                 ],
@@ -166,6 +167,7 @@ class HomeScreen extends StatelessWidget {
                   size: ButtonSize.normal,
                   type: ButtonType.secondary,
                   expanded: true,
+                  iconColor: AppColors.white,
                 ),
               ),
               Text(
@@ -231,6 +233,7 @@ class HomeScreen extends StatelessWidget {
                 size: ButtonSize.normal,
                 type: ButtonType.secondary,
                 expanded: true,
+                iconColor: AppColors.white,
               ),
               const SizedBox(
                 height: Dimension.d10,
@@ -357,6 +360,7 @@ class _EmergencyActivation extends StatelessWidget {
               size: ButtonSize.large,
               type: ButtonType.activation,
               expanded: true,
+              iconColor: AppColors.white,
             ),
           ),
         ],
@@ -494,6 +498,7 @@ class _ActivateListileComponent extends StatelessWidget {
               size: ButtonSize.normal,
               type: ButtonType.warnActivate,
               expanded: true,
+              iconColor: AppColors.white,
             ),
           ),
         ],

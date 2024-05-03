@@ -107,6 +107,7 @@ class _MembersScreenState extends State<MembersScreen> {
                             size: ButtonSize.normal,
                             type: ButtonType.primary,
                             expanded: true,
+                            iconColor: AppColors.white,
                           ),
                         ],
                       ),

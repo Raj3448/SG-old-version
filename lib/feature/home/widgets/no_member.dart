@@ -109,6 +109,7 @@ class NoMember extends StatelessWidget {
               size: ButtonSize.large,
               type: ButtonType.primary,
               expanded: true,
+              iconColor: AppColors.white,
             ),
           ],
         ),

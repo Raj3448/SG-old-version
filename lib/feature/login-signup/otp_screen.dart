@@ -94,6 +94,7 @@ class OTPScreen extends StatelessWidget {
                 title: 'Continue'.tr(),
                 showIcon: false,
                 iconPath: Icons.not_interested,
+                iconColor: AppColors.white,
               ),
               const SizedBox(height: Dimension.d6),
               Row(
@@ -114,6 +115,7 @@ class OTPScreen extends StatelessWidget {
                     title: 'Resend'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
+                    iconColor: AppColors.white,
                   ),
                 ],
               ),
