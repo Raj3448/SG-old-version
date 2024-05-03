@@ -204,7 +204,7 @@ class HomeScreen extends StatelessWidget {
                     height: 132,
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(right: 200),
+                      padding: const EdgeInsets.only(right: 130),
                       controller: _testimonialsCardController,
                       scrollDirection: Axis.horizontal,
                       children: List.generate(3, (index) => _TestmonialsCard()),
@@ -232,7 +232,7 @@ class HomeScreen extends StatelessWidget {
                       textAlign: TextAlign.left,
                       style: AppTextStyle.bodyXLSemiBold.copyWith(
                         color: AppColors.grayscale900,
-                        height: 1,
+                        height: 1.8,
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
                       ),
