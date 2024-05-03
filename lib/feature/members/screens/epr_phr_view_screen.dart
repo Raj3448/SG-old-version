@@ -224,34 +224,41 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Text(
-              widget.title,
-              style: AppTextStyle.bodyLargeMedium.copyWith(
-                height: 2.4,
-                color: AppColors.grayscale900,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(right: Dimension.d5),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isExpand = !_isExpand;
-                  });
-                },
-                child: Icon(
-                  _isExpand ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
-                  size: 8,
-                  color: AppColors.grayscale900,
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isExpand = !_isExpand;
+            });
+          },
+          child: SizedBox(
+            height: 40,
+            child: Row(
+              children: [
+                Text(
+                  widget.title,
+                  style: AppTextStyle.bodyLargeMedium.copyWith(
+                    height: 2.4,
+                    color: AppColors.grayscale900,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right: Dimension.d5),
+                  child: Icon(
+                    _isExpand ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
+                    size: 8,
+                    color: AppColors.grayscale900,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
+        if (_isExpand)
+          const SizedBox(
+            height: Dimension.d2,
+          ),
         if (_isExpand)
           Container(
             decoration: BoxDecoration(
