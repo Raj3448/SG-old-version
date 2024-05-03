@@ -8,7 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
-import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
@@ -25,7 +24,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final PageController _pageController = PageController();
+  final PageController _offerPageController = PageController();
+  final PageController _testimonialsCardController = PageController();
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.only(right: 200),
-                  controller: _pageController,
+                  controller: _offerPageController,
                   scrollDirection: Axis.horizontal,
                   children: List.generate(
                     4,
@@ -133,13 +133,59 @@ class HomeScreen extends StatelessWidget {
               ),
               Center(
                 child: SmoothPageIndicator(
-                  controller: _pageController,
+                  controller: _offerPageController,
                   count: 4,
                   effect: const ExpandingDotsEffect(
                     activeDotColor: AppColors.primary,
                     dotColor: AppColors.grayscale300,
                     dotHeight: 8,
-                    dotWidth: 6,
+                    dotWidth: 8,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimension.d3),
+                child: CustomButton(
+                  ontap: () {},
+                  title: 'Know More',
+                  showIcon: false,
+                  iconPath: Icons.not_interested,
+                  size: ButtonSize.normal,
+                  type: ButtonType.secondary,
+                  expanded: true,
+                ),
+              ),
+              Text(
+                'Testimonials',
+                style: AppTextStyle.bodyXLSemiBold.copyWith(
+                  color: AppColors.grayscale900,
+                  height: 2.6,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                height: 132,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(right: 200),
+                  controller: _testimonialsCardController,
+                  scrollDirection: Axis.horizontal,
+                  children: List.generate(3, (index) => _TestmonialsCard()),
+                ),
+              ),
+              const SizedBox(
+                height: Dimension.d3,
+              ),
+              Center(
+                child: SmoothPageIndicator(
+                  controller: _testimonialsCardController,
+                  count: 3,
+                  effect: const ExpandingDotsEffect(
+                    activeDotColor: AppColors.primary,
+                    dotColor: AppColors.grayscale300,
+                    dotHeight: 8,
+                    dotWidth: 8,
                   ),
                 ),
               ),
@@ -162,50 +208,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: Dimension.d3,
-              ),
-              SizedBox(
-                height: 52,
-                child: TextFormField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: InputDecoration(
-                    fillColor: Colors.white24,
-                    filled: true,
-                    border: InputBorder.none,
-                    hintText: 'Enter Your Email',
-                    hintStyle: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale600,
-                      fontSize: 16,
-                      height: 1.46,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: FontFamily.inter,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 10,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        width: 2,
-                        color: AppColors.secondary,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        width: 2,
-                        color: AppColors.primary,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onFieldSubmitted: (value) {},
-                ),
-              ),
-              const SizedBox(
                 height: Dimension.d4,
               ),
               CustomButton(
@@ -223,6 +225,50 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _TestmonialsCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 132,
+      margin: const EdgeInsets.only(left: Dimension.d2),
+      padding: const EdgeInsets.all(Dimension.d2),
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(Dimension.d2)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+              width: 220,
+              child: Text(
+                  'The service was amazing and support from care couch is great overall.')),
+          SizedBox(
+            width: 220,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Avatar.fromSize(
+                  imgPath: '',
+                  size: AvatarSize.size12,
+                ),
+                const SizedBox(
+                  width: Dimension.d2,
+                ),
+                Text(
+                  'Varun Nair',
+                  style: AppTextStyle.bodyMediumMedium.copyWith(
+                      color: AppColors.grayscale800,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
