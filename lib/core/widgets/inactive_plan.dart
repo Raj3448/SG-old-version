@@ -4,8 +4,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/elder_care_sub.dart';
+import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 
 class IconTextComponent extends StatelessWidget {
   const IconTextComponent({required this.text, super.key});
@@ -57,6 +56,7 @@ class InactivePlanComponent extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(Dimension.d3),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,10 +65,9 @@ class InactivePlanComponent extends StatelessWidget {
                   name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
-                const ElderCareSubscription(
-                  color: ElderCareColor.grey,
-                  title: 'Care Inactive',
-                  showIcon: false,
+                const SubscriptionPkg(
+                  expanded: false,
+                  type: SubscriptionType.inActive,
                 ),
               ],
             ),
@@ -77,68 +76,33 @@ class InactivePlanComponent extends StatelessWidget {
             ),
             const Row(
               children: [
-                AnalogComponent(text1: 'Relation', text2: 'Father'),
+                AnalogComponent(text1: 'Relation', text2: 'Mother'),
                 SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(text1: 'Age', text2: '62'),
+                AnalogComponent(text1: 'Age', text2: '65'),
               ],
             ),
-            const SizedBox(
-              height: Dimension.d3,
+            const SizedBox(height: Dimension.d3),
+            Text(
+              'Signup to Personalized care packages',
+              style: AppTextStyle.bodyMediumBold
+                  .copyWith(color: AppColors.grayscale900),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.secondary,
-                border: Border.all(
-                  color: AppColors.line,
-                  width: Dimension.arbitary(1),
-                ),
-                borderRadius: BorderRadius.circular(Dimension.d1),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: Dimension.d2,
-                  horizontal: Dimension.d3,
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Unlock regular health monitoring with our Care Plan',
-                      style: AppTextStyle.bodyMediumSemiBold
-                          .copyWith(color: AppColors.grayscale900),
-                    ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
-                    const IconTextComponent(text: 'Dedicated Coaches'),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
-                    const IconTextComponent(
-                      text: 'PHR,emergency support',
-                    ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
-                    const IconTextComponent(
-                      text: 'Vital monitoring,and community engagement',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: Dimension.d3,
-            ),
-            CustomButton(
-              ontap: () {},
-              title: 'Upgrade to Care',
-              showIcon: false,
-              iconPath: Icons.not_interested,
-              size: ButtonSize.normal,
-              type: ButtonType.primary,
+            const SizedBox(height: Dimension.d3),
+            const SubscriptionPkg(
               expanded: true,
+              type: SubscriptionType.companion,
+            ),
+            const SizedBox(height: Dimension.d3),
+            const SubscriptionPkg(
+              expanded: true,
+              type: SubscriptionType.wellness,
+            ),
+            const SizedBox(height: Dimension.d3),
+            const SubscriptionPkg(
+              expanded: true,
+              type: SubscriptionType.emergency,
             ),
           ],
         ),

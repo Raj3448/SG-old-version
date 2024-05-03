@@ -49,11 +49,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
               ),
               const Spacer(),
               _IconContainer(
-                iconPath: 'assets/icon/wallet.svg',
-                onPressed: () {},
-              ),
-              const SizedBox(width: 12),
-              _IconContainer(
                 iconPath: 'assets/icon/bell-Unread.svg',
                 onPressed: () {
                   context.pushNamed(RoutesConstants.notificationScreen);

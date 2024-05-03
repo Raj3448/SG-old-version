@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:device_preview/device_preview.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,6 +27,7 @@ import 'package:silver_genie/feature/subscription/store/subscription_store.dart'
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
+
 void main() async {
   await runZonedGuarded(
     () async {
@@ -45,12 +45,15 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
-      GetIt.instance.registerLazySingleton(() => UserDetailStore(UserDetailServices()));
+      GetIt.instance
+          .registerLazySingleton(() => UserDetailStore(UserDetailServices()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
-      GetIt.instance.registerLazySingleton(() => NotificationStore(NotificationServices()));
+      GetIt.instance.registerLazySingleton(
+        () => NotificationStore(NotificationServices()),
+      );
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance
@@ -73,10 +76,11 @@ void main() async {
 
       runApp(
         EasyLocalization(
-            supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
-            path: 'assets/translations',
-            fallbackLocale: const Locale('en', 'US'),
-            child: const MyApp()),
+          supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
+          path: 'assets/translations',
+          fallbackLocale: const Locale('en', 'US'),
+          child: const MyApp(),
+        ),
       );
       FlutterNativeSplash.remove();
     },

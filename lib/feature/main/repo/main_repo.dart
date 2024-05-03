@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_instance_creation
+
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 abstract class IMembersService {

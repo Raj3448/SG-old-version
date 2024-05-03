@@ -24,144 +24,168 @@ class EPRPHRViewScreen extends StatelessWidget {
       builder: (context) {
         return Scaffold(
           appBar: const PageAppbar(title: 'EPR'),
-          body: store.isLoading ? const Center(child: CircularProgressIndicator(),) : Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimension.d3),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Personal Details',
-                          style: AppTextStyle.bodyLargeMedium.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            height: 2.4,
-                            color: AppColors.grayscale900,
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 3,
-                          ),
-                          height: 248,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: AppColors.grayscale300,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Avatar.fromSize(
-                                      imgPath: '',
-                                      size: AvatarSize.size24,
-                                    ),
-                                    const SizedBox(
-                                      width: Dimension.d2,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          store.userDetails!.fold((l) => '', (r) => r.fullname),
-                                          style:
-                                              AppTextStyle.bodyLargeMedium.copyWith(
-                                            color: AppColors.grayscale900,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Relation: Father  Age: 67',
-                                          style: AppTextStyle.bodyMediumMedium
-                                              .copyWith(
-                                            color: AppColors.grayscale800,
-                                            height: 1.5,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+          backgroundColor: AppColors.white,
+          body: store.isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(Dimension.d3),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Personal Details',
+                                style: AppTextStyle.bodyLargeMedium.copyWith(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  height: 2.4,
+                                  color: AppColors.grayscale900,
                                 ),
-                                IconTitleDetailsComponent(
-                                    icon: Icons.email_outlined,
-                                    title: 'Email',
-                                    details: store.userDetails!.fold((l) => '', (r) => r.emailId)),
-                                IconTitleDetailsComponent(
-                                    icon: Icons.phone_outlined,
-                                    title: 'Contact',
-                                    details: store.userDetails!.fold((l) => '', (r) => r.mobileNum)),
-                                IconTitleDetailsComponent(
-                                    icon: AppIcons.home,
-                                    title: 'Address',
-                                    details: store.userDetails!.fold((l) => '', (r) => r.address)),
-                              ],
-                            ),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 3,
+                                ),
+                                height: 248,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                    color: AppColors.grayscale300,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Avatar.fromSize(
+                                            imgPath: '',
+                                            size: AvatarSize.size24,
+                                          ),
+                                          const SizedBox(
+                                            width: Dimension.d2,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                store.userDetails!.fold(
+                                                  (l) => '',
+                                                  (r) => r.fullname,
+                                                ),
+                                                style: AppTextStyle
+                                                    .bodyLargeMedium
+                                                    .copyWith(
+                                                  color: AppColors.grayscale900,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Relation: Father  Age: 67',
+                                                style: AppTextStyle
+                                                    .bodyMediumMedium
+                                                    .copyWith(
+                                                  color: AppColors.grayscale800,
+                                                  height: 1.5,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      IconTitleDetailsComponent(
+                                        icon: Icons.email_outlined,
+                                        title: 'Email',
+                                        details: store.userDetails!.fold(
+                                          (l) => '',
+                                          (r) => r.emailId,
+                                        ),
+                                      ),
+                                      IconTitleDetailsComponent(
+                                        icon: Icons.phone_outlined,
+                                        title: 'Contact',
+                                        details: store.userDetails!.fold(
+                                          (l) => '',
+                                          (r) => r.mobileNum,
+                                        ),
+                                      ),
+                                      IconTitleDetailsComponent(
+                                        icon: AppIcons.home,
+                                        title: 'Address',
+                                        details: store.userDetails!.fold(
+                                          (l) => '',
+                                          (r) => r.address,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: Dimension.d3,
+                              ),
+                              const _ExpandedButton(
+                                title: 'Insurance details',
+                              ),
+                              const _ExpandedButton(
+                                title: 'Preferred Hospitals',
+                              ),
+                              const _ExpandedButton(
+                                title: 'Emergency Contact',
+                              ),
+                              const _ExpandedButton(
+                                title: 'Preferred ambulance',
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(
-                          height: Dimension.d3,
-                        ),
-                        const _ExpandedButton(
-                          title: 'Insurance details',
-                        ),
-                        const _ExpandedButton(
-                          title: 'Preferred Hospitals',
-                        ),
-                        const _ExpandedButton(
-                          title: 'Emergency Contact',
-                        ),
-                        const _ExpandedButton(
-                          title: 'Preferred ambulance',
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Container(
-                height: 76,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.grayscale100,
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, -4),
-                      color: AppColors.grayscale300,
-                      blurRadius: 8,
+                    Container(
+                      height: 76,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        color: AppColors.grayscale100,
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, -4),
+                            color: AppColors.grayscale300,
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Dimension.d3,
+                        horizontal: Dimension.d5,
+                      ),
+                      child: CustomButton(
+                        ontap: () {},
+                        title: 'Update EPR',
+                        showIcon: false,
+                        iconPath: AppIcons.add,
+                        size: ButtonSize.normal,
+                        type: ButtonType.primary,
+                        expanded: true,
+                      ),
                     ),
                   ],
                 ),
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  vertical: Dimension.d3,
-                  horizontal: Dimension.d5,
-                ),
-                child: CustomButton(
-                  ontap: () {},
-                  title: 'Update EPR',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: ButtonType.primary,
-                  expanded: true,
-                ),
-              ),
-            ],
-          ),
         );
       },
     );
@@ -285,4 +309,3 @@ class _InsuranceDetailsComponent extends StatelessWidget {
     );
   }
 }
-

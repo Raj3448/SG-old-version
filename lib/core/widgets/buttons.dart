@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 enum ButtonSize {
@@ -84,10 +85,10 @@ class CustomButton extends StatelessWidget {
                     children: [
                       Icon(
                         iconPath,
-                        color: Colors.white,
+                        color: AppColors.primary,
                         size: 17,
                       ),
-                      const SizedBox(width: 7.5),
+                      const SizedBox(width: Dimension.d4),
                       Text(
                         title.tr(),
                         style: _getTextStyle(),

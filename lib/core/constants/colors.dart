@@ -34,4 +34,8 @@ abstract class AppColors {
   static const lightOrange = Color(0xFFFFF2ED);
   static const lightYellow = Color(0xFFFFFAE8);
   static const lightBlue = Color(0xFFF4F0FF);
+  static const lightGold = Color(0xFFFFFCF6);
+
+  //--- Subscription package colors ----------------------------
+  static const gold = Color(0xFFCDC500);
 }

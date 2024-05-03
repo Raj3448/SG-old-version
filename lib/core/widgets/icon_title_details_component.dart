@@ -6,11 +6,12 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 class IconTitleDetailsComponent extends StatelessWidget {
-  const IconTitleDetailsComponent(
-      {required this.icon,
-      required this.title,
-      required this.details,
-      super.key});
+  const IconTitleDetailsComponent({
+    required this.icon,
+    required this.title,
+    required this.details,
+    super.key,
+  });
   final IconData icon;
   final String title;
   final String details;
@@ -31,7 +32,9 @@ class IconTitleDetailsComponent extends StatelessWidget {
         Text(
           title,
           style: AppTextStyle.bodyLargeMedium.copyWith(
-              fontWeight: FontWeight.w400, color: AppColors.grayscale600),
+            fontWeight: FontWeight.w400,
+            color: AppColors.grayscale600,
+          ),
         ),
         Expanded(
           child: Text(

@@ -24,6 +24,7 @@ class EmergencyServices extends StatelessWidget {
     final store = GetIt.I<EmergencyServiceStore>();
     return Scaffold(
       appBar: const PageAppbar(title: 'Emergency services'),
+      backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
