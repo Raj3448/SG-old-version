@@ -165,17 +165,12 @@ class PlanPricingDetailsComponent extends StatelessWidget {
         const SizedBox(
           height: Dimension.d4,
         ),
-        SizedBox(
-          height: 380,
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: store.emergencyServiceModel.plans.length,
-            itemBuilder: (context, index) {
-              return PlanDisplayComponent(
-                plan: store.emergencyServiceModel.plans[index],
-              );
-            },
-          ),
+        Column(
+          children: List.generate(
+              store.emergencyServiceModel.plans.length,
+              (index) => PlanDisplayComponent(
+                    plan: store.emergencyServiceModel.plans[index],
+                  )),
         )
       ],
     );
@@ -183,6 +178,9 @@ class PlanPricingDetailsComponent extends StatelessWidget {
 }
 
 class ExploreNowComponent extends StatelessWidget {
+  const ExploreNowComponent({required this.pageTitle, super.key});
+
+  final String pageTitle;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -202,9 +200,8 @@ class ExploreNowComponent extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              context.pushNamed(RoutesConstants.couplePlanPage,pathParameters: {
-                'pageTitle' : 'Wellness Genie'
-              });
+              context.pushNamed(RoutesConstants.couplePlanPage,
+                  pathParameters: {'pageTitle': pageTitle});
             },
             child: Container(
                 height: 48,
@@ -263,17 +260,14 @@ class HowItWorkComponent extends StatelessWidget {
             height: 2.514,
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: ListView.builder(
-              itemCount: questionsAndContentList.length,
-              itemBuilder: (context, index) {
-                return ExpandingQuestionComponent(
-                    question:
-                        questionsAndContentList[index]['question'] as String,
-                    temp: questionsAndContentList[index]['answer'] as String);
-              }),
-        ),
+        Column(
+          children: List.generate(
+              questionsAndContentList.length,
+              (index) => ExpandingQuestionComponent(
+                  question:
+                      questionsAndContentList[index]['question'] as String,
+                  temp: questionsAndContentList[index]['answer'] as String)),
+        )
       ],
     );
   }

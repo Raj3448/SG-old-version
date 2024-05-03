@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/widgets/back_to_home_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -46,7 +47,27 @@ class GeniePage extends StatelessWidget {
                 planName: pageTitle,
               ),
               CustomButton(
-                ontap: () {},
+                ontap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          insetPadding: const EdgeInsets.symmetric(
+                              horizontal: Dimension.d2),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimension.d2)),
+                          child: Container(
+                              height: 300,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimension.d2),
+                              child: const BackToHomeComponent(
+                                  title: 'Your request has been received',
+                                  description:
+                                      'Thank you for your interest. The SG team will be in touch with you shortly')),
+                        );
+                      });
+                },
                 title: 'Book Care',
                 showIcon: false,
                 iconPath: AppIcons.add,
@@ -54,7 +75,9 @@ class GeniePage extends StatelessWidget {
                 type: ButtonType.primary,
                 expanded: true,
               ),
-              ExploreNowComponent(),
+              ExploreNowComponent(
+                pageTitle: pageTitle,
+              ),
               HowItWorkComponent(
                 questionsAndContentList: questionAndAnswerList,
               ),
