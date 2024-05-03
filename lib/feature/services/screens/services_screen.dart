@@ -257,58 +257,74 @@ class ServicesListTileComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      alignment: Alignment.center,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(width: 2, color: AppColors.secondary),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.secondary,
-                border: Border.all(width: 2, color: AppColors.grayscale300),
-                borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: () {
+        GoRouter.of(context).pushNamed(
+          RoutesConstants.serviceDetailsScreen,
+          pathParameters: {
+            'imgPath': 'cdsc',
+            'name': 'Critical nurse care',
+            'yoe': 'Critical nurse care',
+            'type': 'Critical nurse care',
+            'docInfo': 'Critical nurse care',
+            'hospital': 'Critical nurse care',
+            'charges': 'Critical nurse care',
+          },
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        alignment: Alignment.center,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          border: Border.all(width: 2, color: AppColors.secondary),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.secondary,
+                  border: Border.all(width: 2, color: AppColors.grayscale300),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                height: 64,
+                width: 64,
+                child: Image.asset(imagePath),
               ),
-              height: 64,
-              width: 64,
-              child: Image.asset(imagePath),
-            ),
-            const SizedBox(
-              width: Dimension.d2,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale900,
-                      fontSize: 16,
-                      height: 2,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: FontFamily.inter,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale600,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: FontFamily.inter,
-                    ),
-                  ),
-                ],
+              const SizedBox(
+                width: Dimension.d2,
               ),
-            ),
-          ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale900,
+                        fontSize: 16,
+                        height: 2,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: FontFamily.inter,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale600,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: FontFamily.inter,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

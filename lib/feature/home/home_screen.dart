@@ -68,20 +68,24 @@ class HomeScreen extends StatelessWidget {
                         iconImagePath: 'assets/icon/volunteer_activism.png',
                         buttonName: 'Health Care',
                         onTap: () {
-                          context.pushNamed(RoutesConstants.servicesCareScreen,
-                              pathParameters: {
-                                'pageTitle': 'Health Care Service'
-                              });
+                          context.pushNamed(
+                            RoutesConstants.servicesCareScreen,
+                            pathParameters: {
+                              'pageTitle': 'Health Care Service',
+                            },
+                          );
                         },
                       ),
                       BookServiceButton(
                         iconImagePath: 'assets/icon/home_health.png',
                         buttonName: 'Home Care',
                         onTap: () {
-                          context.pushNamed(RoutesConstants.servicesCareScreen,
-                              pathParameters: {
-                                'pageTitle': 'Home Care Service'
-                              });
+                          context.pushNamed(
+                            RoutesConstants.servicesCareScreen,
+                            pathParameters: {
+                              'pageTitle': 'Home Care Service',
+                            },
+                          );
                         },
                       ),
                       BookServiceButton(
@@ -93,14 +97,16 @@ class HomeScreen extends StatelessWidget {
                         iconImagePath: 'assets/icon/ambulance.png',
                         buttonName: 'Emergency',
                         onTap: () {
-                          context.pushNamed(RoutesConstants.geniePage,
-                              pathParameters: {
-                                'pageTitle': 'Emergency Genie',
-                                'defination':
-                                    'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
-                                'headline':
-                                    'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
-                              });
+                          GoRouter.of(context).pushNamed(
+                            RoutesConstants.geniePage,
+                            pathParameters: {
+                              'pageTitle': 'Emergency Genie',
+                              'defination':
+                                  "We understand the unpredictability of life, but that shouldn't hinder your well-being. With our comprehensive emergency support service, we'll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver",
+                              'headline':
+                                  'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
+                            },
+                          );
                         },
                       ),
                     ],
@@ -283,15 +289,16 @@ class _ActiveBookingComponent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(
-          4,
-          (index) => index == 0
-              ? Text(
-                  'Active bookings',
-                  style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
-                )
-              : const BookingListTileComponent(
-                  bookingServiceStatus: BookingServiceStatus.active,
-                )),
+        4,
+        (index) => index == 0
+            ? Text(
+                'Active bookings',
+                style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
+              )
+            : const BookingListTileComponent(
+                bookingServiceStatus: BookingServiceStatus.active,
+              ),
+      ),
     );
   }
 }
@@ -304,16 +311,19 @@ class _TestmonialsCard extends StatelessWidget {
       margin: const EdgeInsets.only(left: Dimension.d2),
       padding: const EdgeInsets.all(Dimension.d2),
       decoration: BoxDecoration(
-          color: AppColors.grayscale100,
-          borderRadius: BorderRadius.circular(Dimension.d2)),
+        color: AppColors.grayscale100,
+        borderRadius: BorderRadius.circular(Dimension.d2),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-              width: 220,
-              child: Text(
-                  'The service was amazing and support from care couch is great overall.')),
+            width: 220,
+            child: Text(
+              'The service was amazing and support from care couch is great overall.',
+            ),
+          ),
           SizedBox(
             width: 220,
             child: Row(
@@ -329,12 +339,13 @@ class _TestmonialsCard extends StatelessWidget {
                 Text(
                   'Varun Nair',
                   style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale800,
-                      fontWeight: FontWeight.w500),
+                    color: AppColors.grayscale800,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

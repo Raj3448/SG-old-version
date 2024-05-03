@@ -189,11 +189,12 @@ final GoRouter routes = GoRouter(
         final String defination = state.pathParameters['defination'] ?? '';
         final String headline = state.pathParameters['headline'] ?? '';
         return MaterialPage(
-            child: GeniePage(
-          pageTitle: pageTitle,
-          
-          headline: headline, definition: defination,
-        ));
+          child: GeniePage(
+            pageTitle: pageTitle,
+            headline: headline,
+            definition: defination,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -244,12 +245,15 @@ final GoRouter routes = GoRouter(
       path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus',
       name: RoutesConstants.bookingServiceStatusDetailsPage,
       pageBuilder: (context, state) {
-        final bookingServiceStatusString = state.pathParameters['bookingServiceStatus'];
-        BookingServiceStatus bookingServiceStatus = BookingServiceStatus.values.firstWhere((e) => e.toString() == bookingServiceStatusString);
+        final bookingServiceStatusString =
+            state.pathParameters['bookingServiceStatus'];
+        BookingServiceStatus bookingServiceStatus = BookingServiceStatus.values
+            .firstWhere((e) => e.toString() == bookingServiceStatusString);
         return MaterialPage(
-            child: BookingSeviceStatusPage(
-          bookingServiceStatus: bookingServiceStatus,
-        ));
+          child: BookingSeviceStatusPage(
+            bookingServiceStatus: bookingServiceStatus,
+          ),
+        );
       },
     ),
     GoRoute(
