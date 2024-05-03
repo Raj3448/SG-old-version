@@ -28,4 +28,6 @@ class RoutesConstants {
   static const notificationScreen = '/notificationScreen';
   static const eprPhrPdfViewPage = '/eprPhrPdfViewPage';
   static const bookingServiceStatusDetailsPage = '/bookingServiceStatusDetailsPage';
+  static const geniePage = '/geniePage';
+  static const couplePlanPage = '/couplePlanPage';
 }
