@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -14,6 +13,8 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/back_to_home_component.dart';
+import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
@@ -37,6 +38,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const _MemberInfo(),
               _EmergencyActivation(),
+              _ActiveBookingComponent(),
               Text(
                 'Book services',
                 style: AppTextStyle.bodyXLSemiBold
@@ -48,12 +50,18 @@ class HomeScreen extends StatelessWidget {
                   BookServiceButton(
                     iconImagePath: 'assets/icon/volunteer_activism.png',
                     buttonName: 'Health Care',
-                    onTap: () {},
+                    onTap: () {
+                      context.pushNamed(RoutesConstants.servicesCareScreen,
+                          pathParameters: {'pageTitle': 'Health Care Service'});
+                    },
                   ),
                   BookServiceButton(
                     iconImagePath: 'assets/icon/home_health.png',
                     buttonName: 'Home Care',
-                    onTap: () {},
+                    onTap: () {
+                      context.pushNamed(RoutesConstants.servicesCareScreen,
+                          pathParameters: {'pageTitle': 'Home Care Service'});
+                    },
                   ),
                   BookServiceButton(
                     iconImagePath: 'assets/icon/prescriptions.png',
@@ -64,8 +72,13 @@ class HomeScreen extends StatelessWidget {
                     iconImagePath: 'assets/icon/ambulance.png',
                     buttonName: 'Emergency',
                     onTap: () {
-                      GoRouter.of(context)
-                          .push(RoutesConstants.emergencyServiceScreen);
+                      context.pushNamed(RoutesConstants.geniePage, pathParameters: {
+                  'pageTitle': 'Emergency Genie',
+                  'defination':
+                      'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                  'headline':
+                      'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
+                });
                     },
                   ),
                 ],
@@ -215,6 +228,23 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class _ActiveBookingComponent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(
+          4,
+          (index) => index == 0
+              ? Text(
+                  'Active bookings',
+                  style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
+                )
+              : const BookingListTileComponent()),
+    );
+  }
+}
+
 class _TestmonialsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -327,46 +357,9 @@ class _EmergencyActivateBottomSheetState
       padding: const EdgeInsets.symmetric(
           horizontal: Dimension.d4, vertical: Dimension.d3),
       child: isActivate
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/icon/success.svg',
-                  height: 92,
-                ),
-                const SizedBox(
-                  height: Dimension.d4,
-                ),
-                Text(
-                  'Emergency Alert Activated',
-                  style: AppTextStyle.bodyLargeMedium.copyWith(
-                      color: AppColors.grayscale900,
-                      fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(
-                  height: Dimension.d2,
-                ),
-                Text(
-                  'You will get a Callback from our team very soon',
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: AppColors.grayscale700,
-                  ),
-                ),
-                const SizedBox(
-                  height: Dimension.d6,
-                ),
-                CustomButton(
-                  ontap: () {
-                    Navigator.of(context).pop();
-                  },
-                  title: 'Back to Home',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: ButtonType.primary,
-                  expanded: true,
-                ),
-              ],
+          ? const BackToHomeComponent(
+              title: 'Emergency Alert Activated',
+              description: 'You will get a Callback from our team very soon',
             )
           : Column(
               children: [
@@ -549,7 +542,6 @@ class _MemberInfo extends StatelessWidget {
                             : const SizedBox();
                       },
                     ),
-                  
                   const SizedBox(height: Dimension.d4),
                   if (store.selectedIndex != -1)
                     Observer(

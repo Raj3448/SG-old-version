@@ -101,10 +101,6 @@ class UserProfile extends StatelessWidget {
                             height: Dimension.d6,
                           ),
                           ProfileNav(
-                            title: 'Wallet',
-                            onTap: () {},
-                          ),
-                          ProfileNav(
                             title: 'SG+ subscription',
                             onTap: () {
                               context.pushNamed(

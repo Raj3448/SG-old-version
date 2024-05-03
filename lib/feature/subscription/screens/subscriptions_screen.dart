@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
@@ -77,7 +79,9 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
             padding: const EdgeInsets.symmetric(
                 vertical: Dimension.d3, horizontal: Dimension.d5),
             child: CustomButton(
-              ontap: () {},
+              ontap: () {
+                context.pushNamed(RoutesConstants.SGSubcscriptionPage);
+              },
               title: 'Buy new subscription',
               showIcon: false,
               iconPath: AppIcons.add,
@@ -192,5 +196,3 @@ class _UserDetailsComponent extends StatelessWidget {
     );
   }
 }
-
-
