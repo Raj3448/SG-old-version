@@ -27,6 +27,7 @@ class _BookingsScreenState extends State<BookingsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const Appbar(),
+        backgroundColor: AppColors.white,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
@@ -69,7 +70,6 @@ class BookingsStateComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      
       child: Column(
         children: List.generate(6, (index) => const BookingListTileComponent()),
       ),
