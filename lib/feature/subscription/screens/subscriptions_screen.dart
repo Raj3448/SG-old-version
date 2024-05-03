@@ -35,6 +35,7 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PageAppbar(title: 'Subscriptions'),
+      backgroundColor: AppColors.white,
       body: Column(
         children: [
           Expanded(

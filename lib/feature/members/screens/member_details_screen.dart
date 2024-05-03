@@ -103,8 +103,7 @@ class MemberDetailsScreen extends StatelessWidget {
                       isEpr: true,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        GoRouter.of(context)
-                            .push(RoutesConstants.eprPhrPdfViewPage);
+                        GoRouter.of(context).push(RoutesConstants.eprPhrRoute);
                       },
                     ),
                     const SizedBox(height: 16),

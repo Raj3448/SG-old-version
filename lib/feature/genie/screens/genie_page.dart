@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -7,26 +8,23 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/dummy_variables.dart';
 
 class GeniePage extends StatelessWidget {
+  const GeniePage({
+    required this.pageTitle,
+    required this.definition,
+    required this.headline,
+    super.key,
+  });
   final String pageTitle;
 
-  final String defination;
+  final String definition;
 
   final String headline;
 
-  const GeniePage(
-      {required this.pageTitle,
-      required this.defination,
-      required this.headline,
-      Key? key})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    
-
-
     return Scaffold(
       appBar: PageAppbar(title: pageTitle),
+      backgroundColor: AppColors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
         child: SingleChildScrollView(
@@ -36,7 +34,7 @@ class GeniePage extends StatelessWidget {
               GenieOverviewComponent(
                 title: pageTitle,
                 headline: headline,
-                defination: defination,
+                defination: definition,
               ),
               ServiceProvideComponent(
                 serviceDetailsList: servicesList,
@@ -59,7 +57,7 @@ class GeniePage extends StatelessWidget {
               ExploreNowComponent(),
               HowItWorkComponent(
                 questionsAndContentList: questionAndAnswerList,
-              )
+              ),
             ],
           ),
         ),

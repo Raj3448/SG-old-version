@@ -59,16 +59,13 @@ class MemberCard extends StatelessWidget {
               ],
             ),
             if (hasCareSub)
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const SubscriptionPkg(
-                      expanded: false,
-                      type: SubscriptionType.wellness,
-                    ),
+                  SizedBox(height: 8),
+                  SubscriptionPkg(
+                    expanded: false,
+                    type: SubscriptionType.wellness,
                   ),
                 ],
               ),
