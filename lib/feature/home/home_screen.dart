@@ -34,212 +34,243 @@ class HomeScreen extends StatelessWidget {
       appBar: const Appbar(),
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(Dimension.d4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Observer(
-                builder: (_) {
-                  return Column(
-                    children: [
-                      if (store.familyMembers.isEmpty)
-                        const NoMember()
-                      else
-                        const _MemberInfo(),
-                    ],
-                  );
-                },
-              ),
-              _EmergencyActivation(),
-              _ActiveBookingComponent(),
-              Text(
-                'Book services',
-                style: AppTextStyle.bodyXLSemiBold
-                    .copyWith(color: AppColors.grayscale900, height: 2.6),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BookServiceButton(
-                    iconImagePath: 'assets/icon/volunteer_activism.png',
-                    buttonName: 'Health Care',
-                    onTap: () {
-                      context.pushNamed(RoutesConstants.servicesCareScreen,
-                          pathParameters: {'pageTitle': 'Health Care Service'});
+                  Observer(
+                    builder: (_) {
+                      return Column(
+                        children: [
+                          if (store.familyMembers.isEmpty)
+                            const NoMember()
+                          else
+                            const _MemberInfo(),
+                        ],
+                      );
                     },
                   ),
-                  BookServiceButton(
-                    iconImagePath: 'assets/icon/home_health.png',
-                    buttonName: 'Home Care',
-                    onTap: () {
-                      context.pushNamed(RoutesConstants.servicesCareScreen,
-                          pathParameters: {'pageTitle': 'Home Care Service'});
-                    },
+                  _EmergencyActivation(),
+                  _ActiveBookingComponent(),
+                  Text(
+                    'Book services',
+                    style: AppTextStyle.bodyXLSemiBold
+                        .copyWith(color: AppColors.grayscale900, height: 2.6),
                   ),
-                  BookServiceButton(
-                    iconImagePath: 'assets/icon/prescriptions.png',
-                    buttonName: 'Convenience',
-                    onTap: () {},
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BookServiceButton(
+                        iconImagePath: 'assets/icon/volunteer_activism.png',
+                        buttonName: 'Health Care',
+                        onTap: () {
+                          context.pushNamed(RoutesConstants.servicesCareScreen,
+                              pathParameters: {
+                                'pageTitle': 'Health Care Service'
+                              });
+                        },
+                      ),
+                      BookServiceButton(
+                        iconImagePath: 'assets/icon/home_health.png',
+                        buttonName: 'Home Care',
+                        onTap: () {
+                          context.pushNamed(RoutesConstants.servicesCareScreen,
+                              pathParameters: {
+                                'pageTitle': 'Home Care Service'
+                              });
+                        },
+                      ),
+                      BookServiceButton(
+                        iconImagePath: 'assets/icon/prescriptions.png',
+                        buttonName: 'Convenience',
+                        onTap: () {},
+                      ),
+                      BookServiceButton(
+                        iconImagePath: 'assets/icon/ambulance.png',
+                        buttonName: 'Emergency',
+                        onTap: () {
+                          context.pushNamed(RoutesConstants.geniePage,
+                              pathParameters: {
+                                'pageTitle': 'Emergency Genie',
+                                'defination':
+                                    'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                                'headline':
+                                    'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
+                              });
+                        },
+                      ),
+                    ],
                   ),
-                  BookServiceButton(
-                    iconImagePath: 'assets/icon/ambulance.png',
-                    buttonName: 'Emergency',
-                    onTap: () {
-                      context.pushNamed(RoutesConstants.geniePage,
-                          pathParameters: {
-                            'pageTitle': 'Emergency Genie',
-                            'defination':
-                                'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
-                            'headline':
-                                'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
-                          });
-                    },
+                  Text(
+                    'About Us',
+                    style: AppTextStyle.bodyXLSemiBold
+                        .copyWith(color: AppColors.grayscale900, height: 2.6),
+                  ),
+                  Text(
+                    'SilverGenie: Your trusted senior healthcare platform. We empower seniors for independent living, leveraging technology for real-time monitoring and improved health outcomes.',
+                    style: AppTextStyle.bodyLargeMedium.copyWith(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      height: 1.5,
+                      color: AppColors.grayscale700,
+                    ),
+                  ),
+                  Text(
+                    'What we offer',
+                    style: AppTextStyle.bodyXLSemiBold.copyWith(
+                      color: AppColors.grayscale900,
+                      height: 2.4,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimension.d1,
+                  ),
+                  SizedBox(
+                    height: 240,
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.only(right: 200),
+                      controller: _offerPageController,
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(
+                        4,
+                        (index) => const _HomeScreenOfferCard(
+                          offerTitle: 'SG Workforce',
+                          content1: 'Trained critical care nursing staff',
+                          content2:
+                              'Trained nursing staff or attendants for senior citizens',
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  Center(
+                    child: SmoothPageIndicator(
+                      controller: _offerPageController,
+                      count: 4,
+                      effect: const ExpandingDotsEffect(
+                        activeDotColor: AppColors.primary,
+                        dotColor: AppColors.grayscale300,
+                        dotHeight: 8,
+                        dotWidth: 8,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimension.d3),
+                    child: CustomButton(
+                      ontap: () {},
+                      title: 'Know More',
+                      showIcon: false,
+                      iconColor: AppColors.error,
+                      iconPath: Icons.not_interested,
+                      size: ButtonSize.normal,
+                      type: ButtonType.secondary,
+                      expanded: true,
+                    ),
+                  ),
+                  Text(
+                    'Testimonials',
+                    style: AppTextStyle.bodyXLSemiBold.copyWith(
+                      color: AppColors.grayscale900,
+                      height: 2.6,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),
-              Text(
-                'About Us',
-                style: AppTextStyle.bodyXLSemiBold
-                    .copyWith(color: AppColors.grayscale900, height: 2.6),
-              ),
-              Text(
-                'SilverGenie: Your trusted senior healthcare platform. We empower seniors for independent living, leveraging technology for real-time monitoring and improved health outcomes.',
-                style: AppTextStyle.bodyLargeMedium.copyWith(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  height: 1.5,
-                  color: AppColors.grayscale700,
-                ),
-              ),
-              Text(
-                'What we offer',
-                style: AppTextStyle.bodyXLSemiBold.copyWith(
-                  color: AppColors.grayscale900,
-                  height: 2.4,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(
-                height: Dimension.d1,
-              ),
-              SizedBox(
-                height: 240,
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.only(right: 200),
-                  controller: _offerPageController,
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(
-                    4,
-                    (index) => const _HomeScreenOfferCard(
-                      offerTitle: 'SG Workforce',
-                      content1: 'Trained critical care nursing staff',
-                      content2:
-                          'Trained nursing staff or attendants for senior citizens',
+            ),
+            Container(
+              color: AppColors.secondary,
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 132,
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.only(right: 200),
+                      controller: _testimonialsCardController,
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(3, (index) => _TestmonialsCard()),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              Center(
-                child: SmoothPageIndicator(
-                  controller: _offerPageController,
-                  count: 4,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColors.primary,
-                    dotColor: AppColors.grayscale300,
-                    dotHeight: 8,
-                    dotWidth: 8,
+                  const SizedBox(
+                    height: Dimension.d3,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: Dimension.d3),
-                child: CustomButton(
-                  ontap: () {},
-                  title: 'Know More',
-                  showIcon: false,
-                  iconPath: Icons.not_interested,
-                  size: ButtonSize.normal,
-                  type: ButtonType.secondary,
-                  expanded: true,
-                  iconColor: AppColors.white,
-                ),
-              ),
-              Text(
-                'Testimonials',
-                style: AppTextStyle.bodyXLSemiBold.copyWith(
-                  color: AppColors.grayscale900,
-                  height: 2.6,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(
-                height: 132,
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.only(right: 200),
-                  controller: _testimonialsCardController,
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(3, (index) => _TestmonialsCard()),
-                ),
-              ),
-              const SizedBox(
-                height: Dimension.d3,
-              ),
-              Center(
-                child: SmoothPageIndicator(
-                  controller: _testimonialsCardController,
-                  count: 3,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColors.primary,
-                    dotColor: AppColors.grayscale300,
-                    dotHeight: 8,
-                    dotWidth: 8,
+                  Center(
+                    child: SmoothPageIndicator(
+                      controller: _testimonialsCardController,
+                      count: 3,
+                      effect: const ExpandingDotsEffect(
+                        activeDotColor: AppColors.primary,
+                        dotColor: AppColors.grayscale300,
+                        dotHeight: 8,
+                        dotWidth: 8,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      'Newsletter',
+                      textAlign: TextAlign.left,
+                      style: AppTextStyle.bodyXLSemiBold.copyWith(
+                        color: AppColors.grayscale900,
+                        height: 1,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                'Newsletter',
-                style: AppTextStyle.bodyXLSemiBold.copyWith(
-                  color: AppColors.grayscale900,
-                  height: 2.6,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                ),
+            ),
+            const SizedBox(
+              height: Dimension.d3,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
+              child: Column(
+                children: [
+                  Text(
+                    'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
+                    style: AppTextStyle.bodyLargeMedium.copyWith(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      height: 1.4,
+                      color: AppColors.grayscale700,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  CustomButton(
+                    ontap: () {},
+                    iconColor: AppColors.error,
+                    title: 'Subscribe',
+                    showIcon: false,
+                    iconPath: AppIcons.add,
+                    size: ButtonSize.normal,
+                    type: ButtonType.secondary,
+                    expanded: true,
+                  ),
+                  const SizedBox(
+                    height: Dimension.d10,
+                  ),
+                ],
               ),
-              Text(
-                'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
-                style: AppTextStyle.bodyLargeMedium.copyWith(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  height: 1.4,
-                  color: AppColors.grayscale700,
-                ),
-              ),
-              const SizedBox(
-                height: Dimension.d4,
-              ),
-              CustomButton(
-                ontap: () {},
-                title: 'Subscribe',
-                showIcon: false,
-                iconPath: AppIcons.add,
-                size: ButtonSize.normal,
-                type: ButtonType.secondary,
-                expanded: true,
-                iconColor: AppColors.white,
-              ),
-              const SizedBox(
-                height: Dimension.d10,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -258,7 +289,9 @@ class _ActiveBookingComponent extends StatelessWidget {
                   'Active bookings',
                   style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
                 )
-              : const BookingListTileComponent()),
+              : const BookingListTileComponent(
+                  bookingServiceStatus: BookingServiceStatus.active,
+                )),
     );
   }
 }
@@ -270,8 +303,9 @@ class _TestmonialsCard extends StatelessWidget {
       height: 132,
       margin: const EdgeInsets.only(left: Dimension.d2),
       padding: const EdgeInsets.all(Dimension.d2),
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(Dimension.d2)),
+      decoration: BoxDecoration(
+          color: AppColors.grayscale100,
+          borderRadius: BorderRadius.circular(Dimension.d2)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,

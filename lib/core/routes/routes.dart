@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
@@ -184,16 +185,15 @@ final GoRouter routes = GoRouter(
       path: '/geniePage/:pageTitle/:definition/:headline',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
-        final pageTitle = state.pathParameters['pageTitle'] ?? '';
-        final definition = state.pathParameters['definition'] ?? '';
-        final headline = state.pathParameters['headline'] ?? '';
+        final String pageTitle = state.pathParameters['pageTitle'] ?? '';
+        final String defination = state.pathParameters['defination'] ?? '';
+        final String headline = state.pathParameters['headline'] ?? '';
         return MaterialPage(
-          child: GeniePage(
-            pageTitle: pageTitle,
-            definition: definition,
-            headline: headline,
-          ),
-        );
+            child: GeniePage(
+          pageTitle: pageTitle,
+          
+          headline: headline, definition: defination,
+        ));
       },
     ),
     GoRoute(
@@ -241,10 +241,15 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/bookingServiceStatusDetailsPage',
+      path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus',
       name: RoutesConstants.bookingServiceStatusDetailsPage,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: BookingSeviceStatusPage());
+        final bookingServiceStatusString = state.pathParameters['bookingServiceStatus'];
+        BookingServiceStatus bookingServiceStatus = BookingServiceStatus.values.firstWhere((e) => e.toString() == bookingServiceStatusString);
+        return MaterialPage(
+            child: BookingSeviceStatusPage(
+          bookingServiceStatus: bookingServiceStatus,
+        ));
       },
     ),
     GoRoute(

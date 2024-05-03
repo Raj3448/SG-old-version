@@ -222,59 +222,58 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
   bool _isExpand = false;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isExpand = !_isExpand;
-        });
-      },
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                widget.title,
-                style: AppTextStyle.bodyLargeMedium.copyWith(
-                  height: 2.4,
-                  color: AppColors.grayscale900,
-                  fontWeight: FontWeight.w500,
-                ),
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              widget.title,
+              style: AppTextStyle.bodyLargeMedium.copyWith(
+                height: 2.4,
+                color: AppColors.grayscale900,
+                fontWeight: FontWeight.w500,
               ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(right: Dimension.d2),
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: Dimension.d5),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isExpand = !_isExpand;
+                  });
+                },
                 child: Icon(
                   _isExpand ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
                   size: 8,
                   color: AppColors.grayscale900,
                 ),
               ),
-            ],
-          ),
-          if (_isExpand)
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.grayscale300),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Column(
-                children: List.generate(
-                  2,
-                  (index) => _InsuranceDetailsComponent(
-                    insuranceName:
-                        '${index + 1}. Aditya Birla Health insurance',
-                    policyNo: 'Aabc@wer.com',
-                    contactPerson: '9983457601',
-                    contactAmbulance: 'N/A',
-                    contactAddress:
-                        'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
-                  ),
+            ),
+          ],
+        ),
+        if (_isExpand)
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.grayscale300),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Column(
+              children: List.generate(
+                2,
+                (index) => _InsuranceDetailsComponent(
+                  insuranceName: '${index + 1}. Aditya Birla Health insurance',
+                  policyNo: 'Aabc@wer.com',
+                  contactPerson: '9983457601',
+                  contactAmbulance: 'N/A',
+                  contactAddress:
+                      'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
                 ),
               ),
             ),
-          if (!_isExpand) const Divider(),
-        ],
-      ),
+          ),
+        if (!_isExpand) const Divider(),
+      ],
     );
   }
 }

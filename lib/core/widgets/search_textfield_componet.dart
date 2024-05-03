@@ -19,8 +19,8 @@ class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
       height: 52,
       child: TextFormField(
         focusNode: _searchFocusNode,
-        style:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            color: AppColors.grayscale900, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           prefixIcon: Image.asset(
             'assets/icon/Icon - Search.png',

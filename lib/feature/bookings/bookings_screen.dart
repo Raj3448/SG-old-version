@@ -54,7 +54,7 @@ class _BookingsScreenState extends State<BookingsScreen>
                 child: TabBarView(
                   controller: controller,
                   children: List.generate(
-                      3, (index) => const BookingsStateComponent()),
+                      3, (index) => BookingsStateComponent( bookingServiceStatus: index==0?BookingServiceStatus.requested:index==1?BookingServiceStatus.active:BookingServiceStatus.completed,)),
                 ),
               ),
             ],
@@ -64,14 +64,19 @@ class _BookingsScreenState extends State<BookingsScreen>
 }
 
 class BookingsStateComponent extends StatelessWidget {
-  const BookingsStateComponent({super.key});
+  final BookingServiceStatus bookingServiceStatus;
+  const BookingsStateComponent({required this.bookingServiceStatus, super.key});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
-        children: List.generate(6, (index) => const BookingListTileComponent()),
+        children: List.generate(
+            6,
+            (index) => BookingListTileComponent(
+                  bookingServiceStatus: bookingServiceStatus,
+                )),
       ),
     );
   }
