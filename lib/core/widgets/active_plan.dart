@@ -241,7 +241,9 @@ class ActivePlanComponent extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: onTap,
+                    ontap: () {
+                      context.pushNamed(RoutesConstants.eprPhrPdfViewPage);
+                    },
                     title: 'View PHR',
                     showIcon: false,
                     iconPath: Icons.not_interested,
@@ -272,11 +274,24 @@ class ActivePlanComponent extends StatelessWidget {
               'Upgrade to Companion genie to benefit more',
               style: AppTextStyle.bodySmallMedium,
             ),
-            const SizedBox(height: Dimension.d3),
-            const SubscriptionPkg(
-              expanded: true,
-              type: SubscriptionType.companion,
+            const SizedBox(
+              height: Dimension.d2,
             ),
+            GestureDetector(
+              onTap: () {
+                context.pushNamed(RoutesConstants.geniePage, pathParameters: {
+                  'pageTitle': 'Wellness Genie',
+                  'defination':
+                      'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                  'headline':
+                      'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
+                });
+              },
+              child: const SubscriptionPkg(
+                expanded: true,
+                type: SubscriptionType.wellness,
+              ),
+            )
           ],
         ),
       ),

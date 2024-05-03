@@ -20,38 +20,40 @@ class CouplePlanPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PlanPricingDetailsComponent(planName: pageTitle),
-            Text(
-              '1. Select family member',
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale700, height: 2),
-            ),
-            const CustomDropDownBox(
-              memberList: ['', ''],
-            ),
-            Text(
-              '2. Select another family member',
-              style: AppTextStyle.bodyMediumMedium
-                  .copyWith(color: AppColors.grayscale700, height: 2),
-            ),
-            const CustomDropDownBox(
-              memberList: ['', ''],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
-              child: CustomButton(
-                  ontap: () {},
-                  title: 'Book care',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: ButtonType.disable,
-                  expanded: true),
-            )
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PlanPricingDetailsComponent(planName: pageTitle),
+              Text(
+                '1. Select family member',
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(color: AppColors.grayscale700, height: 2),
+              ),
+              const CustomDropDownBox(
+                memberList: ['', ''],
+              ),
+              Text(
+                '2. Select another family member',
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(color: AppColors.grayscale700, height: 2),
+              ),
+              const CustomDropDownBox(
+                memberList: ['', ''],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
+                child: CustomButton(
+                    ontap: () {},
+                    title: 'Book care',
+                    showIcon: false,
+                    iconPath: AppIcons.add,
+                    size: ButtonSize.normal,
+                    type: ButtonType.disable,
+                    expanded: true),
+              )
+            ],
+          ),
         ),
       ),
     );

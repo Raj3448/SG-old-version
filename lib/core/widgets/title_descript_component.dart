@@ -15,7 +15,9 @@ class TitleDescriptComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(bottom: Dimension.d2),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.grayscale400),
         color: AppColors.grayscale300,

@@ -37,55 +37,47 @@ class NotificationScreen extends StatelessWidget {
                             color: AppColors.primary,
                           ),
                         ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          child: ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: store.notifications!
-                                .fold((l) => null, (r) => r.length),
-                            itemBuilder: (context, index) {
-                              if (index == 3) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Earlier',
-                                      style: AppTextStyle.bodyMediumMedium
-                                          .copyWith(
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.primary,
-                                      ),
-                                    ),
-                                    NotificationComponent(
-                                      notificationModel:
-                                          store.notifications!.fold(
+                        Column(
+                          children: List.generate(
+                              store.notifications!.fold(
+                                  (l) => null!, (r) => r.length), (index) {
+                            if (index == 3) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Earlier',
+                                    style: AppTextStyle.bodyMediumMedium
+                                        .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.primary),
+                                  ),
+                                  NotificationComponent(
+                                      notificationModel: store.notifications!
+                                          .fold(
                                               (l) => NotificationModel(
-                                                    title: '',
-                                                    description: '',
-                                                    datetime: DateTime.now(),
-                                                  ), (r) {
-                                        return r[index];
-                                      }),
-                                    ),
-                                  ],
-                                );
-                              }
-                              return NotificationComponent(
+                                                  title: '',
+                                                  description: '',
+                                                  datetime: DateTime.now()),
+                                              (r) {
+                                    return r[index];
+                                  }))
+                                ],
+                              );
+                            }
+                            return NotificationComponent(
                                 notificationModel: store.notifications!.fold(
                                     (l) => NotificationModel(
-                                          title: '',
-                                          description: '',
-                                          datetime: DateTime.now(),
-                                        ), (r) {
-                                  return r[index];
-                                }),
-                              );
-                            },
-                          ),
+                                        title: '',
+                                        description: '',
+                                        datetime: DateTime.now()), (r) {
+                              return r[index];
+                            }));
+                          }),
                         ),
                         const SizedBox(
-                          height: Dimension.d20,
-                        ),
+                          height: Dimension.d3,
+                        )
                       ],
                     ),
                   ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/initialize_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -17,7 +18,7 @@ class BookingSeviceStatusPage extends StatelessWidget {
       appBar: const PageAppbar(title: 'Booking Details'),
       backgroundColor: AppColors.white,
       body: Padding(
-        padding: const EdgeInsets.all(Dimension.d4),
+        padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,15 +51,25 @@ class BookingSeviceStatusPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Booking Status',
-                      style: AppTextStyle.bodyMediumMedium,
-                    ),
-                    Text(
-                      'Payment Pending',
-                      style: AppTextStyle.bodyMediumBold
-                          .copyWith(color: AppColors.warning2),
-                    ),
+                    const Text('Booking Status',
+                        style: AppTextStyle.bodyMediumMedium),
+                    Row(
+                      children: [
+                        const Icon(
+                          AppIcons.check,
+                          size: 10,
+                          color: AppColors.grayscale800,
+                        ),
+                        const SizedBox(
+                          width: Dimension.d2,
+                        ),
+                        Text(
+                          'Service Completed',
+                          style: AppTextStyle.bodyMediumBold
+                              .copyWith(color: AppColors.grayscale800),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
