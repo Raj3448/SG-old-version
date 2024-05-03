@@ -63,12 +63,13 @@ class _BookingsScreenState extends State<BookingsScreen>
 }
 
 class BookingsStateComponent extends StatelessWidget {
-  const BookingsStateComponent({Key? key}) : super(key: key);
+  const BookingsStateComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
+      
       child: Column(
         children: List.generate(6, (index) => const BookingListTileComponent()),
       ),

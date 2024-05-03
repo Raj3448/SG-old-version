@@ -1,25 +1,28 @@
 //import 'dart:convert';
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/core/failure/failure.dart';
-import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
 
-class UserDetailServices implements IUserFacades{
+class UserDetailServices implements IUserFacades {
   UserDetailServices();
 
   UserDetails _userDetails = UserDetails(
-      fullname: 'Varun Nair',
-      gender: 'Male',
-      dateBirth: '16-02-2002',
-      mobileNum: "+91 1234567890",
-      emailId: 'example@gmail.com',
-      address:
-          'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
-      country: 'India',
-      state: 'Maharashtra',
-      city: 'Pune',
-      postalCode: 411041);
+    fullname: 'Varun Nair',
+    gender: 'Male',
+    dateBirth: '16-02-2002',
+    mobileNum: '+91 1234567890',
+    emailId: 'example@gmail.com',
+    address:
+        'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
+    country: 'India',
+    state: 'Maharashtra',
+    city: 'Pune',
+    postalCode: 411041,
+  );
 
   @override
   Future<Either<Failure, UserDetails>> fetchUserDetailsFromApi() async {
@@ -42,9 +45,11 @@ class UserDetailServices implements IUserFacades{
       return const Left(Failure.someThingWentWrong());
     }
   }
-  
+
   @override
-  Future<Either<Failure, UserDetails>> updateUserDetails({@required UserDetails? userDetails}) async{
+  Future<Either<Failure, UserDetails>> updateUserDetails({
+    @required UserDetails? userDetails,
+  }) async {
     try {
       // final response = await HttpClient().post<String>('/UserDetails/id',
       //     data: jsonEncode(userDetails.toJson()));

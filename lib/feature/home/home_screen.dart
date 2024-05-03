@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
@@ -19,6 +19,7 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
+import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -28,15 +29,28 @@ class HomeScreen extends StatelessWidget {
   final PageController _testimonialsCardController = PageController();
   @override
   Widget build(BuildContext context) {
+    final store = GetIt.I<HomeStore>();
     return Scaffold(
       appBar: const Appbar(),
+      backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Dimension.d4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _MemberInfo(),
+              Observer(
+                builder: (_) {
+                  return Column(
+                    children: [
+                      if (store.familyMembers.isEmpty)
+                        const NoMember()
+                      else
+                        const _MemberInfo(),
+                    ],
+                  );
+                },
+              ),
               _EmergencyActivation(),
               _ActiveBookingComponent(),
               Text(
@@ -91,10 +105,11 @@ class HomeScreen extends StatelessWidget {
               Text(
                 'SilverGenie: Your trusted senior healthcare platform. We empower seniors for independent living, leveraging technology for real-time monitoring and improved health outcomes.',
                 style: AppTextStyle.bodyLargeMedium.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    height: 1.5,
-                    color: AppColors.grayscale700),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  height: 1.5,
+                  color: AppColors.grayscale700,
+                ),
               ),
               Text(
                 'What we offer',
@@ -295,12 +310,15 @@ class _EmergencyActivation extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: Dimension.d2),
       padding: const EdgeInsets.symmetric(
-          horizontal: Dimension.d2, vertical: Dimension.d3),
+        horizontal: Dimension.d2,
+        vertical: Dimension.d3,
+      ),
       height: 170,
       width: double.infinity,
       decoration: BoxDecoration(
-          border: Border.all(width: 1, color: AppColors.grayscale300),
-          borderRadius: BorderRadius.circular(Dimension.d2)),
+        border: Border.all(color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(Dimension.d2),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,7 +326,9 @@ class _EmergencyActivation extends StatelessWidget {
           Text(
             'Emergency',
             style: AppTextStyle.bodyXLMedium.copyWith(
-                fontWeight: FontWeight.w500, color: AppColors.grayscale900),
+              fontWeight: FontWeight.w500,
+              color: AppColors.grayscale900,
+            ),
           ),
           Text(
             'When the button is pressed, all emergency services will be activated.',
@@ -320,13 +340,16 @@ class _EmergencyActivation extends StatelessWidget {
             child: CustomButton(
               ontap: () {
                 showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return _EmergencyActivateBottomSheet();
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(Dimension.d3)),
-                    constraints: const BoxConstraints(maxHeight: 320));
+                  context: context,
+                  builder: (context) {
+                    return _EmergencyActivateBottomSheet();
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Dimension.d3),
+                  ),
+                  constraints: const BoxConstraints(maxHeight: 320),
+                  backgroundColor: AppColors.white,
+                );
               },
               title: 'Activate Emergency',
               showIcon: false,
@@ -355,7 +378,9 @@ class _EmergencyActivateBottomSheetState
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-          horizontal: Dimension.d4, vertical: Dimension.d3),
+        horizontal: Dimension.d4,
+        vertical: Dimension.d3,
+      ),
       child: isActivate
           ? const BackToHomeComponent(
               title: 'Emergency Alert Activated',
@@ -368,22 +393,24 @@ class _EmergencyActivateBottomSheetState
                     Text(
                       'Emergency',
                       style: AppTextStyle.bodyXLSemiBold.copyWith(
-                          fontSize: 20,
-                          color: AppColors.grayscale900,
-                          fontWeight: FontWeight.w600),
+                        fontSize: 20,
+                        color: AppColors.grayscale900,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const Spacer(),
                     TextButton(
                       child: Text(
                         'Cancel',
                         style: AppTextStyle.bodyMediumMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary),
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                    )
+                    ),
                   ],
                 ),
                 Text(
@@ -408,7 +435,7 @@ class _EmergencyActivateBottomSheetState
                       isActivate = true;
                     });
                   },
-                )
+                ),
               ],
             ),
     );
@@ -418,16 +445,16 @@ class _EmergencyActivateBottomSheetState
 class _ActivateListileComponent extends StatelessWidget {
   final VoidCallback onPressed;
   const _ActivateListileComponent({
-    Key? key,
     required this.onPressed,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: Dimension.d2),
       decoration: BoxDecoration(
-          border: Border.all(width: 1, color: AppColors.grayscale300),
-          borderRadius: BorderRadius.circular(Dimension.d2)),
+        border: Border.all(color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(Dimension.d2),
+      ),
       padding: const EdgeInsets.all(Dimension.d3),
       child: Row(
         children: [
@@ -452,7 +479,7 @@ class _ActivateListileComponent extends StatelessWidget {
                 'Mother',
                 style: AppTextStyle.bodyMediumMedium
                     .copyWith(color: AppColors.grayscale700),
-              )
+              ),
             ],
           ),
           const Spacer(),

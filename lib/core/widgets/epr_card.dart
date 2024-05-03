@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
 class HealthCard extends StatelessWidget {
@@ -20,7 +21,7 @@ class HealthCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.secondary,
+        color: AppColors.grayscale100,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: AppColors.line),
       ),
@@ -59,7 +60,7 @@ class HealthCard extends StatelessWidget {
             ontap: ontap,
             title: isEpr ? 'View EPR' : 'View PHR',
             showIcon: true,
-            iconPath: Icons.remove_red_eye_outlined,
+            iconPath: AppIcons.visibility_on,
             size: ButtonSize.small,
             type: ButtonType.secondary,
             expanded: false,

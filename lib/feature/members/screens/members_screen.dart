@@ -26,6 +26,7 @@ class _MembersScreenState extends State<MembersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Appbar(),
+      backgroundColor: AppColors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
@@ -65,7 +66,7 @@ class _MembersScreenState extends State<MembersScreen> {
                             itemCount: members.length,
                             itemBuilder: (context, index) {
                               final member = members[index];
-                              return GestureDetector(
+                              return MemberCard(
                                 onTap: () {
                                   final hasCareSub =
                                       member.hasCareSub ? 'true' : 'false';
@@ -83,11 +84,9 @@ class _MembersScreenState extends State<MembersScreen> {
                                     },
                                   );
                                 },
-                                child: MemberCard(
-                                  name: member.name,
-                                  relation: member.relation,
-                                  hasCareSub: member.hasCareSub,
-                                ),
+                                name: member.name,
+                                relation: member.relation,
+                                hasCareSub: member.hasCareSub,
                               );
                             },
                             separatorBuilder: (context, index) {

@@ -9,10 +9,12 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/epr_card.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
@@ -53,7 +55,7 @@ class MemberDetailsScreen extends StatelessWidget {
                       desc:
                           'In order to update the Health record\nof a family member, please contact\nSilvergenie',
                       btnTitle: 'Contact Genie',
-                      showBtnIcon: true,
+                      showBtnIcon: false,
                       btnIconPath: AppIcons.phone,
                     );
                   },
@@ -101,7 +103,8 @@ class MemberDetailsScreen extends StatelessWidget {
                       isEpr: true,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        GoRouter.of(context).push(RoutesConstants.eprPhrPdfViewPage);
+                        GoRouter.of(context)
+                            .push(RoutesConstants.eprPhrPdfViewPage);
                       },
                     ),
                     const SizedBox(height: 16),
@@ -109,19 +112,41 @@ class MemberDetailsScreen extends StatelessWidget {
                       isEpr: false,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        GoRouter.of(context).push(RoutesConstants.eprPhrPdfViewPage);
+                        GoRouter.of(context)
+                            .push(RoutesConstants.eprPhrPdfViewPage);
                       },
                     ),
                     const SizedBox(height: Dimension.d17),
                   ],
                 )
               else
-                const Column(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SubscribeCard(),
-                    SizedBox(height: 16),
-                    PlanDetailsCard(),
-                    SizedBox(height: 16),
+                    const SubscribeCard(),
+                    const SizedBox(height: Dimension.d8),
+                    Text(
+                      'Signup for care packages',
+                      style: AppTextStyle.bodyXLBold
+                          .copyWith(color: AppColors.grayscale900),
+                    ),
+                    const SizedBox(height: Dimension.d6),
+                    const SubscriptionPkg(
+                      expanded: true,
+                      type: SubscriptionType.companion,
+                    ),
+                    const SizedBox(height: Dimension.d3),
+                    const SubscriptionPkg(
+                      expanded: true,
+                      type: SubscriptionType.wellness,
+                    ),
+                    const SizedBox(height: Dimension.d3),
+                    const SubscriptionPkg(
+                      expanded: true,
+                      type: SubscriptionType.emergency,
+                    ),
+                    const SizedBox(height: Dimension.d3),
+                    const SizedBox(height: 16),
                   ],
                 ),
             ],
@@ -162,112 +187,97 @@ class _BasicDetailsBox extends StatelessWidget {
             children: [
               Avatar.fromSize(imgPath: 'imgPath', size: AvatarSize.size32),
               const SizedBox(width: 8),
-              Text(name, style: AppTextStyle.bodyLargeMedium),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  GoRouter.of(context).pushNamed(
-                    RoutesConstants.addEditFamilyMemberRoute,
-                    pathParameters: {'edit': 'true'},
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: AppColors.primary),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: AppTextStyle.bodyLargeMedium),
+                  const SizedBox(height: Dimension.d2),
+                  Row(
+                    children: [
+                      Text(
+                        'Age: $age',
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.grayscale600),
+                      ),
+                      const SizedBox(width: Dimension.d2),
+                      Text(
+                        'Relationship: $relation',
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.grayscale600),
+                      ),
+                    ],
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
-                  child: Text(
-                    'Edit'.tr(),
-                    style: AppTextStyle.bodyMediumMedium
-                        .copyWith(color: AppColors.primary),
-                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Text(
+                'Subscription: ',
+                style: AppTextStyle.bodyLargeMedium
+                    .copyWith(color: AppColors.grayscale700),
+              ),
+              const SizedBox(width: Dimension.d2),
+              const SubscriptionPkg(
+                expanded: false,
+                type: SubscriptionType.wellness,
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.d3),
+          Row(
+            children: [
+              const Icon(
+                AppIcons.phone,
+                color: AppColors.grayscale700,
+                size: 17,
+              ),
+              const SizedBox(width: Dimension.d3),
+              Text(
+                mobileNo,
+                style: AppTextStyle.bodyLargeMedium
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.d3),
+          Row(
+            children: [
+              const Icon(
+                AppIcons.home,
+                color: AppColors.grayscale700,
+                size: 17,
+              ),
+              const SizedBox(width: Dimension.d3),
+              SizedBox(
+                width: 300,
+                child: Text(
+                  address,
+                  style: AppTextStyle.bodyLargeMedium
+                      .copyWith(color: AppColors.grayscale900),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _Field(
-            age: age,
-            gender: gender,
-            relation: relation,
-            mobileNo: mobileNo,
-            address: address,
+          const SizedBox(height: Dimension.d3),
+          CustomButton(
+            ontap: () {
+              GoRouter.of(context).pushNamed(
+                RoutesConstants.addEditFamilyMemberRoute,
+                pathParameters: {'edit': 'true'},
+              );
+            },
+            title: 'Edit',
+            showIcon: false,
+            iconPath: AppIcons.add,
+            size: ButtonSize.small,
+            type: ButtonType.secondary,
+            expanded: true,
           ),
         ],
       ),
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  const _Field({
-    required this.age,
-    required this.gender,
-    required this.relation,
-    required this.mobileNo,
-    required this.address,
-  });
-
-  final String age;
-  final String gender;
-  final String relation;
-  final String mobileNo;
-  final String address;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _InitializeComponent(name: 'Age'.tr(), initializeElement: age),
-        _InitializeComponent(name: 'Gender'.tr(), initializeElement: gender),
-        _InitializeComponent(
-            name: 'Relationship'.tr(), initializeElement: relation),
-        _InitializeComponent(
-            name: 'Mobile number'.tr(), initializeElement: mobileNo),
-        _InitializeComponent(name: 'Address'.tr(), initializeElement: address),
-      ],
-    );
-  }
-}
-
-class _InitializeComponent extends StatelessWidget {
-  _InitializeComponent(
-      {required this.name, required this.initializeElement, super.key});
-
-  final String name;
-  final String initializeElement;
-  final textStyle = AppTextStyle.bodyMediumMedium
-      .copyWith(color: AppColors.grayscale600, height: 2);
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-            child: Text(
-          name,
-          style: textStyle,
-        )),
-        Expanded(
-            child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              ': ',
-              style: textStyle,
-            ),
-            Expanded(
-              child: Text(
-                initializeElement,
-                style: textStyle,
-              ),
-            )
-          ],
-        )),
-      ],
     );
   }
 }

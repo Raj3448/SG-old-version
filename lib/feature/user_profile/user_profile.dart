@@ -1,4 +1,4 @@
-// ignore_for_file: inference_failure_on_instance_creation
+// ignore_for_file: inference_failure_on_instance_creation, inference_failure_on_function_invocation, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -18,7 +18,7 @@ import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class UserProfile extends StatelessWidget {
-  UserProfile({super.key});
+  const UserProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,26 +27,27 @@ class UserProfile extends StatelessWidget {
     return Observer(
       builder: (context) {
         return Scaffold(
-            backgroundColor: AppColors.white,
-            appBar: const PageAppbar(title: 'User Profile'),
-            body: store.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(Dimension.d4),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(Dimension.d1),
-                                border: Border.all(
-                                  color: AppColors.secondary,
-                                  width: 2,
-                                )),
-                            child: Padding(
-                              padding: const EdgeInsets.all(Dimension.d3),
-                              child: Column(children: [
+          backgroundColor: AppColors.white,
+          appBar: const PageAppbar(title: 'User Profile'),
+          body: store.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(Dimension.d4),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Dimension.d1),
+                            border: Border.all(
+                              color: AppColors.secondary,
+                              width: 2,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(Dimension.d3),
+                            child: Column(
+                              children: [
                                 Row(
                                   children: [
                                     const Avatar(imgPath: '', maxRadius: 44),
@@ -64,9 +65,10 @@ class UserProfile extends StatelessWidget {
                                   height: Dimension.d4,
                                 ),
                                 CustomTextIcon(
-                                    iconpath: AppIcons.phone,
-                                    title: store.userDetails!
-                                        .fold((l) => '', (r) => r.mobileNum)),
+                                  iconpath: AppIcons.phone,
+                                  title: store.userDetails!
+                                      .fold((l) => '', (r) => r.mobileNum),
+                                ),
                                 const SizedBox(
                                   height: Dimension.d2,
                                 ),
@@ -146,8 +148,9 @@ class _LogOutComponent extends StatelessWidget {
         padding:
             const EdgeInsets.symmetric(horizontal: Dimension.d4, vertical: 20),
         decoration: BoxDecoration(
-            color: AppColors.grayscale100,
-            borderRadius: BorderRadius.circular(Dimension.d2)),
+          color: AppColors.grayscale100,
+          borderRadius: BorderRadius.circular(Dimension.d2),
+        ),
         child: Column(
           children: [
             Text(
@@ -205,7 +208,7 @@ class _LogOutComponent extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

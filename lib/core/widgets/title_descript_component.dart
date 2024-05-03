@@ -19,9 +19,10 @@ class TitleDescriptComponent extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: Dimension.d2),
       decoration: BoxDecoration(
-          border: Border.all(color: AppColors.grayscale400, width: 1),
-          color: AppColors.grayscale300,
-          borderRadius: BorderRadius.circular(5)),
+        border: Border.all(color: AppColors.grayscale400),
+        color: AppColors.grayscale300,
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
