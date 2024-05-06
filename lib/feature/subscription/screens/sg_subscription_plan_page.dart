@@ -13,11 +13,17 @@ import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/core/widgets/title_descript_component.dart';
+import 'package:silver_genie/feature/emergency_services/model/emergency_service_model.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 
-class SGSubcscriptionPage extends StatelessWidget {
+class SGSubcscriptionPage extends StatefulWidget {
   const SGSubcscriptionPage({super.key});
 
+  @override
+  State<SGSubcscriptionPage> createState() => _SGSubcscriptionPageState();
+}
+
+class _SGSubcscriptionPageState extends State<SGSubcscriptionPage> {
   @override
   Widget build(BuildContext context) {
     const temp =
@@ -101,8 +107,20 @@ class SGSubcscriptionPage extends StatelessWidget {
               Column(
                 children: List.generate(
                     store.emergencyServiceModel.plans.length,
-                    (index) => PlanDisplayComponent(
-                          plan: store.emergencyServiceModel.plans[index],
+                    (index) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              final updatedPlans = List<Plan>.from(store.emergencyServiceModel.plans);
+                              for (int i = 0; i < updatedPlans.length; i++) {
+                                updatedPlans[i] = updatedPlans[i].copyWith(isSelected: i == index);
+                              }
+                              store.emergencyServiceModel = store.emergencyServiceModel.copyWith(plans: updatedPlans);
+                            });
+                          },
+                          child: PlanDisplayComponent(
+                            plan: store.emergencyServiceModel.plans[index],
+                            isSelected: store.emergencyServiceModel.plans[index].isSelected,
+                          ),
                         )),
               ),
               Text(

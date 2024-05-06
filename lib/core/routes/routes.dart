@@ -182,7 +182,7 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/geniePage/:pageTitle/:definition/:headline',
+      path: '/geniePage/:pageTitle/:defination/:headline',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
         final String pageTitle = state.pathParameters['pageTitle'] ?? '';

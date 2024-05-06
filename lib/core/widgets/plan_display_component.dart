@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -5,16 +6,20 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/feature/emergency_services/model/emergency_service_model.dart';
 
 class PlanDisplayComponent extends StatelessWidget {
-  const PlanDisplayComponent({required this.plan, super.key});
+  const PlanDisplayComponent({
+    required this.plan,
+    required this.isSelected,
+    Key? key,
+  }) : super(key: key);
   final Plan plan;
-
+  final bool isSelected;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.grayscale400),
+        border: Border.all(width: 1,color: isSelected? AppColors.primary :AppColors.grayscale400),
         color: AppColors.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
