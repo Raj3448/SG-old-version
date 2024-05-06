@@ -17,12 +17,12 @@ class GenieOverviewComponent extends StatelessWidget {
   final String title;
   final String headline;
   final String defination;
-  const GenieOverviewComponent(
-      {required this.title,
-      required this.headline,
-      required this.defination,
-      Key? key})
-      : super(key: key);
+  const GenieOverviewComponent({
+    required this.title,
+    required this.headline,
+    required this.defination,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -116,28 +116,33 @@ class ServiceProvideComponent extends StatelessWidget {
           duration: const Duration(seconds: 1),
           height: 350,
           child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: serviceDetailsList.length,
-              itemBuilder: (context, index) {
-                return _ServiceCheckBox(
-                  servicename:
-                      serviceDetailsList[index]['servicename'] as String,
-                  isProvide: serviceDetailsList[index]['isProvide'] as bool,
-                );
-              }),
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: serviceDetailsList.length,
+            itemBuilder: (context, index) {
+              return _ServiceCheckBox(
+                servicename: serviceDetailsList[index]['servicename'] as String,
+                isProvide: serviceDetailsList[index]['isProvide'] as bool,
+              );
+            },
+          ),
         ),
         Container(
           width: double.infinity,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-                color: AppColors.grayscale100, blurRadius: 7, spreadRadius: 12)
-          ]),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.grayscale100,
+                blurRadius: 7,
+                spreadRadius: 12,
+              ),
+            ],
+          ),
           alignment: Alignment(0, 0),
           child: Icon(
             AppIcons.arrow_down_ios,
             size: 6,
           ),
-        )
+        ),
       ],
     );
   }
@@ -208,8 +213,9 @@ class ExploreNowComponent extends StatelessWidget {
       padding: const EdgeInsets.all(Dimension.d2),
       margin: const EdgeInsets.symmetric(vertical: Dimension.d6),
       decoration: BoxDecoration(
-          border: Border.all(width: 1, color: AppColors.grayscale300),
-          borderRadius: BorderRadius.circular(Dimension.d2)),
+        border: Border.all(width: 1, color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(Dimension.d2),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -220,41 +226,45 @@ class ExploreNowComponent extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              context.pushNamed(RoutesConstants.couplePlanPage,
-                  pathParameters: {'pageTitle': pageTitle});
+              context.pushNamed(
+                RoutesConstants.couplePlanPage,
+                pathParameters: {'pageTitle': pageTitle},
+              );
             },
             child: Container(
-                height: 48,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
-                decoration: BoxDecoration(
-                    color: AppColors.secondary,
-                    border: Border.all(width: 1, color: AppColors.primary),
-                    borderRadius: BorderRadius.circular(Dimension.d2)),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/avg_time.png',
-                      height: 21,
+              height: 48,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
+              decoration: BoxDecoration(
+                color: AppColors.secondary,
+                border: Border.all(width: 1, color: AppColors.primary),
+                borderRadius: BorderRadius.circular(Dimension.d2),
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/icon/avg_time.png',
+                    height: 21,
+                  ),
+                  const SizedBox(
+                    width: Dimension.d3,
+                  ),
+                  Text(
+                    'Explore Now',
+                    style: AppTextStyle.bodyMediumMedium.copyWith(
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(
-                      width: Dimension.d3,
-                    ),
-                    Text(
-                      'Explore Now',
-                      style: AppTextStyle.bodyMediumMedium.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      AppIcons.arrow_forward,
-                      size: 20,
-                      color: AppColors.primary,
-                    ),
-                  ],
-                )),
-          )
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    AppIcons.arrow_forward,
+                    size: 20,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -282,12 +292,13 @@ class HowItWorkComponent extends StatelessWidget {
         ),
         Column(
           children: List.generate(
-              questionsAndContentList.length,
-              (index) => ExpandingQuestionComponent(
-                  question:
-                      questionsAndContentList[index]['question'] as String,
-                  temp: questionsAndContentList[index]['answer'] as String)),
-        )
+            questionsAndContentList.length,
+            (index) => ExpandingQuestionComponent(
+              question: questionsAndContentList[index]['question'] as String,
+              temp: questionsAndContentList[index]['answer'] as String,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -316,10 +327,10 @@ class _ServiceCheckBox extends StatelessWidget {
         Text(
           servicename,
           style: AppTextStyle.bodyMediumMedium.copyWith(
-              height: 2,
-              color:
-                  isProvide ? AppColors.grayscale900 : AppColors.grayscale700),
-        )
+            height: 2,
+            color: isProvide ? AppColors.grayscale900 : AppColors.grayscale700,
+          ),
+        ),
       ],
     );
   }

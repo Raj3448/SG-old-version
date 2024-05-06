@@ -16,6 +16,7 @@ class ServicesCareScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PageAppbar(title: pagetitle),
+      backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Dimension.d4),
