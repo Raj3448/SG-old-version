@@ -1,10 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 class SearchTextfieldComponet extends StatefulWidget {
-  const SearchTextfieldComponet({super.key});
+  const SearchTextfieldComponet({
+    required this.textEditingController,
+    required this.onChanged, Key? key,
+  }) : super(key: key);
+  final TextEditingController textEditingController;
+  final void Function(String)? onChanged;
 
   @override
   State<SearchTextfieldComponet> createState() =>
@@ -19,6 +25,8 @@ class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
       height: 52,
       child: TextFormField(
         focusNode: _searchFocusNode,
+        controller: widget.textEditingController,
+        onChanged: widget.onChanged,
         style: const TextStyle(
             color: AppColors.grayscale900, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
