@@ -7,7 +7,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/initialize_component.dart';
@@ -157,52 +157,31 @@ class EPRPHRViewScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      height: 76,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: AppColors.grayscale100,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, -4),
-                            color: AppColors.grayscale300,
-                            blurRadius: 8,
-                          ),
-                        ],
-                      ),
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: Dimension.d3,
-                        horizontal: Dimension.d5,
-                      ),
-                      child: CustomButton(
-                        ontap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const InfoDialog(
-                                showIcon: false,
-                                title: 'Hi there!!',
-                                desc:
-                                    'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                                btnTitle: 'Contact Genie',
-                                showBtnIcon: true,
-                                btnIconPath: AppIcons.phone,
-                              );
-                            },
-                          );
-                        },
-                        title: 'Update EPR',
-                        showIcon: false,
-                        iconPath: AppIcons.add,
-                        size: ButtonSize.normal,
-                        type: ButtonType.primary,
-                        expanded: true,
-                        iconColor: AppColors.white,
-                      ),
-                    ),
                   ],
                 ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FixedButton(
+            ontap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const InfoDialog(
+                    showIcon: false,
+                    title: 'Hi there!!',
+                    desc:
+                        'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                    btnTitle: 'Contact Genie',
+                    showBtnIcon: true,
+                    btnIconPath: AppIcons.phone,
+                  );
+                },
+              );
+            },
+            btnTitle: 'Update EPR',
+            showIcon: false,
+            iconPath: AppIcons.add,
+          ),
         );
       },
     );

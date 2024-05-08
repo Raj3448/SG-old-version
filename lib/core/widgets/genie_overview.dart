@@ -10,6 +10,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
+import 'package:silver_genie/feature/emergency_services/model/emergency_service_model.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 
 class GenieOverviewComponent extends StatelessWidget {
@@ -147,18 +148,25 @@ class ServiceProvideComponent extends StatelessWidget {
   }
 }
 
-class PlanPricingDetailsComponent extends StatelessWidget {
+class PlanPricingDetailsComponent extends StatefulWidget {
   PlanPricingDetailsComponent({required this.planName, super.key});
 
   final String planName;
+
+  @override
+  State<PlanPricingDetailsComponent> createState() => _PlanPricingDetailsComponentState();
+}
+
+class _PlanPricingDetailsComponentState extends State<PlanPricingDetailsComponent> {
   final store = GetIt.I<EmergencyServiceStore>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${planName.split(' ').first} plans for single',
+          '${widget.planName.split(' ').first} plans for single',
           style: AppTextStyle.bodyMediumMedium.copyWith(
             fontFamily: FontFamily.plusJakarta,
             color: AppColors.grayscale900,
@@ -172,12 +180,23 @@ class PlanPricingDetailsComponent extends StatelessWidget {
         ),
         Column(
           children: List.generate(
-            store.emergencyServiceModel.plans.length,
-            (index) => PlanDisplayComponent(
-              plan: store.emergencyServiceModel.plans[index],
-            ),
-          ),
-        ),
+              store.emergencyServiceModel.plans.length,
+              (index) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              final updatedPlans = List<Plan>.from(store.emergencyServiceModel.plans);
+                              for (int i = 0; i < updatedPlans.length; i++) {
+                                updatedPlans[i] = updatedPlans[i].copyWith(isSelected: i == index);
+                              }
+                              store.emergencyServiceModel = store.emergencyServiceModel.copyWith(plans: updatedPlans);
+                            });
+                          },
+                          child: PlanDisplayComponent(
+                            plan: store.emergencyServiceModel.plans[index],
+                            isSelected: store.emergencyServiceModel.plans[index].isSelected,
+                          ),
+                        )),
+        )
       ],
     );
   }

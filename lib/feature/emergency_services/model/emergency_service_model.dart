@@ -38,6 +38,7 @@ class Plan with _$Plan {
     @JsonKey(name: 'descrip') required String descrip,
     @JsonKey(name: 'amount') required double amount,
     @JsonKey(name: 'discountamount') required double discountamount,
+    @JsonKey(name: 'isSelected') required bool isSelected,
   }) = _Plan;
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);

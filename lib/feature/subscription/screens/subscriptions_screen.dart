@@ -11,6 +11,7 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
+import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';
@@ -69,38 +70,16 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
               ),
             ),
           ),
-          Container(
-            height: 76,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.grayscale100,
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, -4),
-                  color: AppColors.grayscale300,
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              vertical: Dimension.d3,
-              horizontal: Dimension.d5,
-            ),
-            child: CustomButton(
-              ontap: () {
-                context.pushNamed(RoutesConstants.SGSubcscriptionPage);
-              },
-              title: 'Buy new subscription',
-              showIcon: false,
-              iconPath: AppIcons.add,
-              size: ButtonSize.normal,
-              type: ButtonType.primary,
-              expanded: true,
-              iconColor: AppColors.white,
-            ),
-          ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FixedButton(
+        ontap: () {
+          context.pushNamed(RoutesConstants.SGSubcscriptionPage);
+        },
+        btnTitle: 'Buy new subscription',
+        showIcon: false,
+        iconPath: AppIcons.add,
       ),
     );
   }

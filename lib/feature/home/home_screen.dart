@@ -72,6 +72,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Health Care Service',
+                              'isConvenience' : false.toString()
                             },
                           );
                         },
@@ -84,14 +85,23 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Home Care Service',
+                              'isConvenience' : false.toString()
                             },
                           );
                         },
                       ),
                       BookServiceButton(
                         iconImagePath: 'assets/icon/prescriptions.png',
-                        buttonName: 'Convenience',
-                        onTap: () {},
+                        buttonName: 'Wellness & Convenience',
+                        onTap: () {
+                          context.pushNamed(
+                            RoutesConstants.servicesCareScreen,
+                            pathParameters: {
+                              'pageTitle': 'Convenience care services',
+                              'isConvenience' : true.toString()
+                            },
+                          );
+                        },
                       ),
                       BookServiceButton(
                         iconImagePath: 'assets/icon/ambulance.png',
@@ -671,12 +681,20 @@ class BookServiceButton extends StatelessWidget {
             ),
             child: Image.asset(iconImagePath),
           ),
-          Text(
-            buttonName,
-            style: AppTextStyle.bodySmallMedium.copyWith(
-              color: AppColors.grayscale700,
-              fontWeight: FontWeight.w500,
-              height: 2.6,
+          const SizedBox(
+            height: Dimension.d2,
+          ),
+          SizedBox(
+            height: 32,
+            width: 87,
+            child: Text(
+              buttonName,
+              textAlign: TextAlign.center,
+              style: AppTextStyle.bodySmallMedium.copyWith(
+                color: AppColors.grayscale700,
+                fontWeight: FontWeight.w500,
+                height: 1,
+              ),
             ),
           ),
         ],

@@ -270,6 +270,8 @@ mixin _$Plan {
   double get amount => throw _privateConstructorUsedError;
   @JsonKey(name: 'discountamount')
   double get discountamount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isSelected')
+  bool get isSelected => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -286,7 +288,8 @@ abstract class $PlanCopyWith<$Res> {
       @JsonKey(name: 'duration') String duration,
       @JsonKey(name: 'descrip') String descrip,
       @JsonKey(name: 'amount') double amount,
-      @JsonKey(name: 'discountamount') double discountamount});
+      @JsonKey(name: 'discountamount') double discountamount,
+      @JsonKey(name: 'isSelected') bool isSelected});
 }
 
 /// @nodoc
@@ -307,6 +310,7 @@ class _$PlanCopyWithImpl<$Res, $Val extends Plan>
     Object? descrip = null,
     Object? amount = null,
     Object? discountamount = null,
+    Object? isSelected = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -329,6 +333,10 @@ class _$PlanCopyWithImpl<$Res, $Val extends Plan>
           ? _value.discountamount
           : discountamount // ignore: cast_nullable_to_non_nullable
               as double,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -345,7 +353,8 @@ abstract class _$$PlanImplCopyWith<$Res> implements $PlanCopyWith<$Res> {
       @JsonKey(name: 'duration') String duration,
       @JsonKey(name: 'descrip') String descrip,
       @JsonKey(name: 'amount') double amount,
-      @JsonKey(name: 'discountamount') double discountamount});
+      @JsonKey(name: 'discountamount') double discountamount,
+      @JsonKey(name: 'isSelected') bool isSelected});
 }
 
 /// @nodoc
@@ -363,6 +372,7 @@ class __$$PlanImplCopyWithImpl<$Res>
     Object? descrip = null,
     Object? amount = null,
     Object? discountamount = null,
+    Object? isSelected = null,
   }) {
     return _then(_$PlanImpl(
       title: null == title
@@ -385,6 +395,10 @@ class __$$PlanImplCopyWithImpl<$Res>
           ? _value.discountamount
           : discountamount // ignore: cast_nullable_to_non_nullable
               as double,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -397,7 +411,8 @@ class _$PlanImpl implements _Plan {
       @JsonKey(name: 'duration') required this.duration,
       @JsonKey(name: 'descrip') required this.descrip,
       @JsonKey(name: 'amount') required this.amount,
-      @JsonKey(name: 'discountamount') required this.discountamount});
+      @JsonKey(name: 'discountamount') required this.discountamount,
+      @JsonKey(name: 'isSelected') required this.isSelected});
 
   factory _$PlanImpl.fromJson(Map<String, dynamic> json) =>
       _$$PlanImplFromJson(json);
@@ -417,10 +432,13 @@ class _$PlanImpl implements _Plan {
   @override
   @JsonKey(name: 'discountamount')
   final double discountamount;
+  @override
+  @JsonKey(name: 'isSelected')
+  final bool isSelected;
 
   @override
   String toString() {
-    return 'Plan(title: $title, duration: $duration, descrip: $descrip, amount: $amount, discountamount: $discountamount)';
+    return 'Plan(title: $title, duration: $duration, descrip: $descrip, amount: $amount, discountamount: $discountamount, isSelected: $isSelected)';
   }
 
   @override
@@ -434,13 +452,15 @@ class _$PlanImpl implements _Plan {
             (identical(other.descrip, descrip) || other.descrip == descrip) &&
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.discountamount, discountamount) ||
-                other.discountamount == discountamount));
+                other.discountamount == discountamount) &&
+            (identical(other.isSelected, isSelected) ||
+                other.isSelected == isSelected));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, title, duration, descrip, amount, discountamount);
+  int get hashCode => Object.hash(runtimeType, title, duration, descrip, amount,
+      discountamount, isSelected);
 
   @JsonKey(ignore: true)
   @override
@@ -458,12 +478,13 @@ class _$PlanImpl implements _Plan {
 
 abstract class _Plan implements Plan {
   const factory _Plan(
-      {@JsonKey(name: 'title') required final String title,
-      @JsonKey(name: 'duration') required final String duration,
-      @JsonKey(name: 'descrip') required final String descrip,
-      @JsonKey(name: 'amount') required final double amount,
-      @JsonKey(name: 'discountamount')
-      required final double discountamount}) = _$PlanImpl;
+          {@JsonKey(name: 'title') required final String title,
+          @JsonKey(name: 'duration') required final String duration,
+          @JsonKey(name: 'descrip') required final String descrip,
+          @JsonKey(name: 'amount') required final double amount,
+          @JsonKey(name: 'discountamount') required final double discountamount,
+          @JsonKey(name: 'isSelected') required final bool isSelected}) =
+      _$PlanImpl;
 
   factory _Plan.fromJson(Map<String, dynamic> json) = _$PlanImpl.fromJson;
 
@@ -482,6 +503,9 @@ abstract class _Plan implements Plan {
   @override
   @JsonKey(name: 'discountamount')
   double get discountamount;
+  @override
+  @JsonKey(name: 'isSelected')
+  bool get isSelected;
   @override
   @JsonKey(ignore: true)
   _$$PlanImplCopyWith<_$PlanImpl> get copyWith =>

@@ -119,13 +119,16 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/servicesCareScreen/:pageTitle',
+      path: '/servicesCareScreen/:pageTitle/:isConvenience',
       name: RoutesConstants.servicesCareScreen,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Care';
+        final isConvenience =
+            state.pathParameters['isConvenience'].toString().toLowerCase();
         return MaterialPage(
           child: ServicesCareScreen(
             pagetitle: pageTitle,
+            isConvenience: bool.parse(isConvenience),
           ),
         );
       },
@@ -182,7 +185,7 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/geniePage/:pageTitle/:definition/:headline',
+      path: '/geniePage/:pageTitle/:defination/:headline',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
         final String pageTitle = state.pathParameters['pageTitle'] ?? '';
@@ -257,7 +260,8 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.paymentScreen,
+      path: '/paymentScreen',
+      name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: PaymentScreen());
       },

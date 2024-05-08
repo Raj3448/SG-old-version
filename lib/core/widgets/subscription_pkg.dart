@@ -92,7 +92,7 @@ class SubscriptionPkg extends StatelessWidget {
               RoutesConstants.geniePage,
               pathParameters: {
                 'pageTitle': 'Companion Genie',
-                'definition':
+                'defination':
                     'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
                 'headline':
                     'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
@@ -103,7 +103,7 @@ class SubscriptionPkg extends StatelessWidget {
               RoutesConstants.geniePage,
               pathParameters: {
                 'pageTitle': 'Wellness Genie',
-                'definition':
+                'defination':
                     'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
                 'headline':
                     'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
@@ -114,7 +114,7 @@ class SubscriptionPkg extends StatelessWidget {
               RoutesConstants.geniePage,
               pathParameters: {
                 'pageTitle': 'Emergency Genie',
-                'definition':
+                'defination':
                     'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
                 'headline':
                     'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',

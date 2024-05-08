@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -36,7 +37,7 @@ class ServicesScreen extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d3,
               ),
-              const SearchTextfieldComponet(),
+              SearchTextfieldComponet(textEditingController: TextEditingController(), onChanged: (String ) {  },),
               const SizedBox(
                 height: Dimension.d3,
               ),
@@ -59,6 +60,7 @@ class ServicesScreen extends StatelessWidget {
                         RoutesConstants.servicesCareScreen,
                         pathParameters: {
                           'pageTitle': 'Home care services',
+                          'isConvenience' : false.toString()
                         },
                       );
                     },
@@ -157,6 +159,7 @@ class ServicesScreen extends StatelessWidget {
                         RoutesConstants.servicesCareScreen,
                         pathParameters: {
                           'pageTitle': 'Health care services',
+                          'isConvenience' : false.toString()
                         },
                       );
                     },

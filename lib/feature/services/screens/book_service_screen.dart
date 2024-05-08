@@ -1,17 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/models/value_item.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/services/repo/services_repo.dart';
-import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/services/widgets/booking_status.dart';
 
 class BookServiceScreen extends StatelessWidget {
@@ -19,14 +19,13 @@ class BookServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<ServicesStore>();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Book Service'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FixedButton(
         ontap: () {
-          // store.paymentEnabled = !store.paymentEnabled;
+          context.pushNamed(RoutesConstants.paymentScreen);
         },
         btnTitle: 'Submit & next',
         showIcon: false,
