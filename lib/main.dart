@@ -33,7 +33,7 @@ import 'package:silver_genie/firebase_options.dart';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox(TOKEN_BOX_NAME);
+  await setupHiveBox();
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
