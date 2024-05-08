@@ -11,9 +11,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
@@ -29,6 +32,8 @@ import 'package:silver_genie/feature/user_profile/store/user_details_store.dart'
 import 'package:silver_genie/firebase_options.dart';
 
 void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox(TOKEN_BOX_NAME);
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +59,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
+      GetIt.instance.registerLazySingleton(() => TokenManager());
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

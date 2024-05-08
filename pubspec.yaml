@@ -25,11 +25,14 @@ dependencies:
   flutter_mobx: ^2.2.0+2
   flutter_native_splash: ^2.3.5
   # dart run flutter_native_splash:create
+  flutter_secure_storage: ^9.0.0
   flutter_svg: ^2.0.10+1
   fpdart: ^1.1.0
   freezed_annotation: ^2.4.1
   get_it: ^7.6.4
   go_router: ^12.1.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   json_annotation: ^4.8.1
   mobx: ^2.3.0+1
   multi_dropdown: ^2.1.4
