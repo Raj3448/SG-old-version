@@ -1,15 +1,20 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
+import 'package:silver_genie/core/utils/token_manager.dart';
 
 class AuthInterceptor extends Interceptor {
+  final TokenManager _tokenStorage;
+
+  AuthInterceptor(this._tokenStorage);
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     // TODO(You): Put the paths you want the interceptor to ignore
     if (!options.path.contains('/login')) {
       // TODO(You): Fetch your access token and plug it in
-      const token = '<YOUR-TOKEN-HERE>';
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      final token = await _tokenStorage.getToken();
+      if (token != null) {
+        options.headers['Authorization'] = 'Bearer $token';
+      }
     }
     handler.next(options);
   }
