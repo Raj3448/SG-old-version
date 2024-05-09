@@ -119,6 +119,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _firstNameController,
+                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Last Name'),

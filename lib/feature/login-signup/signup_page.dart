@@ -55,6 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       large: false,
                       enabled: true,
                       controller: nameContr,
+                      isFieldDisable: false,
                       validationLogic: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your name';
@@ -76,7 +77,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           return 'Please enter your name';
                         }
                         return null;
-                      }, isFieldDisable: false,
+                      },
+                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Enter Email'.tr()),
@@ -94,7 +96,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           return 'Please enter a valid email address';
                         }
                         return null;
-                      }, isFieldDisable: false,
+                      },
+                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Mobile Number'.tr()),
