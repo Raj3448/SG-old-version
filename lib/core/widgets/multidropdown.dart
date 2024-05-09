@@ -1,4 +1,4 @@
-// ignore_for_file: strict_raw_type
+// ignore_for_file: strict_raw_type, library_private_types_in_public_api
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -93,19 +93,45 @@ class GenderDropdown extends StatelessWidget {
   }
 }
 
-class DateDropdown extends StatelessWidget {
+class DateDropdown extends StatefulWidget {
   const DateDropdown({super.key});
+  @override
+  _DateDropdownState createState() => _DateDropdownState();
+}
+
+class _DateDropdownState extends State<DateDropdown> {
+  late TextEditingController _dateController;
+  DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showDatePicker(
+      onTap: () async {
+        final pickedDate = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
           lastDate: DateTime.now(),
           initialDate: DateTime.now(),
         );
+
+        if (pickedDate != null && pickedDate != _selectedDate) {
+          setState(() {
+            _selectedDate = pickedDate;
+            _dateController.text = DateFormat.yMMMd().format(_selectedDate!);
+          });
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -114,16 +140,44 @@ class DateDropdown extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 14,
         ),
         child: Row(
           children: [
-            Text(
-              'Select'.tr(),
-              style: AppTextStyle.bodyLargeMedium
-                  .copyWith(color: AppColors.grayscale600),
+            Expanded(
+              child: TextFormField(
+                controller: _dateController,
+                decoration: InputDecoration(
+                  hintText: 'Select',
+                  border: InputBorder.none,
+                  hintStyle: AppTextStyle.bodyLargeMedium
+                      .copyWith(color: AppColors.grayscale600),
+                ),
+                style: AppTextStyle.bodyLargeMedium.copyWith(
+                  color: _selectedDate != null
+                      ? AppColors.grayscale900
+                      : AppColors.grayscale600,
+                ),
+                textAlignVertical: TextAlignVertical.top,
+                readOnly: true,
+                onTap: () async {
+                  final pickedDate = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime.now(),
+                    initialDate: DateTime.now(),
+                  );
+
+                  if (pickedDate != null && pickedDate != _selectedDate) {
+                    setState(() {
+                      _selectedDate = pickedDate;
+                      _dateController.text =
+                          DateFormat.yMMMd().format(_selectedDate!);
+                    });
+                  }
+                },
+              ),
             ),
-            const Spacer(),
+            const SizedBox(width: 10),
             const Icon(
               AppIcons.calendar,
               color: AppColors.grayscale700,

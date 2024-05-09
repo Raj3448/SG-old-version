@@ -56,7 +56,7 @@ class UserProfile extends StatelessWidget {
                                     ),
                                     Text(
                                       store.userDetails!
-                                          .fold((l) => '', (r) => r.fullname),
+                                          .fold((l) => '', (r) => r.firstName),
                                       style: AppTextStyle.bodyXLSemiBold,
                                     ),
                                   ],

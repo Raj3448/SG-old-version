@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, inference_failure_on_function_invocation
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -86,7 +86,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                               Text(
                                                 store.userDetails!.fold(
                                                   (l) => '',
-                                                  (r) => r.fullname,
+                                                  (r) => r.firstName,
                                                 ),
                                                 style: AppTextStyle
                                                     .bodyLargeMedium

@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
-import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
@@ -25,7 +25,8 @@ class ProfileDetails extends StatefulWidget {
 }
 
 class _ProfileDetailsState extends State<ProfileDetails> {
-  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final MultiSelectController _genderController = MultiSelectController();
   final MultiSelectController _countryController = MultiSelectController();
@@ -50,7 +51,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   final List<ValueItem<String>> _stateItems = [
     const ValueItem(label: 'Maharashtra', value: 'Maharashtra'),
-    const ValueItem(label: 'Keral', value: 'Keral'),
+    const ValueItem(label: 'Kerala', value: 'Kerala'),
     const ValueItem(label: 'Karnataka', value: 'Karnataka'),
   ];
 
@@ -74,6 +75,28 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       builder: (context) {
         return Scaffold(
           backgroundColor: AppColors.white,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FixedButton(
+            ontap: () async {
+              final store = GetIt.I<UserDetailStore>();
+              UserDetails? userDetails;
+              store.userDetails!.map((a) {
+                userDetails = a;
+              });
+              userDetails = userDetails!.copyWith(
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                emailId: _emailController.text,
+                mobileNum: _mobileController.text,
+              );
+              await store.updateUserDetails(userDetails!);
+              GoRouter.of(context).pop();
+            },
+            btnTitle: 'Save details',
+            showIcon: false,
+            iconPath: AppIcons.add,
+          ),
           appBar: const PageAppbar(title: 'Personal Details'),
           body: store.isLoading || !_isInitialize
               ? const Center(child: CircularProgressIndicator())
@@ -87,85 +110,40 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Center(child: EditPic()),
-                        const SizedBox(
-                          height: Dimension.d5,
-                        ),
-                        const TextLabel(title: 'Full Name'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d5),
+                        const TextLabel(title: 'First Name'),
+                        const SizedBox(height: Dimension.d2),
                         CustomTextField(
-                          hintText: 'Enter your name',
+                          hintText: 'Enter your first name',
                           keyboardType: TextInputType.name,
                           large: false,
                           enabled: true,
-                          controller: _fullNameController,
+                          controller: _firstNameController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
+                        const SizedBox(height: Dimension.d4),
+                        const TextLabel(title: 'Last Name'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'Enter your last name',
+                          keyboardType: TextInputType.name,
+                          large: false,
+                          enabled: true,
+                          controller: _lastNameController,
                         ),
-                        const TextLabel(
-                          title: 'Gender',
-                        ),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const TextLabel(title: 'Gender'),
+                        const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           values: _genderItems,
                           controller: _genderController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
-                        const TextLabel(
-                          title: 'Date of birth',
-                        ),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showDatePicker(
-                              context: context,
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime.now(),
-                              initialDate: DateTime.now(),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.line),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  dateBirth,
-                                  style: AppTextStyle.bodyLargeMedium.copyWith(
-                                    color: AppColors.grayscale700,
-                                  ),
-                                ),
-                                const Spacer(),
-                                const Icon(
-                                  AppIcons.calendar,
-                                  color: AppColors.grayscale700,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const TextLabel(title: 'Date of birth'),
+                        const SizedBox(height: Dimension.d2),
+                        const DateDropdown(),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Mobile Field'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         GestureDetector(
                           onTap: () {
                             showDialog(
@@ -191,13 +169,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _mobileController,
                           ),
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Email ID'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         GestureDetector(
                           onTap: () {
                             showDialog(
@@ -223,13 +197,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _emailController,
                           ),
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Address'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         CustomTextField(
                           hintText: 'Address',
                           keyboardType: TextInputType.emailAddress,
@@ -237,46 +207,30 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           enabled: true,
                           controller: _addressController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Country'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           controller: _countryController,
                           values: _countryItems,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'State'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           values: _stateItems,
                           controller: _stateController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'City'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           values: _cityItems,
                           controller: _cityController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Postal Code'),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         CustomTextField(
                           hintText: 'Postal Code',
                           keyboardType: TextInputType.number,
@@ -284,32 +238,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           enabled: true,
                           controller: _postalController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d10,
-                        ),
-                        CustomButton(
-                          ontap: () async {
-                            final store = GetIt.I<UserDetailStore>();
-                            UserDetails? userDetails;
-                            store.userDetails!.map((a) {
-                              userDetails = a;
-                            });
-                            userDetails = userDetails!.copyWith(
-                              fullname: _fullNameController.text,
-                              emailId: _emailController.text,
-                              mobileNum: _mobileController.text,
-                            );
-                            await store.updateUserDetails(userDetails!);
-                            Navigator.of(context).pop();
-                          },
-                          title: 'Save details',
-                          showIcon: false,
-                          iconPath: AppIcons.add,
-                          size: ButtonSize.normal,
-                          type: ButtonType.primary,
-                          expanded: true,
-                          iconColor: AppColors.white,
-                        ),
+                        const SizedBox(height: Dimension.d20),
+                        const SizedBox(height: Dimension.d5),
                       ],
                     ),
                   ),
@@ -321,7 +251,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   void _initializeControllers(UserDetailStore store) {
     store.userDetails!.map((userDetails) {
-      _fullNameController.text = userDetails.fullname;
+      _firstNameController.text = userDetails.firstName;
+      _lastNameController.text = userDetails.lastName;
       dateBirth = userDetails.dateBirth;
 
       _genderController.selectedOptions.add(_genderItems[0]);

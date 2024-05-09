@@ -5,7 +5,8 @@ part 'user_details.g.dart';
 @JsonSerializable()
 class UserDetails {
   UserDetails({
-    required this.fullname,
+    required this.firstName,
+    required this.lastName,
     required this.gender,
     required this.dateBirth,
     required this.mobileNum,
@@ -19,8 +20,10 @@ class UserDetails {
 
   factory UserDetails.fromJson(Map<String, dynamic> json) =>
       _$UserDetailsFromJson(json);
-  @JsonKey(name: 'fullname')
-  final String fullname;
+  @JsonKey(name: 'firstName')
+  final String firstName;
+  @JsonKey(name: 'lastName')
+  final String lastName;
   @JsonKey(name: 'gender')
   final String gender;
   @JsonKey(name: 'dateBirth')
@@ -43,7 +46,8 @@ class UserDetails {
   final int postalCode;
 
   UserDetails copyWith({
-    String? fullname,
+    String? firstName,
+    String? lastName,
     String? gender,
     String? dateBirth,
     String? mobileNum,
@@ -55,7 +59,8 @@ class UserDetails {
     int? postalCode,
   }) =>
       UserDetails(
-        fullname: fullname ?? this.fullname,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
         gender: gender ?? this.gender,
         dateBirth: dateBirth ?? this.dateBirth,
         mobileNum: mobileNum ?? this.mobileNum,

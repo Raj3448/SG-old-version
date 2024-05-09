@@ -7,6 +7,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
+import 'package:silver_genie/core/widgets/multidropdown.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -46,10 +47,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextLabel(title: 'Enter Full Name'.tr()),
+                    TextLabel(title: 'Enter first name'.tr()),
                     const SizedBox(height: Dimension.d2),
                     CustomTextField(
-                      hintText: 'Enter Name'.tr(),
+                      hintText: 'Enter first name'.tr(),
+                      keyboardType: TextInputType.name,
+                      large: false,
+                      enabled: true,
+                      controller: nameContr,
+                      validationLogic: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                    TextLabel(title: 'Enter last name'.tr()),
+                    const SizedBox(height: Dimension.d2),
+                    CustomTextField(
+                      hintText: 'Enter last name'.tr(),
                       keyboardType: TextInputType.name,
                       large: false,
                       enabled: true,
@@ -85,6 +102,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     CustomPhoneField(
                       title: 'Enter Mobile Number'.tr(),
                     ),
+                    const SizedBox(height: Dimension.d4),
+                    TextLabel(title: 'Date of birth'.tr()),
+                    const SizedBox(height: Dimension.d2),
+                    const DateDropdown(),
                     const SizedBox(height: Dimension.d4),
                     CustomButton(
                       size: ButtonSize.normal,

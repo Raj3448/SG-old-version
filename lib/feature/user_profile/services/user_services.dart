@@ -11,7 +11,8 @@ class UserDetailServices implements IUserFacades {
   UserDetailServices();
 
   UserDetails _userDetails = UserDetails(
-    fullname: 'Varun Nair',
+    firstName: 'Varun',
+    lastName: 'Nair',
     gender: 'Male',
     dateBirth: '16-02-2002',
     mobileNum: '+91 1234567890',
