@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +22,15 @@ class TextLabel extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
+    Key? key,
     required this.hintText,
     required this.keyboardType,
     required this.large,
     required this.enabled,
-    this.validationLogic,
     this.controller,
-    super.key,
-  });
+    this.validationLogic,
+    required this.isFieldDisable,
+  }) : super(key: key);
 
   final String hintText;
   final TextInputType keyboardType;
@@ -36,6 +38,7 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;
   final TextEditingController? controller;
   final String? Function(String?)? validationLogic;
+  final bool isFieldDisable;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +47,9 @@ class CustomTextField extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
-      style:
-          AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.grayscale900),
+      style: AppTextStyle.bodyLargeMedium.copyWith(
+          color:
+              isFieldDisable ? AppColors.grayscale700 : AppColors.grayscale900),
       maxLines: 8,
       minLines: large ? 5 : 1,
       decoration: InputDecoration(
