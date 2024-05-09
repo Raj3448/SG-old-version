@@ -77,10 +77,15 @@ class BookingsStateComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = false;
+    bool isLoading = bookingServiceStatus == BookingServiceStatus.completed ||
+            BookingServiceStatus.active == bookingServiceStatus
+        ? true
+        : false;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      child: !isLoading
+      child: !isLoading ||
+              !(bookingServiceStatus == BookingServiceStatus.completed ||
+                  BookingServiceStatus.active == bookingServiceStatus)
           ? EmptyStateComponent(
               bookingServiceStatus: bookingServiceStatus,
             )
