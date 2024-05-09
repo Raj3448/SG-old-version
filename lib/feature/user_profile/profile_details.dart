@@ -45,7 +45,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   final List<ValueItem<String>> _countryItems = [
     const ValueItem(label: 'India', value: 'India'),
-    const ValueItem(label: 'Rassia', value: 'Rassia'),
+    const ValueItem(label: 'Russia', value: 'Russia'),
     const ValueItem(label: 'Australia', value: 'Australia'),
   ];
 
@@ -129,6 +129,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _lastNameController,
+                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Gender'),
@@ -167,6 +168,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: false,
                             controller: _mobileController,
+                            isFieldDisable: true,
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
@@ -195,6 +197,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: false,
                             controller: _emailController,
+                            isFieldDisable: true,
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
@@ -206,6 +209,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _addressController,
+                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Country'),
@@ -237,6 +241,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _postalController,
+                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d20),
                         const SizedBox(height: Dimension.d5),

@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                                 return 'Please enter a valid email address';
                               }
                               return null;
-                            },
+                            }, isFieldDisable: false,
                           ),
                         )
                       else
