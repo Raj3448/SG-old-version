@@ -29,7 +29,7 @@ class CustomTextField extends StatelessWidget {
     required this.enabled,
     this.controller,
     this.validationLogic,
-    required this.isFieldDisable,
+
   }) : super(key: key);
 
   final String hintText;
@@ -38,7 +38,7 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;
   final TextEditingController? controller;
   final String? Function(String?)? validationLogic;
-  final bool isFieldDisable;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       style: AppTextStyle.bodyLargeMedium.copyWith(
           color:
-              isFieldDisable ? AppColors.grayscale700 : AppColors.grayscale900),
+              enabled ? AppColors.grayscale700 : AppColors.grayscale900),
       maxLines: 8,
       minLines: large ? 5 : 1,
       decoration: InputDecoration(

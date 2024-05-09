@@ -101,7 +101,7 @@ class BookServiceScreen extends StatelessWidget {
                 hintText: 'Write your purpose here',
                 keyboardType: TextInputType.name,
                 large: true,
-                enabled: true, isFieldDisable: false,
+                enabled: true, 
               ),
               const SizedBox(height: Dimension.d4),
               Text(
@@ -114,7 +114,7 @@ class BookServiceScreen extends StatelessWidget {
                 hintText: 'Type here...',
                 keyboardType: TextInputType.name,
                 large: true,
-                enabled: true, isFieldDisable: false,
+                enabled: true, 
               ),
               const SizedBox(height: Dimension.d20),
               const SizedBox(height: Dimension.d4),

@@ -100,7 +100,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _fullNameController,
-                          isFieldDisable: false,
+                          
                         ),
                         const SizedBox(
                           height: Dimension.d4,
@@ -188,9 +188,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             hintText: 'Mobile Field',
                             keyboardType: TextInputType.number,
                             large: false,
-                            enabled: false,
+                            enabled: true,
                             controller: _mobileController,
-                            isFieldDisable: true,
+                            
                           ),
                         ),
                         const SizedBox(
@@ -221,9 +221,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             hintText: 'email address',
                             keyboardType: TextInputType.emailAddress,
                             large: false,
-                            enabled: false,
+                            enabled: true,
                             controller: _emailController,
-                            isFieldDisable: true,
+                            
                           ),
                         ),
                         const SizedBox(
@@ -239,7 +239,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _addressController,
-                          isFieldDisable: false,
+                          
                         ),
                         const SizedBox(
                           height: Dimension.d4,
@@ -287,7 +287,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _postalController,
-                          isFieldDisable: false,
+                          
                         ),
                         const SizedBox(
                           height: Dimension.d10,
