@@ -28,6 +28,7 @@ import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
 import 'package:silver_genie/setup_hive_boxes.dart';
 
@@ -56,6 +57,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
+      GetIt.instance.registerLazySingleton(() => UserDetailStore(GetIt.I<UserDetailServices>()));
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
