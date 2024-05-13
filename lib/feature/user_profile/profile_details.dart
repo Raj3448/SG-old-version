@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
@@ -83,7 +81,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () async {
-              final store = GetIt.I<UserDetailStore>();
               UserDetails? userDetails;
               store.userDetails!.map((a) {
                 userDetails = a;
@@ -129,15 +126,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         const SizedBox(height: Dimension.d2),
                         CustomTextField(
                           hintText: 'Enter your last name',
-                       
                           keyboardType: TextInputType.name,
                           large: false,
                           enabled: true,
                           controller: _lastNameController,
                         ),
-                        const SizedBox(height: Dimension.d4),
-                        const TextLabel(title: 'Gender'),
-                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Gender'),
                         const SizedBox(height: Dimension.d2),
