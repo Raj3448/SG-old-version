@@ -54,7 +54,7 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              const DateDropdown(),
+              DateDropdown(dateController: TextEditingController(),),
               const SizedBox(height: Dimension.d4),
               Text(
                 '3. Select time slot',

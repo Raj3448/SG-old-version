@@ -49,7 +49,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       style: AppTextStyle.bodyLargeMedium.copyWith(
           color:
-              enabled ? AppColors.grayscale700 : AppColors.grayscale900),
+              !enabled ? AppColors.grayscale700 : AppColors.grayscale900),
       maxLines: 8,
       minLines: large ? 5 : 1,
       decoration: InputDecoration(

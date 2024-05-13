@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                     ontap: () {
                       GoRouter.of(context).push(RoutesConstants.signUpRoute);
                     },
-                    title: 'Sign Up'.tr(),
+                    title: 'Signup'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
                     iconColor: AppColors.primary,

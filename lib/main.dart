@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
@@ -27,9 +26,10 @@ import 'package:silver_genie/feature/notification/store/notification_store.dart'
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
+import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
-import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
+import 'package:silver_genie/setup_hive_boxes.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -50,8 +50,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
-      GetIt.instance
-          .registerLazySingleton(() => UserDetailStore(UserDetailServices()));
+      GetIt.instance.registerLazySingleton(()=> UserDetailsCache());
+      GetIt.instance.registerLazySingleton(() => UserDetailServices(GetIt.I<UserDetailsCache>()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
@@ -60,6 +60,7 @@ void main() async {
         () => NotificationStore(NotificationServices()),
       );
       GetIt.instance.registerLazySingleton(() => TokenManager());
+      
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

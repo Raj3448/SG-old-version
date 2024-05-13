@@ -1,71 +1,46 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'user_details.freezed.dart';
 part 'user_details.g.dart';
 
-@JsonSerializable()
-class UserDetails {
-  UserDetails({
-    required this.fullname,
-    required this.gender,
-    required this.dateBirth,
-    required this.mobileNum,
-    required this.emailId,
-    required this.address,
-    required this.country,
-    required this.state,
-    required this.city,
-    required this.postalCode,
-  });
+@freezed
+class UserDetails with _$UserDetails {
+    const factory UserDetails({
+        required int id,
+        required String username,
+        required String email,
+        required dynamic provider,
+        required dynamic password,
+        required dynamic resetPasswordToken,
+        required dynamic confirmationToken,
+        required bool confirmed,
+        required bool blocked,
+        required String gender,
+        required int age,
+        required String phoneNumber,
+        required DateTime dateOfBirth,
+        required dynamic relation,
+        required String uniqueKey,
+        required String firstName,
+        required String lastName,
+        required Address address,
+        required dynamic userTags,
+        required DateTime createdAt,
+        required DateTime updatedAt,
+    }) = _UserDetails;
 
-  factory UserDetails.fromJson(Map<String, dynamic> json) =>
-      _$UserDetailsFromJson(json);
-  @JsonKey(name: 'fullname')
-  final String fullname;
-  @JsonKey(name: 'gender')
-  final String gender;
-  @JsonKey(name: 'dateBirth')
-  final String dateBirth;
-  @JsonKey(name: 'mobileNum')
-  @Default('+91 1234567890')
-  final String mobileNum;
-  @JsonKey(name: 'emailId')
-  @Default('example@gmail.com')
-  final String emailId;
-  @JsonKey(name: 'address')
-  final String address;
-  @JsonKey(name: 'country')
-  final String country;
-  @JsonKey(name: 'state')
-  final String state;
-  @JsonKey(name: 'city')
-  final String city;
-  @JsonKey(name: 'postalCode')
-  final int postalCode;
+    factory UserDetails.fromJson(Map<String, dynamic> json) => _$UserDetailsFromJson(json);
+}
 
-  UserDetails copyWith({
-    String? fullname,
-    String? gender,
-    String? dateBirth,
-    String? mobileNum,
-    String? emailId,
-    String? address,
-    String? country,
-    String? state,
-    String? city,
-    int? postalCode,
-  }) =>
-      UserDetails(
-        fullname: fullname ?? this.fullname,
-        gender: gender ?? this.gender,
-        dateBirth: dateBirth ?? this.dateBirth,
-        mobileNum: mobileNum ?? this.mobileNum,
-        emailId: emailId ?? this.emailId,
-        address: address ?? this.address,
-        country: country ?? this.country,
-        state: state ?? this.state,
-        city: city ?? this.city,
-        postalCode: postalCode ?? this.postalCode,
-      );
+@freezed
+class Address with _$Address {
+    const factory Address({
+        required String city,
+        required String state,
+        required String streetAddress,
+        required String postalCode,
+        required String country
+    }) = _Address;
 
-  Map<String, dynamic> toJson() => _$UserDetailsToJson(this);
+    factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
 }

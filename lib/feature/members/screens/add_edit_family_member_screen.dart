@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -58,8 +59,8 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               showIcon: false,
               iconPath: AppIcons.check,
             ),
-      body: const SingleChildScrollView(
-        physics: BouncingScrollPhysics(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.fast,
         ),
         child: Padding(
@@ -67,15 +68,24 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: EditPic()),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Full name'),
-              SizedBox(height: 8),
-              CustomTextField(
-                hintText: 'Enter your name',
+              const Center(child: EditPic()),
+              const SizedBox(height: 16),
+              AsteriskLabel(label: 'First name'),
+              const SizedBox(height: 8),
+              const CustomTextField(
+                hintText: 'Enter your first name',
                 keyboardType: TextInputType.name,
                 large: false,
-                enabled: true, 
+                enabled: true,
+              ),
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Last name'),
+              const SizedBox(height: 8),
+              const CustomTextField(
+                hintText: 'Enter your last name',
+                keyboardType: TextInputType.name,
+                large: false,
+                enabled: true,
               ),
               SizedBox(height: 16),
               AsteriskLabel(label: 'Gender'),
@@ -84,7 +94,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               SizedBox(height: 16),
               AsteriskLabel(label: 'Date of birth'),
               SizedBox(height: 8),
-              DateDropdown(),
+              DateDropdown(dateController: TextEditingController(),),
               SizedBox(height: 16),
               AsteriskLabel(label: 'Relation'),
               SizedBox(height: 8),
@@ -92,7 +102,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               SizedBox(height: 16),
               AsteriskLabel(label: 'Mobile number'),
               SizedBox(height: 8),
-              CustomTextField(
+              const CustomTextField(
                 hintText: 'Enter mobile number',
                 keyboardType: TextInputType.number,
                 large: false,
@@ -150,6 +160,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                 enabled: true, 
               ),
               SizedBox(height: Dimension.d20),
+              SizedBox(height: Dimension.d5),
             ],
           ),
         ),

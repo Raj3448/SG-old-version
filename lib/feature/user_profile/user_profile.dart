@@ -50,14 +50,32 @@ class UserProfile extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Avatar(imgPath: '', maxRadius: 44),
+                                    Avatar.fromSize(
+                                      imgPath: '',
+                                      size: AvatarSize.size44,
+                                    ),
                                     const SizedBox(
                                       width: Dimension.d2,
                                     ),
-                                    Text(
-                                      store.userDetails!
-                                          .fold((l) => '', (r) => r.fullname),
-                                      style: AppTextStyle.bodyXLSemiBold,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          store.userDetails!.fold(
+                                              (l) => '',
+                                              (r) =>
+                                                  '${r.firstName} ${r.lastName}'),
+                                          style: AppTextStyle.bodyXLSemiBold,
+                                        ),
+                                        Text(
+                                          'Age: ${store.userDetails!.fold((l) => '', (r) => r.age)} Relationship: ${store.userDetails!.fold((l) => '', (r) => r.relation)}',
+                                          style: AppTextStyle.bodyMediumMedium
+                                              .copyWith(
+                                                  color:
+                                                      AppColors.grayscale600),
+                                        )
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -67,7 +85,7 @@ class UserProfile extends StatelessWidget {
                                 CustomTextIcon(
                                   iconpath: AppIcons.phone,
                                   title: store.userDetails!
-                                      .fold((l) => '', (r) => r.mobileNum),
+                                      .fold((l) => '', (r) => r.phoneNumber),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d2,
@@ -75,7 +93,7 @@ class UserProfile extends StatelessWidget {
                                 CustomTextIcon(
                                   iconpath: AppIcons.home,
                                   title: store.userDetails!
-                                      .fold((l) => '', (r) => r.emailId),
+                                      .fold((l) => '', (r) => r.email),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d4,

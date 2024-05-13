@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, inference_failure_on_function_invocation
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -86,7 +86,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                               Text(
                                                 store.userDetails!.fold(
                                                   (l) => '',
-                                                  (r) => r.fullname,
+                                                  (r) => r.firstName,
                                                 ),
                                                 style: AppTextStyle
                                                     .bodyLargeMedium
@@ -114,7 +114,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                         title: 'Email',
                                         details: store.userDetails!.fold(
                                           (l) => '',
-                                          (r) => r.emailId,
+                                          (r) => r.email,
                                         ),
                                       ),
                                       IconTitleDetailsComponent(
@@ -122,7 +122,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                         title: 'Contact',
                                         details: store.userDetails!.fold(
                                           (l) => '',
-                                          (r) => r.mobileNum,
+                                          (r) => r.phoneNumber,
                                         ),
                                       ),
                                       IconTitleDetailsComponent(
@@ -130,7 +130,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                         title: 'Address',
                                         details: store.userDetails!.fold(
                                           (l) => '',
-                                          (r) => r.address,
+                                          (r) => r.address.streetAddress,
                                         ),
                                       ),
                                     ],
