@@ -53,6 +53,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final List<ValueItem<String>> _stateItems = [
     const ValueItem(label: 'Maharashtra', value: 'Maharashtra'),
     const ValueItem(label: 'Kerala', value: 'Kerala'),
+    const ValueItem(label: 'Kerala', value: 'Kerala'),
     const ValueItem(label: 'Karnataka', value: 'Karnataka'),
   ];
 
@@ -126,11 +127,15 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         const SizedBox(height: Dimension.d2),
                         CustomTextField(
                           hintText: 'Enter your last name',
+                       
                           keyboardType: TextInputType.name,
                           large: false,
                           enabled: true,
                           controller: _lastNameController,
                         ),
+                        const SizedBox(height: Dimension.d4),
+                        const TextLabel(title: 'Gender'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Gender'),
                         const SizedBox(height: Dimension.d2),
@@ -146,6 +151,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Mobile Field'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         GestureDetector(
                           onTap: () {
@@ -173,7 +179,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Email ID'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         GestureDetector(
                           onTap: () {
@@ -201,7 +209,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Address'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         CustomTextField(
                           hintText: 'Address',
@@ -211,28 +221,36 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           controller: _addressController,
                         ),
                         const SizedBox(height: Dimension.d4),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Country'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           controller: _countryController,
                           values: _countryItems,
                         ),
                         const SizedBox(height: Dimension.d4),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'State'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           values: _stateItems,
                           controller: _stateController,
                         ),
                         const SizedBox(height: Dimension.d4),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'City'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         MultiDropdown(
                           values: _cityItems,
                           controller: _cityController,
                         ),
                         const SizedBox(height: Dimension.d4),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Postal Code'),
+                        const SizedBox(height: Dimension.d2),
                         const SizedBox(height: Dimension.d2),
                         CustomTextField(
                           hintText: 'Postal Code',
@@ -241,6 +259,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           enabled: true,
                           controller: _postalController,
                         ),
+                        const SizedBox(height: Dimension.d20),
+                        const SizedBox(height: Dimension.d5),
                         const SizedBox(height: Dimension.d20),
                         const SizedBox(height: Dimension.d5),
                       ],

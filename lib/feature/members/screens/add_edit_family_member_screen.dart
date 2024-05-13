@@ -161,6 +161,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               ),
               SizedBox(height: Dimension.d20),
               SizedBox(height: Dimension.d5),
+              SizedBox(height: Dimension.d5),
             ],
           ),
         ),
