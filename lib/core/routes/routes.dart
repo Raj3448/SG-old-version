@@ -68,9 +68,17 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.otpRoute,
+      path: '/otp/:email/:phoneNumber',
+      name: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: OTPScreen());
+        final email = state.pathParameters['email'].toString();
+        final phoneNumber = state.pathParameters['phoneNumber'].toString();
+        return MaterialPage(
+          child: OTPScreen(
+            email: email,
+            phoneNumber: phoneNumber,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -241,7 +249,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: BookServiceScreen());
+        return MaterialPage(child: BookServiceScreen());
       },
     ),
     GoRoute(

@@ -93,8 +93,33 @@ class GenderDropdown extends StatelessWidget {
   }
 }
 
-class DateDropdown extends StatelessWidget {
-  const DateDropdown({super.key});
+class DateDropdown extends StatefulWidget {
+  const DateDropdown({
+    required this.controller,
+    super.key,
+  });
+
+  final TextEditingController controller;
+
+  @override
+  _DateDropdownState createState() => _DateDropdownState();
+}
+
+class _DateDropdownState extends State<DateDropdown> {
+  late TextEditingController _dateController;
+  DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateController = widget.controller;
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +129,16 @@ class DateDropdown extends StatelessWidget {
           context: context,
           firstDate: DateTime(1950),
           lastDate: DateTime.now(),
-          initialDate: DateTime.now(),
+          initialDate: _selectedDate ?? DateTime.now(),
         );
+
+        if (pickedDate != null && pickedDate != _selectedDate) {
+          setState(() {
+            _selectedDate = pickedDate;
+            _dateController.text =
+                DateFormat('yyyy-MM-dd').format(_selectedDate!);
+          });
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -118,12 +151,33 @@ class DateDropdown extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(
-              'Select'.tr(),
-              style: AppTextStyle.bodyLargeMedium
-                  .copyWith(color: AppColors.grayscale600),
+            Expanded(
+              child: TextFormField(
+                controller: _dateController,
+                decoration: const InputDecoration(
+                  hintText: 'Select',
+                  border: InputBorder.none,
+                ),
+                readOnly: true,
+                onTap: () async {
+                  final pickedDate = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime.now(),
+                    initialDate: _selectedDate ?? DateTime.now(),
+                  );
+
+                  if (pickedDate != null && pickedDate != _selectedDate) {
+                    setState(() {
+                      _selectedDate = pickedDate;
+                      _dateController.text =
+                          DateFormat('yyyy-MM-dd').format(_selectedDate!);
+                    });
+                  }
+                },
+              ),
             ),
-            const Spacer(),
+            const SizedBox(width: 10),
             const Icon(
               AppIcons.calendar,
               color: AppColors.grayscale700,

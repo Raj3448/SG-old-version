@@ -2,24 +2,32 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
+import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key});
+  const OTPScreen({
+    required this.email,
+    required this.phoneNumber,
+    super.key,
+  });
+  final String email;
+  final String phoneNumber;
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
+  final TextEditingController otpController = TextEditingController();
+  final authService = GetIt.I<AuthService>();
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -51,6 +59,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   Form(
                     key: formKey,
                     child: PinCodeTextField(
+                      controller: otpController,
                       appContext: context,
                       mainAxisAlignment: MainAxisAlignment.center,
                       length: 4,
@@ -96,17 +105,25 @@ class _OTPScreenState extends State<OTPScreen> {
                     size: ButtonSize.normal,
                     type: ButtonType.primary,
                     expanded: true,
-                    ontap: () {
-                      if (formKey.currentState!.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        Future.delayed(const Duration(seconds: 2), () {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                          GoRouter.of(context).push(RoutesConstants.mainRoute);
-                        });
+                    ontap: () async {
+                      // if (formKey.currentState!.validate()) {
+                      //   setState(() {
+                      //     _isLoading = true;
+                      //   });
+                      //   Future.delayed(const Duration(seconds: 2), () {
+                      //     setState(() {
+                      //       _isLoading = false;
+                      //     });
+                      //     GoRouter.of(context).push(RoutesConstants.mainRoute);
+                      //   });
+                      // }
+                      if (otpController.text.isNotEmpty) {
+                        await authService.verifyOtp(
+                          otpController.text,
+                          widget.email,
+                          widget.phoneNumber,
+                          context,
+                        );
                       }
                     },
                     title: 'Continue'.tr(),
@@ -141,7 +158,7 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
             ),
           ),
-          if (_isLoading) const LoadingWidget()
+          if (_isLoading) const LoadingWidget(),
         ],
       ),
     );

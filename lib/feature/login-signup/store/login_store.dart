@@ -8,4 +8,7 @@ class LoginStore = _LoginStoreBase with _$LoginStore;
 abstract class _LoginStoreBase with Store {
   @observable
   bool isEmail = false;
+
+  @observable
+  String? selectCountryDialCode;
 }

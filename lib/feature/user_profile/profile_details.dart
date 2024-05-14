@@ -61,6 +61,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   ];
 
   bool _isInitialize = false;
+  final TextEditingController dobContr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -114,54 +115,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           values: _genderItems,
                           controller: _genderController,
                         ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
-                        const TextLabel(
-                          title: 'Date of birth',
-                        ),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showDatePicker(
-                              context: context,
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime.now(),
-                              initialDate: DateTime.now(),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.line),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  dateBirth,
-                                  style: AppTextStyle.bodyLargeMedium.copyWith(
-                                    color: AppColors.grayscale700,
-                                  ),
-                                ),
-                                const Spacer(),
-                                const Icon(
-                                  AppIcons.calendar,
-                                  color: AppColors.grayscale700,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: Dimension.d4,
-                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const TextLabel(title: 'Date of birth'),
+                        const SizedBox(height: Dimension.d2),
+                        // DateDropdown(controller: dobContr),
+                        const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Mobile Field'),
                         const SizedBox(
                           height: Dimension.d2,

@@ -16,9 +16,10 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
 class AddEditFamilyMemberScreen extends StatelessWidget {
-  const AddEditFamilyMemberScreen({required this.edit, super.key});
+  AddEditFamilyMemberScreen({required this.edit, super.key});
 
   final bool edit;
+  final TextEditingController dobContr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +70,19 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
             children: [
               Center(child: EditPic()),
               SizedBox(height: 16),
-              AsteriskLabel(label: 'Full name'),
+              AsteriskLabel(label: 'First name'),
               SizedBox(height: 8),
               CustomTextField(
-                hintText: 'Enter your name',
+                hintText: 'Enter your first name',
+                keyboardType: TextInputType.name,
+                large: false,
+                enabled: true,
+              ),
+              SizedBox(height: 16),
+              AsteriskLabel(label: 'Last name'),
+              SizedBox(height: 8),
+              CustomTextField(
+                hintText: 'Enter your last name',
                 keyboardType: TextInputType.name,
                 large: false,
                 enabled: true,
@@ -84,7 +94,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               SizedBox(height: 16),
               AsteriskLabel(label: 'Date of birth'),
               SizedBox(height: 8),
-              DateDropdown(),
+              // DateDropdown(controller: dobContr,),
               SizedBox(height: 16),
               AsteriskLabel(label: 'Relation'),
               SizedBox(height: 8),
@@ -150,6 +160,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                 enabled: true,
               ),
               SizedBox(height: Dimension.d20),
+              SizedBox(height: Dimension.d5),
             ],
           ),
         ),
