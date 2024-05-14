@@ -56,7 +56,7 @@ class UserProfile extends StatelessWidget {
                                     ),
                                     Text(
                                       store.userDetails!
-                                          .fold((l) => '', (r) => r.fullname),
+                                          .fold((l) => '', (r) => r.firstName),
                                       style: AppTextStyle.bodyXLSemiBold,
                                     ),
                                   ],
@@ -106,16 +106,12 @@ class UserProfile extends StatelessWidget {
                           height: Dimension.d6,
                         ),
                         ProfileNav(
-                          title: 'SG+ subscription',
+                          title: 'Subscriptions',
                           onTap: () {
                             context.pushNamed(
                               RoutesConstants.subscriptionsScreen,
                             );
                           },
-                        ),
-                        ProfileNav(
-                          title: 'Emergency subscription',
-                          onTap: () {},
                         ),
                         ProfileNav(
                           title: 'About',

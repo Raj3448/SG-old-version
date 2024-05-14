@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                                 return 'Please enter a valid email address';
                               }
                               return null;
-                            },
+                            }, isFieldDisable: false,
                           ),
                         )
                       else
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                     ontap: () {
                       GoRouter.of(context).push(RoutesConstants.signUpRoute);
                     },
-                    title: 'Sign Up'.tr(),
+                    title: 'Signup'.tr(),
                     showIcon: false,
                     iconPath: Icons.not_interested,
                     iconColor: AppColors.primary,

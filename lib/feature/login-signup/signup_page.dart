@@ -58,7 +58,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextLabel(title: 'Enter Full Name'.tr()),
+                    TextLabel(title: 'Enter first name'.tr()),
+                    const SizedBox(height: Dimension.d2),
+                    CustomTextField(
+                      hintText: 'Enter first name'.tr(),
+                      keyboardType: TextInputType.name,
+                      large: false,
+                      enabled: true,
+                      controller: firstNameContr,
+                      validationLogic: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                    TextLabel(title: 'Enter last name'.tr()),
                     const SizedBox(height: Dimension.d2),
                     CustomTextField(
                       hintText: 'Enter first name'.tr(),
@@ -90,6 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
+                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Enter Email'.tr()),
@@ -110,6 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
+                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Mobile Number'.tr()),

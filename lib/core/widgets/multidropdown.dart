@@ -1,4 +1,4 @@
-// ignore_for_file: strict_raw_type
+// ignore_for_file: strict_raw_type, library_private_types_in_public_api
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -124,8 +124,8 @@ class _DateDropdownState extends State<DateDropdown> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showDatePicker(
+      onTap: () async {
+        final pickedDate = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
           lastDate: DateTime.now(),
@@ -147,7 +147,6 @@ class _DateDropdownState extends State<DateDropdown> {
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 14,
         ),
         child: Row(
           children: [

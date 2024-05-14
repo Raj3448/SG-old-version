@@ -70,6 +70,7 @@ class AuthService implements IAuthService {
   Future<Either<AuthFailure, void>> signup(
     String firstName,
     String lastName,
+    String dob,
     String email,
     String phoneNumber,
     String dob,
