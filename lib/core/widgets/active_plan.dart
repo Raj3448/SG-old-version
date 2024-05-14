@@ -243,7 +243,7 @@ class ActivePlanComponent extends StatelessWidget {
                   child: CustomButton(
                     ontap: () {
                       GoRouter.of(context)
-                          .pushNamed(RoutesConstants.eprPhrPdfViewPage);
+                          .pushNamed(RoutesConstants.phrPdfViewPage);
                     },
                     title: 'View PHR',
                     showIcon: false,

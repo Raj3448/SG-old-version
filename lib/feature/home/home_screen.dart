@@ -620,7 +620,7 @@ class _MemberInfo extends StatelessWidget {
                                     name: selectedMember.name,
                                     onTap: () {
                                       GoRouter.of(context)
-                                          .push(RoutesConstants.eprPhrRoute);
+                                          .push(RoutesConstants.eprRoute);
                                     },
                                   )
                                 : InactivePlanComponent(

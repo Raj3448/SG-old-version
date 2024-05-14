@@ -19,12 +19,12 @@ Future<void> setupHiveBox() async {
 }
 
 Future<void> initializeBoxForUserDetails() async {
-  Hive..registerAdapter(UserDetailsAdapter())..registerAdapter(AddressAdapter());
+  Hive..registerAdapter(UserAdapter())..registerAdapter(AddressAdapter());
   var userDetailsKey = Hive.generateSecureKey(); // Generate a secure encryption key
   
   await storage.write(
       key: USER_DETAILS_BOX_KEY, value: base64UrlEncode(userDetailsKey));
-  await Hive.openBox<UserDetails>(
+  await Hive.openBox<User>(
     USER_DETAILS_BOX_NAME,
     encryptionCipher: HiveAesCipher(userDetailsKey),
     compactionStrategy: (int total, int deleted) => deleted > 2,

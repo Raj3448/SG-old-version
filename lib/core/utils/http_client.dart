@@ -30,7 +30,7 @@ class HttpClient with DioMixin implements Dio {
       AuthInterceptor(tokenStorage),
       UserAgentInterceptor(),
       DioFirebasePerformanceInterceptor(),
-      
+      DioCacheInterceptor(options: defaultCacheOptions)
       /*CookieManager(PersistCookieJar(
         ignoreExpires: true,
         storage: FileStorage("${GetIt.I<Directory>().path}/.cookies/"),

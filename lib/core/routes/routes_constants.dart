@@ -16,7 +16,7 @@ class RoutesConstants {
 
   //---- Screens ------------------//
   static const addEditFamilyMemberRoute = '/addEditFamilyMember';
-  static const eprPhrRoute = '/eprPhr';
+  static const eprRoute = '/eprPhr';
   static const memberDetailsRoute = '/memberDetails';
   static const emergencyServiceScreen = '/emergencyServiceScreen';
   static const servicesCareScreen = '/servicesCareScreen';
@@ -26,7 +26,7 @@ class RoutesConstants {
   static const bookingDetailsScreen = '/bookingDetailsScreen';
   static const subscriptionsScreen = '/subscriptionsScreen';
   static const notificationScreen = '/notificationScreen';
-  static const eprPhrPdfViewPage = '/eprPhrPdfViewPage';
+  static const phrPdfViewPage = '/eprPhrPdfViewPage';
   static const bookingServiceStatusDetailsPage =
       '/bookingServiceStatusDetailsPage';
   static const geniePage = '/geniePage';

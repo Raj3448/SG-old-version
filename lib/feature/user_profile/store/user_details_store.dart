@@ -17,23 +17,35 @@ abstract class _UserDetailStoreBase with Store {
   Either<Failure, UserDetails>? userDetails;
 
   @observable
-  bool isLoading = false;
+  bool isLoadingUserInfo = false;
+
+  @observable
+  bool isLoadingEprDetails = false;
 
   @action
   Future<void> getUserDetails() async {
-    isLoading = true;
+    isLoadingUserInfo = true;
     userDetails = await userDetailServices.fetchUserDetailsFromApi();
-    isLoading = false;
+    isLoadingUserInfo = false;
   }
 
   @action
-  Future<void> updateUserDetails(UserDetails newInstance) async {
-    isLoading = true;
+  Future<void> updateUserDetails(User newInstance) async {
+    isLoadingUserInfo = true;
     final Either<Failure, UserDetails> userDetailsResult =
-        await userDetailServices.updateUserDetails(userDetails: newInstance);
+        await userDetailServices.updateUserDetails(user: newInstance);
     userDetailsResult.fold((l) {}, (r) {
       userDetails = userDetailsResult;
     });
-    isLoading = false;
+    isLoadingUserInfo = false;
+  }
+
+  @action
+  Future<void> getEprDetails() async {
+    isLoadingEprDetails = true;
+    final Either<Failure, UserDetails> userDetailsResult =
+        await userDetailServices.getEprDetails();
+    userDetails = userDetailsResult;
+    isLoadingEprDetails = false;
   }
 }

@@ -6,29 +6,33 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
-import 'package:silver_genie/core/widgets/initialize_component.dart';
+import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/members/model/epr_models.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
-class EPRPHRViewScreen extends StatelessWidget {
-  EPRPHRViewScreen({super.key});
+class EPRViewScreen extends StatelessWidget {
+  EPRViewScreen({super.key});
   final store = GetIt.I<UserDetailStore>();
 
   @override
   Widget build(BuildContext context) {
-    store.getUserDetails();
+    store
+      ..getUserDetails()
+      ..getEprDetails();
     return Observer(
       builder: (context) {
         return Scaffold(
           appBar: const PageAppbar(title: 'EPR'),
           backgroundColor: AppColors.white,
-          body: store.isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
+          body: store.isLoadingUserInfo || store.isLoadingEprDetails
+              ? const LoadingWidget(
+                  showShadow: false,
                 )
               : Column(
                   children: [
@@ -86,7 +90,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                               Text(
                                                 store.userDetails!.fold(
                                                   (l) => '',
-                                                  (r) => r.firstName,
+                                                  (r) => r.user.firstName,
                                                 ),
                                                 style: AppTextStyle
                                                     .bodyLargeMedium
@@ -114,7 +118,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                         title: 'Email',
                                         details: store.userDetails!.fold(
                                           (l) => '',
-                                          (r) => r.email,
+                                          (r) => r.user.email,
                                         ),
                                       ),
                                       IconTitleDetailsComponent(
@@ -122,7 +126,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                         title: 'Contact',
                                         details: store.userDetails!.fold(
                                           (l) => '',
-                                          (r) => r.phoneNumber,
+                                          (r) => r.user.phoneNumber,
                                         ),
                                       ),
                                       IconTitleDetailsComponent(
@@ -130,7 +134,7 @@ class EPRPHRViewScreen extends StatelessWidget {
                                         title: 'Address',
                                         details: store.userDetails!.fold(
                                           (l) => '',
-                                          (r) => r.address.streetAddress,
+                                          (r) => r.user.address.streetAddress,
                                         ),
                                       ),
                                     ],
@@ -140,18 +144,22 @@ class EPRPHRViewScreen extends StatelessWidget {
                               const SizedBox(
                                 height: Dimension.d3,
                               ),
-                              const _ExpandedButton(
+                              _ExpandedButton(
                                 title: 'Insurance details',
+                                userInsurance: store.userDetails!
+                                    .fold((l) => [], (r) => r.userInsurance),
                               ),
-                              const _ExpandedButton(
-                                title: 'Preferred Hospitals',
-                              ),
-                              const _ExpandedButton(
-                                title: 'Emergency Contact',
-                              ),
-                              const _ExpandedButton(
-                                title: 'Preferred ambulance',
-                              ),
+                              _ExpandedButton(
+                                  title: 'Preferred Hospitals',
+                                  preferredServices: store.userDetails!.fold(
+                                      (l) => [], (r) => r.preferredServices)),
+                              _ExpandedButton(
+                                  title: 'Emergency Contact',
+                                  emrgencyContactList: store.userDetails!.fold(
+                                      (l) => [], (r) => r.emergencyContacts)),
+                              const SizedBox(
+                                height: Dimension.d19,
+                              )
                             ],
                           ),
                         ),
@@ -189,8 +197,16 @@ class EPRPHRViewScreen extends StatelessWidget {
 }
 
 class _ExpandedButton extends StatefulWidget {
-  const _ExpandedButton({required this.title});
-
+  const _ExpandedButton({
+    this.emrgencyContactList,
+    this.userInsurance,
+    this.preferredServices,
+    required this.title,
+    Key? key,
+  }) : super(key: key);
+  final List<EmergencyContact>? emrgencyContactList;
+  final List<UserInsurance>? userInsurance;
+  final List<PreferredService>? preferredServices;
   final String title;
 
   @override
@@ -246,15 +262,25 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
             ),
             child: Column(
               children: List.generate(
-                2,
-                (index) => _InsuranceDetailsComponent(
-                  insuranceName: '${index + 1}. Aditya Birla Health insurance',
-                  policyNo: 'Aabc@wer.com',
-                  contactPerson: '9983457601',
-                  contactAmbulance: 'N/A',
-                  contactAddress:
-                      'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
-                ),
+                widget.userInsurance != null ? widget.userInsurance!.length : widget.emrgencyContactList != null ? widget.emrgencyContactList!.length : widget.preferredServices!.length,
+                (index) => (widget.userInsurance != null)
+                    ? _UserInsuranceComponent(
+                        titleName:
+                            '${index + 1}. ${widget.userInsurance![index].contactPerson}',
+                        assignedElements: widget.userInsurance![index],
+                      )
+                    : (widget.preferredServices != null)
+                        ? _PreferredServiceComponent(
+                            titleName:
+                                '${index + 1}. ${widget.preferredServices![index].name}',
+                            assignedElements: widget.preferredServices![index],
+                          )
+                        : _EmergencyContactComponent(
+                            titleName:
+                                '${index + 1}. ${widget.emrgencyContactList![index].contactPersonName}',
+                            assignedElements:
+                                widget.emrgencyContactList![index],
+                          ),
               ),
             ),
           ),
@@ -264,20 +290,17 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
   }
 }
 
-class _InsuranceDetailsComponent extends StatelessWidget {
-  const _InsuranceDetailsComponent({
-    required this.insuranceName,
-    required this.policyNo,
-    required this.contactPerson,
-    required this.contactAmbulance,
-    required this.contactAddress,
-  });
+class _UserInsuranceComponent extends StatelessWidget {
+  final String titleName;
 
-  final String insuranceName;
-  final String policyNo;
-  final String contactPerson;
-  final String contactAmbulance;
-  final String contactAddress;
+  const _UserInsuranceComponent({
+    Key? key,
+    required this.titleName,
+    required this.assignedElements,
+  }) : super(key: key);
+
+  final UserInsurance assignedElements;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -286,22 +309,118 @@ class _InsuranceDetailsComponent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            insuranceName,
+            titleName,
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
-          InitializeComponent(name: 'Policy No', initializeElement: policyNo),
-          InitializeComponent(
+          AssigningComponent(
+              name: 'Policy No',
+              initializeElement: assignedElements.policyNumber),
+          AssigningComponent(
             name: 'Contact Person',
-            initializeElement: contactPerson,
+            initializeElement: assignedElements.contactPerson,
           ),
-          InitializeComponent(
+          AssigningComponent(
             name: 'Contact Of Ambulance',
-            initializeElement: contactAmbulance,
+            initializeElement: assignedElements.contactNumber,
           ),
-          InitializeComponent(
+          AssigningComponent(
             name: 'Contact Of Address',
-            initializeElement: contactAddress,
+            initializeElement: assignedElements.insuranceProvider,
+          ),
+          const Divider(
+            color: AppColors.grayscale300,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmergencyContactComponent extends StatelessWidget {
+  final String titleName;
+
+  const _EmergencyContactComponent({
+    required this.titleName,
+    required this.assignedElements,
+    Key? key,
+  }) : super(key: key);
+
+  final EmergencyContact assignedElements;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titleName,
+            style: AppTextStyle.bodyLargeMedium
+                .copyWith(fontWeight: FontWeight.w500, height: 2.4),
+          ),
+          AssigningComponent(
+            name: 'Contact No.',
+            initializeElement: assignedElements.contactNumber,
+          ),
+          AssigningComponent(
+            name: 'Relation',
+            initializeElement: assignedElements.relation as String,
+          ),
+          AssigningComponent(
+            name: 'Email',
+            initializeElement: assignedElements.email,
+          ),
+          AssigningComponent(
+            name: 'Contact Of Address',
+            initializeElement: assignedElements.country,
+          ),
+          const Divider(
+            color: AppColors.grayscale300,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreferredServiceComponent extends StatelessWidget {
+  final String titleName;
+
+  const _PreferredServiceComponent({
+    required this.titleName,
+    required this.assignedElements,
+    Key? key,
+  }) : super(key: key);
+
+  final PreferredService assignedElements;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titleName,
+            style: AppTextStyle.bodyLargeMedium
+                .copyWith(fontWeight: FontWeight.w500, height: 2.4),
+          ),
+          AssigningComponent(
+            name: 'Contact Person',
+            initializeElement: assignedElements.contactPerson,
+          ),
+          AssigningComponent(
+            name: 'Contact No.',
+            initializeElement: assignedElements.contactNumber,
+          ),
+          AssigningComponent(
+            name: 'Contact Of Ambulance',
+            initializeElement: assignedElements.ambulanceContact != null
+                ? assignedElements.ambulanceContact as String
+                : 'N/A',
           ),
           const Divider(
             color: AppColors.grayscale300,

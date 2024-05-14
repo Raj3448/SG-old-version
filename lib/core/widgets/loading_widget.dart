@@ -5,8 +5,8 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 
 class LoadingWidget extends StatefulWidget {
   final VoidCallback? onAppeared;
-
-  const LoadingWidget({Key? key, this.onAppeared}) : super(key: key);
+  final bool showShadow;
+  const LoadingWidget({Key? key, this.onAppeared, this.showShadow = true}) : super(key: key);
 
   @override
   _LoadingWidgetState createState() => _LoadingWidgetState();
@@ -32,12 +32,12 @@ class _LoadingWidgetState extends State<LoadingWidget> {
           decoration: BoxDecoration(
               color: AppColors.grayscale100,
               borderRadius: BorderRadius.circular(Dimension.d3),
-              boxShadow: [
+              boxShadow: widget.showShadow? [
                 BoxShadow(
                     blurRadius: 2,
                     spreadRadius: 2000,
                     color: AppColors.black.withOpacity(0.5))
-              ]),
+              ]:null),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

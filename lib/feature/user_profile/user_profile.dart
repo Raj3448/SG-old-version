@@ -30,7 +30,7 @@ class UserProfile extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.white,
           appBar: const PageAppbar(title: 'User Profile'),
-          body: store.isLoading
+          body: store.isLoadingUserInfo
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Padding(
@@ -66,11 +66,11 @@ class UserProfile extends StatelessWidget {
                                           store.userDetails!.fold(
                                               (l) => '',
                                               (r) =>
-                                                  '${r.firstName} ${r.lastName}'),
+                                                  '${r.user.firstName} ${r.user.lastName}'),
                                           style: AppTextStyle.bodyXLSemiBold,
                                         ),
                                         Text(
-                                          'Age: ${store.userDetails!.fold((l) => '', (r) => r.age)} Relationship: ${store.userDetails!.fold((l) => '', (r) => r.relation)}',
+                                          'Age: ${store.userDetails!.fold((l) => '', (r) => calculateAge(r.user.dateOfBirth))} Relationship: ${store.userDetails!.fold((l) => '', (r) => r.user.relation)}',
                                           style: AppTextStyle.bodyMediumMedium
                                               .copyWith(
                                                   color:
@@ -86,7 +86,7 @@ class UserProfile extends StatelessWidget {
                                 CustomTextIcon(
                                   iconpath: AppIcons.phone,
                                   title: store.userDetails!
-                                      .fold((l) => '', (r) => r.phoneNumber),
+                                      .fold((l) => '', (r) => r.user.phoneNumber),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d2,
@@ -94,7 +94,7 @@ class UserProfile extends StatelessWidget {
                                 CustomTextIcon(
                                   iconpath: AppIcons.home,
                                   title: store.userDetails!
-                                      .fold((l) => '', (r) => r.email),
+                                      .fold((l) => '', (r) => r.user.email),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d4,
@@ -237,4 +237,13 @@ class _LogOutComponent extends StatelessWidget {
       ),
     );
   }
+}
+
+int calculateAge(DateTime dob) {
+  final now = DateTime.now();
+  int age = now.year - dob.year;
+  if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+    age--;
+  }
+  return age;
 }

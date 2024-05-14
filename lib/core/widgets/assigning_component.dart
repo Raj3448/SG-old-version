@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
-class InitializeComponent extends StatelessWidget {
-  const InitializeComponent({
+class AssigningComponent extends StatelessWidget {
+  const AssigningComponent({
     required this.name,
     required this.initializeElement,
     super.key,

@@ -2,17 +2,17 @@ import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 
-class UserDetailsAdapter extends TypeAdapter<UserDetails> {
+class UserAdapter extends TypeAdapter<User> {
   @override
   final int typeId = 0;
 
   @override
-  UserDetails read(BinaryReader reader) {
-    return UserDetails.fromJson(reader.readMap() as Map<String, dynamic>);
+  User read(BinaryReader reader) {
+    return User.fromJson(reader.readMap() as Map<String, dynamic>);
   }
 
   @override
-  void write(BinaryWriter writer, UserDetails obj) {
+  void write(BinaryWriter writer, User obj) {
     writer.writeMap(obj.toJson());
   }
 }

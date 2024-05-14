@@ -81,17 +81,17 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () async {
-              UserDetails? userDetails;
+              User? user;
               store.userDetails!.map((a) {
-                userDetails = a;
+                user = a.user;
               });
-              userDetails = userDetails!.copyWith(
+              user = user!.copyWith(
                 firstName: _firstNameController.text,
                 lastName: _lastNameController.text,
                 email: _emailController.text,
                 phoneNumber: _mobileController.text,
               );
-              await store.updateUserDetails(userDetails!);
+              await store.updateUserDetails(user!);
               context.pop();
             },
             btnTitle: 'Save details',
@@ -99,7 +99,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
             iconPath: AppIcons.add,
           ),
           appBar: const PageAppbar(title: 'Personal Details'),
-          body: store.isLoading || !_isInitialize
+          body: store.isLoadingUserInfo || !_isInitialize
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   physics: const BouncingScrollPhysics(
@@ -269,19 +269,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   void _initializeControllers(UserDetailStore store) {
     store.userDetails!.map((userDetails) {
-      _firstNameController.text = userDetails.firstName;
-      _lastNameController.text = userDetails.lastName;
+      _firstNameController.text = userDetails.user.firstName;
+      _lastNameController.text = userDetails.user.lastName;
       _dobController.text =
-          DateFormat('dd/MM/yyyy').format(userDetails.dateOfBirth);
+          DateFormat('dd/MM/yyyy').format(userDetails.user.dateOfBirth);
 
       _genderController.selectedOptions.add(_genderItems[0]);
-      _mobileController.text = userDetails.phoneNumber;
-      _emailController.text = userDetails.email;
-      _addressController.text = userDetails.address.streetAddress;
+      _mobileController.text = userDetails.user.phoneNumber;
+      _emailController.text = userDetails.user.email;
+      _addressController.text = userDetails.user.address.streetAddress;
       _countryController.selectedOptions.add(_countryItems[0]);
       _stateController.selectedOptions.add(_stateItems[0]);
       _cityController.selectedOptions.add(_cityItems[0]);
-      _postalController.text = userDetails.address.postalCode.toString();
+      _postalController.text = userDetails.user.address.postalCode.toString();
     });
   }
 }
