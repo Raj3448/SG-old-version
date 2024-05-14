@@ -98,11 +98,11 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              const CustomTextField(
+              CustomTextField(
                 hintText: 'Write your purpose here',
                 keyboardType: TextInputType.name,
                 large: true,
-                enabled: true, isFieldDisable: false,
+                enabled: true,
               ),
               const SizedBox(height: Dimension.d4),
               Text(
@@ -111,11 +111,11 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              const CustomTextField(
+              CustomTextField(
                 hintText: 'Type here...',
                 keyboardType: TextInputType.name,
                 large: true,
-                enabled: true, isFieldDisable: false,
+                enabled: true,
               ),
               const SizedBox(height: Dimension.d20),
               const SizedBox(height: Dimension.d4),

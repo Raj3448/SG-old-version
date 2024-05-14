@@ -1,6 +1,5 @@
 // ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars, use_build_context_synchronously
 
-import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
@@ -73,7 +72,6 @@ class AuthService implements IAuthService {
     String dob,
     String email,
     String phoneNumber,
-    String dob,
     BuildContext context,
   ) async {
     final data = <String, dynamic>{

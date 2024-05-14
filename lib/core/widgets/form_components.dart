@@ -24,12 +24,10 @@ class TextLabel extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
-    Key? key,
     required this.hintText,
     required this.keyboardType,
     required this.large,
     required this.enabled,
-    this.controller,
     this.controller,
     this.validationLogic,
     this.textInputAction,

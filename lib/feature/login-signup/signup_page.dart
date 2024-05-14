@@ -106,7 +106,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Enter Email'.tr()),
@@ -127,7 +126,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Mobile Number'.tr()),
