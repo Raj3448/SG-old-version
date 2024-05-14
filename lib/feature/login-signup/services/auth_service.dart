@@ -26,7 +26,7 @@ class AuthService implements IAuthService {
   @override
   Future<Either<AuthFailure, void>> loginWithNumber(String number) async {
     try {
-      final response = httpClient.post('https://silvergenie.com/api/v1/login');
+      final response = httpClient.post('http://localhost:1337/api/login/');
       return const Right(null);
     } catch (e) {
       return const Left(AuthFailure.invalidPhoneNumber());
@@ -36,7 +36,7 @@ class AuthService implements IAuthService {
   @override
   Future<Either<AuthFailure, void>> loginWithEmail(String email) async {
     try {
-      final response = httpClient.post('https://silvergenie.com/api/v1/login');
+      final response = httpClient.post('http://localhost:1337/api/login/');
       return const Right(null);
     } catch (e) {
       return const Left(AuthFailure.invalidEmail());
@@ -61,7 +61,7 @@ class AuthService implements IAuthService {
 
     try {
       final response = await httpClient.post(
-        'https://af19-2405-201-4004-910c-8f4c-713c-b57-a1a3.ngrok-free.app/api/auth/register-app-user',
+        'http://localhost:1337/api/auth/register-app-user',
         data: data,
         options: Options(
           headers: {
@@ -82,7 +82,7 @@ class AuthService implements IAuthService {
   @override
   Future<Either<AuthFailure, void>> verifyOtp(String otp) async {
     try {
-      final response = httpClient.post('https://silvergenie.com/api/v1/login');
+      final response = httpClient.post('http://localhost:1337/api/verify-otp/');
       return const Right(null);
     } catch (e) {
       return const Left(AuthFailure.otpInvalid());

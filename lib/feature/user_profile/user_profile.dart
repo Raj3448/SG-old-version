@@ -19,9 +19,10 @@ import 'package:silver_genie/feature/user_profile/store/user_details_store.dart'
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
+    
     final store = GetIt.I<UserDetailStore>();
     store.getUserDetails();
     return Observer(

@@ -123,76 +123,76 @@ class _DateDropdownState extends State<DateDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: () async {
-      
-          final pickedDate = await showDatePicker(
-            context: context,
-            firstDate: DateTime(1950),
-            lastDate: DateTime.now(),
-            initialDate: DateTime.now(),
-          );
+    return GestureDetector(
+      onTap: () async {
+        final pickedDate = await showDatePicker(
+          context: context,
+          firstDate: DateTime(1950),
+          lastDate: DateTime.now(),
+          initialDate: DateTime.now(),
+        );
 
-          if (pickedDate != null && pickedDate != _selectedDate) {
-            setState(() {
-              _selectedDate = pickedDate;
-              widget.dateController.text =
-                  DateFormat.yMMMd().format(_selectedDate!);
-            });
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.line),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: widget.dateController,
-                  decoration: InputDecoration(
-                    hintText: 'Select',
-                    border: InputBorder.none,
-                    hintStyle: AppTextStyle.bodyLargeMedium
-                        .copyWith(color: AppColors.grayscale600),
-                  ),
-                  style: AppTextStyle.bodyLargeMedium.copyWith(
-                    color: _selectedDate != null
-                        ? AppColors.grayscale900
-                        : AppColors.grayscale600,
-                  ),
-                  textAlignVertical: TextAlignVertical.top,
-                  readOnly: true,
-                  onTap: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1950),
-                      lastDate: DateTime.now(),
-                      initialDate: DateTime.now(),
-                    );
-
-                    if (pickedDate != null && pickedDate != _selectedDate) {
-                      setState(() {
-                        _selectedDate = pickedDate;
-                        widget.dateController.text =
-                            DateFormat.yMMMd().format(_selectedDate!);
-                      });
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Icon(
-                AppIcons.calendar,
-                color: AppColors.grayscale700,
-                size: 18,
-              ),
-            ],
-          ),
+        if (pickedDate != null && pickedDate != _selectedDate) {
+          setState(() {
+            _selectedDate = pickedDate;
+            widget.dateController.text =
+                DateFormat.yMMMd().format(_selectedDate!);
+          });
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.line),
         ),
-      );
-    }
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: widget.dateController,
+                decoration: InputDecoration(
+                  hintText: 'Select',
+                  border: InputBorder.none,
+                  hintStyle: AppTextStyle.bodyLargeMedium
+                      .copyWith(color: AppColors.grayscale600),
+                ),
+                style: AppTextStyle.bodyLargeMedium.copyWith(
+                  color: _selectedDate != null
+                      ? AppColors.grayscale900
+                      : AppColors.grayscale600,
+                ),
+                textAlignVertical: TextAlignVertical.top,
+                readOnly: true,
+                onTap: () async {
+                  final pickedDate = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime.now(),
+                    initialDate: DateTime.now(),
+                  );
+
+                  if (pickedDate != null && pickedDate != _selectedDate) {
+                    setState(() {
+                      _selectedDate = pickedDate;
+                      widget.dateController.text =
+                          DateFormat.yMMMd().format(_selectedDate!);
+                    });
+                  }
+                },
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Icon(
+              AppIcons.calendar,
+              color: AppColors.grayscale700,
+              size: 18,
+            ),
+          ],
+        ),
+      ),
+    );
   }
+}

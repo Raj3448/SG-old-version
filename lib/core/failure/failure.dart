@@ -6,4 +6,5 @@ abstract class Failure with _$Failure {
   const factory Failure.socketException() = SocketException;
   const factory Failure.someThingWentWrong() = SomeThingWentWrong;
   const factory Failure.badResponse() = BadResponse;
+  const factory Failure.hiveError() = HiveExceptionError;
 }

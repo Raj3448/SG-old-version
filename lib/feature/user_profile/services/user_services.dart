@@ -2,6 +2,7 @@
 //import 'dart:convert';
 // ignore_for_file: lines_longer_than_80_chars
 import 'package:fpdart/fpdart.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
@@ -12,7 +13,6 @@ class UserDetailServices implements IUserFacades {
   UserDetailServices(
     this._userDetailCache,
   );
-
 
   UserDetails _userDetails = UserDetails(
       id: 1,
@@ -36,8 +36,8 @@ class UserDetailServices implements IUserFacades {
       blocked: false,
       relation: 'self',
       uniqueKey: '',
-      createdAt: DateTime.parse("2024-05-08T10:44:21.044Z"),
-      updatedAt: DateTime.parse("2024-05-08T10:46:26.015Z"),
+      createdAt: DateTime.parse('2024-05-08T10:44:21.044Z'),
+      updatedAt: DateTime.parse('2024-05-08T10:46:26.015Z'),
       userTags: null);
 
   @override
@@ -45,15 +45,16 @@ class UserDetailServices implements IUserFacades {
     //  API call here to fetch user details
     try {
       final cachedUserDetails = await _userDetailCache.getUserDetails();
-    if (cachedUserDetails != null) {
-      //returning catched details
-      return Right(_userDetails);
-    } else {
-      
-      // Return the fetched user details from api
-      return Right(_userDetails);
-    }
-      
+      if (cachedUserDetails != null) {
+        //returning catched details
+        print('Cached User Details : => $cachedUserDetails');
+        return Right(cachedUserDetails);
+      } else {
+        // Return the fetched user details from api
+        await _userDetailCache.saveUserDetails(_userDetails);
+        print('Fetched User Details : => $_userDetails');
+        return Right(_userDetails);
+      }
     } on SocketException {
       return const Left(Failure.socketException());
     } catch (error) {
@@ -77,10 +78,13 @@ class UserDetailServices implements IUserFacades {
       // } else {
       //   return const Left(Failure.badResponse());
       // }
+      await _userDetailCache.saveUserDetails(_userDetails);
       _userDetails = userDetails;
       return Right(_userDetails);
     } on SocketException {
       return const Left(Failure.socketException());
+    } on HiveError {
+      return const Left(Failure.hiveError());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }

@@ -11,15 +11,17 @@ const JWT_TOKEN_KEY = 'JWT_token';
 const USER_DETAILS_BOX_NAME = 'user_details_box';
 const USER_DETAILS_BOX_KEY = 'userDetails_box_key';
 
+const storage = FlutterSecureStorage();
+
 Future<void> setupHiveBox() async {
   await initializeBoxForToken();
   await initializeBoxForUserDetails();
 }
 
 Future<void> initializeBoxForUserDetails() async {
-  Hive.registerAdapter(UserDetailsAdapter());
+  Hive..registerAdapter(UserDetailsAdapter())..registerAdapter(AddressAdapter());
   var userDetailsKey = Hive.generateSecureKey(); // Generate a secure encryption key
-  const storage = FlutterSecureStorage();
+  
   await storage.write(
       key: USER_DETAILS_BOX_KEY, value: base64UrlEncode(userDetailsKey));
   await Hive.openBox<UserDetails>(
@@ -31,7 +33,6 @@ Future<void> initializeBoxForUserDetails() async {
 
 Future<void> initializeBoxForToken() async {
   var key = Hive.generateSecureKey(); // Generate a secure encryption key
-  const storage = FlutterSecureStorage();
   await storage.write(key: 'hive_key', value: base64UrlEncode(key));
   await Hive.openBox(TOKEN_BOX_NAME, encryptionCipher: HiveAesCipher(key));
 }

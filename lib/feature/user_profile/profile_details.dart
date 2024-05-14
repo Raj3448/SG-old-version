@@ -92,7 +92,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 phoneNumber: _mobileController.text,
               );
               await store.updateUserDetails(userDetails!);
-              GoRouter.of(context).pop();
+              context.pop();
             },
             btnTitle: 'Save details',
             showIcon: false,
