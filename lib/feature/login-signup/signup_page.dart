@@ -77,23 +77,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextLabel(title: 'Enter last name'.tr()),
                     const SizedBox(height: Dimension.d2),
                     CustomTextField(
-                      hintText: 'Enter first name'.tr(),
-                      keyboardType: TextInputType.name,
-                      large: false,
-                      enabled: true,
-                      controller: firstNameContr,
-                      textInputAction: TextInputAction.next,
-                      validationLogic: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: Dimension.d4),
-                    TextLabel(title: 'Enter last name'.tr()),
-                    const SizedBox(height: Dimension.d2),
-                    CustomTextField(
                       hintText: 'Enter last name'.tr(),
                       keyboardType: TextInputType.name,
                       large: false,
@@ -118,7 +101,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: emailContr,
                       textInputAction: TextInputAction.next,
                       validationLogic: (value) {
-                        const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
+                        const regex =
+                            r'^[a-zA-Z0-9._%+-]+@yoursilvergenie\.com$';
                         if (value!.isEmpty) {
                           return 'Please enter your email address';
                         } else if (!RegExp(regex).hasMatch(value)) {
