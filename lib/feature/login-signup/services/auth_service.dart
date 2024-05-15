@@ -34,7 +34,7 @@ abstract class IAuthService {
   );
 }
 
-const baseUrl = 'http://172.27.112.1:1337/api';
+const baseUrl = 'api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {
