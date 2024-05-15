@@ -94,7 +94,13 @@ class GenderDropdown extends StatelessWidget {
 }
 
 class DateDropdown extends StatefulWidget {
-  const DateDropdown({super.key});
+  const DateDropdown({
+    required this.controller,
+    super.key,
+  });
+
+  final TextEditingController controller;
+
   @override
   _DateDropdownState createState() => _DateDropdownState();
 }
@@ -106,7 +112,7 @@ class _DateDropdownState extends State<DateDropdown> {
   @override
   void initState() {
     super.initState();
-    _dateController = TextEditingController();
+    _dateController = widget.controller;
   }
 
   @override
@@ -123,13 +129,14 @@ class _DateDropdownState extends State<DateDropdown> {
           context: context,
           firstDate: DateTime(1950),
           lastDate: DateTime.now(),
-          initialDate: DateTime.now(),
+          initialDate: _selectedDate ?? DateTime.now(),
         );
 
         if (pickedDate != null && pickedDate != _selectedDate) {
           setState(() {
             _selectedDate = pickedDate;
-            _dateController.text = DateFormat.yMMMd().format(_selectedDate!);
+            _dateController.text =
+                DateFormat('yyyy-MM-dd').format(_selectedDate!);
           });
         }
       },
@@ -146,32 +153,24 @@ class _DateDropdownState extends State<DateDropdown> {
             Expanded(
               child: TextFormField(
                 controller: _dateController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Select',
                   border: InputBorder.none,
-                  hintStyle: AppTextStyle.bodyLargeMedium
-                      .copyWith(color: AppColors.grayscale600),
                 ),
-                style: AppTextStyle.bodyLargeMedium.copyWith(
-                  color: _selectedDate != null
-                      ? AppColors.grayscale900
-                      : AppColors.grayscale600,
-                ),
-                textAlignVertical: TextAlignVertical.top,
                 readOnly: true,
                 onTap: () async {
                   final pickedDate = await showDatePicker(
                     context: context,
                     firstDate: DateTime(1950),
                     lastDate: DateTime.now(),
-                    initialDate: DateTime.now(),
+                    initialDate: _selectedDate ?? DateTime.now(),
                   );
 
                   if (pickedDate != null && pickedDate != _selectedDate) {
                     setState(() {
                       _selectedDate = pickedDate;
                       _dateController.text =
-                          DateFormat.yMMMd().format(_selectedDate!);
+                          DateFormat('yyyy-MM-dd').format(_selectedDate!);
                     });
                   }
                 },

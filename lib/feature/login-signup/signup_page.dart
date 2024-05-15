@@ -1,5 +1,8 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -8,6 +11,8 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
+import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
+import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,7 +24,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final nameContr = TextEditingController();
+    final firstNameContr = TextEditingController();
+    final lastNameContr = TextEditingController();
+    final emailContr = TextEditingController();
+    final phoneNumbContr = TextEditingController();
+    final dobContr = TextEditingController();
+    final authService = GetIt.I<AuthService>();
+    final store = GetIt.I<LoginStore>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -54,8 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.name,
                       large: false,
                       enabled: true,
-                      controller: nameContr,
-                      isFieldDisable: false,
+                      controller: firstNameContr,
                       validationLogic: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your name';
@@ -71,14 +81,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.name,
                       large: false,
                       enabled: true,
-                      controller: nameContr,
+                      controller: lastNameContr,
+                      textInputAction: TextInputAction.next,
                       validationLogic: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your name';
                         }
                         return null;
                       },
-                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Enter Email'.tr()),
@@ -88,8 +98,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.emailAddress,
                       large: false,
                       enabled: true,
+                      controller: emailContr,
+                      textInputAction: TextInputAction.next,
                       validationLogic: (value) {
-                        const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
+                        const regex =
+                            r'^[a-zA-Z0-9._%+-]+@yoursilvergenie\.com$';
                         if (value!.isEmpty) {
                           return 'Please enter your email address';
                         } else if (!RegExp(regex).hasMatch(value)) {
@@ -97,27 +110,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      isFieldDisable: false,
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Mobile Number'.tr()),
                     const SizedBox(height: Dimension.d2),
                     CustomPhoneField(
+                      controller: phoneNumbContr,
                       title: 'Enter Mobile Number'.tr(),
                     ),
                     const SizedBox(height: Dimension.d4),
                     TextLabel(title: 'Date of birth'.tr()),
                     const SizedBox(height: Dimension.d2),
-                    const DateDropdown(),
+                    DateDropdown(
+                      controller: dobContr,
+                    ),
                     const SizedBox(height: Dimension.d4),
                     CustomButton(
                       size: ButtonSize.normal,
                       type: ButtonType.primary,
                       expanded: true,
-                      ontap: () {
+                      ontap: () async {
                         if (formKey.currentState!.validate() &&
-                            nameContr.text.isNotEmpty) {
-                          GoRouter.of(context).push(RoutesConstants.otpRoute);
+                            firstNameContr.text.isNotEmpty) {
+                          await authService.signup(
+                            firstNameContr.text,
+                            lastNameContr.text,
+                            dobContr.text,
+                            emailContr.text,
+                            '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                .replaceFirst('+', ''),
+                            context,
+                          );
                         }
                       },
                       title: 'Sign Up'.tr(),

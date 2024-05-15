@@ -9,6 +9,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
+import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,8 +23,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<LoginStore>();
+    final authService = GetIt.I<AuthService>();
     final emailFormKey = GlobalKey<FormState>();
     final numberFormKey = GlobalKey<FormState>();
+    final phoneNumberContr = TextEditingController();
+    final emailContr = TextEditingController();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -55,25 +59,29 @@ class _LoginPageState extends State<LoginPage> {
                         Form(
                           key: emailFormKey,
                           child: CustomTextField(
+                            controller: emailContr,
                             hintText: 'Enter e-mail',
                             keyboardType: TextInputType.emailAddress,
                             large: false,
                             enabled: true,
                             validationLogic: (value) {
-                              const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
+                              // const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
+                              const regex =
+                                  r'^[a-zA-Z0-9._%+-]+@yoursilvergenie\.com$';
                               if (value!.isEmpty) {
                                 return 'Please enter your email address';
                               } else if (!RegExp(regex).hasMatch(value)) {
                                 return 'Please enter a valid email address';
                               }
                               return null;
-                            }, isFieldDisable: false,
+                            },
                           ),
                         )
                       else
                         Form(
                           key: numberFormKey,
                           child: CustomPhoneField(
+                            controller: phoneNumberContr,
                             title: 'Enter Mobile Number'.tr(),
                           ),
                         ),
@@ -99,16 +107,20 @@ class _LoginPageState extends State<LoginPage> {
                           size: ButtonSize.normal,
                           type: ButtonType.primary,
                           expanded: true,
-                          ontap: () {
+                          ontap: () async {
                             if (store.isEmail) {
                               if (emailFormKey.currentState!.validate()) {
-                                GoRouter.of(context)
-                                    .push(RoutesConstants.otpRoute);
+                                await authService.loginWithEmail(
+                                  emailContr.text,
+                                  context,
+                                );
                               }
                             } else {
                               if (numberFormKey.currentState!.validate()) {
-                                GoRouter.of(context)
-                                    .push(RoutesConstants.otpRoute);
+                                await authService.loginWithNumber(
+                                  phoneNumberContr.text,
+                                  context,
+                                );
                               }
                             }
                           },

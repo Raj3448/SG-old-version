@@ -62,6 +62,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   ];
 
   bool _isInitialize = false;
+  final TextEditingController dobContr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +120,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _firstNameController,
-                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Last Name'),
@@ -130,7 +130,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _lastNameController,
-                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Gender'),
@@ -142,7 +141,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Date of birth'),
                         const SizedBox(height: Dimension.d2),
-                        const DateDropdown(),
+                        // DateDropdown(controller: dobContr),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Mobile Field'),
                         const SizedBox(height: Dimension.d2),
@@ -169,7 +168,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: false,
                             controller: _mobileController,
-                            isFieldDisable: true,
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
@@ -198,7 +196,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: false,
                             controller: _emailController,
-                            isFieldDisable: true,
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
@@ -210,7 +207,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _addressController,
-                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d4),
                         const TextLabel(title: 'Country'),
@@ -242,7 +238,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           large: false,
                           enabled: true,
                           controller: _postalController,
-                          isFieldDisable: false,
                         ),
                         const SizedBox(height: Dimension.d20),
                         const SizedBox(height: Dimension.d5),

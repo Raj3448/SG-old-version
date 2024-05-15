@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:firebase_performance_dio/firebase_performance_dio.dart';
@@ -18,19 +19,20 @@ class HttpClient with DioMixin implements Dio {
         return status != null && status >= 200 && status < 400;
       },
     );
-    httpClientAdapter = Http2Adapter(
-      ConnectionManager(
-        idleTimeout: const Duration(seconds: 10),
-        onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
-      ),
-    );
+    // httpClientAdapter = Http2Adapter(
+    //   ConnectionManager(
+    //     idleTimeout: const Duration(seconds: 10),
+    //     onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
+    //   ),
+    // );
+    httpClientAdapter = DefaultHttpClientAdapter();
     final TokenManager tokenStorage = GetIt.I<TokenManager>();
     interceptors.addAll([
       ErrorInterceptor(),
       AuthInterceptor(tokenStorage),
       UserAgentInterceptor(),
       DioFirebasePerformanceInterceptor(),
-      
+
       /*CookieManager(PersistCookieJar(
         ignoreExpires: true,
         storage: FileStorage("${GetIt.I<Directory>().path}/.cookies/"),
@@ -57,6 +59,5 @@ class HttpClient with DioMixin implements Dio {
     // hitCacheOnErrorExcept: [401, 403, 500],
     // Optional. Overrides HTTPs directive to delete entry past this duration.
     maxStale: const Duration(hours: 1),
-    
   );
 }
