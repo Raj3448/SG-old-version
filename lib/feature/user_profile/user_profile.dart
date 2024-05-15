@@ -16,13 +16,13 @@ import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
-    
     final store = GetIt.I<UserDetailStore>();
     store.getUserDetails();
     return Observer(
@@ -85,8 +85,8 @@ class UserProfile extends StatelessWidget {
                                 ),
                                 CustomTextIcon(
                                   iconpath: AppIcons.phone,
-                                  title: store.userDetails!
-                                      .fold((l) => '', (r) => r.user.phoneNumber),
+                                  title: store.userDetails!.fold(
+                                      (l) => '', (r) => r.user.phoneNumber),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d2,
@@ -134,7 +134,12 @@ class UserProfile extends StatelessWidget {
                         ),
                         ProfileNav(
                           title: 'About',
-                          onTap: () {},
+                          onTap: () async {
+                            await launchUrl(
+                              Uri.parse(
+                                  'https://www.yoursilvergenie.com/about-us/'),
+                            );
+                          },
                         ),
                         ProfileNav(
                           title: 'Logout',

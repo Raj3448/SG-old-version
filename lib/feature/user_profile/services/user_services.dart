@@ -85,7 +85,7 @@ class UserDetailServices implements IUserFacades {
       final cachedUserDetails = await _userDetailCache.getUserDetails();
       if (cachedUserDetails != null) {
         //returning catched details
-        print('Cached User Details : => $cachedUserDetails');
+        print('Cache User Details : => $cachedUserDetails');
         _userDetails = _userDetails.copyWith(user: cachedUserDetails);
         return Right(_userDetails);
       } else {
@@ -119,42 +119,6 @@ class UserDetailServices implements IUserFacades {
       // }
       await _userDetailCache.saveUserDetails(user);
       _userDetails = _userDetails.copyWith(user: user);
-      return Right(_userDetails);
-    } on SocketException {
-      return const Left(Failure.socketException());
-    } on HiveError {
-      return const Left(Failure.hiveError());
-    } catch (error) {
-      return const Left(Failure.someThingWentWrong());
-    }
-  }
-
-  @override
-  Future<Either<Failure, UserDetails>> getEprDetails() async {
-    try {
-      // final response =
-      //     await HttpClient().get('http://localhost:1337/api/user/epr');
-      // if (response.statusCode == 200) {
-      //   final jsonBody = jsonDecode(response.data as String);
-      //   final emergencyContacts = (jsonBody['data']['emergencyContacts']
-      //           as List)
-      //       .map((e) => EmergencyContact.fromJson(e as Map<String, dynamic>))
-      //       .toList();
-      //   final userInsurance = (jsonBody['data']['UserInsurance'] as List)
-      //       .map((e) => UserInsurance.fromJson(e as Map<String, dynamic>))
-      //       .toList();
-      //   final preferredServices = (jsonBody['data']['preferredServices']
-      //           as List)
-      //       .map((e) => PreferredService.fromJson(e as Map<String, dynamic>))
-      //       .toList();
-
-      //   _userDetails = _userDetails.copyWith(
-      //       emergencyContacts: emergencyContacts,
-      //       preferredServices: preferredServices,
-      //       userInsurance: userInsurance);
-      // }
-      await Future.delayed(const Duration(seconds: 2), () {
-      }); //temp line
       return Right(_userDetails);
     } on SocketException {
       return const Left(Failure.socketException());

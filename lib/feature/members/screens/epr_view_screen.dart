@@ -6,6 +6,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
@@ -22,151 +23,162 @@ class EPRViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    store
-      ..getUserDetails()
-      ..getEprDetails();
+    store.getUserDetails();
     return Observer(
       builder: (context) {
         return Scaffold(
           appBar: const PageAppbar(title: 'EPR'),
           backgroundColor: AppColors.white,
-          body: store.isLoadingUserInfo || store.isLoadingEprDetails
-              ? const LoadingWidget(
+          body: FutureBuilder(
+            future: HttpClient()
+                .get('http://api-dev.yoursilvergenie.com/api/user/family/epr?userId=5'),
+            builder: (context, snapshot) {
+              if (store.isLoadingUserInfo ||
+                  snapshot.connectionState == ConnectionState.waiting) {
+                return const LoadingWidget(
                   showShadow: false,
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(Dimension.d3),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Personal Details',
-                                style: AppTextStyle.bodyLargeMedium.copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  height: 2.4,
-                                  color: AppColors.grayscale900,
+                );
+              }
+              if (!snapshot.hasData) {
+                return const SizedBox();
+              }
+              
+              print('SnapShot data : ${snapshot.data}');
+              return Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Dimension.d3),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Personal Details',
+                              style: AppTextStyle.bodyLargeMedium.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                height: 2.4,
+                                color: AppColors.grayscale900,
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 3,
+                              ),
+                              height: 248,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  color: AppColors.grayscale300,
                                 ),
                               ),
-                              Container(
-                                width: double.infinity,
-                                margin: const EdgeInsets.symmetric(
-                                  vertical: 5,
-                                  horizontal: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
                                 ),
-                                height: 248,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                    color: AppColors.grayscale300,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 10,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Avatar.fromSize(
-                                            imgPath: '',
-                                            size: AvatarSize.size24,
-                                          ),
-                                          const SizedBox(
-                                            width: Dimension.d2,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                store.userDetails!.fold(
-                                                  (l) => '',
-                                                  (r) => r.user.firstName,
-                                                ),
-                                                style: AppTextStyle
-                                                    .bodyLargeMedium
-                                                    .copyWith(
-                                                  color: AppColors.grayscale900,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Avatar.fromSize(
+                                          imgPath: '',
+                                          size: AvatarSize.size24,
+                                        ),
+                                        const SizedBox(
+                                          width: Dimension.d2,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              store.userDetails!.fold(
+                                                (l) => '',
+                                                (r) => r.user.firstName,
                                               ),
-                                              Text(
-                                                'Relation: Father  Age: 67',
-                                                style: AppTextStyle
-                                                    .bodyMediumMedium
-                                                    .copyWith(
-                                                  color: AppColors.grayscale800,
-                                                  height: 1.5,
-                                                ),
+                                              style: AppTextStyle
+                                                  .bodyLargeMedium
+                                                  .copyWith(
+                                                color: AppColors.grayscale900,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      IconTitleDetailsComponent(
-                                        icon: Icons.email_outlined,
-                                        title: 'Email',
-                                        details: store.userDetails!.fold(
-                                          (l) => '',
-                                          (r) => r.user.email,
+                                            ),
+                                            Text(
+                                              'Relation: Father  Age: 67',
+                                              style: AppTextStyle
+                                                  .bodyMediumMedium
+                                                  .copyWith(
+                                                color: AppColors.grayscale800,
+                                                height: 1.5,
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                      ],
+                                    ),
+                                    IconTitleDetailsComponent(
+                                      icon: Icons.email_outlined,
+                                      title: 'Email',
+                                      details: store.userDetails!.fold(
+                                        (l) => '',
+                                        (r) => r.user.email,
                                       ),
-                                      IconTitleDetailsComponent(
-                                        icon: Icons.phone_outlined,
-                                        title: 'Contact',
-                                        details: store.userDetails!.fold(
-                                          (l) => '',
-                                          (r) => r.user.phoneNumber,
-                                        ),
+                                    ),
+                                    IconTitleDetailsComponent(
+                                      icon: Icons.phone_outlined,
+                                      title: 'Contact',
+                                      details: store.userDetails!.fold(
+                                        (l) => '',
+                                        (r) => r.user.phoneNumber,
                                       ),
-                                      IconTitleDetailsComponent(
-                                        icon: AppIcons.home,
-                                        title: 'Address',
-                                        details: store.userDetails!.fold(
-                                          (l) => '',
-                                          (r) => r.user.address.streetAddress,
-                                        ),
+                                    ),
+                                    IconTitleDetailsComponent(
+                                      icon: AppIcons.home,
+                                      title: 'Address',
+                                      details: store.userDetails!.fold(
+                                        (l) => '',
+                                        (r) => r.user.address.streetAddress,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: Dimension.d3,
-                              ),
-                              _ExpandedButton(
-                                title: 'Insurance details',
-                                userInsurance: store.userDetails!
-                                    .fold((l) => [], (r) => r.userInsurance),
-                              ),
-                              _ExpandedButton(
-                                  title: 'Preferred Hospitals',
-                                  preferredServices: store.userDetails!.fold(
-                                      (l) => [], (r) => r.preferredServices)),
-                              _ExpandedButton(
-                                  title: 'Emergency Contact',
-                                  emrgencyContactList: store.userDetails!.fold(
-                                      (l) => [], (r) => r.emergencyContacts)),
-                              const SizedBox(
-                                height: Dimension.d19,
-                              )
-                            ],
-                          ),
+                            ),
+                            const SizedBox(
+                              height: Dimension.d3,
+                            ),
+                            _ExpandedButton(
+                              title: 'Insurance details',
+                              userInsurance: store.userDetails!
+                                  .fold((l) => [], (r) => r.userInsurance),
+                            ),
+                            _ExpandedButton(
+                                title: 'Preferred Hospitals',
+                                preferredServices: store.userDetails!.fold(
+                                    (l) => [], (r) => r.preferredServices)),
+                            _ExpandedButton(
+                                title: 'Emergency Contact',
+                                emrgencyContactList: store.userDetails!.fold(
+                                    (l) => [], (r) => r.emergencyContacts)),
+                            const SizedBox(
+                              height: Dimension.d19,
+                            )
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              );
+            },
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
@@ -262,7 +274,11 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
             ),
             child: Column(
               children: List.generate(
-                widget.userInsurance != null ? widget.userInsurance!.length : widget.emrgencyContactList != null ? widget.emrgencyContactList!.length : widget.preferredServices!.length,
+                widget.userInsurance != null
+                    ? widget.userInsurance!.length
+                    : widget.emrgencyContactList != null
+                        ? widget.emrgencyContactList!.length
+                        : widget.preferredServices!.length,
                 (index) => (widget.userInsurance != null)
                     ? _UserInsuranceComponent(
                         titleName:

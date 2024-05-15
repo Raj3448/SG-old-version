@@ -19,8 +19,6 @@ abstract class _UserDetailStoreBase with Store {
   @observable
   bool isLoadingUserInfo = false;
 
-  @observable
-  bool isLoadingEprDetails = false;
 
   @action
   Future<void> getUserDetails() async {
@@ -38,14 +36,5 @@ abstract class _UserDetailStoreBase with Store {
       userDetails = userDetailsResult;
     });
     isLoadingUserInfo = false;
-  }
-
-  @action
-  Future<void> getEprDetails() async {
-    isLoadingEprDetails = true;
-    final Either<Failure, UserDetails> userDetailsResult =
-        await userDetailServices.getEprDetails();
-    userDetails = userDetailsResult;
-    isLoadingEprDetails = false;
   }
 }
