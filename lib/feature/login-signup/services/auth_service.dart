@@ -6,9 +6,8 @@ import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
-
-import '../../user_profile/model/user_details.dart';
-import '../../user_profile/repository/local/user_details_cache.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 
 abstract class IAuthService {
   Future<Either<AuthFailure, void>> login(String identifier);
@@ -19,7 +18,6 @@ abstract class IAuthService {
     String phoneNumber,
     String dob,
   );
-  Future<void> logOut();
   Future<Either<VerifyOTPFailure, void>> verifyOtp(
     String otp,
     String phoneNumber,
@@ -31,10 +29,15 @@ const baseUrl = 'api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {
-  AuthService({required this.httpClient, required this.userDetailsCache});
+  AuthService(
+      {required this.httpClient,
+      required this.userDetailsCache,
+      required this.tokenManager});
 
   final HttpClient httpClient;
   final UserDetailsCache userDetailsCache;
+
+  final TokenManager tokenManager;
 
   @override
   Future<Either<AuthFailure, void>> login(
@@ -114,8 +117,12 @@ class AuthService implements IAuthService {
               data: phoneNumberData,
             );
       if (phoneNumberVerificationResponse.statusCode == 200) {
-        await GetIt.I<TokenManager>().saveToken(phoneNumberVerificationResponse
-            .data['data']['AUTH_TOKEN'] as String);
+        final token =
+            phoneNumberVerificationResponse?.data['data']['AUTH_TOKEN'];
+
+        if (token is String) {
+          await tokenManager.saveToken(token);
+        }
 
         if (phoneNumberVerificationResponse.data['data']['userDetails'] !=
             null) {
@@ -131,11 +138,5 @@ class AuthService implements IAuthService {
     } catch (e) {
       return const Left(VerifyOTPFailure.unknown());
     }
-  }
-
-  @override
-  Future<void> logOut() async {
-    await GetIt.I<UserDetailsCache>().clearUserDetails();
-    await GetIt.I<TokenManager>().deleteToken();
   }
 }

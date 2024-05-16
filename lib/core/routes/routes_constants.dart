@@ -1,6 +1,7 @@
 class RoutesConstants {
   static const initialRoute = '/';
   static const mainRoute = '/main';
+  static const onboardingRoute = '/onboarding';
 
   //---- Authentication -----------//
   static const loginRoute = '/login';

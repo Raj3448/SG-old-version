@@ -5,9 +5,11 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -154,6 +156,7 @@ class _Button extends StatelessWidget {
           CustomButton(
             ontap: () {
               store.setOnboardingStatus(false);
+              GoRouter.of(context).goNamed(RoutesConstants.initialRoute);
             },
             title: 'Get Started'.tr(),
             showIcon: false,

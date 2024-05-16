@@ -12,10 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
+import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
@@ -36,34 +38,57 @@ import 'package:silver_genie/firebase_options.dart';
 import 'package:silver_genie/setup_hive_boxes.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  await setupHiveBox();
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
-      // Retain native splash screen until Dart is ready
-      FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      GetIt.instance.registerLazySingleton(
+
+      await Hive.initFlutter();
+      await setupHiveBox();
+
+      // Initialize SharedPreferences asynchronously
+      GetIt.instance.registerSingletonAsync<SharedPreferences>(
+        () => SharedPreferences.getInstance(),
+      );
+
+      // Wait for all asynchronous singletons (like SharedPreferences) to be ready
+      await GetIt.instance.allReady();
+
+      GetIt.instance.registerSingleton(
+        OnboardingStore(preferences: GetIt.instance.get<SharedPreferences>()),
+      );
+
+      GetIt.instance.registerSingleton<TokenManager>(TokenManager());
+      GetIt.instance.registerSingleton<UserDetailsCache>(UserDetailsCache());
+
+      GetIt.instance.registerSingleton<AuthStore>(
+        AuthStore(
+          tokenManager: GetIt.instance.get<TokenManager>(),
+          userCache: GetIt.instance.get<UserDetailsCache>(),
+        )..refresh(),
+      );
+
+      GetIt.instance.registerLazySingleton<HttpClient>(
         () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
-      GetIt.instance.registerLazySingleton(() => UserDetailsCache());
 
       GetIt.instance.registerLazySingleton(
         () => AuthService(
-            httpClient: GetIt.instance.get<HttpClient>(),
-            userDetailsCache: GetIt.instance.get<UserDetailsCache>()),
+          httpClient: GetIt.instance.get<HttpClient>(),
+          userDetailsCache: GetIt.instance.get<UserDetailsCache>(),
+          tokenManager: GetIt.instance.get<TokenManager>(),
+        ),
       );
+
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => VerityOtpStore());
 
       GetIt.instance.registerLazySingleton(() => SignupStore());
-      GetIt.instance.registerLazySingleton(() => OnboardingStore());
       GetIt.instance.registerLazySingleton(
         () => UserDetailServices(
           GetIt.I<UserDetailsCache>(),
@@ -79,7 +104,9 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
-      GetIt.instance.registerLazySingleton(() => TokenManager());
+
+      // Retain native splash screen until Dart is ready
+      FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
       if (!kIsWeb) {
         if (kDebugMode) {

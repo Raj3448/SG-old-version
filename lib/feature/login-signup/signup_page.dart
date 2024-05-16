@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -15,45 +16,58 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final formKey = GlobalKey<FormState>();
+  final firstNameContr = TextEditingController();
+  final lastNameContr = TextEditingController();
+  final emailContr = TextEditingController();
+  final phoneNumbContr = TextEditingController();
+  final dobContr = TextEditingController();
+  final store = GetIt.I<SignupStore>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    reaction((_) => store.authFailure, (authFailure) {
+      if (store.authFailure != null) {
+        store.authFailure?.fold(
+          (l) => {
+            l.maybeWhen(invalidEmail: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid email!')));
+            }, orElse: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error: Unknown error!')));
+            })
+          },
+          (r) => GoRouter.of(context).pushNamed(
+            RoutesConstants.otpRoute,
+            pathParameters: {
+              'email': emailContr.text,
+              'phoneNumber':
+                  '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                      .replaceFirst('+', ''),
+            },
+          ),
+        );
+      }
+      store.authFailure = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final firstNameContr = TextEditingController();
-    final lastNameContr = TextEditingController();
-    final emailContr = TextEditingController();
-    final phoneNumbContr = TextEditingController();
-    final dobContr = TextEditingController();
-    final store = GetIt.I<SignupStore>();
     return Scaffold(
       body: Observer(
         builder: (context) {
-          if (store.authFailure != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              store.authFailure?.fold(
-                (l) => {
-                  l.maybeWhen(invalidEmail: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invalid email!')));
-                  }, orElse: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Error: Unknown error!')));
-                  })
-                },
-                (r) => GoRouter.of(context).pushNamed(
-                  RoutesConstants.otpRoute,
-                  pathParameters: {
-                    'email': emailContr.text,
-                    'phoneNumber':
-                        '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                            .replaceFirst('+', ''),
-                  },
-                ),
-              );
-            });
-          }
-
           return Stack(
             children: [
               SingleChildScrollView(
