@@ -65,9 +65,8 @@ class _LoginPageState extends State<LoginPage> {
                             large: false,
                             enabled: true,
                             validationLogic: (value) {
-                              // const regex = r'^[a-zA-Z0-9._%+-]+@gmail\.com$';
                               const regex =
-                                  r'^[a-zA-Z0-9._%+-]+@yoursilvergenie\.com$';
+                                  r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
                               if (value!.isEmpty) {
                                 return 'Please enter your email address';
                               } else if (!RegExp(regex).hasMatch(value)) {

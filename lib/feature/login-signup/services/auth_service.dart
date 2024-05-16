@@ -34,7 +34,7 @@ abstract class IAuthService {
   );
 }
 
-const baseUrl = 'http://172.27.112.1:1337/api';
+const baseUrl = 'api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {
@@ -126,13 +126,6 @@ class AuthService implements IAuthService {
         data: data,
       );
       if (request.statusCode == 200) {
-        await GoRouter.of(context).pushNamed(
-          RoutesConstants.otpRoute,
-          pathParameters: {
-            'email': email,
-            'phoneNumber': phoneNumber,
-          },
-        );
         return const Right(null);
       } else {
         return const Left(AuthFailure.unknownError('Error unknown'));

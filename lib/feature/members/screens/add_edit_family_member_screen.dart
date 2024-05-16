@@ -167,6 +167,15 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 large: false,
                 enabled: true,
+                validationLogic: (value) {
+                  const regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                  if (value!.isEmpty) {
+                    return 'Please enter your email address';
+                  } else if (!RegExp(regex).hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: Dimension.d20),
               const SizedBox(height: Dimension.d5),
