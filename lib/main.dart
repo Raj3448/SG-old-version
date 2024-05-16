@@ -46,8 +46,7 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       GetIt.instance.registerLazySingleton(
-        () =>
-            () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
+        () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
       GetIt.instance.registerLazySingleton(
         () => AuthService(httpClient: GetIt.instance.get<HttpClient>()),

@@ -3,10 +3,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 part 'login_store.g.dart';
 
@@ -30,21 +28,9 @@ abstract class _LoginStoreBase with Store {
   void login(
     String email,
     BuildContext context,
-    String phoneNumber,
   ) {
     isLoading = true;
     authFailure = null;
-    authService
-        .loginWithEmail(
-          email,
-          context,
-        )
-        .then(
-          (value) => {
-            isLoading = false,
-            authFailure = value,
-          },
-        );
     authService
         .loginWithEmail(
           email,

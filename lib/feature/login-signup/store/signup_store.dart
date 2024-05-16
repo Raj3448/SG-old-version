@@ -37,7 +37,6 @@ abstract class _SignupStoreBase with Store {
           dob,
           email,
           phoneNumber,
-          context,
         )
         .then(
           (value) => {
