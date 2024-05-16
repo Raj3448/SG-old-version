@@ -2,7 +2,6 @@
 
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
@@ -126,9 +125,9 @@ class AuthService implements IAuthService {
           await userDetailsCache.saveUserDetails(user);
         }
         return const Right(null);
+      } else {
+        return const Left(VerifyOTPFailure.unknown());
       }
-
-      return const Left(VerifyOTPFailure.unknown());
     } catch (e) {
       return const Left(VerifyOTPFailure.unknown());
     }

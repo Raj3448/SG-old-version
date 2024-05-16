@@ -51,7 +51,8 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.mainRoute,
+      path: '/login',
+      name: RoutesConstants.mainRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MainScreen());
       },
@@ -92,8 +93,10 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
-        
-        return MaterialPage(child: UserProfile(userDetailStore: GetIt.I<UserDetailStore>(),));
+        return MaterialPage(
+            child: UserProfile(
+          userDetailStore: GetIt.I<UserDetailStore>(),
+        ));
       },
     ),
     GoRoute(

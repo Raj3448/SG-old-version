@@ -17,8 +17,10 @@ class UserDetails with _$UserDetails {
       _$UserDetailsFromJson(json);
 }
 
-@JsonSerializable(createFactory: true,)
-class User{
+@JsonSerializable(
+  createFactory: true,
+)
+class User {
   @JsonKey(name: "id")
   final int id;
   @JsonKey(name: "username")
@@ -36,7 +38,7 @@ class User{
   @JsonKey(name: "dateOfBirth")
   final DateTime dateOfBirth;
   @JsonKey(name: "relation")
-  final String relation;
+  String? relation;
   @JsonKey(name: "uniqueKey")
   final String uniqueKey;
   @JsonKey(name: "firstName")
@@ -50,7 +52,13 @@ class User{
   @JsonKey(name: "updatedAt")
   final DateTime updatedAt;
   @JsonKey(name: "address")
-  Address? address = Address(id: 0, state: '', city: '', streetAddress: '', postalCode: '', country: '');
+  Address? address = Address(
+      id: 0,
+      state: '',
+      city: '',
+      streetAddress: '',
+      postalCode: '',
+      country: '');
 
   User({
     required this.id,
@@ -61,7 +69,7 @@ class User{
     required this.gender,
     required this.phoneNumber,
     required this.dateOfBirth,
-    required this.relation,
+    this.relation,
     required this.uniqueKey,
     required this.firstName,
     required this.lastName,

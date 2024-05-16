@@ -228,6 +228,8 @@ class _LogOutComponent extends StatelessWidget {
                     child: CustomButton(
                       ontap: () async {
                         await GetIt.I<AuthService>().logOut();
+
+                        GoRouter.of(context).go(RoutesConstants.loginRoute);
                       },
                       title: 'Yes, logout',
                       showIcon: false,
