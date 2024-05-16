@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
@@ -22,6 +21,7 @@ import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
+import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
@@ -46,7 +46,8 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       GetIt.instance.registerLazySingleton(
-        () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
+        () =>
+            () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
       GetIt.instance.registerLazySingleton(
         () => AuthService(httpClient: GetIt.instance.get<HttpClient>()),
@@ -54,6 +55,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
+      GetIt.instance.registerLazySingleton(() => VerityOtpStore());
+
       GetIt.instance.registerLazySingleton(() => SignupStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
       GetIt.instance
