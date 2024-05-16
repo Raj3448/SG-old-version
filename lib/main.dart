@@ -29,9 +29,11 @@ import 'package:silver_genie/feature/notification/store/notification_store.dart'
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
+import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/firebase_options.dart';
+import 'package:silver_genie/setup_hive_boxes.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -48,8 +50,12 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
+      GetIt.instance.registerLazySingleton(() => UserDetailsCache());
+
       GetIt.instance.registerLazySingleton(
-        () => AuthService(httpClient: GetIt.instance.get<HttpClient>()),
+        () => AuthService(
+            httpClient: GetIt.instance.get<HttpClient>(),
+            userDetailsCache: GetIt.instance.get<UserDetailsCache>()),
       );
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
@@ -58,16 +64,23 @@ void main() async {
 
       GetIt.instance.registerLazySingleton(() => SignupStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
-      GetIt.instance
-          .registerLazySingleton(() => UserDetailStore(UserDetailServices()));
+      GetIt.instance.registerLazySingleton(
+        () => UserDetailServices(
+          GetIt.I<UserDetailsCache>(),
+          GetIt.instance.get<HttpClient>(),
+        ),
+      );
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
       GetIt.instance.registerLazySingleton(
+          () => UserDetailStore(GetIt.I<UserDetailServices>()));
+      GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
       GetIt.instance.registerLazySingleton(() => TokenManager());
+
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

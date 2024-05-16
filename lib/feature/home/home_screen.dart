@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
+    
     return Scaffold(
       appBar: const Appbar(),
       backgroundColor: AppColors.white,
@@ -620,7 +621,7 @@ class _MemberInfo extends StatelessWidget {
                                     name: selectedMember.name,
                                     onTap: () {
                                       GoRouter.of(context)
-                                          .push(RoutesConstants.eprPhrRoute);
+                                          .push(RoutesConstants.eprRoute);
                                     },
                                   )
                                 : InactivePlanComponent(

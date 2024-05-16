@@ -9,31 +9,34 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
+import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key});
+  final UserDetailStore userDetailStore;
+  const UserProfile({super.key, required this.userDetailStore});
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<UserDetailStore>();
-    store.getUserDetails();
+    userDetailStore.getUserDetails();
     return Observer(
       builder: (context) {
         return Scaffold(
           backgroundColor: AppColors.white,
           appBar: const PageAppbar(title: 'User Profile'),
-          body: store.isLoading
+          body: userDetailStore.isLoadingUserInfo
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(Dimension.d4),
+                    padding: const EdgeInsets.all(Dimension.d3),
                     child: Column(
                       children: [
                         Container(
@@ -50,14 +53,32 @@ class UserProfile extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Avatar(imgPath: '', maxRadius: 44),
+                                    Avatar.fromSize(
+                                      imgPath: '',
+                                      size: AvatarSize.size44,
+                                    ),
                                     const SizedBox(
                                       width: Dimension.d2,
                                     ),
-                                    Text(
-                                      store.userDetails!
-                                          .fold((l) => '', (r) => r.firstName),
-                                      style: AppTextStyle.bodyXLSemiBold,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          userDetailStore.userDetails!.fold(
+                                              (l) => '',
+                                              (r) =>
+                                                  '${r.user.firstName} ${r.user.lastName}'),
+                                          style: AppTextStyle.bodyXLSemiBold,
+                                        ),
+                                        Text(
+                                          'Age: ${userDetailStore.userDetails!.fold((l) => '', (r) => calculateAge(r.user.dateOfBirth))} Relationship: ${userDetailStore.userDetails!.fold((l) => '', (r) => r.user.relation)}',
+                                          style: AppTextStyle.bodyMediumMedium
+                                              .copyWith(
+                                                  color:
+                                                      AppColors.grayscale600),
+                                        )
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -66,16 +87,16 @@ class UserProfile extends StatelessWidget {
                                 ),
                                 CustomTextIcon(
                                   iconpath: AppIcons.phone,
-                                  title: store.userDetails!
-                                      .fold((l) => '', (r) => r.mobileNum),
+                                  title: userDetailStore.userDetails!.fold(
+                                      (l) => '', (r) => r.user.phoneNumber),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d2,
                                 ),
                                 CustomTextIcon(
                                   iconpath: AppIcons.home,
-                                  title: store.userDetails!
-                                      .fold((l) => '', (r) => r.emailId),
+                                  title: userDetailStore.userDetails!
+                                      .fold((l) => '', (r) => r.user.email),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d4,
@@ -115,7 +136,12 @@ class UserProfile extends StatelessWidget {
                         ),
                         ProfileNav(
                           title: 'About',
-                          onTap: () {},
+                          onTap: () async {
+                            await launchUrl(
+                              Uri.parse(
+                                  'https://www.yoursilvergenie.com/about-us/'),
+                            );
+                          },
                         ),
                         ProfileNav(
                           title: 'Logout',
@@ -200,7 +226,11 @@ class _LogOutComponent extends StatelessWidget {
                   child: SizedBox(
                     height: 48,
                     child: CustomButton(
-                      ontap: () {},
+                      ontap: () async {
+                        await GetIt.I<AuthService>().logOut();
+
+                        GoRouter.of(context).go(RoutesConstants.loginRoute);
+                      },
                       title: 'Yes, logout',
                       showIcon: false,
                       iconPath: Icons.not_interested,

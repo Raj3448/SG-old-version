@@ -13,9 +13,6 @@ abstract class _VerityOtpStoreBase with Store {
   final authService = GetIt.I<AuthService>();
 
   @observable
-  String? selectCountryDialCode;
-
-  @observable
   bool isLoading = false;
 
   @observable

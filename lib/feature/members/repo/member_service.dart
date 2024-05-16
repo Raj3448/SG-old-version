@@ -124,4 +124,6 @@ class FetchMemberData implements MemberService {
       }
     }
   }
+
+  
 }

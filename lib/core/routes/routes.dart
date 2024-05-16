@@ -15,8 +15,8 @@ import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
-import 'package:silver_genie/feature/members/screens/epr_phr_pdf_view_page.dart';
-import 'package:silver_genie/feature/members/screens/epr_phr_view_screen.dart';
+import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
+import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
 import 'package:silver_genie/feature/notification/notification_screen.dart';
@@ -30,6 +30,7 @@ import 'package:silver_genie/feature/services/screens/services_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
@@ -50,7 +51,8 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.mainRoute,
+      path: '/login',
+      name: RoutesConstants.mainRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MainScreen());
       },
@@ -91,7 +93,10 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
+        return MaterialPage(
+            child: UserProfile(
+          userDetailStore: GetIt.I<UserDetailStore>(),
+        ));
       },
     ),
     GoRoute(
@@ -122,9 +127,9 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: '/eprPhrPdfViewPage',
-      name: RoutesConstants.eprPhrPdfViewPage,
+      name: RoutesConstants.phrPdfViewPage,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: EprPhrPdfViewPage());
+        return const MaterialPage(child: PhrPdfViewPage());
       },
     ),
     GoRoute(
@@ -169,9 +174,9 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.eprPhrRoute,
+      path: RoutesConstants.eprRoute,
       pageBuilder: (context, state) {
-        return MaterialPage(child: EPRPHRViewScreen());
+        return MaterialPage(child: EPRViewScreen());
       },
     ),
     GoRoute(

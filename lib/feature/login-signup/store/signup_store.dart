@@ -28,15 +28,7 @@ abstract class _SignupStoreBase with Store {
   ) {
     isLoading = true;
     authFailure = null;
-    authService
-        .signup(
-          firstName,
-          lastName,
-          dob,
-          email,
-          phoneNumber,
-        )
-        .then(
+    authService.signup(firstName, lastName, dob, email, phoneNumber).then(
           (value) => {
             isLoading = false,
             authFailure = value,

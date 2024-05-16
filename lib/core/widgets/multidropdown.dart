@@ -7,7 +7,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 
-class MultiDropdown extends StatelessWidget {
+class MultiDropdown extends StatefulWidget {
   const MultiDropdown({
     required this.values,
     this.controller,
@@ -16,6 +16,18 @@ class MultiDropdown extends StatelessWidget {
 
   final List<ValueItem> values;
   final MultiSelectController? controller;
+
+  @override
+  State<MultiDropdown> createState() => _MultiDropdownState();
+}
+
+class _MultiDropdownState extends State<MultiDropdown> {
+  @override
+  void dispose() {
+    widget.controller!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,9 +38,9 @@ class MultiDropdown extends StatelessWidget {
       ),
       padding: const EdgeInsets.only(right: 10),
       child: MultiSelectDropDown(
-        controller: controller,
+        controller: widget.controller,
         onOptionSelected: (selectedOptions) {},
-        options: values,
+        options: widget.values,
         selectionType: SelectionType.single,
         optionTextStyle: AppTextStyle.bodyLargeMedium,
         hintStyle: AppTextStyle.bodyLargeMedium

@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class EprPhrPdfViewPage extends StatefulWidget {
-  const EprPhrPdfViewPage({super.key});
+class PhrPdfViewPage extends StatefulWidget {
+  const PhrPdfViewPage({super.key});
 
   @override
-  _EprPhrPdfViewPageState createState() => _EprPhrPdfViewPageState();
+  _PhrPdfViewPageState createState() => _PhrPdfViewPageState();
 }
 
-class _EprPhrPdfViewPageState extends State<EprPhrPdfViewPage> {
+class _PhrPdfViewPageState extends State<PhrPdfViewPage> {
   bool _documentLoadFailed = false;
 
   @override

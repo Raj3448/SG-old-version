@@ -14,7 +14,6 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
-import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});

@@ -8,7 +8,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/initialize_component.dart';
+import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 
 class BookingSeviceStatusPage extends StatelessWidget {
@@ -106,35 +106,35 @@ class BookingSeviceStatusPage extends StatelessWidget {
                 style: AppTextStyle.bodyXLMedium
                     .copyWith(fontWeight: FontWeight.w500, height: 2.6),
               ),
-              const InitializeComponent(
+              const AssigningComponent(
                 name: 'Service opted for',
                 initializeElement: 'Vinita nair',
               ),
               const SizedBox(
                 height: Dimension.d1,
               ),
-              const InitializeComponent(
+              const AssigningComponent(
                 name: 'Relation',
                 initializeElement: 'Mother',
               ),
               const SizedBox(
                 height: Dimension.d1,
               ),
-              const InitializeComponent(
+              const AssigningComponent(
                 name: 'Duration of service',
                 initializeElement: '1 hr ',
               ),
               const SizedBox(
                 height: Dimension.d1,
               ),
-              const InitializeComponent(
+              const AssigningComponent(
                 name: 'Requested on',
                 initializeElement: '24/4/2024',
               ),
               const SizedBox(
                 height: Dimension.d1,
               ),
-              const InitializeComponent(
+              const AssigningComponent(
                 name: 'Additional info',
                 initializeElement: '-',
               ),
