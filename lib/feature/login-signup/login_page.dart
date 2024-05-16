@@ -29,138 +29,173 @@ class _LoginPageState extends State<LoginPage> {
     final phoneNumberContr = TextEditingController();
     final emailContr = TextEditingController();
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(Dimension.d5),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 240,
-                height: 240,
-                child: Image.asset('assets/splash/sg_logo.png'),
-              ),
-              Text(
-                'Login'.tr(),
-                style: AppTextStyle.heading4SemiBold,
-              ),
-              const SizedBox(height: Dimension.d6),
-              Observer(
-                builder: (context) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextLabel(
-                        title: store.isEmail
-                            ? 'Enter email'
-                            : 'Mobile Number'.tr(),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      if (store.isEmail)
-                        Form(
-                          key: emailFormKey,
-                          child: CustomTextField(
-                            controller: emailContr,
-                            hintText: 'Enter e-mail',
-                            keyboardType: TextInputType.emailAddress,
-                            large: false,
-                            enabled: true,
-                            validationLogic: (value) {
-                              const regex =
-                                  r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
-                              if (value!.isEmpty) {
-                                return 'Please enter your email address';
-                              } else if (!RegExp(regex).hasMatch(value)) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
+      body: Observer(
+        builder: (context) {
+          if (store.authFailure != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              print(store.authFailure);
+              store.authFailure?.fold(
+                (l) => {
+                  l.maybeWhen(
+                    invalidEmail: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Invalid email!')),
+                      );
+                    },
+                    orElse: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: Unknown error!')),
+                      );
+                    },
+                  ),
+                },
+                (r) => GoRouter.of(context).pushNamed(
+                  RoutesConstants.otpRoute,
+                  pathParameters: {
+                    'email': emailContr.text,
+                    'phoneNumber': phoneNumberContr.text,
+                  },
+                ),
+              );
+            });
+          }
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(Dimension.d5),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 240,
+                    height: 240,
+                    child: Image.asset('assets/splash/sg_logo.png'),
+                  ),
+                  Text(
+                    'Login'.tr(),
+                    style: AppTextStyle.heading4SemiBold,
+                  ),
+                  const SizedBox(height: Dimension.d6),
+                  Observer(
+                    builder: (context) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextLabel(
+                            title: store.isEmail
+                                ? 'Enter email'
+                                : 'Mobile Number'.tr(),
+                          ),
+                          const SizedBox(height: Dimension.d2),
+                          if (store.isEmail)
+                            Form(
+                              key: emailFormKey,
+                              child: CustomTextField(
+                                controller: emailContr,
+                                hintText: 'Enter e-mail',
+                                keyboardType: TextInputType.emailAddress,
+                                large: false,
+                                enabled: true,
+                                validationLogic: (value) {
+                                  const regex =
+                                      r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your email address';
+                                  } else if (!RegExp(regex).hasMatch(value)) {
+                                    return 'Please enter a valid email address';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            )
+                          else
+                            Form(
+                              key: numberFormKey,
+                              child: CustomPhoneField(
+                                controller: phoneNumberContr,
+                                title: 'Enter Mobile Number'.tr(),
+                              ),
+                            ),
+                          const SizedBox(height: Dimension.d4),
+                          CustomButton(
+                            size: ButtonSize.large,
+                            type: ButtonType.tertiary,
+                            expanded: false,
+                            ontap: () {
+                              store.isEmail = !store.isEmail;
                             },
+                            title: store.isEmail
+                                ? 'Use Mobile Number instead'.tr()
+                                : 'Use email instead'.tr(),
+                            showIcon: false,
+                            iconPath: Icons.not_interested,
+                            iconColor: AppColors.white,
                           ),
-                        )
-                      else
-                        Form(
-                          key: numberFormKey,
-                          child: CustomPhoneField(
-                            controller: phoneNumberContr,
-                            title: 'Enter Mobile Number'.tr(),
+                          const SizedBox(height: Dimension.d4),
+                          SizedBox(
+                            width: double.infinity,
+                            child: CustomButton(
+                              size: ButtonSize.normal,
+                              type: ButtonType.primary,
+                              expanded: true,
+                              ontap: () async {
+                                if (store.isEmail) {
+                                  if (emailFormKey.currentState!.validate()) {
+                                    // await authService.loginWithEmail(
+                                    //   emailContr.text,
+                                    //   context,
+                                    // );
+                                    store.login(emailContr.text, context);
+                                  }
+                                } else {
+                                  if (numberFormKey.currentState!.validate()) {
+                                    // await authService.loginWithNumber(
+                                    //   phoneNumberContr.text,
+                                    //   context,
+                                    // );
+                                    store.login(phoneNumberContr.text, context);
+                                  }
+                                }
+                              },
+                              title: 'Login'.tr(),
+                              showIcon: false,
+                              iconPath: Icons.not_interested,
+                              iconColor: AppColors.white,
+                            ),
                           ),
-                        ),
-                      const SizedBox(height: Dimension.d4),
+                          const SizedBox(height: Dimension.d6),
+                        ],
+                      );
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account?".tr(),
+                        style: AppTextStyle.bodyLargeMedium,
+                      ),
+                      const SizedBox(
+                        width: Dimension.d1,
+                      ),
                       CustomButton(
-                        size: ButtonSize.large,
+                        size: ButtonSize.normal,
                         type: ButtonType.tertiary,
-                        expanded: false,
+                        expanded: true,
                         ontap: () {
-                          store.isEmail = !store.isEmail;
+                          GoRouter.of(context)
+                              .push(RoutesConstants.signUpRoute);
                         },
-                        title: store.isEmail
-                            ? 'Use Mobile Number instead'.tr()
-                            : 'Use email instead'.tr(),
+                        title: 'Signup'.tr(),
                         showIcon: false,
                         iconPath: Icons.not_interested,
-                        iconColor: AppColors.white,
+                        iconColor: AppColors.primary,
                       ),
-                      const SizedBox(height: Dimension.d4),
-                      SizedBox(
-                        width: double.infinity,
-                        child: CustomButton(
-                          size: ButtonSize.normal,
-                          type: ButtonType.primary,
-                          expanded: true,
-                          ontap: () async {
-                            if (store.isEmail) {
-                              if (emailFormKey.currentState!.validate()) {
-                                await authService.loginWithEmail(
-                                  emailContr.text,
-                                  context,
-                                );
-                              }
-                            } else {
-                              if (numberFormKey.currentState!.validate()) {
-                                await authService.loginWithNumber(
-                                  phoneNumberContr.text,
-                                  context,
-                                );
-                              }
-                            }
-                          },
-                          title: 'Login'.tr(),
-                          showIcon: false,
-                          iconPath: Icons.not_interested,
-                          iconColor: AppColors.white,
-                        ),
-                      ),
-                      const SizedBox(height: Dimension.d6),
                     ],
-                  );
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Don't have an account?".tr(),
-                    style: AppTextStyle.bodyLargeMedium,
-                  ),
-                  const SizedBox(
-                    width: Dimension.d1,
-                  ),
-                  CustomButton(
-                    size: ButtonSize.normal,
-                    type: ButtonType.tertiary,
-                    expanded: true,
-                    ontap: () {
-                      GoRouter.of(context).push(RoutesConstants.signUpRoute);
-                    },
-                    title: 'Signup'.tr(),
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    iconColor: AppColors.primary,
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

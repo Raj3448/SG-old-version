@@ -14,7 +14,7 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
-import 'package:silver_genie/feature/login-signup/store/login_store.dart';
+import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -27,7 +27,7 @@ class SignUpScreen extends StatelessWidget {
     final phoneNumbContr = TextEditingController();
     final dobContr = TextEditingController();
     final authService = GetIt.I<AuthService>();
-    final store = GetIt.I<LoginStore>();
+    final store = GetIt.I<SignupStore>();
     return Scaffold(
       body: Observer(
         builder: (context) {

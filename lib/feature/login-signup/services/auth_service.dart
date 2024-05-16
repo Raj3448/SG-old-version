@@ -34,7 +34,7 @@ abstract class IAuthService {
   );
 }
 
-const baseUrl = 'api';
+const baseUrl = 'http://172.27.112.1:1337/api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {
@@ -78,7 +78,7 @@ class AuthService implements IAuthService {
     BuildContext context,
   ) async {
     final data = <String, dynamic>{
-      'email': email,
+      'identifier': email,
     };
     try {
       final request = await httpClient.post(

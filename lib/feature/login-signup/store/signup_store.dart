@@ -1,39 +1,42 @@
-// ignore_for_file: library_private_types_in_public_api
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
-part 'login_store.g.dart';
+part 'signup_store.g.dart';
 
-class LoginStore = _LoginStoreBase with _$LoginStore;
+class SignupStore = _SignupStoreBase with _$SignupStore;
 
-abstract class _LoginStoreBase with Store {
+abstract class _SignupStoreBase with Store {
   final authService = GetIt.I<AuthService>();
-  @observable
-  bool isEmail = false;
-
-  @observable
-  String? selectCountryDialCode;
-
   @observable
   bool isLoading = false;
 
   @observable
   Either<AuthFailure, void>? authFailure;
 
+  @observable
+  String? selectCountryDialCode;
+
   @action
-  void login(
+  void signup(
+    String firstName,
+    String lastName,
+    String dob,
     String email,
+    String phoneNumber,
     BuildContext context,
   ) {
     isLoading = true;
     authFailure = null;
     authService
-        .loginWithEmail(
+        .signup(
+          firstName,
+          lastName,
+          dob,
           email,
+          phoneNumber,
           context,
         )
         .then(
