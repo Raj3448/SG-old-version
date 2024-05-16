@@ -82,7 +82,8 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.homeRoute,
+      name: RoutesConstants.homeRoute,
+      path: '/home',
       pageBuilder: (context, state) {
         return MaterialPage(child: HomeScreen());
       },
