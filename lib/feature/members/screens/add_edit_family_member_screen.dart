@@ -2,7 +2,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -168,6 +167,15 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 large: false,
                 enabled: true,
+                validationLogic: (value) {
+                  const regex = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                  if (value!.isEmpty) {
+                    return 'Please enter your email address';
+                  } else if (!RegExp(regex).hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: Dimension.d20),
               const SizedBox(height: Dimension.d5),

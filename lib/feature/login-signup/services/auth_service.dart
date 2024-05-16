@@ -6,23 +6,15 @@ import 'package:flutter/widgets.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
-import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
-import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 
 abstract class IAuthService {
-  Future<Either<AuthFailure, void>> loginWithNumber(
-    String number,
-    BuildContext context,
-  );
-  Future<Either<AuthFailure, void>> loginWithEmail(
-    String email,
-    BuildContext context,
-  );
+  Future<Either<AuthFailure, void>> login(String identifier);
   Future<Either<AuthFailure, void>> signup(
     String firstName,
     String lastName,
@@ -31,17 +23,15 @@ abstract class IAuthService {
     String dob,
     BuildContext context,
   );
-  Future<Either<AuthFailure, void>> verifyOtp(
+  Future<void> logOut();
+  Future<Either<VerifyOTPFailure, void>> verifyOtp(
     String otp,
     String phoneNumber,
     String email,
-    BuildContext context,
   );
-
-  Future<void> logOut() async {}
 }
 
-const baseUrl = '/api';
+const baseUrl = 'api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {
@@ -50,12 +40,11 @@ class AuthService implements IAuthService {
   final HttpClient httpClient;
 
   @override
-  Future<Either<AuthFailure, void>> loginWithNumber(
-    String phoneNumber,
-    BuildContext context,
+  Future<Either<AuthFailure, void>> login(
+    String identifier,
   ) async {
     final data = <String, dynamic>{
-      'phoneNumber': phoneNumber,
+      'identifier': identifier,
     };
     try {
       final request = await httpClient.post(
@@ -63,43 +52,6 @@ class AuthService implements IAuthService {
         data: data,
       );
       if (request.statusCode == 200) {
-        await GoRouter.of(context).pushNamed(
-          RoutesConstants.otpRoute,
-          pathParameters: {
-            'email': 'email',
-            'phoneNumber': phoneNumber,
-          },
-        );
-        return const Right(null);
-      } else {
-        return const Left(AuthFailure.unknownError('Error unknown'));
-      }
-    } catch (e) {
-      return const Left(AuthFailure.tooManyRequests());
-    }
-  }
-
-  @override
-  Future<Either<AuthFailure, void>> loginWithEmail(
-    String email,
-    BuildContext context,
-  ) async {
-    final data = <String, dynamic>{
-      'email': email,
-    };
-    try {
-      final request = await httpClient.post(
-        '$baseUrl/login/',
-        data: data,
-      );
-      if (request.statusCode == 200) {
-        await GoRouter.of(context).pushNamed(
-          RoutesConstants.otpRoute,
-          pathParameters: {
-            'email': email,
-            'phoneNumber': 'phoneNumber',
-          },
-        );
         return const Right(null);
       } else {
         return const Left(AuthFailure.unknownError('Error unknown'));
@@ -127,19 +79,10 @@ class AuthService implements IAuthService {
     };
     try {
       final request = await httpClient.post(
-        // 'http://13.127.111.218:1337/api/auth/register-app-user',
-        // 'http://api-dev.yoursilvergenie.com/api/auth/register-app-user',
         '$baseUrl/auth/register-app-user',
         data: data,
       );
       if (request.statusCode == 200) {
-        await GoRouter.of(context).pushNamed(
-          RoutesConstants.otpRoute,
-          pathParameters: {
-            'email': email,
-            'phoneNumber': phoneNumber,
-          },
-        );
         return const Right(null);
       } else {
         return const Left(AuthFailure.unknownError('Error unknown'));
@@ -150,15 +93,15 @@ class AuthService implements IAuthService {
   }
 
   @override
-  Future<Either<AuthFailure, void>> verifyOtp(
+  Future<Either<VerifyOTPFailure, void>> verifyOtp(
     String otp,
     String phoneNumber,
     String email,
-    BuildContext context,
   ) async {
     final phoneNumberData = <String, dynamic>{
       'otp': otp,
       'phoneNumber': phoneNumber,
+      'email': email,
     };
     final emailData = <String, dynamic>{
       'otp': otp,
@@ -167,12 +110,10 @@ class AuthService implements IAuthService {
     try {
       final phoneNumberVerificationResponse = loginStore.isEmail
           ? await httpClient.post(
-              // 'http://13.127.111.218:1337/api/auth/register-complete',
               '$baseUrl/verify-otp/',
               data: emailData,
             )
           : await httpClient.post(
-              // 'http://13.127.111.218:1337/api/auth/register-complete',
               '$baseUrl/auth/register-complete',
               data: phoneNumberData,
             );
@@ -186,14 +127,14 @@ class AuthService implements IAuthService {
           final User user = User.fromJson(phoneNumberVerificationResponse
               .data['data']['userDetails'] as Map<String, dynamic>);
 
-          print('Cached ' + user.toString());
           await GetIt.I<UserDetailsCache>().saveUserDetails(user);
         }
-        await GoRouter.of(context).pushReplacement(RoutesConstants.homeRoute);
+        return const Right(null);
       }
-      return const Right(null);
+
+      return const Left(VerifyOTPFailure.unknown());
     } catch (e) {
-      return const Left(AuthFailure.otpInvalid());
+      return const Left(VerifyOTPFailure.unknown());
     }
   }
 

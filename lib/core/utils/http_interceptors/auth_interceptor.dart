@@ -9,7 +9,9 @@ class AuthInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     // TODO(You): Put the paths you want the interceptor to ignore
-    if (!options.path.contains('/login')) {
+    if (!options.path.contains('/login') ||
+        !options.path.contains('/register-complete') ||
+        !options.path.contains('/verify-otp')) {
       // TODO(You): Fetch your access token and plug it in
       final token = await _tokenStorage.getToken();
       print(token);

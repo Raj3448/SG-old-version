@@ -14,3 +14,9 @@ abstract class AuthFailure with _$AuthFailure {
   const factory AuthFailure.networkError() = NetworkError;
   const factory AuthFailure.unknownError(String message) = UnknownError;
 }
+
+@freezed
+abstract class VerifyOTPFailure with _$VerifyOTPFailure {
+  const factory VerifyOTPFailure.invalidOTP() = _InvalidOTPError;
+  const factory VerifyOTPFailure.unknown() = _UnknownVerifyOTPError;
+}

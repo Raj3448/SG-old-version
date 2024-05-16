@@ -20,6 +20,8 @@ import 'package:silver_genie/feature/emergency_services/store/emergency_service_
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
+import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
+import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
@@ -54,6 +56,9 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
+      GetIt.instance.registerLazySingleton(() => VerityOtpStore());
+
+      GetIt.instance.registerLazySingleton(() => SignupStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
       GetIt.instance.registerLazySingleton(()=> UserDetailsCache());
       GetIt.instance.registerLazySingleton(() => UserDetailServices(GetIt.I<UserDetailsCache>(),GetIt.instance.get<HttpClient>()));
