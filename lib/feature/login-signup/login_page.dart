@@ -9,7 +9,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
-import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<LoginStore>();
-    final authService = GetIt.I<AuthService>();
     final emailFormKey = GlobalKey<FormState>();
     final numberFormKey = GlobalKey<FormState>();
     final phoneNumberContr = TextEditingController();
@@ -33,18 +31,17 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) {
           if (store.authFailure != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              print(store.authFailure);
               store.authFailure?.fold(
                 (l) => {
                   l.maybeWhen(
                     invalidEmail: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Invalid email!')),
+                        const SnackBar(content: Text('Invalid email!')),
                       );
                     },
                     orElse: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: Unknown error!')),
+                        const SnackBar(content: Text('Error: Unknown error!')),
                       );
                     },
                   ),
@@ -139,18 +136,10 @@ class _LoginPageState extends State<LoginPage> {
                               ontap: () async {
                                 if (store.isEmail) {
                                   if (emailFormKey.currentState!.validate()) {
-                                    // await authService.loginWithEmail(
-                                    //   emailContr.text,
-                                    //   context,
-                                    // );
                                     store.login(emailContr.text, context);
                                   }
                                 } else {
                                   if (numberFormKey.currentState!.validate()) {
-                                    // await authService.loginWithNumber(
-                                    //   phoneNumberContr.text,
-                                    //   context,
-                                    // );
                                     store.login(phoneNumberContr.text, context);
                                   }
                                 }

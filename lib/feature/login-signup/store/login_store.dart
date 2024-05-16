@@ -26,15 +26,14 @@ abstract class _LoginStoreBase with Store {
 
   @action
   void login(
-    String email,
+    String identifier,
     BuildContext context,
   ) {
     isLoading = true;
     authFailure = null;
     authService
-        .loginWithEmail(
-          email,
-          context,
+        .login(
+          identifier,
         )
         .then(
           (value) => {
