@@ -50,8 +50,12 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
+      GetIt.instance.registerLazySingleton(() => UserDetailsCache());
+
       GetIt.instance.registerLazySingleton(
-        () => AuthService(httpClient: GetIt.instance.get<HttpClient>()),
+        () => AuthService(
+            httpClient: GetIt.instance.get<HttpClient>(),
+            userDetailsCache: GetIt.instance.get<UserDetailsCache>()),
       );
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
@@ -60,18 +64,23 @@ void main() async {
 
       GetIt.instance.registerLazySingleton(() => SignupStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
-      GetIt.instance.registerLazySingleton(()=> UserDetailsCache());
-      GetIt.instance.registerLazySingleton(() => UserDetailServices(GetIt.I<UserDetailsCache>(),GetIt.instance.get<HttpClient>()));
+      GetIt.instance.registerLazySingleton(
+        () => UserDetailServices(
+          GetIt.I<UserDetailsCache>(),
+          GetIt.instance.get<HttpClient>(),
+        ),
+      );
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
-      GetIt.instance.registerLazySingleton(() => UserDetailStore(GetIt.I<UserDetailServices>()));
+      GetIt.instance.registerLazySingleton(
+          () => UserDetailStore(GetIt.I<UserDetailServices>()));
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
       GetIt.instance.registerLazySingleton(() => TokenManager());
-      
+
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance

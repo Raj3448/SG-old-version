@@ -1,17 +1,15 @@
 // ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars, use_build_context_synchronously
 
-import 'dart:convert';
-
-import 'package:flutter/widgets.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
+
+import '../../user_profile/model/user_details.dart';
+import '../../user_profile/repository/local/user_details_cache.dart';
 
 abstract class IAuthService {
   Future<Either<AuthFailure, void>> login(String identifier);
@@ -21,7 +19,6 @@ abstract class IAuthService {
     String email,
     String phoneNumber,
     String dob,
-    BuildContext context,
   );
   Future<void> logOut();
   Future<Either<VerifyOTPFailure, void>> verifyOtp(
@@ -35,9 +32,10 @@ const baseUrl = 'api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {
-  AuthService({required this.httpClient});
+  AuthService({required this.httpClient, required this.userDetailsCache});
 
   final HttpClient httpClient;
+  final UserDetailsCache userDetailsCache;
 
   @override
   Future<Either<AuthFailure, void>> login(
@@ -68,7 +66,6 @@ class AuthService implements IAuthService {
     String dob,
     String email,
     String phoneNumber,
-    BuildContext context,
   ) async {
     final data = <String, dynamic>{
       'firstName': firstName,
@@ -123,11 +120,10 @@ class AuthService implements IAuthService {
 
         if (phoneNumberVerificationResponse.data['data']['userDetails'] !=
             null) {
-          print(phoneNumberVerificationResponse.data['data']['userDetails']);
           final User user = User.fromJson(phoneNumberVerificationResponse
               .data['data']['userDetails'] as Map<String, dynamic>);
 
-          await GetIt.I<UserDetailsCache>().saveUserDetails(user);
+          await userDetailsCache.saveUserDetails(user);
         }
         return const Right(null);
       }
