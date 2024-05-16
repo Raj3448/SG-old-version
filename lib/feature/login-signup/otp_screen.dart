@@ -14,6 +14,8 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 
+import '../../core/routes/routes_constants.dart';
+
 class OTPScreen extends StatefulWidget {
   const OTPScreen({
     required this.email,
