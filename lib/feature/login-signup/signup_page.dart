@@ -13,7 +13,6 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
-import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -26,22 +25,20 @@ class SignUpScreen extends StatelessWidget {
     final emailContr = TextEditingController();
     final phoneNumbContr = TextEditingController();
     final dobContr = TextEditingController();
-    final authService = GetIt.I<AuthService>();
     final store = GetIt.I<LoginStore>();
     return Scaffold(
       body: Observer(
         builder: (context) {
           if (store.authFailure != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              print(store.authFailure);
               store.authFailure?.fold(
                 (l) => {
                   l.maybeWhen(invalidEmail: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Invalid email!')));
+                        const SnackBar(content: Text('Invalid email!')));
                   }, orElse: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: Unknown error!')));
+                        const SnackBar(content: Text('Error: Unknown error!')));
                   })
                 },
                 (r) => GoRouter.of(context).pushNamed(
@@ -164,7 +161,6 @@ class SignUpScreen extends StatelessWidget {
                                     emailContr.text,
                                     '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
                                         .replaceFirst('+', ''),
-                                    context,
                                   );
                                   // await authService.signup(
                                   //   firstNameContr.text,

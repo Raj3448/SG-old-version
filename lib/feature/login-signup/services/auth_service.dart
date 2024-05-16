@@ -24,13 +24,11 @@ abstract class IAuthService {
     String email,
     String phoneNumber,
     String dob,
-    BuildContext context,
   );
-  Future<Either<AuthFailure, void>> verifyOtp(
+  Future<Either<VerifyOTPFailure, void>> verifyOtp(
     String otp,
     String phoneNumber,
     String email,
-    BuildContext context,
   );
 }
 
@@ -109,7 +107,6 @@ class AuthService implements IAuthService {
     String dob,
     String email,
     String phoneNumber,
-    BuildContext context,
   ) async {
     final data = <String, dynamic>{
       'firstName': firstName,
@@ -120,8 +117,6 @@ class AuthService implements IAuthService {
     };
     try {
       final request = await httpClient.post(
-        // 'http://13.127.111.218:1337/api/auth/register-app-user',
-        // 'http://api-dev.yoursilvergenie.com/api/auth/register-app-user',
         '$baseUrl/auth/register-app-user',
         data: data,
       );
@@ -136,11 +131,10 @@ class AuthService implements IAuthService {
   }
 
   @override
-  Future<Either<AuthFailure, void>> verifyOtp(
+  Future<Either<VerifyOTPFailure, void>> verifyOtp(
     String otp,
     String phoneNumber,
     String email,
-    BuildContext context,
   ) async {
     final phoneNumberData = <String, dynamic>{
       'otp': otp,
@@ -162,12 +156,10 @@ class AuthService implements IAuthService {
               '$baseUrl/auth/register-complete',
               data: phoneNumberData,
             );
-      if (phoneNumberVerificationResponse.statusCode == 200) {
-        await GoRouter.of(context).pushReplacement(RoutesConstants.homeRoute);
-      }
+      if (phoneNumberVerificationResponse.statusCode == 200) {}
       return const Right(null);
     } catch (e) {
-      return const Left(AuthFailure.otpInvalid());
+      return const Left(VerifyOTPFailure.invalidOTP());
     }
   }
 }
