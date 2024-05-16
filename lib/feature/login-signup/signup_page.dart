@@ -46,7 +46,9 @@ class SignUpScreen extends StatelessWidget {
                   RoutesConstants.otpRoute,
                   pathParameters: {
                     'email': emailContr.text,
-                    'phoneNumber': phoneNumbContr.text,
+                    'phoneNumber':
+                        '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                            .replaceFirst('+', ''),
                   },
                 ),
               );
@@ -156,23 +158,12 @@ class SignUpScreen extends StatelessWidget {
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
                                   store.signup(
-                                    firstNameContr.text,
-                                    lastNameContr.text,
-                                    dobContr.text,
-                                    emailContr.text,
-                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                        .replaceFirst('+', ''),
-                                    context,
-                                  );
-                                  // await authService.signup(
-                                  //   firstNameContr.text,
-                                  //   lastNameContr.text,
-                                  //   dobContr.text,
-                                  //   emailContr.text,
-                                  //   '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                  //       .replaceFirst('+', ''),
-                                  //   context,
-                                  // );
+                                      firstNameContr.text,
+                                      lastNameContr.text,
+                                      dobContr.text,
+                                      emailContr.text,
+                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                          .replaceFirst('+', ''));
                                 }
                               },
                               title: 'Sign Up'.tr(),

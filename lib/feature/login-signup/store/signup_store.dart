@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -26,7 +25,6 @@ abstract class _SignupStoreBase with Store {
     String dob,
     String email,
     String phoneNumber,
-    BuildContext context,
   ) {
     isLoading = true;
     authFailure = null;

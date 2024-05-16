@@ -50,7 +50,9 @@ class _LoginPageState extends State<LoginPage> {
                   RoutesConstants.otpRoute,
                   pathParameters: {
                     'email': emailContr.text,
-                    'phoneNumber': phoneNumberContr.text,
+                    'phoneNumber':
+                        '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                            .replaceFirst('+', ''),
                   },
                 ),
               );
@@ -140,7 +142,10 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                 } else {
                                   if (numberFormKey.currentState!.validate()) {
-                                    store.login(phoneNumberContr.text, context);
+                                    store.login(
+                                        '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                                            .replaceFirst('+', ''),
+                                        context);
                                   }
                                 }
                               },

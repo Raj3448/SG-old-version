@@ -41,19 +41,21 @@ class _OTPScreenState extends State<OTPScreen> {
           if (store.authFailure != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               store.authFailure?.fold(
-                (l) => {
-                  l.maybeWhen(invalidOTP: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invalid OTP!')));
-                  }, orElse: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Error: Unknown error!')));
-                  })
-                },
-                (r) => GoRouter.of(context).replaceNamed(
-                  RoutesConstants.homeRoute,
-                ),
-              );
+                  (l) => {
+                        l.maybeWhen(invalidOTP: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Invalid OTP!')));
+                        }, orElse: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Error: Unknown error!')));
+                        })
+                      },
+                  (r) => {
+                        GoRouter.of(context).goNamed(
+                          RoutesConstants.homeRoute,
+                        ),
+                      });
             });
           }
 
