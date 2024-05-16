@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -19,45 +20,58 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final store = GetIt.I<LoginStore>();
+  final emailFormKey = GlobalKey<FormState>();
+  final numberFormKey = GlobalKey<FormState>();
+  final phoneNumberContr = TextEditingController();
+  final emailContr = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Use reaction or autorun to manage state changes.
+    reaction((_) => store.authFailure, (authFailure) {
+      if (authFailure != null) {
+        authFailure.fold(
+          (l) {
+            l.maybeWhen(
+              invalidEmail: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid email!')),
+                );
+              },
+              orElse: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error: Unknown error!')),
+                );
+              },
+            );
+          },
+          (r) {
+            GoRouter.of(context).pushNamed(
+              RoutesConstants.otpRoute,
+              pathParameters: {
+                'email': emailContr.text,
+                'phoneNumber':
+                    '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                        .replaceFirst('+', ''),
+              },
+            );
+          },
+        );
+
+        // Reset the authFailure after handling.
+        store.authFailure = null;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<LoginStore>();
-    final emailFormKey = GlobalKey<FormState>();
-    final numberFormKey = GlobalKey<FormState>();
-    final phoneNumberContr = TextEditingController();
-    final emailContr = TextEditingController();
     return Scaffold(
       body: Observer(
         builder: (context) {
-          if (store.authFailure != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              store.authFailure?.fold(
-                (l) => {
-                  l.maybeWhen(
-                    invalidEmail: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invalid email!')),
-                      );
-                    },
-                    orElse: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Error: Unknown error!')),
-                      );
-                    },
-                  ),
-                },
-                (r) => GoRouter.of(context).pushNamed(
-                  RoutesConstants.otpRoute,
-                  pathParameters: {
-                    'email': emailContr.text,
-                    'phoneNumber':
-                        '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
-                            .replaceFirst('+', ''),
-                  },
-                ),
-              );
-            });
-          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(Dimension.d5),

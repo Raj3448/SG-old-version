@@ -7,23 +7,21 @@ part 'onboarding_store.g.dart';
 class OnboardingStore = _OnboardingStoreBase with _$OnboardingStore;
 
 abstract class _OnboardingStoreBase with Store {
-  _OnboardingStoreBase() {
-    _loadPrefs();
+  _OnboardingStoreBase({required this.preferences}) {
+    init();
   }
-
-  late SharedPreferences _preferences;
+  final SharedPreferences preferences;
 
   @observable
   bool showOnboarding = true;
 
   @action
-  Future<void> setOnboardingStatus(bool status) async {
+  void setOnboardingStatus(bool status) {
     showOnboarding = status;
-    await _preferences.setBool('showOnboarding', status);
+    preferences.setBool('showOnboarding', status);
   }
 
-  Future<void> _loadPrefs() async {
-    _preferences = await SharedPreferences.getInstance();
-    showOnboarding = _preferences.getBool('showOnboarding') ?? true;
+  void init() {
+    showOnboarding = preferences.getBool('showOnboarding') ?? true;
   }
 }

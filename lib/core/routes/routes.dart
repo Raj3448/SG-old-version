@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
+import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
@@ -15,10 +15,10 @@ import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
-import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
 import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/members_screen.dart';
+import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
 import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
@@ -34,24 +34,39 @@ import 'package:silver_genie/feature/user_profile/store/user_details_store.dart'
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
+final authStore = GetIt.I<AuthStore>();
 
 final GoRouter routes = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
       path: RoutesConstants.initialRoute,
+      name: RoutesConstants.initialRoute,
+      redirect: (context, state) {
+        if (store.showOnboarding) {
+          return RoutesConstants.onboardingRoute;
+        }
+        if (authStore.isAuthenticated) {
+          return RoutesConstants.homeRoute;
+        }
+        if (!authStore.initialised) return null;
+
+        return RoutesConstants.loginRoute;
+      },
       builder: (context, state) {
-        return Observer(
-          builder: (context) {
-            return store.showOnboarding
-                ? const OnboardingScreen()
-                : const LoginPage();
-          },
-        );
+        /// Add splash screen here
+        return Container();
       },
     ),
     GoRoute(
-      path: '/login',
+      path: RoutesConstants.onboardingRoute,
+      name: '/onboarding',
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: OnboardingScreen());
+      },
+    ),
+    GoRoute(
+      path: '/main',
       name: RoutesConstants.mainRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: MainScreen());
@@ -59,6 +74,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: RoutesConstants.loginRoute,
+      name: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
         return const MaterialPage(child: LoginPage());
       },
