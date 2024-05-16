@@ -18,6 +18,7 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
+import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
@@ -47,12 +48,15 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HttpClient(baseOptions: BaseOptions(baseUrl: Env.serverUrl)),
       );
+      GetIt.instance.registerLazySingleton(
+        () => AuthService(httpClient: GetIt.instance.get<HttpClient>()),
+      );
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(() => LoginStore());
       GetIt.instance.registerLazySingleton(() => OnboardingStore());
       GetIt.instance.registerLazySingleton(()=> UserDetailsCache());
-      GetIt.instance.registerLazySingleton(() => UserDetailServices(GetIt.I<UserDetailsCache>()));
+      GetIt.instance.registerLazySingleton(() => UserDetailServices(GetIt.I<UserDetailsCache>(),GetIt.instance.get<HttpClient>()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());

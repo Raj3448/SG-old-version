@@ -11,9 +11,8 @@ class AuthInterceptor extends Interceptor {
     // TODO(You): Put the paths you want the interceptor to ignore
     if (!options.path.contains('/login')) {
       // TODO(You): Fetch your access token and plug it in
-      //final token = await _tokenStorage.getToken();
-      final token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE1NzcwNTk5LCJleHAiOjE3MTgzNjI1OTl9.WVHwc1axDAOnAJNe1-afqGarvzqKpsKiLUjcmz_3mQg';
+      final token = await _tokenStorage.getToken();
+      print(token);
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
       }

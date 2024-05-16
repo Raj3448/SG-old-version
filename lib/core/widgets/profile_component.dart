@@ -27,7 +27,8 @@ class CustomTextIcon extends StatelessWidget {
         ),
         Text(
           title,
-          style: AppTextStyle.bodyLargeMedium,
+          style: AppTextStyle.bodyLargeMedium
+              .copyWith(overflow: TextOverflow.ellipsis),
         ),
       ],
     );

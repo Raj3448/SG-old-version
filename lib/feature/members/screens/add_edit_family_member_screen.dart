@@ -17,9 +17,10 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
 class AddEditFamilyMemberScreen extends StatelessWidget {
-  const AddEditFamilyMemberScreen({required this.edit, super.key});
+  AddEditFamilyMemberScreen({required this.edit, super.key});
 
   final bool edit;
+  final TextEditingController dobContr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +65,15 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
           decelerationRate: ScrollDecelerationRate.fast,
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Center(child: EditPic()),
               const SizedBox(height: 16),
-              AsteriskLabel(label: 'First name'),
+              const AsteriskLabel(label: 'First name'),
               const SizedBox(height: 8),
-              const CustomTextField(
+              CustomTextField(
                 hintText: 'Enter your first name',
                 keyboardType: TextInputType.name,
                 large: false,
@@ -81,87 +82,95 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const AsteriskLabel(label: 'Last name'),
               const SizedBox(height: 8),
-              const CustomTextField(
+              CustomTextField(
                 hintText: 'Enter your last name',
                 keyboardType: TextInputType.name,
                 large: false,
                 enabled: true,
               ),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Gender'),
-              SizedBox(height: 8),
-              GenderDropdown(),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Date of birth'),
-              SizedBox(height: 8),
-              DateDropdown(dateController: TextEditingController(),),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Relation'),
-              SizedBox(height: 8),
-              RelationDropdown(),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Mobile number'),
-              SizedBox(height: 8),
-              const CustomTextField(
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Last name'),
+              const SizedBox(height: 8),
+              CustomTextField(
+                hintText: 'Enter your last name',
+                keyboardType: TextInputType.name,
+                large: false,
+                enabled: true,
+              ),
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Gender'),
+              const SizedBox(height: 8),
+              const GenderDropdown(),
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Date of birth'),
+              const SizedBox(height: 8),
+              // DateDropdown(controller: dobContr,),
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Relation'),
+              const SizedBox(height: 8),
+              const RelationDropdown(),
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Mobile number'),
+              const SizedBox(height: 8),
+              CustomTextField(
                 hintText: 'Enter mobile number',
                 keyboardType: TextInputType.number,
                 large: false,
                 enabled: true,
               ),
-              SizedBox(height: 16),
-              TextLabel(title: 'Member address'),
-              SizedBox(height: 8),
+              const SizedBox(height: 16),
+              const TextLabel(title: 'Member address'),
+              const SizedBox(height: 8),
               CustomTextField(
                 hintText: 'Enter address',
                 keyboardType: TextInputType.streetAddress,
                 large: true,
-                enabled: true, 
+                enabled: true,
               ),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Country'),
-              SizedBox(height: 8),
-              MultiDropdown(
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Country'),
+              const SizedBox(height: 8),
+              const MultiDropdown(
                 values: [
                   ValueItem(label: 'Countries', value: 'Countries'),
                 ],
               ),
-              SizedBox(height: 16),
-              TextLabel(title: 'State'),
-              SizedBox(height: 8),
-              MultiDropdown(
+              const SizedBox(height: 16),
+              const TextLabel(title: 'State'),
+              const SizedBox(height: 8),
+              const MultiDropdown(
                 values: [
                   ValueItem(label: 'State', value: 'State'),
                 ],
               ),
-              SizedBox(height: 16),
-              TextLabel(title: 'City'),
-              SizedBox(height: 8),
-              MultiDropdown(
+              const SizedBox(height: 16),
+              const TextLabel(title: 'City'),
+              const SizedBox(height: 8),
+              const MultiDropdown(
                 values: [
                   ValueItem(label: 'City', value: 'City'),
                 ],
               ),
-              SizedBox(height: 16),
-              TextLabel(title: 'Postal code'),
-              SizedBox(height: 8),
+              const SizedBox(height: 16),
+              const TextLabel(title: 'Postal code'),
+              const SizedBox(height: 8),
               CustomTextField(
                 hintText: 'Enter postal code',
                 keyboardType: TextInputType.number,
                 large: false,
-                enabled: true, 
+                enabled: true,
               ),
-              SizedBox(height: 16),
-              AsteriskLabel(label: 'Email ID'),
-              SizedBox(height: 8),
+              const SizedBox(height: 16),
+              const AsteriskLabel(label: 'Email ID'),
+              const SizedBox(height: 8),
               CustomTextField(
                 hintText: 'Enter email address',
                 keyboardType: TextInputType.emailAddress,
                 large: false,
-                enabled: true, 
+                enabled: true,
               ),
-              SizedBox(height: Dimension.d20),
-              SizedBox(height: Dimension.d5),
-              SizedBox(height: Dimension.d5),
+              const SizedBox(height: Dimension.d20),
+              const SizedBox(height: Dimension.d5),
             ],
           ),
         ),

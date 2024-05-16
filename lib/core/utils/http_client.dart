@@ -31,7 +31,7 @@ class HttpClient with DioMixin implements Dio {
       AuthInterceptor(tokenStorage),
       UserAgentInterceptor(),
       DioFirebasePerformanceInterceptor(),
-      
+
       /*CookieManager(PersistCookieJar(
         ignoreExpires: true,
         storage: FileStorage("${GetIt.I<Directory>().path}/.cookies/"),
@@ -58,6 +58,5 @@ class HttpClient with DioMixin implements Dio {
     // hitCacheOnErrorExcept: [401, 403, 500],
     // Optional. Overrides HTTPs directive to delete entry past this duration.
     maxStale: const Duration(hours: 1),
-    
   );
 }

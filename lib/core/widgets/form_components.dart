@@ -1,10 +1,12 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class TextLabel extends StatelessWidget {
   const TextLabel({required this.title, super.key});
@@ -22,15 +24,15 @@ class TextLabel extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
-    Key? key,
     required this.hintText,
     required this.keyboardType,
     required this.large,
     required this.enabled,
     this.controller,
     this.validationLogic,
-
-  }) : super(key: key);
+    this.textInputAction,
+    super.key,
+  });
 
   final String hintText;
   final TextInputType keyboardType;
@@ -38,7 +40,7 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;
   final TextEditingController? controller;
   final String? Function(String?)? validationLogic;
-  
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +49,10 @@ class CustomTextField extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
       style: AppTextStyle.bodyLargeMedium.copyWith(
-          color:
-              !enabled ? AppColors.grayscale700 : AppColors.grayscale900),
+        color: enabled ? AppColors.grayscale700 : AppColors.grayscale900,
+      ),
       maxLines: 8,
       minLines: large ? 5 : 1,
       decoration: InputDecoration(
@@ -87,13 +90,20 @@ class CustomTextField extends StatelessWidget {
 }
 
 class CustomPhoneField extends StatelessWidget {
-  const CustomPhoneField({required this.title, super.key});
+  const CustomPhoneField({
+    required this.title,
+    this.controller,
+    super.key,
+  });
 
   final String title;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
+    final store = GetIt.I<LoginStore>();
     return TextFormField(
+      controller: controller,
       keyboardType: TextInputType.number,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
@@ -121,11 +131,17 @@ class CustomPhoneField extends StatelessWidget {
           child: CountryCodePicker(
             padding: EdgeInsets.zero,
             showDropDownButton: true,
-            initialSelection: 'IN',
+            initialSelection: store.selectCountryDialCode ?? '+91',
             flagWidth: 25,
             favorite: const ['+91', 'IN'],
             textStyle: AppTextStyle.bodyLargeMedium
                 .copyWith(color: AppColors.grayscale900),
+            onChanged: (countryCode) {
+              store.selectCountryDialCode = countryCode.dialCode;
+            },
+            onInit: (value) {
+              store.selectCountryDialCode == value!.dialCode;
+            },
           ),
         ),
       ),

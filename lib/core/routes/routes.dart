@@ -30,6 +30,7 @@ import 'package:silver_genie/feature/services/screens/services_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
@@ -68,9 +69,17 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: RoutesConstants.otpRoute,
+      path: '/otp/:email/:phoneNumber',
+      name: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: OTPScreen());
+        final email = state.pathParameters['email'].toString();
+        final phoneNumber = state.pathParameters['phoneNumber'].toString();
+        return MaterialPage(
+          child: OTPScreen(
+            email: email,
+            phoneNumber: phoneNumber,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -82,7 +91,8 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: UserProfile());
+        
+        return MaterialPage(child: UserProfile(userDetailStore: GetIt.I<UserDetailStore>(),));
       },
     ),
     GoRoute(
@@ -241,7 +251,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       path: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: BookServiceScreen());
+        return MaterialPage(child: BookServiceScreen());
       },
     ),
     GoRoute(

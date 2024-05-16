@@ -15,7 +15,8 @@ import 'package:silver_genie/feature/services/repo/services_repo.dart';
 import 'package:silver_genie/feature/services/widgets/booking_status.dart';
 
 class BookServiceScreen extends StatelessWidget {
-  const BookServiceScreen({super.key});
+  BookServiceScreen({super.key});
+  final TextEditingController dobContr = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              DateDropdown(dateController: TextEditingController(),),
+              // DateDropdown(controller: dobContr),
               const SizedBox(height: Dimension.d4),
               Text(
                 '3. Select time slot',
@@ -97,11 +98,11 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              const CustomTextField(
+              CustomTextField(
                 hintText: 'Write your purpose here',
                 keyboardType: TextInputType.name,
                 large: true,
-                enabled: true, 
+                enabled: true,
               ),
               const SizedBox(height: Dimension.d4),
               Text(
@@ -110,11 +111,11 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              const CustomTextField(
+              CustomTextField(
                 hintText: 'Type here...',
                 keyboardType: TextInputType.name,
                 large: true,
-                enabled: true, 
+                enabled: true,
               ),
               const SizedBox(height: Dimension.d20),
               const SizedBox(height: Dimension.d4),

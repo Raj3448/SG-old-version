@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
+    
     return Scaffold(
       appBar: const Appbar(),
       backgroundColor: AppColors.white,

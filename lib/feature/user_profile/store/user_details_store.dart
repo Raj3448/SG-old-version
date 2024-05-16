@@ -1,7 +1,9 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
 
 part 'user_details_store.g.dart';
@@ -19,6 +21,8 @@ abstract class _UserDetailStoreBase with Store {
   @observable
   bool isLoadingUserInfo = false;
 
+  @observable
+  String firstName = '----';
 
   @action
   Future<void> getUserDetails() async {
@@ -35,6 +39,15 @@ abstract class _UserDetailStoreBase with Store {
     userDetailsResult.fold((l) {}, (r) {
       userDetails = userDetailsResult;
     });
+    isLoadingUserInfo = false;
+  }
+
+  Future<void> fetchUserDetailsFromCache() async {
+    isLoadingUserInfo = true;
+    final userInfo = await GetIt.I<UserDetailsCache>().getUserDetails();
+    if (userInfo != null) {
+      firstName = userInfo.firstName;
+    }
     isLoadingUserInfo = false;
   }
 }

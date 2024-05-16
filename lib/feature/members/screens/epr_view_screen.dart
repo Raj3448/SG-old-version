@@ -31,7 +31,7 @@ class EPRViewScreen extends StatelessWidget {
           backgroundColor: AppColors.white,
           body: FutureBuilder(
             future: HttpClient()
-                .get('http://api-dev.yoursilvergenie.com/api/user/family/epr?userId=5'),
+                .get('/user/family/epr?userId=5'),
             builder: (context, snapshot) {
               if (store.isLoadingUserInfo ||
                   snapshot.connectionState == ConnectionState.waiting) {
@@ -144,7 +144,7 @@ class EPRViewScreen extends StatelessWidget {
                                       title: 'Address',
                                       details: store.userDetails!.fold(
                                         (l) => '',
-                                        (r) => r.user.address.streetAddress,
+                                        (r) => r.user.address!.streetAddress,
                                       ),
                                     ),
                                   ],
