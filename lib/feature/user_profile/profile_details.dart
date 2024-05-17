@@ -1,5 +1,7 @@
 // ignore_for_file: inference_failure_on_function_invocation, strict_raw_type, lines_longer_than_80_chars
 
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -38,6 +40,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _postalController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
+  File? storedImageFile;
 
   final List<ValueItem<String>> _genderItems = [
     const ValueItem(label: 'Male', value: 'Male'),
@@ -52,7 +55,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     store.getUserDetails().then((value) {
       _initializeControllers(store);
-      _isInitialize = true;
     });
     return Observer(
       builder: (context) {
@@ -105,7 +107,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Center(child: EditPic()),
+                      Center(child: EditPic()),
                       const SizedBox(height: Dimension.d5),
                       const TextLabel(title: 'First Name'),
                       const SizedBox(height: Dimension.d2),
@@ -288,8 +290,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           selectedGenderIndex >= 0 &&
           selectedGenderIndex < _genderItems.length) {
         print("Selected Gender: ${selectedGenderIndex}");
-        _genderController
-            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+
+        try {
+          _genderController
+              .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+        } catch (error) {
+          //print(error);
+        }
       }
       _mobileController.text = userDetails.user.phoneNumber;
       _emailController.text = userDetails.user.email;
@@ -299,6 +306,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         _countryController.text = userDetails.user.address!.country;
         _addressController.text = userDetails.user.address!.streetAddress;
         _postalController.text = userDetails.user.address!.postalCode;
+      }
+      if (!_isInitialize) {
+        setState(() {
+          _isInitialize = true;
+        });
       }
     });
   }

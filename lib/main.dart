@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/core/utils/image_store/image_store.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
@@ -109,6 +110,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
+      GetIt.instance.registerLazySingleton(() => ImageStore());
       GetIt.instance.registerLazySingleton(
           () => UserDetailStore(GetIt.I<UserDetailServices>()));
       GetIt.instance.registerLazySingleton(
