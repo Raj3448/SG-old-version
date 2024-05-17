@@ -86,15 +86,19 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/otp/:email/:phoneNumber',
+      path: '/otp/:email/:phoneNumber/:isFromLoginPage',
       name: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
         final email = state.pathParameters['email'].toString();
         final phoneNumber = state.pathParameters['phoneNumber'].toString();
+        final isFromLoginPage =
+            state.pathParameters['isFromLoginPage'].toString().toLowerCase() ==
+                'true';
         return MaterialPage(
           child: OTPScreen(
             email: email,
             phoneNumber: phoneNumber,
+            isFromLoginPage: isFromLoginPage,
           ),
         );
       },

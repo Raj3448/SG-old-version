@@ -10,7 +10,8 @@ part 'verify_otp_store.g.dart';
 class VerityOtpStore = _VerityOtpStoreBase with _$VerityOtpStore;
 
 abstract class _VerityOtpStoreBase with Store {
-  final authService = GetIt.I<AuthService>();
+  _VerityOtpStoreBase(this.authService);
+  final AuthService authService;
 
   @observable
   bool isLoading = false;
@@ -19,18 +20,20 @@ abstract class _VerityOtpStoreBase with Store {
   Either<VerifyOTPFailure, void>? authFailure;
 
   @action
-  void verifyOtp(
-    String otp,
-    String phoneNumber,
-    String email,
-  ) {
+  void verifyOtp({
+    required String otp,
+    required String phoneNumber,
+    required String email,
+    required bool isFromLoginPage,
+  }) {
     isLoading = true;
     authFailure = null;
     authService
         .verifyOtp(
-          otp,
-          phoneNumber,
-          email,
+          otp: otp,
+          phoneNumber: phoneNumber,
+          email: email,
+          isFromLoginPage: isFromLoginPage,
         )
         .then(
           (value) => {

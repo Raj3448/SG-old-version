@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
@@ -8,7 +7,10 @@ part 'signup_store.g.dart';
 class SignupStore = _SignupStoreBase with _$SignupStore;
 
 abstract class _SignupStoreBase with Store {
-  final authService = GetIt.I<AuthService>();
+  _SignupStoreBase(this.authService);
+
+  final AuthService authService;
+
   @observable
   bool isLoading = false;
 
