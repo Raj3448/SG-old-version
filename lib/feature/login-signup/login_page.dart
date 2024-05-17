@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
           (r) {
             GoRouter.of(context).pushNamed(
               RoutesConstants.otpRoute,
-              pathParameters: {
+              extra: {
                 'email': emailContr.text,
                 'phoneNumber':
                     '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'

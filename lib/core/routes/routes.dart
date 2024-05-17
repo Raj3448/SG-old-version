@@ -86,19 +86,18 @@ final GoRouter routes = GoRouter(
       },
     ),
     GoRoute(
-      path: '/otp/:email/:phoneNumber/:isFromLoginPage',
+      path: '/otp',
       name: RoutesConstants.otpRoute,
       pageBuilder: (context, state) {
-        final email = state.pathParameters['email'].toString();
-        final phoneNumber = state.pathParameters['phoneNumber'].toString();
-        final isFromLoginPage =
-            state.pathParameters['isFromLoginPage'].toString().toLowerCase() ==
-                'true';
+        final extraData = state.extra as Map<String, dynamic>?;
+        final email = extraData?['email'] as String?;
+        final phoneNumber = extraData?['phoneNumber'] as String?;
+        final isFromLoginPage = extraData?['isFromLoginPage'] == 'true';
         return MaterialPage(
           child: OTPScreen(
+            isFromLoginPage: isFromLoginPage,
             email: email,
             phoneNumber: phoneNumber,
-            isFromLoginPage: isFromLoginPage,
           ),
         );
       },
@@ -114,9 +113,10 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.userProfileRoute,
       pageBuilder: (context, state) {
         return MaterialPage(
-            child: UserProfile(
-          userDetailStore: GetIt.I<UserDetailStore>(),
-        ));
+          child: UserProfile(
+            userDetailStore: GetIt.I<UserDetailStore>(),
+          ),
+        );
       },
     ),
     GoRoute(
@@ -222,9 +222,9 @@ final GoRouter routes = GoRouter(
       path: '/geniePage/:pageTitle/:defination/:headline',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
-        final String pageTitle = state.pathParameters['pageTitle'] ?? '';
-        final String defination = state.pathParameters['defination'] ?? '';
-        final String headline = state.pathParameters['headline'] ?? '';
+        final pageTitle = state.pathParameters['pageTitle'] ?? '';
+        final defination = state.pathParameters['defination'] ?? '';
+        final headline = state.pathParameters['headline'] ?? '';
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,
@@ -284,7 +284,7 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final bookingServiceStatusString =
             state.pathParameters['bookingServiceStatus'];
-        BookingServiceStatus bookingServiceStatus = BookingServiceStatus.values
+        var bookingServiceStatus = BookingServiceStatus.values
             .firstWhere((e) => e.toString() == bookingServiceStatusString);
         return MaterialPage(
           child: BookingSeviceStatusPage(

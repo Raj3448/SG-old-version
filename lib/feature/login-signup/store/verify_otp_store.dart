@@ -36,8 +36,8 @@ abstract class _VerityOtpStoreBase with Store {
   @action
   void verifyOtp({
     required String otp,
-    required String phoneNumber,
-    required String email,
+    required String? phoneNumber,
+    required String? email,
     required bool isFromLoginPage,
   }) {
     isLoading = true;

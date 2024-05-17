@@ -21,13 +21,13 @@ import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen({
-    required this.phoneNumber,
     required this.isFromLoginPage,
-    required this.email,
+    this.phoneNumber,
+    this.email,
     super.key,
   });
-  final String email;
-  final String phoneNumber;
+  final String? email;
+  final String? phoneNumber;
   final bool isFromLoginPage;
 
   @override
@@ -177,8 +177,10 @@ class _OTPScreenState extends State<OTPScreen> {
                             if (widget.isFromLoginPage) {
                               store.verifyOtp(
                                 otp: otpController.text,
-                                phoneNumber: widget.phoneNumber,
-                                email: widget.email,
+                                phoneNumber: loginStore.isEmail
+                                    ? null
+                                    : widget.phoneNumber,
+                                email: loginStore.isEmail ? widget.email : null,
                                 isFromLoginPage: true,
                               );
                               return;
@@ -208,25 +210,56 @@ class _OTPScreenState extends State<OTPScreen> {
                           const SizedBox(
                             width: Dimension.d1,
                           ),
-                          CustomButton(
-                            size: ButtonSize.normal,
-                            type: ButtonType.tertiary,
-                            expanded: true,
-                            ontap: () {},
-                            title: 'Resend'.tr(),
-                            showIcon: false,
-                            iconPath: Icons.not_interested,
-                            iconColor: AppColors.white,
+                          Observer(
+                            builder: (_) {
+                              return store.showResendButton
+                                  ? CustomButton(
+                                      size: ButtonSize.normal,
+                                      type: ButtonType.tertiary,
+                                      expanded: true,
+                                      ontap: store.isResendLoading
+                                          ? () {}
+                                          : () {
+                                              widget.isFromLoginPage == true
+                                                  ? store.resendOTPLogin(
+                                                      loginStore.identifier)
+                                                  : store.resendOTPSignup(
+                                                      signupStore.firstName,
+                                                      signupStore.lastName,
+                                                      signupStore.dob,
+                                                      signupStore.email,
+                                                      signupStore.phoneNumber,
+                                                    );
+                                            },
+                                      title: store.isResendLoading
+                                          ? 'Resending'
+                                          : 'Resend'.tr(),
+                                      showIcon: false,
+                                      iconPath: Icons.not_interested,
+                                      iconColor: AppColors.white,
+                                    )
+                                  : CustomButton(
+                                      size: ButtonSize.normal,
+                                      type: ButtonType.tertiary,
+                                      expanded: true,
+                                      ontap: () {},
+                                      title:
+                                          'Resend in ${store.countdown}s'.tr(),
+                                      showIcon: false,
+                                      iconPath: Icons.not_interested,
+                                      iconColor: AppColors.white,
+                                    );
+                            },
                           ),
                         ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

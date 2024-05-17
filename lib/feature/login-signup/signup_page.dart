@@ -67,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           (r) => GoRouter.of(context).pushNamed(
             RoutesConstants.otpRoute,
-            pathParameters: {
+            extra: {
               'email': emailContr.text,
               'phoneNumber':
                   '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
@@ -186,6 +186,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               type: ButtonType.primary,
                               expanded: true,
                               ontap: () {
+                                print(firstNameContr.text);
+                                print(lastNameContr.text);
+                                print(dobContr.text);
+                                print(emailContr.text);
+                                print(
+                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                        .replaceFirst('+', ''));
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
                                   store
