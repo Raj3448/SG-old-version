@@ -147,9 +147,9 @@ class _OTPScreenState extends State<OTPScreen> {
                         ontap: () async {
                           if (otpController.text.isNotEmpty) {
                             store.verifyOtp(
-                              otpController.text,
-                              widget.phoneNumber,
-                              widget.email,
+                              otp: otpController.text,
+                              phoneNumber: widget.phoneNumber,
+                              email: widget.email,
                             );
                           }
                         },
