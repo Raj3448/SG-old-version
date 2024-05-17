@@ -21,10 +21,12 @@ class OTPScreen extends StatefulWidget {
   const OTPScreen({
     required this.email,
     required this.phoneNumber,
+    required this.isFromLoginPage,
     super.key,
   });
   final String email;
   final String phoneNumber;
+  final bool isFromLoginPage;
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -43,14 +45,18 @@ class _OTPScreenState extends State<OTPScreen> {
       if (store.authFailure != null) {
         store.authFailure?.fold(
           (l) => {
-            l.maybeWhen(invalidOTP: () {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text('Invalid OTP!')));
-            }, orElse: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Error: Unknown error!')),
-              );
-            })
+            l.maybeWhen(
+              invalidOTP: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid OTP!')),
+                );
+              },
+              orElse: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error: Unknown error!')),
+                );
+              },
+            ),
           },
           (r) => {
             GetIt.I<AuthStore>().refresh(),
@@ -150,6 +156,7 @@ class _OTPScreenState extends State<OTPScreen> {
                               otp: otpController.text,
                               phoneNumber: widget.phoneNumber,
                               email: widget.email,
+                              isFromLoginPage: widget.isFromLoginPage,
                             );
                           }
                         },

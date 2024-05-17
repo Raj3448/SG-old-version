@@ -1,4 +1,4 @@
-// ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars, use_build_context_synchronously
+// ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars, use_build_context_synchronously, avoid_dynamic_calls
 
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
@@ -16,20 +16,23 @@ abstract class IAuthService {
     String phoneNumber,
     String dob,
   );
-  Future<Either<VerifyOTPFailure, void>> verifyOtp(
-      {required String otp,
-      required String phoneNumber,
-      required String email,
-      bool isFromLoginPage});
+  Future<Either<VerifyOTPFailure, void>> verifyOtp({
+    required String otp,
+    required String phoneNumber,
+    required String email,
+    required bool isFromLoginPage,
+  });
 }
 
-const baseUrl = 'api';
+// const baseUrl = 'api';
+const baseUrl = 'http://api-dev.yoursilvergenie.com/api';
 
 class AuthService implements IAuthService {
-  AuthService(
-      {required this.httpClient,
-      required this.userDetailsCache,
-      required this.tokenManager});
+  AuthService({
+    required this.httpClient,
+    required this.userDetailsCache,
+    required this.tokenManager,
+  });
 
   final HttpClient httpClient;
   final UserDetailsCache userDetailsCache;
@@ -50,6 +53,14 @@ class AuthService implements IAuthService {
       );
       if (request.statusCode == 200) {
         return const Right(null);
+      } else if (request.statusCode == 400) {
+        final errorMessage = request.data['error']['message'] as String;
+        print(errorMessage);
+        if (errorMessage.contains('User does not exist')) {
+          return const Left(AuthFailure.invalidEmail());
+        } else {
+          return const Left(AuthFailure.unknownError('Error unknown'));
+        }
       } else {
         return const Left(AuthFailure.unknownError('Error unknown'));
       }
@@ -80,11 +91,21 @@ class AuthService implements IAuthService {
       );
       if (request.statusCode == 200) {
         return const Right(null);
+      } else if (request.statusCode == 400) {
+        final errorMessage = request.data['error']['message'] as String;
+        if (errorMessage.contains('User already exist')) {
+          return const Left(AuthFailure.userAlreadyExists());
+        } else if (errorMessage.contains('Invalid phone number') ||
+            errorMessage.contains('Request is Invalid or Bad Request')) {
+          return const Left(AuthFailure.invalidPhoneNumber());
+        } else {
+          return const Left(AuthFailure.unknownError('Unknown error'));
+        }
       } else {
-        return const Left(AuthFailure.unknownError('Error unknown'));
+        return const Left(AuthFailure.unknownError('Unknown error'));
       }
     } catch (e) {
-      return const Left(AuthFailure.tooManyRequests());
+      return const Left(AuthFailure.networkError());
     }
   }
 
@@ -93,7 +114,7 @@ class AuthService implements IAuthService {
     required String otp,
     required String phoneNumber,
     required String email,
-    bool isFromLoginPage = true,
+    required bool isFromLoginPage,
   }) async {
     final signUpData = <String, dynamic>{
       'otp': otp,
@@ -105,7 +126,7 @@ class AuthService implements IAuthService {
       'email': email,
     };
     try {
-      final phoneNumberVerificationResponse = (isFromLoginPage)
+      final phoneNumberVerificationResponse = isFromLoginPage
           ? await httpClient.post(
               '$baseUrl/verify-otp/',
               data: emailData,
@@ -116,20 +137,28 @@ class AuthService implements IAuthService {
             );
       if (phoneNumberVerificationResponse.statusCode == 200) {
         final token =
-            phoneNumberVerificationResponse?.data['data']['AUTH_TOKEN'];
-
+            phoneNumberVerificationResponse.data['data']['AUTH_TOKEN'];
         if (token is String) {
           await tokenManager.saveToken(token);
         }
-
         if (phoneNumberVerificationResponse.data['data']['userDetails'] !=
             null) {
-          final User user = User.fromJson(phoneNumberVerificationResponse
-              .data['data']['userDetails'] as Map<String, dynamic>);
-
+          final user = User.fromJson(
+            phoneNumberVerificationResponse.data['data']['userDetails']
+                as Map<String, dynamic>,
+          );
           await userDetailsCache.saveUserDetails(user);
         }
         return const Right(null);
+      } else if (phoneNumberVerificationResponse.statusCode == 400) {
+        final errorMessage =
+            phoneNumberVerificationResponse.data['error']['message'] as String;
+        print(errorMessage);
+        if (errorMessage.contains('Invalid OTP or User does not exist')) {
+          return const Left(VerifyOTPFailure.invalidOTP());
+        } else {
+          return const Left(VerifyOTPFailure.unknown());
+        }
       } else {
         return const Left(VerifyOTPFailure.unknown());
       }

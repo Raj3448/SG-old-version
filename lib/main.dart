@@ -85,10 +85,22 @@ void main() async {
 
       GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
-      GetIt.instance.registerLazySingleton(() => LoginStore());
-      GetIt.instance.registerLazySingleton(() => VerityOtpStore());
+      GetIt.instance.registerLazySingleton(
+        () => LoginStore(
+          GetIt.instance.get<AuthService>(),
+        ),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => VerityOtpStore(
+          GetIt.instance.get<AuthService>(),
+        ),
+      );
 
-      GetIt.instance.registerLazySingleton(() => SignupStore());
+      GetIt.instance.registerLazySingleton(
+        () => SignupStore(
+          GetIt.instance.get<AuthService>(),
+        ),
+      );
       GetIt.instance.registerLazySingleton(
         () => UserDetailServices(
           GetIt.I<UserDetailsCache>(),

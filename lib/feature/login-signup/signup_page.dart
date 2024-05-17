@@ -40,13 +40,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (store.authFailure != null) {
         store.authFailure?.fold(
           (l) => {
-            l.maybeWhen(invalidEmail: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Invalid email!')));
-            }, orElse: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Error: Unknown error!')));
-            })
+            l.maybeWhen(
+              invalidEmail: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid email address!')),
+                );
+              },
+              invalidPhoneNumber: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid phone number!')),
+                );
+              },
+              emailAlreadyInUse: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('This Email is already in use!'),
+                  ),
+                );
+              },
+              userAlreadyExists: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('User with this email already exists!'),
+                  ),
+                );
+              },
+              orElse: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error: Unknown error!')),
+                );
+              },
+            ),
           },
           (r) => GoRouter.of(context).pushNamed(
             RoutesConstants.otpRoute,
@@ -171,12 +195,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
                                   store.signup(
-                                      firstNameContr.text,
-                                      lastNameContr.text,
-                                      dobContr.text,
-                                      emailContr.text,
-                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                          .replaceFirst('+', ''));
+                                    firstNameContr.text,
+                                    lastNameContr.text,
+                                    dobContr.text,
+                                    emailContr.text,
+                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                        .replaceFirst('+', ''),
+                                  );
                                 }
                               },
                               title: 'Sign Up'.tr(),
