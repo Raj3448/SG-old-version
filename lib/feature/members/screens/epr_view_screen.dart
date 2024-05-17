@@ -20,7 +20,7 @@ import 'package:silver_genie/feature/user_profile/store/user_details_store.dart'
 class EPRViewScreen extends StatelessWidget {
   EPRViewScreen({super.key});
   final store = GetIt.I<UserDetailStore>();
-
+  final http = GetIt.I<HttpClient>();
   @override
   Widget build(BuildContext context) {
     store.getUserDetails();
@@ -30,8 +30,8 @@ class EPRViewScreen extends StatelessWidget {
           appBar: const PageAppbar(title: 'EPR'),
           backgroundColor: AppColors.white,
           body: FutureBuilder(
-            future: HttpClient()
-                .get('/user/family/epr?userId=5'),
+            future: http.get(
+                '/api/user/family/epr?userId=${store.userDetails!.fold((l) => null, (r) => r.user.id)}'),
             builder: (context, snapshot) {
               if (store.isLoadingUserInfo ||
                   snapshot.connectionState == ConnectionState.waiting) {
@@ -40,9 +40,11 @@ class EPRViewScreen extends StatelessWidget {
                 );
               }
               if (!snapshot.hasData) {
-                return const SizedBox();
+                return const Center(
+                  child: Text('Bad Request 400'),
+                );
               }
-              
+
               print('SnapShot data : ${snapshot.data}');
               return Column(
                 children: [

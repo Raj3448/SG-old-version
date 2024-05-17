@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use, inference_failure_on_function_invocation, lines_longer_than_80_chars, strict_raw_type
 
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -68,7 +70,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(child: EditPic()),
+              Center(child: EditPic()),
               const SizedBox(height: 16),
               const AsteriskLabel(label: 'First name'),
               const SizedBox(height: 8),
