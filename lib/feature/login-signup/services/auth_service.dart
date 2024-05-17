@@ -25,7 +25,7 @@ abstract class IAuthService {
   );
 }
 
-const baseUrl = 'api';
+const baseUrl = '/api';
 final loginStore = GetIt.I<LoginStore>();
 
 class AuthService implements IAuthService {

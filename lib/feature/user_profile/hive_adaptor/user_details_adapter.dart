@@ -8,7 +8,8 @@ class UserAdapter extends TypeAdapter<User> {
 
   @override
   User read(BinaryReader reader) {
-    return User.fromJson(reader.readMap() as Map<String, dynamic>);
+    final map = Map<String, dynamic>.from(reader.readMap());
+    return User.fromJson(map);
   }
 
   @override
@@ -22,7 +23,8 @@ class AddressAdapter extends TypeAdapter<Address> {
 
   @override
   Address read(BinaryReader reader) {
-    return Address.fromJson(reader.readMap() as Map<String, dynamic>);
+    final map = Map<String, dynamic>.from(reader.readMap());
+    return Address.fromJson(map);
   }
 
   @override
