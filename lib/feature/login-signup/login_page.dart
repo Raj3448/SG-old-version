@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      'User does not exists!',
+                      'Invalid emailaddress!',
                     ),
                   ),
                 );

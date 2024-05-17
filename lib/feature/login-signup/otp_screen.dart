@@ -97,144 +97,128 @@ class _OTPScreenState extends State<OTPScreen> {
     final formKey = GlobalKey<FormState>();
     store.startTimer();
     return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(Dimension.d5),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 240,
-                    height: 240,
-                    child: Image.asset('assets/splash/sg_logo.png'),
-                  ),
-                  Text(
-                    'Verify OTP'.tr(),
-                    style: AppTextStyle.heading4SemiBold,
-                  ),
-                  const SizedBox(height: Dimension.d6),
-                  Text(
-                    'We have just sent you 4 digit code to your email and phone number'
-                        .tr(),
-                    textAlign: TextAlign.center,
-                    style: AppTextStyle.bodyMediumMedium,
-                  ),
-                  const SizedBox(height: Dimension.d6),
-                  Form(
-                    key: formKey,
-                    child: PinCodeTextField(
-                      controller: otpController,
-                      appContext: context,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      length: 4,
-                      keyboardType: TextInputType.number,
-                      cursorColor: AppColors.black,
-                      animationCurve: Curves.easeIn,
-                      animationType: AnimationType.fade,
-                      onChanged: (value) {
-                        // Handle OTP changes
-                      },
-                      onCompleted: (value) {
-                        // Handle successful OTP entry
-                      },
-                      errorTextMargin:
-                          const EdgeInsets.only(left: Dimension.d14),
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(width: Dimension.d4);
-                      },
-                      errorTextSpace: 25,
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(8),
-                        fieldHeight: 56,
-                        fieldWidth: 56,
-                        activeColor: AppColors.primary,
-                        inactiveColor: AppColors.line,
-                        selectedColor: AppColors.primary,
-                        activeFillColor: AppColors.grayscale900,
-                        selectedFillColor: AppColors.secondary,
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your OTP';
-                        } else if (value.length > 4 || value.length < 4) {
-                          return 'Please enter 4 digits OTP';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  CustomButton(
-                    size: ButtonSize.normal,
-                    type: ButtonType.primary,
-                    expanded: true,
-                    ontap: () async {
-                      if (otpController.text.isNotEmpty) {
-                        store.verifyOtp(
-                          otp: otpController.text,
-                          phoneNumber: widget.phoneNumber,
-                          email: widget.email,
-                          isFromLoginPage: widget.isFromLoginPage,
-                        );
-                      }
-                    },
-                    title: 'Continue'.tr(),
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    iconColor: AppColors.white,
-                  ),
-                  const SizedBox(height: Dimension.d6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: Observer(
+        builder: (context) {
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(Dimension.d5),
+                  child: Column(
                     children: [
+                      SizedBox(
+                        width: 240,
+                        height: 240,
+                        child: Image.asset('assets/splash/sg_logo.png'),
+                      ),
                       Text(
-                        "Didn't receive OTP?".tr(),
-                        style: AppTextStyle.bodyLargeMedium,
+                        'Verify OTP'.tr(),
+                        style: AppTextStyle.heading4SemiBold,
                       ),
-                      const SizedBox(
-                        width: Dimension.d1,
+                      const SizedBox(height: Dimension.d6),
+                      Text(
+                        'We have just sent you 4 digit code to your email and phone number'
+                            .tr(),
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.bodyMediumMedium,
                       ),
-                      Observer(
-                        builder: (_) {
-                          return store.showResendButton
-                              ? CustomButton(
-                                  size: ButtonSize.normal,
-                                  type: ButtonType.tertiary,
-                                  expanded: true,
-                                  ontap: store.isResendLoading
-                                      ? () {}
-                                      : () {
-                                          widget.isFromLoginPage == true
-                                              ? store.resendOTPLogin(
-                                                  'loginStore.identifier')
-                                              : store.resendOTPSignup(
-                                                  signupStore.firstName,
-                                                  signupStore.lastName,
-                                                  signupStore.dob,
-                                                  signupStore.email,
-                                                  signupStore.phoneNumber,
-                                                );
-                                        },
-                                  title: store.isResendLoading
-                                      ? 'Resending'
-                                      : 'Resend'.tr(),
-                                  showIcon: false,
-                                  iconPath: Icons.not_interested,
-                                  iconColor: AppColors.white,
-                                )
-                              : CustomButton(
-                                  size: ButtonSize.normal,
-                                  type: ButtonType.tertiary,
-                                  expanded: true,
-                                  ontap: () {},
-                                  title: 'Resend in ${store.countdown}s'.tr(),
-                                  showIcon: false,
-                                  iconPath: Icons.not_interested,
-                                  iconColor: AppColors.white,
-                                );
+                      const SizedBox(height: Dimension.d6),
+                      Form(
+                        key: formKey,
+                        child: PinCodeTextField(
+                          controller: otpController,
+                          appContext: context,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          length: 4,
+                          keyboardType: TextInputType.number,
+                          cursorColor: AppColors.black,
+                          animationCurve: Curves.easeIn,
+                          animationType: AnimationType.fade,
+                          onChanged: (value) {
+                            // Handle OTP changes
+                          },
+                          onCompleted: (value) {
+                            // Handle successful OTP entry
+                          },
+                          errorTextMargin:
+                              const EdgeInsets.only(left: Dimension.d14),
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(width: Dimension.d4);
+                          },
+                          errorTextSpace: 25,
+                          pinTheme: PinTheme(
+                            shape: PinCodeFieldShape.box,
+                            borderRadius: BorderRadius.circular(8),
+                            fieldHeight: 56,
+                            fieldWidth: 56,
+                            activeColor: AppColors.primary,
+                            inactiveColor: AppColors.line,
+                            selectedColor: AppColors.primary,
+                            activeFillColor: AppColors.grayscale900,
+                            selectedFillColor: AppColors.secondary,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your OTP';
+                            } else if (value.length > 4 || value.length < 4) {
+                              return 'Please enter 4 digits OTP';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: Dimension.d4),
+                      CustomButton(
+                        size: ButtonSize.normal,
+                        type: ButtonType.primary,
+                        expanded: true,
+                        ontap: () async {
+                          if (otpController.text.isNotEmpty) {
+                            if (widget.isFromLoginPage) {
+                              store.verifyOtp(
+                                otp: otpController.text,
+                                phoneNumber: widget.phoneNumber,
+                                email: widget.email,
+                                isFromLoginPage: true,
+                              );
+                              return;
+                            }
+
+                            store.verifyOtp(
+                              otp: otpController.text,
+                              phoneNumber: widget.phoneNumber,
+                              email: widget.email,
+                              isFromLoginPage: widget.isFromLoginPage,
+                            );
+                          }
                         },
+                        title: 'Continue'.tr(),
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        iconColor: AppColors.white,
+                      ),
+                      const SizedBox(height: Dimension.d6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Didn't receive OTP?".tr(),
+                            style: AppTextStyle.bodyLargeMedium,
+                          ),
+                          const SizedBox(
+                            width: Dimension.d1,
+                          ),
+                          CustomButton(
+                            size: ButtonSize.normal,
+                            type: ButtonType.tertiary,
+                            expanded: true,
+                            ontap: () {},
+                            title: 'Resend'.tr(),
+                            showIcon: false,
+                            iconPath: Icons.not_interested,
+                            iconColor: AppColors.white,
+                          ),
+                        ],
                       ),
                     ],
                   ),
