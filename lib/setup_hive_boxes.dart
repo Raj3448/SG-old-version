@@ -22,14 +22,9 @@ Future<void> initializeBoxForUserDetails() async {
   Hive
     ..registerAdapter(UserAdapter())
     ..registerAdapter(AddressAdapter());
-  var userDetailsKey =
-      Hive.generateSecureKey(); // Generate a secure encryption key
-
-  await storage.write(
-      key: USER_DETAILS_BOX_KEY, value: base64UrlEncode(userDetailsKey));
+  
   await Hive.openBox<User>(
     USER_DETAILS_BOX_NAME,
-    encryptionCipher: HiveAesCipher(userDetailsKey),
     compactionStrategy: (int total, int deleted) => deleted > 2,
   );
 }
@@ -53,14 +48,13 @@ Future<void> initializeBoxForUserDetails() async {
 // }
 
 Future<void> initializeBoxForToken() async {
+  
   String? existingKey = await storage.read(key: 'hive_key');
   if (existingKey == null) {
     var newKey = Hive.generateSecureKey();
     await storage.write(key: 'hive_key', value: base64UrlEncode(newKey));
     existingKey = base64UrlEncode(newKey);
-  } else {
-    existingKey = await storage.read(key: 'hive_key');
   }
-  var key = base64Url.decode(existingKey!);
+  var key = base64Url.decode(existingKey);
   await Hive.openBox(TOKEN_BOX_NAME, encryptionCipher: HiveAesCipher(key));
 }

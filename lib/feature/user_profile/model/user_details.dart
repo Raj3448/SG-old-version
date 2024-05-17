@@ -69,13 +69,13 @@ class User {
     required this.gender,
     required this.phoneNumber,
     required this.dateOfBirth,
-    this.relation,
     required this.uniqueKey,
     required this.firstName,
     required this.lastName,
     required this.userTags,
     required this.createdAt,
     required this.updatedAt,
+    this.relation = 'Self',
     this.address,
   });
 

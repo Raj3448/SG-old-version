@@ -31,9 +31,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final MultiSelectController _genderController = MultiSelectController();
-  final MultiSelectController _countryController = MultiSelectController();
-  final MultiSelectController _stateController = MultiSelectController();
-  final MultiSelectController _cityController = MultiSelectController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _postalController = TextEditingController();
@@ -42,39 +42,18 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final List<ValueItem<String>> _genderItems = [
     const ValueItem(label: 'Male', value: 'Male'),
     const ValueItem(label: 'Female', value: 'Female'),
-    const ValueItem(label: 'Other', value: 'MaOtherle'),
-  ];
-
-  final List<ValueItem<String>> _countryItems = [
-    const ValueItem(label: 'India', value: 'India'),
-    const ValueItem(label: 'Russia', value: 'Russia'),
-    const ValueItem(label: 'Australia', value: 'Australia'),
-  ];
-
-  final List<ValueItem<String>> _stateItems = [
-    const ValueItem(label: 'Maharashtra', value: 'Maharashtra'),
-    const ValueItem(label: 'Kerala', value: 'Kerala'),
-    const ValueItem(label: 'Kerala', value: 'Kerala'),
-    const ValueItem(label: 'Karnataka', value: 'Karnataka'),
-  ];
-
-  final List<ValueItem<String>> _cityItems = [
-    const ValueItem(label: 'Pune', value: 'Pune'),
-    const ValueItem(label: 'Solapur', value: 'Solapur'),
-    const ValueItem(label: 'Mumbai', value: 'Mumbai'),
+    const ValueItem(label: 'Other', value: 'Other'),
   ];
 
   bool _isInitialize = false;
-  final TextEditingController dobContr = TextEditingController();
+  final store = GetIt.I<UserDetailStore>();
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<UserDetailStore>();
     store.getUserDetails().then((value) {
       _initializeControllers(store);
       _isInitialize = true;
     });
-
     return Observer(
       builder: (context) {
         return Stack(
@@ -103,14 +82,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         .toString(),
                     address: Address(
                         id: 1,
-                        state: _stateController.selectedOptions.first.value
-                            .toString(),
-                        city: _cityController.selectedOptions.first.value
-                            .toString(),
+                        state: _stateController.text,
+                        city: _cityController.text,
                         streetAddress: _addressController.text,
                         postalCode: _postalController.text,
-                        country: _countryController.selectedOptions.first.value
-                            .toString()),
+                        country: _countryController.text),
                   );
                   await store.updateUserDetails(user!);
                   context.pop();
@@ -237,17 +213,23 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       const TextLabel(title: 'Country'),
                       const SizedBox(height: Dimension.d2),
                       const SizedBox(height: Dimension.d2),
-                      MultiDropdown(
+                      CustomTextField(
+                        hintText: 'Country',
+                        keyboardType: TextInputType.emailAddress,
+                        large: false,
+                        enabled: true,
                         controller: _countryController,
-                        values: _countryItems,
                       ),
                       const SizedBox(height: Dimension.d4),
                       const SizedBox(height: Dimension.d4),
                       const TextLabel(title: 'State'),
                       const SizedBox(height: Dimension.d2),
                       const SizedBox(height: Dimension.d2),
-                      MultiDropdown(
-                        values: _stateItems,
+                      CustomTextField(
+                        hintText: 'State',
+                        keyboardType: TextInputType.emailAddress,
+                        large: false,
+                        enabled: true,
                         controller: _stateController,
                       ),
                       const SizedBox(height: Dimension.d4),
@@ -255,8 +237,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       const TextLabel(title: 'City'),
                       const SizedBox(height: Dimension.d2),
                       const SizedBox(height: Dimension.d2),
-                      MultiDropdown(
-                        values: _cityItems,
+                      CustomTextField(
+                        hintText: 'City',
+                        keyboardType: TextInputType.emailAddress,
+                        large: false,
+                        enabled: true,
                         controller: _cityController,
                       ),
                       const SizedBox(height: Dimension.d4),
@@ -293,16 +278,28 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       _lastNameController.text = userDetails.user.lastName;
       _dobController.text =
           DateFormat('dd/MM/yyyy').format(userDetails.user.dateOfBirth);
+      final int selectedGenderIndex = userDetails.user.gender == 'Male'
+          ? 0
+          : userDetails.user.gender == 'Female'
+              ? 1
+              : 2;
 
-      _genderController.selectedOptions.add(store.userDetails!.fold(
-          (l) => const ValueItem(label: '', value: ''),
-          (r) => r.user.gender == 'Male'
-              ? _genderItems[0]
-              : r.user.gender == 'Female'
-                  ? _genderItems[1]
-                  : _genderItems[2]));
+      if (_genderItems.isNotEmpty &&
+          selectedGenderIndex >= 0 &&
+          selectedGenderIndex < _genderItems.length) {
+        print("Selected Gender: ${selectedGenderIndex}");
+        _genderController
+            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+      }
       _mobileController.text = userDetails.user.phoneNumber;
       _emailController.text = userDetails.user.email;
+      if (userDetails.user.address != null) {
+        _cityController.text = userDetails.user.address!.city;
+        _stateController.text = userDetails.user.address!.state;
+        _countryController.text = userDetails.user.address!.country;
+        _addressController.text = userDetails.user.address!.streetAddress;
+        _postalController.text = userDetails.user.address!.postalCode;
+      }
     });
   }
 }
