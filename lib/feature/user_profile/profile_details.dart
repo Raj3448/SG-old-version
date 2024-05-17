@@ -55,7 +55,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     store.getUserDetails().then((value) {
       _initializeControllers(store);
-      _isInitialize = true;
     });
     return Observer(
       builder: (context) {
@@ -291,8 +290,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           selectedGenderIndex >= 0 &&
           selectedGenderIndex < _genderItems.length) {
         print("Selected Gender: ${selectedGenderIndex}");
-        _genderController
-            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+
+        try {
+          _genderController
+              .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+        } catch (error) {
+          //print(error);
+        }
       }
       _mobileController.text = userDetails.user.phoneNumber;
       _emailController.text = userDetails.user.email;
@@ -302,6 +306,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         _countryController.text = userDetails.user.address!.country;
         _addressController.text = userDetails.user.address!.streetAddress;
         _postalController.text = userDetails.user.address!.postalCode;
+      }
+      if (!_isInitialize) {
+        setState(() {
+          _isInitialize = true;
+        });
       }
     });
   }
