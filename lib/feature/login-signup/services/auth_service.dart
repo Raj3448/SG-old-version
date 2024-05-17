@@ -53,19 +53,28 @@ class AuthService implements IAuthService {
       );
       if (request.statusCode == 200) {
         return const Right(null);
-      } else if (request.statusCode == 400) {
-        final errorMessage = request.data['error']['message'] as String;
-        print(errorMessage);
-        if (errorMessage.contains('User does not exist')) {
-          return const Left(AuthFailure.invalidEmail());
-        } else {
+      }
+
+      if (request.statusCode == 400) {
+        final dynamic code = request.data?['error']?['details']?["name"];
+        final errorCode = code is String ? code : null;
+
+        if (errorCode == null) {
           return const Left(AuthFailure.unknownError('Error unknown'));
         }
-      } else {
+        if (errorCode == LoginErrorCodes.invalidEmail) {
+          return const Left(AuthFailure.invalidEmail());
+        }
+
+        if (errorCode == LoginErrorCodes.userDoesNotExit) {
+          return const Left(AuthFailure.userNotFound());
+        }
         return const Left(AuthFailure.unknownError('Error unknown'));
       }
-    } catch (e) {
-      return const Left(AuthFailure.tooManyRequests());
+
+      return const Left(AuthFailure.unknownError('Error unknown'));
+    } catch (_) {
+      return const Left(AuthFailure.unknownError('Error unknown'));
     }
   }
 
@@ -91,19 +100,29 @@ class AuthService implements IAuthService {
       );
       if (request.statusCode == 200) {
         return const Right(null);
-      } else if (request.statusCode == 400) {
-        final errorMessage = request.data['error']['message'] as String;
-        if (errorMessage.contains('User already exist')) {
-          return const Left(AuthFailure.userAlreadyExists());
-        } else if (errorMessage.contains('Invalid phone number') ||
-            errorMessage.contains('Request is Invalid or Bad Request')) {
-          return const Left(AuthFailure.invalidPhoneNumber());
-        } else {
-          return const Left(AuthFailure.unknownError('Unknown error'));
+      }
+
+      if (request.statusCode == 400) {
+        final dynamic code = request.data?['error']?['details']?["name"];
+        final errorCode = code is String ? code : null;
+
+        if (errorCode == null) {
+          return const Left(AuthFailure.unknownError('Error unknown'));
         }
-      } else {
+        if (errorCode == SignUpErrorCodes.userAlreadyExists) {
+          return const Left(AuthFailure.userAlreadyExists());
+        }
+        if (errorCode == SignUpErrorCodes.invalidEmail) {
+          return const Left(AuthFailure.invalidEmail());
+        }
+        if (errorCode == SignUpErrorCodes.invalidPhoneNumber) {
+          return const Left(AuthFailure.invalidPhoneNumber());
+        }
+
         return const Left(AuthFailure.unknownError('Unknown error'));
       }
+
+      return const Left(AuthFailure.unknownError('Unknown error'));
     } catch (e) {
       return const Left(AuthFailure.networkError());
     }
@@ -112,8 +131,8 @@ class AuthService implements IAuthService {
   @override
   Future<Either<VerifyOTPFailure, void>> verifyOtp({
     required String otp,
-    required String phoneNumber,
-    required String email,
+    required String? phoneNumber,
+    required String? email,
     required bool isFromLoginPage,
   }) async {
     final signUpData = <String, dynamic>{
@@ -121,15 +140,15 @@ class AuthService implements IAuthService {
       'phoneNumber': phoneNumber,
       'email': email,
     };
-    final emailData = <String, dynamic>{
+    final loginData = <String, dynamic>{
       'otp': otp,
-      'email': email,
+      'identifier': email ?? phoneNumber,
     };
     try {
       final phoneNumberVerificationResponse = isFromLoginPage
           ? await httpClient.post(
               '$baseUrl/verify-otp/',
-              data: emailData,
+              data: loginData,
             )
           : await httpClient.post(
               '$baseUrl/auth/register-complete',
@@ -151,19 +170,38 @@ class AuthService implements IAuthService {
         }
         return const Right(null);
       } else if (phoneNumberVerificationResponse.statusCode == 400) {
-        final errorMessage =
-            phoneNumberVerificationResponse.data['error']['message'] as String;
-        print(errorMessage);
-        if (errorMessage.contains('Invalid OTP or User does not exist')) {
-          return const Left(VerifyOTPFailure.invalidOTP());
-        } else {
+        final dynamic code =
+            phoneNumberVerificationResponse.data?['error']?['details']?["name"];
+        final errorCode = code is String ? code : null;
+
+        if (errorCode == null) {
           return const Left(VerifyOTPFailure.unknown());
         }
-      } else {
+        if (errorCode == VerifyOTPErrorCodes.invalidOTP) {
+          return const Left(VerifyOTPFailure.invalidOTP());
+        }
+
         return const Left(VerifyOTPFailure.unknown());
       }
+
+      return const Left(VerifyOTPFailure.unknown());
     } catch (e) {
       return const Left(VerifyOTPFailure.unknown());
     }
   }
+}
+
+abstract class LoginErrorCodes {
+  static const String invalidEmail = 'INVALID_EMAIL';
+  static const String userDoesNotExit = 'USER_DOESNT_EXIST';
+}
+
+abstract class SignUpErrorCodes {
+  static const String userAlreadyExists = 'USER_ALREADY_EXIST';
+  static const String invalidEmail = 'INVALID_EMAIL';
+  static const String invalidPhoneNumber = 'INVALID_PHONE_NUMBER';
+}
+
+abstract class VerifyOTPErrorCodes {
+  static const String invalidOTP = 'INVALID_OTP';
 }

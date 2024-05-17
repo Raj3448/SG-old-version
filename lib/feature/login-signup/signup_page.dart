@@ -51,17 +51,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SnackBar(content: Text('Invalid phone number!')),
                 );
               },
-              emailAlreadyInUse: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('This Email is already in use!'),
-                  ),
-                );
-              },
               userAlreadyExists: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('User with this email already exists!'),
+                    content: Text('User already exists!'),
                   ),
                 );
               },

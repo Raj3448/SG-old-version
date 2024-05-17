@@ -152,6 +152,16 @@ class _OTPScreenState extends State<OTPScreen> {
                         expanded: true,
                         ontap: () async {
                           if (otpController.text.isNotEmpty) {
+                            if (widget.isFromLoginPage) {
+                              store.verifyOtp(
+                                otp: otpController.text,
+                                phoneNumber: widget.phoneNumber,
+                                email: widget.email,
+                                isFromLoginPage: true,
+                              );
+                              return;
+                            }
+
                             store.verifyOtp(
                               otp: otpController.text,
                               phoneNumber: widget.phoneNumber,
