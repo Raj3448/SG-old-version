@@ -19,19 +19,16 @@ abstract class _VerityOtpStoreBase with Store {
   Either<VerifyOTPFailure, void>? authFailure;
 
   @action
-  void verifyOtp(
-    String otp,
-    String phoneNumber,
-    String email,
-  ) {
+  void verifyOtp({
+    required String otp,
+    required String phoneNumber,
+    required String email,
+    bool isFromLoginPage = true,
+  }) {
     isLoading = true;
     authFailure = null;
     authService
-        .verifyOtp(
-          otp,
-          phoneNumber,
-          email,
-        )
+        .verifyOtp(otp: otp, phoneNumber: phoneNumber, email: email)
         .then(
           (value) => {
             isLoading = false,

@@ -1,11 +1,9 @@
 // ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars, use_build_context_synchronously
 
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
-import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 
@@ -19,14 +17,13 @@ abstract class IAuthService {
     String dob,
   );
   Future<Either<VerifyOTPFailure, void>> verifyOtp(
-    String otp,
-    String phoneNumber,
-    String email,
-  );
+      {required String otp,
+      required String phoneNumber,
+      required String email,
+      bool isFromLoginPage});
 }
 
-const baseUrl = '/api';
-final loginStore = GetIt.I<LoginStore>();
+const baseUrl = 'api';
 
 class AuthService implements IAuthService {
   AuthService(
@@ -92,12 +89,13 @@ class AuthService implements IAuthService {
   }
 
   @override
-  Future<Either<VerifyOTPFailure, void>> verifyOtp(
-    String otp,
-    String phoneNumber,
-    String email,
-  ) async {
-    final phoneNumberData = <String, dynamic>{
+  Future<Either<VerifyOTPFailure, void>> verifyOtp({
+    required String otp,
+    required String phoneNumber,
+    required String email,
+    bool isFromLoginPage = true,
+  }) async {
+    final signUpData = <String, dynamic>{
       'otp': otp,
       'phoneNumber': phoneNumber,
       'email': email,
@@ -107,14 +105,14 @@ class AuthService implements IAuthService {
       'email': email,
     };
     try {
-      final phoneNumberVerificationResponse = loginStore.isEmail
+      final phoneNumberVerificationResponse = (isFromLoginPage)
           ? await httpClient.post(
               '$baseUrl/verify-otp/',
               data: emailData,
             )
           : await httpClient.post(
               '$baseUrl/auth/register-complete',
-              data: phoneNumberData,
+              data: signUpData,
             );
       if (phoneNumberVerificationResponse.statusCode == 200) {
         final token =
