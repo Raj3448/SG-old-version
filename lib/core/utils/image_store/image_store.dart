@@ -16,7 +16,6 @@ abstract class _ImageStoreBase with Store {
   @observable
   File? storedProfileImage;
 
-  @action
   Future<CroppedFile?> _cropImage(File imageFile) async {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
@@ -29,25 +28,25 @@ abstract class _ImageStoreBase with Store {
       ],
       uiSettings: [
         AndroidUiSettings(
-          toolbarTitle: 'Crop Profile Image',
-          backgroundColor: AppColors.secondary,
-          toolbarColor: AppColors.primary,
-          toolbarWidgetColor: Colors.white,
-          cropFrameColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false
-        )
+            toolbarTitle: 'Crop Profile Image',
+            backgroundColor: AppColors.secondary,
+            toolbarColor: AppColors.primary,
+            toolbarWidgetColor: Colors.white,
+            cropFrameColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false)
       ],
     );
 
     return croppedImage;
   }
 
-  @action
   Future<void> _saveImageToDirectory(File imageFile) async {
-    final appDirectory = await sysPathProvider.getApplicationDocumentsDirectory();
+    final appDirectory =
+        await sysPathProvider.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile.path);
-    final storageResponse = await imageFile.copy('${appDirectory.path}/$fileName');
+    final storageResponse =
+        await imageFile.copy('${appDirectory.path}/$fileName');
     print("Image Added Successfully at: $storageResponse");
     storedProfileImage = storageResponse;
   }
@@ -55,7 +54,8 @@ abstract class _ImageStoreBase with Store {
   @action
   Future<void> takePhoto() async {
     try {
-      final XFile? receivedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+      final XFile? receivedImage =
+          await ImagePicker().pickImage(source: ImageSource.camera);
       if (receivedImage == null) {
         return;
       }
@@ -78,7 +78,8 @@ abstract class _ImageStoreBase with Store {
   @action
   Future<void> chooseImage() async {
     try {
-      final XFile? receivedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? receivedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       if (receivedImage == null) {
         return;
       }

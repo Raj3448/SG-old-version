@@ -84,7 +84,7 @@ class UserDetailServices implements IUserFacades {
       }),
     ],
   );
-  final baseURL = '/api';
+  final baseURL = 'api';
   @override
   Future<Either<Failure, UserDetails>> fetchUserDetailsFromApi() async {
     //  API call here to fetch user details
@@ -113,8 +113,8 @@ class UserDetailServices implements IUserFacades {
     required User user,
   }) async {
     try {
-      final response = await httpClient
-          .post<String>('$baseURL/users/${user.id}', data: user.toJson());
+      final response = await httpClient.put<String>('$baseURL/users/${user.id}',
+          data: user.toJson());
 
       if (response.statusCode == 200) {
         await _userDetailCache.saveUserDetails(user);

@@ -22,7 +22,7 @@ Future<void> initializeBoxForUserDetails() async {
   Hive
     ..registerAdapter(UserAdapter())
     ..registerAdapter(AddressAdapter());
-  
+
   await Hive.openBox<User>(
     USER_DETAILS_BOX_NAME,
     compactionStrategy: (int total, int deleted) => deleted > 2,
@@ -48,7 +48,6 @@ Future<void> initializeBoxForUserDetails() async {
 // }
 
 Future<void> initializeBoxForToken() async {
-  
   String? existingKey = await storage.read(key: 'hive_key');
   if (existingKey == null) {
     var newKey = Hive.generateSecureKey();
