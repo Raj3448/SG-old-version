@@ -16,6 +16,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
+import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,6 +28,7 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     userDetailStore.getUserDetails();
+
     return Observer(
       builder: (context) {
         return Scaffold(
@@ -165,6 +167,7 @@ class UserProfile extends StatelessWidget {
 }
 
 class _LogOutComponent extends StatelessWidget {
+  final otpStore = GetIt.I<VerityOtpStore>();
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -228,6 +231,7 @@ class _LogOutComponent extends StatelessWidget {
                     child: CustomButton(
                       ontap: () {
                         GetIt.I<AuthStore>().logout();
+                        GetIt.I<VerityOtpStore>().resetTimer();
                         GoRouter.of(context).go(RoutesConstants.loginRoute);
                       },
                       title: 'Yes, logout',

@@ -67,11 +67,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           (r) => GoRouter.of(context).pushNamed(
             RoutesConstants.otpRoute,
-            pathParameters: {
+            extra: {
               'email': emailContr.text,
               'phoneNumber':
                   '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
                       .replaceFirst('+', ''),
+              'isFromLoginPage': 'false',
             },
           ),
         );
@@ -185,16 +186,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               type: ButtonType.primary,
                               expanded: true,
                               ontap: () {
+                                print(firstNameContr.text);
+                                print(lastNameContr.text);
+                                print(dobContr.text);
+                                print(emailContr.text);
+                                print(
+                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                        .replaceFirst('+', ''));
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
-                                  store.signup(
-                                    firstNameContr.text,
-                                    lastNameContr.text,
-                                    dobContr.text,
-                                    emailContr.text,
-                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                        .replaceFirst('+', ''),
-                                  );
+                                  store
+                                    ..signup(
+                                      firstNameContr.text,
+                                      lastNameContr.text,
+                                      dobContr.text,
+                                      emailContr.text,
+                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                          .replaceFirst('+', ''),
+                                    )
+                                    ..firstName = firstNameContr.text
+                                    ..lastName = lastNameContr.text
+                                    ..dob = dobContr.text
+                                    ..email = emailContr.text
+                                    ..phoneNumber = phoneNumbContr.text;
                                 }
                               },
                               title: 'Sign Up'.tr(),
