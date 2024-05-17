@@ -11,7 +11,9 @@ part 'login_store.g.dart';
 class LoginStore = _LoginStoreBase with _$LoginStore;
 
 abstract class _LoginStoreBase with Store {
-  final authService = GetIt.I<AuthService>();
+  _LoginStoreBase(this.authService);
+  final AuthService authService;
+
   @observable
   bool isEmail = false;
 
@@ -27,7 +29,6 @@ abstract class _LoginStoreBase with Store {
   @action
   void login(
     String identifier,
-    BuildContext context,
   ) {
     isLoading = true;
     authFailure = null;

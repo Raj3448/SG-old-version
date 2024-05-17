@@ -15,7 +15,7 @@ class HttpClient with DioMixin implements Dio {
   HttpClient({BaseOptions? baseOptions}) {
     options = (baseOptions ?? BaseOptions()).copyWith(
       validateStatus: (int? status) {
-        return status != null && status >= 200 && status < 400;
+        return status != null;
       },
     );
     // httpClientAdapter = Http2Adapter(

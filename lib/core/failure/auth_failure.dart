@@ -6,6 +6,7 @@ abstract class AuthFailure with _$AuthFailure {
   const factory AuthFailure.invalidPhoneNumber() = InvalidPhoneNumber;
   const factory AuthFailure.invalidEmail() = InvalidEmail;
   const factory AuthFailure.userNotFound() = UserNotFound;
+  const factory AuthFailure.userAlreadyExists() = UserAlreadyExists;
   const factory AuthFailure.tooManyRequests() = TooManyRequests;
   const factory AuthFailure.otpExpired() = OtpExpired;
   const factory AuthFailure.otpInvalid() = OtpInvalid;
