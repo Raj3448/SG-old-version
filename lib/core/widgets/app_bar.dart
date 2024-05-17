@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
-import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
@@ -20,8 +19,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
     return Observer(
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16)
-              .copyWith(top: Dimension.d9),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
               Row(

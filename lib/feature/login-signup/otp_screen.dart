@@ -12,7 +12,6 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
@@ -65,7 +64,7 @@ class _OTPScreenState extends State<OTPScreen> {
           (r) => {
             GetIt.I<AuthStore>().refresh(),
             GoRouter.of(context).goNamed(
-              RoutesConstants.homeRoute,
+              RoutesConstants.mainRoute,
             ),
           },
         );
