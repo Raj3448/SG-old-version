@@ -7,6 +7,7 @@ import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
@@ -159,14 +160,20 @@ class _LoginPageState extends State<LoginPage> {
                           ontap: () async {
                             if (store.isEmail) {
                               if (emailFormKey.currentState!.validate()) {
-                                store.login(emailContr.text);
+                                store
+                                  ..login(emailContr.text)
+                                  ..identifier = emailContr.text;
                               }
                             } else {
                               if (numberFormKey.currentState!.validate()) {
-                                store.login(
-                                  '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
-                                      .replaceFirst('+', ''),
-                                );
+                                store
+                                  ..login(
+                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                                        .replaceFirst('+', ''),
+                                  )
+                                  ..identifier =
+                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                                          .replaceFirst('+', '');
                               }
                             }
                           },

@@ -79,6 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               'phoneNumber':
                   '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
                       .replaceFirst('+', ''),
+              'isFromLoginPage': 'false',
             },
           ),
         );
@@ -194,14 +195,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ontap: () {
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
-                                  store.signup(
-                                    firstNameContr.text,
-                                    lastNameContr.text,
-                                    dobContr.text,
-                                    emailContr.text,
-                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                        .replaceFirst('+', ''),
-                                  );
+                                  store
+                                    ..signup(
+                                      firstNameContr.text,
+                                      lastNameContr.text,
+                                      dobContr.text,
+                                      emailContr.text,
+                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                          .replaceFirst('+', ''),
+                                    )
+                                    ..firstName = firstNameContr.text
+                                    ..lastName = lastNameContr.text
+                                    ..dob = dobContr.text
+                                    ..email = emailContr.text
+                                    ..phoneNumber = phoneNumbContr.text;
                                 }
                               },
                               title: 'Sign Up'.tr(),

@@ -15,6 +15,21 @@ abstract class _SignupStoreBase with Store {
   bool isLoading = false;
 
   @observable
+  String firstName = '';
+
+  @observable
+  String lastName = '';
+
+  @observable
+  String dob = '';
+
+  @observable
+  String email = '';
+
+  @observable
+  String phoneNumber = '';
+
+  @observable
   Either<AuthFailure, void>? authFailure;
 
   @observable
