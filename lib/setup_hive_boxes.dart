@@ -19,9 +19,7 @@ Future<void> setupHiveBox() async {
 }
 
 Future<void> initializeBoxForUserDetails() async {
-  Hive
-    ..registerAdapter(UserAdapter())
-    ..registerAdapter(AddressAdapter());
+  Hive.registerAdapter(UserAdapter());
 
   await Hive.openBox<User>(
     USER_DETAILS_BOX_NAME,

@@ -18,6 +18,7 @@ class UserDetails with _$UserDetails {
 }
 
 @JsonSerializable(
+  explicitToJson: true,
   createFactory: true,
 )
 class User {
@@ -52,13 +53,7 @@ class User {
   @JsonKey(name: "updatedAt")
   final DateTime updatedAt;
   @JsonKey(name: "address")
-  Address? address = Address(
-      id: 0,
-      state: '',
-      city: '',
-      streetAddress: '',
-      postalCode: '',
-      country: '');
+  Address? address;
 
   User({
     required this.id,
