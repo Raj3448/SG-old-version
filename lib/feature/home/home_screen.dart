@@ -30,9 +30,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
-    
+
     return Scaffold(
-      appBar: const Appbar(),
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Column(
@@ -73,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Health Care Service',
-                              'isConvenience' : false.toString()
+                              'isConvenience': false.toString()
                             },
                           );
                         },
@@ -86,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Home Care Service',
-                              'isConvenience' : false.toString()
+                              'isConvenience': false.toString()
                             },
                           );
                         },
@@ -99,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Convenience care services',
-                              'isConvenience' : true.toString()
+                              'isConvenience': true.toString()
                             },
                           );
                         },

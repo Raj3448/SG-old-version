@@ -27,7 +27,6 @@ class _BookingsScreenState extends State<BookingsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const Appbar(),
         backgroundColor: AppColors.white,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

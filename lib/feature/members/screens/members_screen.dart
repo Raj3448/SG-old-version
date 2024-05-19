@@ -19,7 +19,7 @@ class MembersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final store = GetIt.I<MembersStore>();
     return Scaffold(
-      appBar: const Appbar(),
+      backgroundColor: AppColors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
