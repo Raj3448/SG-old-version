@@ -81,15 +81,14 @@ void main() async {
           tokenManager: GetIt.instance.get<TokenManager>(),
         ),
       );
-
-      GetIt.instance.registerLazySingleton(
-        () => MembersStore(
-          GetIt.instance.get<MemberService>(),
-        ),
-      );
       GetIt.instance.registerLazySingleton(
         () => MemberService(
           GetIt.instance.get<HttpClient>(),
+        ),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => MembersStore(
+          GetIt.instance.get<MemberService>(),
         ),
       );
       GetIt.instance.registerLazySingleton(
