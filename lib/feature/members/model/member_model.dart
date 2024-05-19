@@ -22,7 +22,7 @@ class Member with _$Member {
     required String uniqueKey,
     required String firstName,
     required String lastName,
-    dynamic userTags, // Assuming userTags can be any type, adjust as necessary
+    dynamic userTags,
     required String createdAt,
     required String updatedAt,
   }) = _Member;
