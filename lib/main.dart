@@ -23,7 +23,6 @@ import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
-import 'package:silver_genie/feature/main/store/main_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
@@ -82,7 +81,6 @@ void main() async {
         ),
       );
 
-      GetIt.instance.registerLazySingleton(() => MainStore());
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(
         () => LoginStore(
