@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -16,7 +15,6 @@ class ServicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const Appbar(),
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -37,7 +35,10 @@ class ServicesScreen extends StatelessWidget {
               const SizedBox(
                 height: Dimension.d3,
               ),
-              SearchTextfieldComponet(textEditingController: TextEditingController(), onChanged: (String ) {  },),
+              SearchTextfieldComponet(
+                textEditingController: TextEditingController(),
+                onChanged: (String) {},
+              ),
               const SizedBox(
                 height: Dimension.d3,
               ),
@@ -60,7 +61,7 @@ class ServicesScreen extends StatelessWidget {
                         RoutesConstants.servicesCareScreen,
                         pathParameters: {
                           'pageTitle': 'Home care services',
-                          'isConvenience' : false.toString()
+                          'isConvenience': false.toString()
                         },
                       );
                     },
@@ -159,7 +160,7 @@ class ServicesScreen extends StatelessWidget {
                         RoutesConstants.servicesCareScreen,
                         pathParameters: {
                           'pageTitle': 'Health care services',
-                          'isConvenience' : false.toString()
+                          'isConvenience': false.toString()
                         },
                       );
                     },
