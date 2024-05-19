@@ -24,6 +24,7 @@ import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/store/main_store.dart';
+import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
@@ -83,7 +84,16 @@ void main() async {
       );
 
       GetIt.instance.registerLazySingleton(() => MainStore());
-      GetIt.instance.registerLazySingleton(() => MembersStore());
+      GetIt.instance.registerLazySingleton(
+        () => MembersStore(
+          GetIt.instance.get<MemberService>(),
+        ),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => MemberService(
+          GetIt.instance.get<HttpClient>(),
+        ),
+      );
       GetIt.instance.registerLazySingleton(
         () => LoginStore(
           GetIt.instance.get<AuthService>(),
@@ -112,7 +122,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => HomeStore());
       GetIt.instance.registerLazySingleton(() => ImageStore());
       GetIt.instance.registerLazySingleton(
-          () => UserDetailStore(GetIt.I<UserDetailServices>()));
+        () => UserDetailStore(GetIt.I<UserDetailServices>()),
+      );
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );

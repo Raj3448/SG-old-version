@@ -1,4 +1,4 @@
-// ignore_for_file: inference_failure_on_function_invocation, avoid_dynamic_calls, lines_longer_than_80_chars
+// ignore_for_file: inference_failure_on_function_invocation, avoid_dynamic_calls, lines_longer_than_80_chars, inference_failure_on_untyped_parameter
 
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
@@ -6,7 +6,7 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/member_health_info_model.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
-abstract class MemberService {
+abstract class IMemberService {
   Future<Either<Failure, List<Member>>> getMembers();
   Future<Either<Failure, Member>> addMember();
   Future<Either<Failure, Member>> editMember();
@@ -14,30 +14,33 @@ abstract class MemberService {
   Future<Either<Failure, MemberHealthInfo>> getMemberHealthInfo();
 }
 
-class FetchMemberData implements MemberService {
-  FetchMemberData(this.httpClient);
+class MemberService implements IMemberService {
+  MemberService(this.httpClient);
 
   final HttpClient httpClient;
 
   @override
   Future<Either<Failure, List<Member>>> getMembers() async {
     try {
-      final response =
-          await httpClient.get('https://silvergenie.com/api/v1/members');
+      final response = await httpClient.get('$baseUrl/user/family');
 
       if (response.statusCode == 200) {
-        final jsonList = response.data;
-        final members = jsonList.map(Member.fromJson).toList();
-        return Right(members as List<Member>);
+        final jsonResponse = response.data;
+        final data = jsonResponse['data'];
+        final members = data.first['users'];
+        final parsedMembers = members
+            .map<Member>(
+              (json) => Member.fromJson(
+                Map<String, dynamic>.from(json as Map),
+              ),
+            )
+            .toList();
+        return Right(parsedMembers as List<Member>);
       } else {
         return const Left(Failure.badResponse());
       }
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(Failure.socketException());
-      } else {
-        return const Left(Failure.someThingWentWrong());
-      }
+      return const Left(Failure.someThingWentWrong());
     }
   }
 
@@ -124,6 +127,4 @@ class FetchMemberData implements MemberService {
       }
     }
   }
-
-  
 }
