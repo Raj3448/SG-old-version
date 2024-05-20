@@ -5,4 +5,5 @@ part 'members_store.g.dart';
 
 class MembersStore = _MembersStoreBase with _$MembersStore;
 
-abstract class _MembersStoreBase with Store {}
+abstract class _MembersStoreBase with Store {
+}
