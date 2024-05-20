@@ -5,33 +5,37 @@ import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
+import 'package:silver_genie/feature/members/repo/member_service.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class EPRViewScreen extends StatelessWidget {
   EPRViewScreen({super.key});
   final store = GetIt.I<UserDetailStore>();
-  final http = GetIt.I<HttpClient>();
+
   @override
   Widget build(BuildContext context) {
     store.getUserDetails();
+
     return Observer(
       builder: (context) {
         return Scaffold(
           appBar: const PageAppbar(title: 'EPR'),
           backgroundColor: AppColors.white,
           body: FutureBuilder(
-            future: http.get(
-                '/api/user/family/epr?userId=${store.userDetails!.fold((l) => null, (r) => r.user.id)}'),
+            future: GetIt.I<MemberServices>().getEPRData(memberId: '38'),
             builder: (context, snapshot) {
               if (store.isLoadingUserInfo ||
                   snapshot.connectionState == ConnectionState.waiting) {
@@ -39,136 +43,64 @@ class EPRViewScreen extends StatelessWidget {
                   showShadow: false,
                 );
               }
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text('Bad Request 400'),
-                );
+
+              if (!snapshot.hasData || snapshot.hasError) {
+                return const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong);
               }
 
-              print('SnapShot data : ${snapshot.data}');
+              final data = snapshot.data!;
+              final userDetails = store.userDetails;
+
+              if (userDetails == null || userDetails.isLeft()) {
+                return const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong);
+              }
+
+              final UserDetails userInfo = userDetails.getOrElse((_) => throw 'Error while fetching userInfo');
+
+              if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
+                return _PersonalDetailsComponent(userInfo: userInfo.user);
+              }
+
+              if (data.isLeft()) {
+                return const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong);
+              }
+
+              final EprDataModel eprData = data.getOrElse((l) => throw 'Error');
+
               return Column(
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(Dimension.d3),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: Dimension.d3),
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Personal Details',
-                              style: AppTextStyle.bodyLargeMedium.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                height: 2.4,
-                                color: AppColors.grayscale900,
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 3,
-                              ),
-                              height: 248,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                  color: AppColors.grayscale300,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 10,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Avatar.fromSize(
-                                          imgPath: '',
-                                          size: AvatarSize.size24,
-                                        ),
-                                        const SizedBox(
-                                          width: Dimension.d2,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              store.userDetails!.fold(
-                                                (l) => '',
-                                                (r) => r.user.firstName,
-                                              ),
-                                              style: AppTextStyle
-                                                  .bodyLargeMedium
-                                                  .copyWith(
-                                                color: AppColors.grayscale900,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Relation: Father  Age: 67',
-                                              style: AppTextStyle
-                                                  .bodyMediumMedium
-                                                  .copyWith(
-                                                color: AppColors.grayscale800,
-                                                height: 1.5,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    IconTitleDetailsComponent(
-                                      icon: Icons.email_outlined,
-                                      title: 'Email',
-                                      details: store.userDetails!.fold(
-                                        (l) => '',
-                                        (r) => r.user.email,
-                                      ),
-                                    ),
-                                    IconTitleDetailsComponent(
-                                      icon: Icons.phone_outlined,
-                                      title: 'Contact',
-                                      details: store.userDetails!.fold(
-                                        (l) => '',
-                                        (r) => r.user.phoneNumber,
-                                      ),
-                                    ),
-                                    IconTitleDetailsComponent(
-                                      icon: AppIcons.home,
-                                      title: 'Address',
-                                      details: store.userDetails!.fold(
-                                        (l) => '',
-                                        (r) => r.user.address!.streetAddress,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            _PersonalDetailsComponent(
+                              userInfo: userInfo.user,
                             ),
                             const SizedBox(
                               height: Dimension.d3,
                             ),
                             _ExpandedButton(
                               title: 'Insurance details',
-                              userInsurance: store.userDetails!
-                                  .fold((l) => [], (r) => r.userInsurance),
+                              userInsurance: eprData.userInsurance,
                             ),
                             _ExpandedButton(
                                 title: 'Preferred Hospitals',
-                                preferredServices: store.userDetails!.fold(
-                                    (l) => [], (r) => r.preferredServices)),
+                                preferredServices:
+                                    eprData.getPreferredHospital),
                             _ExpandedButton(
                                 title: 'Emergency Contact',
-                                emrgencyContactList: store.userDetails!.fold(
-                                    (l) => [], (r) => r.emergencyContacts)),
+                                emrgencyContactList: eprData.emergencyContacts),
+                            _ExpandedButton(
+                                title: 'Preferred Ambulance',
+                                preferredServices:
+                                    eprData.getPreferredAmbulace),
                             const SizedBox(
                               height: Dimension.d19,
                             )
@@ -206,6 +138,102 @@ class EPRViewScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _PersonalDetailsComponent extends StatelessWidget {
+  const _PersonalDetailsComponent({
+    required this.userInfo,
+    super.key,
+  });
+
+  final User userInfo;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          'Personal Details',
+          style: AppTextStyle.bodyLargeMedium.copyWith(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            height: 2,
+            color: AppColors.grayscale900,
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(
+            vertical: 5,
+            horizontal: 3,
+          ),
+          height: 248,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
+              color: AppColors.grayscale300,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 10,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Avatar.fromSize(
+                      imgPath: '',
+                      size: AvatarSize.size24,
+                    ),
+                    const SizedBox(
+                      width: Dimension.d2,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${userInfo.firstName} ${userInfo.lastName}',
+                          style: AppTextStyle.bodyLargeMedium.copyWith(
+                            color: AppColors.grayscale900,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          'Relation: ${userInfo.relation}  Age: ${calculateAge(userInfo.dateOfBirth)}',
+                          style: AppTextStyle.bodyMediumMedium.copyWith(
+                            color: AppColors.grayscale800,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                IconTitleDetailsComponent(
+                  icon: Icons.email_outlined,
+                  title: 'Email',
+                  details: userInfo.email,
+                ),
+                IconTitleDetailsComponent(
+                  icon: Icons.phone_outlined,
+                  title: 'Contact',
+                  details: userInfo.phoneNumber,
+                ),
+                IconTitleDetailsComponent(
+                  icon: AppIcons.home,
+                  title: 'Address',
+                  details: userInfo.address!.streetAddress,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -333,18 +361,18 @@ class _UserInsuranceComponent extends StatelessWidget {
           ),
           AssigningComponent(
               name: 'Policy No',
-              initializeElement: assignedElements.policyNumber),
+              initializeElement: assignedElements.policyNumber!),
           AssigningComponent(
             name: 'Contact Person',
-            initializeElement: assignedElements.contactPerson,
+            initializeElement: assignedElements.contactPerson!,
           ),
           AssigningComponent(
             name: 'Contact Of Ambulance',
-            initializeElement: assignedElements.contactNumber,
+            initializeElement: assignedElements.contactNumber!,
           ),
           AssigningComponent(
             name: 'Contact Of Address',
-            initializeElement: assignedElements.insuranceProvider,
+            initializeElement: assignedElements.insuranceProvider!,
           ),
           const Divider(
             color: AppColors.grayscale300,
@@ -380,7 +408,7 @@ class _EmergencyContactComponent extends StatelessWidget {
           ),
           AssigningComponent(
             name: 'Contact No.',
-            initializeElement: assignedElements.contactNumber,
+            initializeElement: assignedElements.contactNumber!,
           ),
           AssigningComponent(
             name: 'Relation',
@@ -388,11 +416,11 @@ class _EmergencyContactComponent extends StatelessWidget {
           ),
           AssigningComponent(
             name: 'Email',
-            initializeElement: assignedElements.email,
+            initializeElement: assignedElements.email!,
           ),
           AssigningComponent(
             name: 'Contact Of Address',
-            initializeElement: assignedElements.country,
+            initializeElement: assignedElements.country!,
           ),
           const Divider(
             color: AppColors.grayscale300,
@@ -428,11 +456,11 @@ class _PreferredServiceComponent extends StatelessWidget {
           ),
           AssigningComponent(
             name: 'Contact Person',
-            initializeElement: assignedElements.contactPerson,
+            initializeElement: assignedElements.contactPerson!,
           ),
           AssigningComponent(
             name: 'Contact No.',
-            initializeElement: assignedElements.contactNumber,
+            initializeElement: assignedElements.contactNumber!,
           ),
           AssigningComponent(
             name: 'Contact Of Ambulance',

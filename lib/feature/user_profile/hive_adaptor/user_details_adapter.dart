@@ -9,6 +9,10 @@ class UserAdapter extends TypeAdapter<User> {
   @override
   User read(BinaryReader reader) {
     final map = Map<String, dynamic>.from(reader.readMap());
+    // Cast the address field separately if it exists
+    if (map['address'] != null && map['address'] is Map) {
+      map['address'] = (map['address'] as Map).cast<String, dynamic>();
+    }
     return User.fromJson(map);
   }
 
