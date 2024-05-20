@@ -35,7 +35,7 @@ class EPRViewScreen extends StatelessWidget {
           appBar: const PageAppbar(title: 'EPR'),
           backgroundColor: AppColors.white,
           body: FutureBuilder(
-            future: GetIt.I<MemberServices>().getEPRData(memberId: '38'),
+            future: GetIt.I<MemberServices>().getEPRData(memberId: '11'),
             builder: (context, snapshot) {
               if (store.isLoadingUserInfo ||
                   snapshot.connectionState == ConnectionState.waiting) {
@@ -57,7 +57,8 @@ class EPRViewScreen extends StatelessWidget {
                     errorType: ErrorType.somethinWentWrong);
               }
 
-              final UserDetails userInfo = userDetails.getOrElse((_) => throw 'Error while fetching userInfo');
+              final UserDetails userInfo = userDetails
+                  .getOrElse((_) => throw 'Error while fetching userInfo');
 
               if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
                 return _PersonalDetailsComponent(userInfo: userInfo.user);
@@ -152,6 +153,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Personal Details',
