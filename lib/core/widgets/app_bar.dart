@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
-import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
@@ -20,52 +19,56 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
     return Observer(
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16)
-              .copyWith(top: Dimension.d9),
-          child: Column(
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      GoRouter.of(context)
-                          .push(RoutesConstants.userProfileRoute);
-                    },
-                    child: Avatar.fromSize(
-                      imgPath: '',
-                      size: AvatarSize.size24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hi',
-                        style: AppTextStyle.bodyXLBold.copyWith(
-                          color: AppColors.grayscale900,
-                          height: 1.4,
-                        ),
-                      ).tr(args: [store.firstName]),
-                      Text(
-                        'How do you feel today?'.tr(),
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                            color: AppColors.grayscale600, height: 1.42),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context)
+                            .pushNamed(RoutesConstants.userProfileRoute);
+                      },
+                      child: Avatar.fromSize(
+                        imgPath: '',
+                        size: AvatarSize.size24,
                       ),
-                    ],
-                  ),
-                  const Spacer(),
-                  _IconContainer(
-                    iconPath: 'assets/icon/bell-Unread.svg',
-                    onPressed: () {
-                      context.pushNamed(RoutesConstants.notificationScreen);
-                    },
-                  ),
-                ],
-              ),
-            ],
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hi',
+                          style: AppTextStyle.bodyXLBold.copyWith(
+                            color: AppColors.grayscale900,
+                            height: 1.4,
+                          ),
+                        ).tr(args: [store.firstName]),
+                        Text(
+                          'How do you feel today?'.tr(),
+                          style: AppTextStyle.bodyMediumMedium.copyWith(
+                              color: AppColors.grayscale600, height: 1.42),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    _IconContainer(
+                      iconPath: 'assets/icon/bell-Unread.svg',
+                      onPressed: () {
+                        context.pushNamed(RoutesConstants.notificationScreen);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

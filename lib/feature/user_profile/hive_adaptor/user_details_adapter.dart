@@ -1,18 +1,19 @@
 import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
-
 class UserAdapter extends TypeAdapter<User> {
   @override
   final int typeId = 0;
 
   @override
   User read(BinaryReader reader) {
-    final map = Map<String, dynamic>.from(reader.readMap());
+    final map = reader.readMap().cast<String, dynamic>();
+
     // Cast the address field separately if it exists
     if (map['address'] != null && map['address'] is Map) {
       map['address'] = (map['address'] as Map).cast<String, dynamic>();
     }
+
     return User.fromJson(map);
   }
 
@@ -21,6 +22,7 @@ class UserAdapter extends TypeAdapter<User> {
     writer.writeMap(obj.toJson());
   }
 }
+
 class AddressAdapter extends TypeAdapter<Address> {
   @override
   final int typeId = 1;
