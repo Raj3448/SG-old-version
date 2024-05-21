@@ -7,7 +7,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_it/get_it.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
@@ -15,11 +16,28 @@ import 'package:silver_genie/core/utils/image_store/image_store.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/selector.dart';
 
-class EditPic extends StatelessWidget {
+class EditPic extends StatefulWidget {
   EditPic({
+    required this.storedProfileImage,
+    required this.imgUrl,
     Key? key,
   }) : super(key: key);
-  final store = GetIt.I<ImageStore>();
+  File? storedProfileImage;
+  String? imgUrl;
+
+  @override
+  State<EditPic> createState() => _EditPicState();
+}
+
+class _EditPicState extends State<EditPic> {
+
+
+  void _updateProfileImage(File? image) {
+    setState(() {
+      widget.storedProfileImage = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Observer(
@@ -30,7 +48,8 @@ class EditPic extends StatelessWidget {
               context: context,
               builder: (context) {
                 return ChangePicDialog(
-                  imageStore: store,
+                  storedProfileImage: widget.storedProfileImage,
+                  onImageSelected: _updateProfileImage,
                 );
               },
             );
@@ -38,7 +57,15 @@ class EditPic extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomRight,
             children: [
-              if (store.storedProfileImage == null) Avatar.fromSize(imgPath: 'imgPath', size: AvatarSize.size56) else CircleAvatar(radius: 56,backgroundImage: FileImage(store.storedProfileImage!),),
+              if (widget.imgUrl == null && widget.storedProfileImage == null)
+                Avatar.fromSize(imgPath: 'imgPath', size: AvatarSize.size56)
+              else
+                CircleAvatar(
+                  radius: 56,
+                  backgroundImage: widget.storedProfileImage != null
+                      ? FileImage(widget.storedProfileImage!) as ImageProvider
+                      : NetworkImage(widget.imgUrl!),
+                ),
               Container(
                 height: 32,
                 decoration: BoxDecoration(
@@ -48,8 +75,7 @@ class EditPic extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(6),
                 child: SvgPicture.asset(
-                  
-                      'assets/icon/edit.svg',
+                  'assets/icon/edit.svg',
                   color: AppColors.white,
                 ),
               ),
@@ -62,10 +88,11 @@ class EditPic extends StatelessWidget {
 }
 
 class ChangePicDialog extends StatelessWidget {
-  final ImageStore imageStore;
+  File? storedProfileImage;
+  final Function(File) onImageSelected;
   ChangePicDialog({
-    required this.imageStore,
-    Key? key,
+    required this.storedProfileImage,
+    required this.onImageSelected, Key? key,
   }) : super(key: key);
 
   @override
@@ -95,7 +122,7 @@ class ChangePicDialog extends StatelessWidget {
               iconColor: AppColors.grayscale900,
               textColor: AppColors.grayscale900,
               ontap: () async {
-                await imageStore.takePhoto();
+                await takePhoto();
                 Navigator.of(context).pop();
               },
             ),
@@ -107,7 +134,7 @@ class ChangePicDialog extends StatelessWidget {
               iconColor: AppColors.grayscale900,
               textColor: AppColors.grayscale900,
               ontap: () async {
-                await imageStore.chooseImage();
+                await chooseImage();
                 Navigator.of(context).pop();
               },
             ),
@@ -119,7 +146,7 @@ class ChangePicDialog extends StatelessWidget {
               iconColor: AppColors.error,
               textColor: AppColors.error,
               ontap: () {
-                imageStore.removeProfileImage();
+                removeProfileImage();
                 Navigator.of(context).pop();
               },
             ),
@@ -127,5 +154,80 @@ class ChangePicDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> takePhoto() async {
+    try {
+      final XFile? receivedImage =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+      if (receivedImage == null) {
+        return;
+      }
+      File imageFile = File(receivedImage.path);
+      storedProfileImage = imageFile;
+
+      CroppedFile? croppedFile = await _cropImage(storedProfileImage!);
+      if (croppedFile != null) {
+        storedProfileImage = File(croppedFile.path);
+        onImageSelected(await saveImageToDirectory(storedProfileImage!));
+        if (!storedProfileImage!.existsSync()) {
+          print("Cropped file does not exist: ${storedProfileImage!.path}");
+        }
+      }
+    } catch (e) {
+      print("Error taking photo: $e");
+    }
+  }
+
+  Future<void> chooseImage() async {
+    try {
+      final XFile? receivedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (receivedImage == null) {
+        return;
+      }
+      File imageFile = File(receivedImage.path);
+      storedProfileImage = imageFile;
+
+      CroppedFile? croppedFile = await _cropImage(storedProfileImage!);
+      if (croppedFile != null) {
+        storedProfileImage = File(croppedFile.path);
+        onImageSelected(await saveImageToDirectory(storedProfileImage!));
+        if (!storedProfileImage!.existsSync()) {
+          print("file does not exist: ${storedProfileImage!.path}");
+        }
+      }
+    } catch (e) {
+      print("Error choosing image: $e");
+    }
+  }
+
+  Future<void> removeProfileImage() async {
+    storedProfileImage = null;
+  }
+
+  Future<CroppedFile?> _cropImage(File imageFile) async {
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: imageFile.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Crop Profile Image',
+            backgroundColor: AppColors.secondary,
+            toolbarColor: AppColors.primary,
+            toolbarWidgetColor: Colors.white,
+            cropFrameColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false)
+      ],
+    );
+
+    return croppedImage;
   }
 }

@@ -2,6 +2,7 @@
 
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
+import 'package:silver_genie/feature/home/repository/local/home_page_details.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 
 part 'auth_store.g.dart';
@@ -9,8 +10,12 @@ part 'auth_store.g.dart';
 class AuthStore = _AuthStoreBase with _$AuthStore;
 
 abstract class _AuthStoreBase with Store {
-  _AuthStoreBase({required this.tokenManager, required this.userCache});
+  _AuthStoreBase(
+      {required this.homePageComponentDetailscache,
+      required this.tokenManager,
+      required this.userCache});
   final TokenManager tokenManager;
+  final HomePageComponentDetailscache homePageComponentDetailscache;
 
   final UserDetailsCache userCache;
   @observable
@@ -34,10 +39,9 @@ abstract class _AuthStoreBase with Store {
 
   @action
   void logout() {
-    userCache.clearUserDetails().then(
-          (value) => tokenManager
-              .deleteToken()
-              .then((value) => {authTokenExits = false}),
-        );
+    userCache.clearUserDetails().then((value) {
+      tokenManager.deleteToken().then((value) => {authTokenExits = false});
+      homePageComponentDetailscache.clearHomeComponentDetils();
+    });
   }
 }
