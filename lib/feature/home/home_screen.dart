@@ -344,11 +344,11 @@ class _BannerImageComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.network(
-      'http://api-dev.yoursilvergenie.com/api/${bannerImageModel.bannerImage.data.attributes.url}',
+      'http://api-dev.yoursilvergenie.com${bannerImageModel.bannerImage.data.attributes.url}',
       height: bannerImageModel.bannerImage.data.attributes.height,
       width: bannerImageModel.bannerImage.data.attributes.width,
       errorBuilder: (context, error, stackTrace) {
-        print('http://api-dev.yoursilvergenie.com/api${bannerImageModel.bannerImage.data.attributes.url}');
+        print('http://api-dev.yoursilvergenie.com${bannerImageModel.bannerImage.data.attributes.url}');
         return const SizedBox();
       },
     );

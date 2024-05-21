@@ -110,7 +110,6 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(() => HomeStore());
-      GetIt.instance.registerLazySingleton(() => ImageStore());
       GetIt.instance
           .registerLazySingleton(() => MemberServices(GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(
