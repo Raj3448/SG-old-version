@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
-import 'package:silver_genie/core/utils/image_store/image_store.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
@@ -64,11 +63,12 @@ void main() async {
 
       GetIt.instance.registerSingleton<TokenManager>(TokenManager());
       GetIt.instance.registerSingleton<UserDetailsCache>(UserDetailsCache());
-      GetIt.instance.registerLazySingleton(() => HomePageComponentDetailscache());
+      GetIt.instance
+          .registerLazySingleton(() => HomePageComponentDetailscache());
       GetIt.instance.registerSingleton<AuthStore>(
         AuthStore(
           tokenManager: GetIt.instance.get<TokenManager>(),
-          userCache: GetIt.instance.get<UserDetailsCache>(), homePageComponentDetailscache: GetIt.I<HomePageComponentDetailscache>(),
+          userCache: GetIt.instance.get<UserDetailsCache>(),
         )..refresh(),
       );
 
@@ -83,7 +83,10 @@ void main() async {
           tokenManager: GetIt.instance.get<TokenManager>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => HomeService(httpClient: GetIt.I<HttpClient>(), homePageComponentDetailscache: GetIt.I<HomePageComponentDetailscache>()));
+      GetIt.instance.registerLazySingleton(() => HomeService(
+          httpClient: GetIt.I<HttpClient>(),
+          homePageComponentDetailscache:
+              GetIt.I<HomePageComponentDetailscache>()));
       GetIt.instance.registerLazySingleton(() => MembersStore());
       GetIt.instance.registerLazySingleton(
         () => LoginStore(
@@ -110,7 +113,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
-      GetIt.instance.registerLazySingleton(() => HomeStore(homeServices: GetIt.I<HomeService>()));
+      GetIt.instance.registerLazySingleton(() =>
+          HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData());
       GetIt.instance
           .registerLazySingleton(() => MemberServices(GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(
@@ -150,7 +154,7 @@ void main() async {
           child: const MyApp(),
         ),
       );
-      await GetIt.I<HomeStore>().getHomePageComponentDetails();
+
       FlutterNativeSplash.remove();
     },
     (exception, stackTrace) {

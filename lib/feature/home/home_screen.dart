@@ -16,7 +16,6 @@ import 'package:silver_genie/core/widgets/back_to_home_component.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
-import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
@@ -25,7 +24,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -137,68 +136,70 @@ class _HomeScreenComponents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var homePageData = homestore.homePageComponentDetailsList;
-
-    if (homePageData == null || homePageData.isLeft()) {
-      return const ErrorStateComponent(errorType: ErrorType.somethinWentWrong);
+    if (!homestore.isHomepageDataLoaded) {
+      return const SizedBox();
     }
-    try {
-      List<dynamic> componentDetailsList =
-          homePageData.getOrElse((l) => throw 'Error');
-      var widgetList = <Widget>[];
-      for (var component in componentDetailsList) {
-        if (component is AboutUsOfferModel) {
-          widgetList.add(_AboutUsOfferComponent(
+    final componentDetailsList = homestore.isHomepageData;
+    final widgetList = <Widget>[];
+    for (final component in componentDetailsList) {
+      if (component is AboutUsOfferModel) {
+        widgetList.add(
+          _AboutUsOfferComponent(
             aboutUsOfferModel: component,
-          ));
-        } else if (component is BannerImageModel) {
-          widgetList.add(_BannerImageComponent(
-            bannerImageModel: component,
-          ));
-        } else if (component is TestimonialsModel) {
-          widgetList.add(_TestmonialsComponent(
-            testimonialsModel: component,
-          ));
-        } else {
-          const SizedBox();
-        }
+          ),
+        );
+        continue;
       }
-
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Column(
-          children: [
-            ...widgetList,
-            Text(
-              'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
-              style: AppTextStyle.bodyLargeMedium.copyWith(
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                height: 1.4,
-                color: AppColors.grayscale700,
-              ),
-            ),
-            const SizedBox(
-              height: Dimension.d4,
-            ),
-            CustomButton(
-              ontap: () {},
-              iconColor: AppColors.error,
-              title: 'Subscribe',
-              showIcon: false,
-              iconPath: AppIcons.add,
-              size: ButtonSize.normal,
-              type: ButtonType.secondary,
-              expanded: true,
-            ),
-            const SizedBox(
-              height: Dimension.d10,
-            ),
-          ],
-        ),
-      ]);
-    } catch (error) {
-      return const ErrorStateComponent(errorType: ErrorType.somethinWentWrong);
+      if (component is BannerImageModel) {
+        widgetList.add(
+          _BannerImageComponent(
+            bannerImageModel: component,
+          ),
+        );
+        continue;
+      }
+      if (component is TestimonialsModel) {
+        widgetList.add(
+          _TestmonialsComponent(
+            testimonialsModel: component,
+          ),
+        );
+        continue;
+      }
     }
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Column(
+        children: [
+          ...widgetList,
+          Text(
+            'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
+            style: AppTextStyle.bodyLargeMedium.copyWith(
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              height: 1.4,
+              color: AppColors.grayscale700,
+            ),
+          ),
+          const SizedBox(
+            height: Dimension.d4,
+          ),
+          CustomButton(
+            ontap: () {},
+            iconColor: AppColors.error,
+            title: 'Subscribe',
+            showIcon: false,
+            iconPath: AppIcons.add,
+            size: ButtonSize.normal,
+            type: ButtonType.secondary,
+            expanded: true,
+          ),
+          const SizedBox(
+            height: Dimension.d10,
+          ),
+        ],
+      ),
+    ]);
   }
 }
 
@@ -397,8 +398,6 @@ class _BannerImageComponent extends StatelessWidget {
       height: bannerImageModel.bannerImage.data.attributes.height,
       width: bannerImageModel.bannerImage.data.attributes.width,
       errorBuilder: (context, error, stackTrace) {
-        print(
-            'http://api-dev.yoursilvergenie.com${bannerImageModel.bannerImage.data.attributes.url}');
         return const SizedBox();
       },
     );
@@ -459,11 +458,10 @@ class _TestmonialsCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                    Avatar.fromSize(
-                        imgPath: '',
-                        size: AvatarSize.size12,
-                      )
-                ,
+                Avatar.fromSize(
+                  imgPath: '',
+                  size: AvatarSize.size12,
+                ),
                 const SizedBox(
                   width: Dimension.d2,
                 ),

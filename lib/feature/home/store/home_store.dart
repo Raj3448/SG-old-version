@@ -31,13 +31,46 @@ abstract class _HomeScreenStore with Store {
 
   @observable
   Either<Failure, List<dynamic>>? homePageComponentDetailsList;
+  @computed
+  bool get isHomepageDataLoaded =>
+      homePageComponentDetailsList != null &&
+      homePageComponentDetailsList!.isRight();
+
+  @computed
+  List<dynamic> get isHomepageData => homePageComponentDetailsList!
+      .getOrElse((l) => throw 'Crashed: failed to get the homepage data');
 
   @observable
-  bool isloading = false;
+  bool isHomepageComponentInitialloading = false;
+  @observable
+  bool isHomepageComponentRefreshing = false;
 
-  Future<void> getHomePageComponentDetails() async {
-    isloading = true;
+  @action
+  void initHomePageData() {
+    isHomepageComponentInitialloading = true;
+
+    homeServices.getHomePageInfoCache().then((data) {
+      if (data != null) {
+        homePageComponentDetailsList = right(data);
+        isHomepageComponentInitialloading = false;
+        refreshHomePageData();
+        return;
+      }
+    });
+
+    homeServices
+        .getHomePageInfo()
+        .then((value) => homePageComponentDetailsList = value);
+  }
+
+  @action
+  Future<void> refreshHomePageData() async {
+    isHomepageComponentRefreshing = true;
     homePageComponentDetailsList = await homeServices.getHomePageInfo();
-    isloading = false;
+    homePageComponentDetailsList?.fold(
+      (l) => null,
+      (r) => {homePageComponentDetailsList = right(r)},
+    );
+    isHomepageComponentRefreshing = false;
   }
 }
