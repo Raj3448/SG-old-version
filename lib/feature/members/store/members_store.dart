@@ -23,6 +23,17 @@ abstract class _MembersStoreBase with Store {
   @observable
   String? errorMessage;
 
+  @observable
+  int selectedIndex = 0;
+
+  @observable
+  bool isActive = true;
+
+  @action
+  void selectAvatar(int index) {
+    selectedIndex = index;
+  }
+
   @action
   Future<Either<Failure, List<Member>>> fetchMembers() async {
     try {
@@ -42,5 +53,13 @@ abstract class _MembersStoreBase with Store {
       errorMessage = 'An unexpected error occurred';
       return const Left(Failure.someThingWentWrong());
     }
+  }
+
+  @action
+  Future<Either<Failure, Member>> updateMember(
+    int id,
+    Map<String, dynamic> updatedData,
+  ) async {
+    return memberService.updateMember(id, updatedData);
   }
 }

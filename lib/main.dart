@@ -83,13 +83,13 @@ void main() async {
       );
 
       GetIt.instance.registerLazySingleton(
-        () => MembersStore(
-          GetIt.instance.get<MemberService>(),
+        () => MemberService(
+          GetIt.instance.get<HttpClient>(),
         ),
       );
       GetIt.instance.registerLazySingleton(
-        () => MemberService(
-          GetIt.instance.get<HttpClient>(),
+        () => MembersStore(
+          GetIt.instance.get<MemberService>(),
         ),
       );
       GetIt.instance.registerLazySingleton(
@@ -97,6 +97,14 @@ void main() async {
           GetIt.instance.get<AuthService>(),
         ),
       );
+
+      // TO BE CHANGED
+
+      final store = GetIt.instance<MembersStore>();
+      await store.fetchMembers();
+
+      //
+
       GetIt.instance.registerLazySingleton(
         () => VerityOtpStore(
           GetIt.instance.get<AuthService>(),

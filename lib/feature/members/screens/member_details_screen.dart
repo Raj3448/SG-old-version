@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -15,6 +16,7 @@ import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
@@ -26,6 +28,7 @@ class MemberDetailsScreen extends StatelessWidget {
     required this.mobileNo,
     required this.address,
     required this.hasCareSub,
+    required this.index,
     super.key,
   });
 
@@ -36,6 +39,7 @@ class MemberDetailsScreen extends StatelessWidget {
   final String mobileNo;
   final String address;
   final bool hasCareSub;
+  final String index;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +86,7 @@ class MemberDetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _BasicDetailsBox(
+                index: index,
                 name: name,
                 age: age,
                 gender: gender,
@@ -158,6 +163,7 @@ class MemberDetailsScreen extends StatelessWidget {
 
 class _BasicDetailsBox extends StatelessWidget {
   const _BasicDetailsBox({
+    required this.index,
     required this.name,
     required this.age,
     required this.gender,
@@ -165,6 +171,7 @@ class _BasicDetailsBox extends StatelessWidget {
     required this.mobileNo,
     required this.address,
   });
+  final String index;
   final String name;
   final String age;
   final String gender;
@@ -265,7 +272,7 @@ class _BasicDetailsBox extends StatelessWidget {
             ontap: () {
               GoRouter.of(context).pushNamed(
                 RoutesConstants.addEditFamilyMemberRoute,
-                pathParameters: {'edit': 'true'},
+                pathParameters: {'edit': 'true', 'index': index},
               );
             },
             title: 'Edit',

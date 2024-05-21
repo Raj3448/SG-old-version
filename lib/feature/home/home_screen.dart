@@ -11,7 +11,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
-import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
@@ -20,17 +19,24 @@ import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final PageController _offerPageController = PageController();
+
   final PageController _testimonialsCardController = PageController();
+
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
@@ -72,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Health Care Service',
-                              'isConvenience': false.toString()
+                              'isConvenience': false.toString(),
                             },
                           );
                         },
@@ -85,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Home Care Service',
-                              'isConvenience': false.toString()
+                              'isConvenience': false.toString(),
                             },
                           );
                         },
@@ -98,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Convenience care services',
-                              'isConvenience': true.toString()
+                              'isConvenience': true.toString(),
                             },
                           );
                         },
@@ -568,6 +574,7 @@ class _MemberInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
+    final memberStore = GetIt.I<MembersStore>();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -583,14 +590,14 @@ class _MemberInfo extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      for (var i = 0; i < store.familyMembers.length; i++)
+                      for (var i = 0; i < memberStore.members.length; i++)
                         Row(
                           children: [
                             SelectableAvatar(
-                              imgPath: store.familyMembers[i].imagePath,
+                              imgPath: 'imgPath',
                               maxRadius: 24,
-                              isSelected: store.selectedIndex == i,
-                              ontap: () => store.selectAvatar(i),
+                              isSelected: memberStore.selectedIndex == i,
+                              ontap: () => memberStore.selectAvatar(i),
                             ),
                             const SizedBox(width: Dimension.d4),
                           ],
@@ -602,40 +609,43 @@ class _MemberInfo extends StatelessWidget {
                         ontap: () {
                           context.pushNamed(
                             RoutesConstants.addEditFamilyMemberRoute,
-                            pathParameters: {'edit': 'false'},
+                            pathParameters: {'edit': 'false', 'index': '0'},
                           );
                         },
                       ),
                     ],
                   ),
                   const SizedBox(height: Dimension.d4),
-                  if (store.selectedIndex != -1)
+                  if (memberStore.selectedIndex != -1)
                     Observer(
-                      builder: (_) {
+                      builder: (context) {
                         final selectedMember =
-                            store.familyMembers[store.selectedIndex];
-                        return selectedMember != null
-                            ? selectedMember.isActive
-                                ? ActivePlanComponent(
-                                    name: selectedMember.name,
-                                    onTap: () {
-                                      GoRouter.of(context)
-                                          .push(RoutesConstants.eprRoute);
-                                    },
-                                  )
-                                : InactivePlanComponent(
-                                    name: selectedMember.name,
-                                  )
-                            : const SizedBox();
+                            memberStore.members[memberStore.selectedIndex];
+                        if (selectedMember != null && memberStore.isActive) {
+                          return ActivePlanComponent(
+                            name:
+                                '${memberStore.members[memberStore.selectedIndex].firstName} ${memberStore.members[memberStore.selectedIndex].lastName}',
+                            onTap: () {
+                              GoRouter.of(context)
+                                  .push(RoutesConstants.eprRoute);
+                            },
+                          );
+                        } else if (memberStore.isActive == false) {
+                          return InactivePlanComponent(
+                            name:
+                                '${memberStore.members[memberStore.selectedIndex].firstName} ${memberStore.members[memberStore.selectedIndex].lastName}',
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
                       },
                     ),
-                  const SizedBox(height: Dimension.d4),
                   if (store.selectedIndex != -1)
                     Observer(
                       builder: (_) {
                         final selectedMember =
-                            store.familyMembers[store.selectedIndex];
-                        return selectedMember != null && selectedMember.isActive
+                            memberStore.members[memberStore.selectedIndex];
+                        return selectedMember != null && memberStore.isActive
                             ? const CoachContact(
                                 imgpath: '',
                                 name: 'Suma Latha',
