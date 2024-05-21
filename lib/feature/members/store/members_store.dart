@@ -3,6 +3,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 part 'members_store.g.dart';
@@ -12,7 +13,7 @@ class MembersStore = _MembersStoreBase with _$MembersStore;
 abstract class _MembersStoreBase with Store {
   _MembersStoreBase(this.memberService);
 
-  final MemberService memberService;
+  final MemberServices memberService;
 
   @observable
   List<Member> members = [];
@@ -41,7 +42,7 @@ abstract class _MembersStoreBase with Store {
       return membersOrFailure.fold(
         (failure) {
           errorMessage = 'failure';
-          return Left(failure);
+          return Left(failure as Failure);
         },
         (membersList) {
           members = membersList;
@@ -56,7 +57,7 @@ abstract class _MembersStoreBase with Store {
   }
 
   @action
-  Future<Either<Failure, Member>> updateMember(
+  Future<Future<Either<MemberServiceFailure, Member>>> updateMember(
     int id,
     Map<String, dynamic> updatedData,
   ) async {

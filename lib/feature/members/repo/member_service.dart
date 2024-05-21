@@ -2,13 +2,15 @@
 
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/feature/members/model/epr_models.dart';
 import 'package:silver_genie/feature/members/model/member_health_info_model.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 abstract class IMemberService {
-  Future<Either<Failure, List<Member>>> getMembers();
-  Future<Either<Failure, Member>> addMember(
+  Future<Either<MemberServiceFailure, List<Member>>> getMembers();
+  Future<Either<MemberServiceFailure, Member>> addMember(
     bool self,
     String relation,
     String gender,
@@ -18,23 +20,24 @@ abstract class IMemberService {
     String email,
     String phoneNumber,
   );
-  Future<Either<Failure, Member>> updateMember(
+  Future<Either<MemberServiceFailure, Member>> updateMember(
     int id,
     Map<String, dynamic> updateData,
   );
-  Future<Either<Failure, Member>> memberDetails();
-  Future<Either<Failure, MemberHealthInfo>> getMemberHealthInfo();
+  Future<Either<MemberServiceFailure, Member>> memberDetails();
+  Future<Either<MemberServiceFailure, MemberHealthInfo>> getMemberHealthInfo();
+  Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
+    required String memberId,
+  });
 }
 
-const baseUrl = 'http://api-dev.yoursilvergenie.com/api';
-
-class MemberService implements IMemberService {
-  MemberService(this.httpClient);
+class MemberServices implements IMemberService {
+  MemberServices(this.httpClient);
 
   final HttpClient httpClient;
 
   @override
-  Future<Either<Failure, List<Member>>> getMembers() async {
+  Future<Either<MemberServiceFailure, List<Member>>> getMembers() async {
     try {
       final response = await httpClient.get('$baseUrl/user/family');
 
@@ -52,15 +55,19 @@ class MemberService implements IMemberService {
         print(parsedMembers);
         return Right(parsedMembers as List<Member>);
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
     } catch (e) {
-      return const Left(Failure.someThingWentWrong());
+      if (e is SocketException) {
+        return const Left(MemberServiceFailure.socketException());
+      } else {
+        return const Left(MemberServiceFailure.badResponse());
+      }
     }
   }
 
   @override
-  Future<Either<Failure, Member>> addMember(
+  Future<Either<MemberServiceFailure, Member>> addMember(
     bool self,
     String relation,
     String gender,
@@ -102,22 +109,25 @@ class MemberService implements IMemberService {
           final field = errorDetails[0]['path'].join(', ');
           final fieldErrorMessage = errorDetails[0]['message'];
           return Left(
-            Failure.validationError('$field: $fieldErrorMessage'),
+            MemberServiceFailure.validationError('$field: $fieldErrorMessage'),
           );
         } else {
-          return Left(Failure.validationError('$errorMessage'));
+          return Left(MemberServiceFailure.validationError('$errorMessage'));
         }
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(MemberServiceFailure.addMemberError());
       }
     } catch (e) {
-      print(e);
-      return const Left(Failure.someThingWentWrong());
+      if (e is SocketException) {
+        return const Left(MemberServiceFailure.socketException());
+      } else {
+        return const Left(MemberServiceFailure.badResponse());
+      }
     }
   }
 
   @override
-  Future<Either<Failure, Member>> updateMember(
+  Future<Either<MemberServiceFailure, Member>> updateMember(
     int id,
     Map<String, dynamic> updateData,
   ) async {
@@ -133,19 +143,19 @@ class MemberService implements IMemberService {
         // final member = Member.fromJson(responseData as Map<String, dynamic>);
         return Right(member);
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(MemberServiceFailure.memberDetailsEditError());
       }
     } catch (e) {
       if (e is SocketException) {
-        return const Left(Failure.socketException());
+        return const Left(MemberServiceFailure.socketException());
       } else {
-        return const Left(Failure.someThingWentWrong());
+        return const Left(MemberServiceFailure.badResponse());
       }
     }
   }
 
   @override
-  Future<Either<Failure, Member>> memberDetails() async {
+  Future<Either<MemberServiceFailure, Member>> memberDetails() async {
     try {
       final response = await httpClient
           .get('https://silvergenie.com/api/v1/members/details');
@@ -154,19 +164,20 @@ class MemberService implements IMemberService {
         final jsonList = response.data;
         return Right(jsonList as Member);
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
     } catch (e) {
       if (e is SocketException) {
-        return const Left(Failure.socketException());
+        return const Left(MemberServiceFailure.socketException());
       } else {
-        return const Left(Failure.someThingWentWrong());
+        return const Left(MemberServiceFailure.badResponse());
       }
     }
   }
 
   @override
-  Future<Either<Failure, MemberHealthInfo>> getMemberHealthInfo() async {
+  Future<Either<MemberServiceFailure, MemberHealthInfo>>
+      getMemberHealthInfo() async {
     try {
       final response = await httpClient
           .get('https://silvergenie.com/api/v1/members/healthInfo');
@@ -175,13 +186,41 @@ class MemberService implements IMemberService {
         final jsonList = response.data;
         return Right(jsonList as MemberHealthInfo);
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
     } catch (e) {
       if (e is SocketException) {
-        return const Left(Failure.socketException());
+        return const Left(MemberServiceFailure.socketException());
       } else {
-        return const Left(Failure.someThingWentWrong());
+        return const Left(MemberServiceFailure.badResponse());
+      }
+    }
+  }
+
+  @override
+  Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
+    required String memberId,
+  }) async {
+    try {
+      final response =
+          await httpClient.get('/api/user/family/epr?userId=$memberId');
+      if (response.statusCode == 200) {
+        final jsonList = response.data;
+        if (jsonList['data'] == null &&
+            jsonList['details']['name'] == 'EPR_NOT_FOUND') {
+          return const Left(MemberServiceFailure.memberDontHaveEPRInfo());
+        }
+        return Right(
+          EprDataModel.fromJson(jsonList['data'] as Map<String, dynamic>),
+        );
+      } else {
+        return const Left(MemberServiceFailure.fetchMemberInfoError());
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        return const Left(MemberServiceFailure.socketException());
+      } else {
+        return const Left(MemberServiceFailure.badResponse());
       }
     }
   }

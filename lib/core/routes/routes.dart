@@ -11,6 +11,7 @@ import 'package:silver_genie/feature/emergency_services/emergency_services.dart'
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
+import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
@@ -23,6 +24,7 @@ import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
 import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
+import 'package:silver_genie/feature/screens/splashscreen.dart';
 import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/services/screens/booking_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/payment_screen.dart';
@@ -36,6 +38,8 @@ import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
 final store = GetIt.I<OnboardingStore>();
 final authStore = GetIt.I<AuthStore>();
+final homeStore = GetIt.I<HomeStore>();
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -48,6 +52,10 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.initialRoute,
       name: RoutesConstants.initialRoute,
       redirect: (context, state) {
+        if (!homeStore.isHomepageDataLoaded) {
+          return null;
+        }
+
         if (store.showOnboarding) {
           return RoutesConstants.onboardingRoute;
         }
@@ -209,7 +217,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/addEditFamilyMember/:edit/:index',
+      path: '/addEditFamilyMember/:edit',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
         final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
@@ -269,7 +277,7 @@ final GoRouter routes = GoRouter(
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       path:
-          '/memberDetails/:index/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
+          '/memberDetails/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
       name: RoutesConstants.memberDetailsRoute,
       pageBuilder: (context, state) {
         final hasCareSub =

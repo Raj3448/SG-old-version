@@ -17,22 +17,15 @@ import 'package:silver_genie/core/widgets/booking_service_listile_component.dart
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
+import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final PageController _offerPageController = PageController();
-
-  final PageController _testimonialsCardController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -127,174 +120,286 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  Text(
-                    'About Us',
-                    style: AppTextStyle.bodyXLSemiBold
-                        .copyWith(color: AppColors.grayscale900, height: 2.6),
-                  ),
-                  Text(
-                    'SilverGenie: Your trusted senior healthcare platform. We empower seniors for independent living, leveraging technology for real-time monitoring and improved health outcomes.',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                      height: 1.5,
-                      color: AppColors.grayscale700,
-                    ),
-                  ),
-                  Text(
-                    'What we offer',
-                    style: AppTextStyle.bodyXLSemiBold.copyWith(
-                      color: AppColors.grayscale900,
-                      height: 2.4,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: Dimension.d1,
-                  ),
-                  SizedBox(
-                    height: 240,
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(right: 200),
-                      controller: _offerPageController,
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(
-                        4,
-                        (index) => const _HomeScreenOfferCard(
-                          offerTitle: 'SG Workforce',
-                          content1: 'Trained critical care nursing staff',
-                          content2:
-                              'Trained nursing staff or attendants for senior citizens',
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: Dimension.d4,
-                  ),
-                  Center(
-                    child: SmoothPageIndicator(
-                      controller: _offerPageController,
-                      count: 4,
-                      effect: const ExpandingDotsEffect(
-                        activeDotColor: AppColors.primary,
-                        dotColor: AppColors.grayscale300,
-                        dotHeight: 8,
-                        dotWidth: 8,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Dimension.d3),
-                    child: CustomButton(
-                      ontap: () {},
-                      title: 'Know More',
-                      showIcon: false,
-                      iconColor: AppColors.error,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.normal,
-                      type: ButtonType.secondary,
-                      expanded: true,
-                    ),
-                  ),
-                  Text(
-                    'Testimonials',
-                    style: AppTextStyle.bodyXLSemiBold.copyWith(
-                      color: AppColors.grayscale900,
-                      height: 2.6,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              color: AppColors.secondary,
-              padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 132,
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(right: 130),
-                      controller: _testimonialsCardController,
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(3, (index) => _TestmonialsCard()),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: Dimension.d3,
-                  ),
-                  Center(
-                    child: SmoothPageIndicator(
-                      controller: _testimonialsCardController,
-                      count: 3,
-                      effect: const ExpandingDotsEffect(
-                        activeDotColor: AppColors.primary,
-                        dotColor: AppColors.grayscale300,
-                        dotHeight: 8,
-                        dotWidth: 8,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'Newsletter',
-                      textAlign: TextAlign.left,
-                      style: AppTextStyle.bodyXLSemiBold.copyWith(
-                        color: AppColors.grayscale900,
-                        height: 1.8,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: Dimension.d3,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
-              child: Column(
-                children: [
-                  Text(
-                    'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                      height: 1.4,
-                      color: AppColors.grayscale700,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: Dimension.d4,
-                  ),
-                  CustomButton(
-                    ontap: () {},
-                    iconColor: AppColors.error,
-                    title: 'Subscribe',
-                    showIcon: false,
-                    iconPath: AppIcons.add,
-                    size: ButtonSize.normal,
-                    type: ButtonType.secondary,
-                    expanded: true,
-                  ),
-                  const SizedBox(
-                    height: Dimension.d10,
-                  ),
+                  _HomeScreenComponents()
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _HomeScreenComponents extends StatelessWidget {
+  final homestore = GetIt.I<HomeStore>();
+
+  @override
+  Widget build(BuildContext context) {
+    if (!homestore.isHomepageDataLoaded) {
+      return const SizedBox();
+    }
+    final componentDetailsList = homestore.isHomepageData;
+    final widgetList = <Widget>[];
+    for (final component in componentDetailsList) {
+      if (component is AboutUsOfferModel) {
+        widgetList.add(
+          _AboutUsOfferComponent(
+            aboutUsOfferModel: component,
+          ),
+        );
+        continue;
+      }
+      if (component is BannerImageModel) {
+        widgetList.add(
+          _BannerImageComponent(
+            bannerImageModel: component,
+          ),
+        );
+        continue;
+      }
+      if (component is TestimonialsModel) {
+        widgetList.add(
+          _TestmonialsComponent(
+            testimonialsModel: component,
+          ),
+        );
+        continue;
+      }
+    }
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Column(
+        children: [
+          ...widgetList,
+          Text(
+            'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
+            style: AppTextStyle.bodyLargeMedium.copyWith(
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              height: 1.4,
+              color: AppColors.grayscale700,
+            ),
+          ),
+          const SizedBox(
+            height: Dimension.d4,
+          ),
+          CustomButton(
+            ontap: () {},
+            iconColor: AppColors.error,
+            title: 'Subscribe',
+            showIcon: false,
+            iconPath: AppIcons.add,
+            size: ButtonSize.normal,
+            type: ButtonType.secondary,
+            expanded: true,
+          ),
+          const SizedBox(
+            height: Dimension.d10,
+          ),
+        ],
+      ),
+    ]);
+  }
+}
+
+class _TestmonialsComponent extends StatelessWidget {
+  _TestmonialsComponent({
+    required this.testimonialsModel,
+    Key? key,
+  }) : super(key: key);
+
+  final PageController _testimonialsCardController = PageController();
+  final TestimonialsModel testimonialsModel;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          testimonialsModel.title,
+          style: AppTextStyle.bodyXLSemiBold.copyWith(
+            color: AppColors.grayscale900,
+            height: 2.6,
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          ),
+        ),
+        Container(
+          color: AppColors.secondary,
+          padding: const EdgeInsets.symmetric(horizontal: Dimension.d1),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 132,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(right: 130),
+                  controller: _testimonialsCardController,
+                  scrollDirection: Axis.horizontal,
+                  children: List.generate(
+                      testimonialsModel.testimonials.data.length,
+                      (index) => _TestmonialsCard(
+                            testifierName: testimonialsModel.testimonials
+                                .data[index].attributes.testifierName,
+                            content: testimonialsModel
+                                .testimonials.data[index].attributes.content,
+                          )),
+                ),
+              ),
+              const SizedBox(
+                height: Dimension.d3,
+              ),
+              Center(
+                child: SmoothPageIndicator(
+                  controller: _testimonialsCardController,
+                  count: 3,
+                  effect: const ExpandingDotsEffect(
+                    activeDotColor: AppColors.primary,
+                    dotColor: AppColors.grayscale300,
+                    dotHeight: 8,
+                    dotWidth: 8,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'Newsletter',
+                  textAlign: TextAlign.left,
+                  style: AppTextStyle.bodyXLSemiBold.copyWith(
+                    color: AppColors.grayscale900,
+                    height: 1.8,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: Dimension.d3,
+        ),
+      ],
+    );
+  }
+}
+
+class _AboutUsOfferComponent extends StatelessWidget {
+  _AboutUsOfferComponent({
+    required this.aboutUsOfferModel,
+    Key? key,
+  }) : super(key: key);
+
+  final AboutUsOfferModel aboutUsOfferModel;
+  final PageController _offerPageController = PageController();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          aboutUsOfferModel.header,
+          style: AppTextStyle.bodyXLSemiBold
+              .copyWith(color: AppColors.grayscale900, height: 2.6),
+        ),
+        Text(
+          aboutUsOfferModel.description,
+          style: AppTextStyle.bodyLargeMedium.copyWith(
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
+            height: 1.5,
+            color: AppColors.grayscale700,
+          ),
+        ),
+        Text(
+          aboutUsOfferModel.offering.header,
+          style: AppTextStyle.bodyXLSemiBold.copyWith(
+            color: AppColors.grayscale900,
+            height: 2.4,
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(
+          height: Dimension.d1,
+        ),
+        SizedBox(
+          height: 240,
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.only(right: 200),
+            controller: _offerPageController,
+            scrollDirection: Axis.horizontal,
+            children: List.generate(
+              aboutUsOfferModel.offering.offers.length,
+              (index) => _HomeScreenOfferCard(
+                offerTitle: aboutUsOfferModel.offering.offers[index].title,
+                content: List.generate(
+                    aboutUsOfferModel.offering.offers[index].values.length,
+                    (i) => aboutUsOfferModel
+                        .offering.offers[index].values[i].value),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: Dimension.d4,
+        ),
+        Center(
+          child: SmoothPageIndicator(
+            controller: _offerPageController,
+            count: aboutUsOfferModel.offering.offers.length,
+            effect: const ExpandingDotsEffect(
+              activeDotColor: AppColors.primary,
+              dotColor: AppColors.grayscale300,
+              dotHeight: 8,
+              dotWidth: 8,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Dimension.d3),
+          child: CustomButton(
+            ontap: () async {
+              String url;
+              url = aboutUsOfferModel.cta.href ??
+                  aboutUsOfferModel.cta.link!.href;
+              await launchUrl(
+                Uri.parse(url),
+              );
+            },
+            title: aboutUsOfferModel.cta.label,
+            showIcon: false,
+            iconColor: AppColors.error,
+            iconPath: Icons.not_interested,
+            size: ButtonSize.normal,
+            type: ButtonType.secondary,
+            expanded: true,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BannerImageComponent extends StatelessWidget {
+  const _BannerImageComponent({
+    required this.bannerImageModel,
+    Key? key,
+  }) : super(key: key);
+
+  final BannerImageModel bannerImageModel;
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      'http://api-dev.yoursilvergenie.com${bannerImageModel.bannerImage.data.attributes.url}',
+      height: bannerImageModel.bannerImage.data.attributes.height,
+      width: bannerImageModel.bannerImage.data.attributes.width,
+      errorBuilder: (context, error, stackTrace) {
+        return const SizedBox();
+      },
     );
   }
 }
@@ -320,6 +425,14 @@ class _ActiveBookingComponent extends StatelessWidget {
 }
 
 class _TestmonialsCard extends StatelessWidget {
+  const _TestmonialsCard({
+    required this.testifierName,
+    required this.content,
+    Key? key,
+  }) : super(key: key);
+
+  final String testifierName;
+  final String content;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -334,10 +447,10 @@ class _TestmonialsCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 220,
             child: Text(
-              'The service was amazing and support from care couch is great overall.',
+              content,
             ),
           ),
           SizedBox(
@@ -353,7 +466,7 @@ class _TestmonialsCard extends StatelessWidget {
                   width: Dimension.d2,
                 ),
                 Text(
-                  'Varun Nair',
+                  testifierName,
                   style: AppTextStyle.bodyMediumMedium.copyWith(
                     color: AppColors.grayscale800,
                     fontWeight: FontWeight.w500,
@@ -716,13 +829,11 @@ class BookServiceButton extends StatelessWidget {
 class _HomeScreenOfferCard extends StatelessWidget {
   const _HomeScreenOfferCard({
     required this.offerTitle,
-    required this.content1,
-    required this.content2,
+    required this.content,
   });
 
   final String offerTitle;
-  final String content1;
-  final String content2;
+  final List<String> content;
 
   @override
   Widget build(BuildContext context) {
@@ -748,54 +859,36 @@ class _HomeScreenOfferCard extends StatelessWidget {
               fontSize: 16,
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 7),
-                child: Icon(
-                  AppIcons.check,
-                  size: 12,
-                  color: AppColors.primary,
+          Column(
+            children: List.generate(
+              content.length,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: Dimension.d2),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 7),
+                      child: Icon(
+                        AppIcons.check,
+                        size: 12,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: Dimension.d3,
+                    ),
+                    Expanded(
+                      child: Text(
+                        content[index],
+                        style: AppTextStyle.bodyMediumMedium.copyWith(
+                            color: AppColors.grayscale700, height: 1.7),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(
-                width: Dimension.d3,
-              ),
-              Expanded(
-                child: Text(
-                  content1,
-                  style: AppTextStyle.bodyMediumMedium
-                      .copyWith(color: AppColors.grayscale700, height: 1.7),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: Dimension.d2,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 7),
-                child: Icon(
-                  AppIcons.check,
-                  size: 12,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(
-                width: Dimension.d3,
-              ),
-              Expanded(
-                child: Text(
-                  content2,
-                  style: AppTextStyle.bodyMediumMedium
-                      .copyWith(color: AppColors.grayscale700, height: 1.7),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),

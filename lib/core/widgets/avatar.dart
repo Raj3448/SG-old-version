@@ -59,7 +59,7 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       maxRadius: maxRadius,
-      backgroundImage: const AssetImage('assets/icon/headshot.png'),
+      backgroundImage: const AssetImage('assets/icon/default _profile.png'),
       // backgroundImage: NetworkImage(imgPath),
     );
   }
@@ -80,7 +80,7 @@ class SelectableAvatar extends Avatar {
   Widget build(BuildContext context) {
     final imageProvider = imgPath.isNotEmpty
         ? AssetImage(imgPath)
-        : const AssetImage('assets/icon/headshot.png');
+        : const AssetImage('assets/icon/default _profile.png');
     return GestureDetector(
       onTap: ontap,
       child: Container(

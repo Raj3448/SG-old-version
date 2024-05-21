@@ -41,6 +41,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final TextEditingController _postalController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   File? storedImageFile;
+  String? profileImgUrl;
 
   final List<ValueItem<String>> _genderItems = [
     const ValueItem(label: 'Male', value: 'Male'),
@@ -107,7 +108,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(child: EditPic()),
+                      Center(
+                          child: EditPic(
+                        storedProfileImage: storedImageFile,
+                        imgUrl: profileImgUrl,
+                      )),
                       const SizedBox(height: Dimension.d5),
                       const TextLabel(title: 'First Name'),
                       const SizedBox(height: Dimension.d2),
@@ -300,6 +305,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       }
       _mobileController.text = userDetails.user.phoneNumber;
       _emailController.text = userDetails.user.email;
+      if (userDetails.user.profileImg != null) {
+        profileImgUrl = userDetails.user.profileImg;
+      }
       if (userDetails.user.address != null) {
         _cityController.text = userDetails.user.address!.city;
         _stateController.text = userDetails.user.address!.state;

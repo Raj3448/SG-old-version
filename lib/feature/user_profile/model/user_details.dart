@@ -54,6 +54,7 @@ class User {
   final DateTime updatedAt;
   @JsonKey(name: "address")
   Address? address;
+  String? profileImg;
 
   User({
     required this.id,
@@ -72,6 +73,7 @@ class User {
     required this.updatedAt,
     this.relation = 'Self',
     this.address,
+    this.profileImg
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -95,6 +97,7 @@ class User {
     DateTime? createdAt,
     DateTime? updatedAt,
     Address? address,
+    String? profileImg
   }) {
     return User(
       id: id ?? this.id,
@@ -113,6 +116,7 @@ class User {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       address: address ?? this.address,
+      profileImg: profileImg ?? this.profileImg,
     );
   }
 }
