@@ -11,6 +11,7 @@ import 'package:silver_genie/feature/emergency_services/emergency_services.dart'
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
+import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
@@ -48,6 +49,7 @@ final GoRouter routes = GoRouter(
         path: RoutesConstants.initialRoute,
         name: RoutesConstants.initialRoute,
         redirect: (context, state) {
+          
           if (store.showOnboarding) {
             return RoutesConstants.onboardingRoute;
           }
