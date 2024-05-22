@@ -34,10 +34,8 @@ abstract class _AuthStoreBase with Store {
 
   @action
   void logout() {
-    userCache.clearUserDetails().then(
-          (value) => tokenManager
-              .deleteToken()
-              .then((value) => {authTokenExits = false}),
-        );
+    userCache.clearUserDetails().then((value) {
+      tokenManager.deleteToken().then((value) => {authTokenExits = false});
+    });
   }
 }

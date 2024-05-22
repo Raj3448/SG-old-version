@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -15,8 +16,8 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
 class AddEditFamilyMemberScreen extends StatelessWidget {
@@ -36,7 +37,8 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
   final cityContr = TextEditingController();
   final postalCodeContr = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  final memberService = GetIt.I<MemberService>();
+  final memberService = GetIt.I<MemberServices>();
+  final memberStore = GetIt.I<MembersStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +141,12 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: EditPic()),
+              Center(
+                child: EditPic(
+                  storedProfileImage: null,
+                  imgUrl: null,
+                ),
+              ),
               const SizedBox(height: 16),
               Form(
                 key: formKey,
@@ -150,6 +157,8 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Enter your first name',
+                      initialValue:
+                          edit ? memberStore.members[0].firstName : '',
                       keyboardType: TextInputType.name,
                       controller: firstNameContr,
                       large: false,

@@ -17,22 +17,28 @@ class ErrorStateComponent extends StatelessWidget {
 
     switch (errorType) {
       case ErrorType.unknown:
-        errorMessage = "Unknown Error";
+        errorMessage = 'Unknown Error';
         subcontent =
             'We apologise but the page you are trying to access cannot be found';
         imagePath = 'assets/icon/unknown error.svg';
         break;
       case ErrorType.pageNotFound:
-        errorMessage = "Page Not Found";
+        errorMessage = 'Page Not Found';
         subcontent =
             'We apologise but the page you are trying to access cannot be found';
         imagePath = 'assets/icon/page not found.svg';
         break;
       case ErrorType.noInternetConnection:
-        errorMessage = "No Internet Connection";
+        errorMessage = 'No Internet Connection';
         subcontent =
             'Please ensure you are connected to stable Wi-fi network or cellular data to continue';
         imagePath = 'assets/icon/no internet connection.svg';
+        break;
+      case ErrorType.somethinWentWrong:
+        errorMessage = 'Something Went Wrong';
+        subcontent =
+            'We apologise but the page you are trying to access cannot be found';
+        imagePath = 'assets/icon/unknown error.svg';
         break;
     }
 
@@ -57,4 +63,5 @@ enum ErrorType {
   unknown,
   pageNotFound,
   noInternetConnection,
+  somethinWentWrong
 }

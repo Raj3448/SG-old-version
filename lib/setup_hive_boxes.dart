@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
+import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/user_profile/hive_adaptor/user_details_adapter.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
@@ -11,11 +12,34 @@ const JWT_TOKEN_KEY = 'JWT_token';
 const USER_DETAILS_BOX_NAME = 'user_details_box';
 const USER_DETAILS_BOX_KEY = 'userDetails_box_key';
 
+const HOMEPAGE_DETAILS_BOX_NAME = 'homePageDetails';
+const HOMEPAGE_DETAILS_BOX_Key = 'homePageBoxKey';
+
 const storage = FlutterSecureStorage();
 
 Future<void> setupHiveBox() async {
   await initializeBoxForToken();
   await initializeBoxForUserDetails();
+  await initializeBoxForHomePageDetails();
+}
+
+Future<void> initializeBoxForHomePageDetails() async {
+  Hive
+    ..registerAdapter(AboutUsOfferModelAdapter())
+    ..registerAdapter(BannerImageModelAdapter())
+    ..registerAdapter(TestimonialsModelAdapter())
+    ..registerAdapter(TestimonialsAdapter())
+    ..registerAdapter(DatumAdapter())
+    ..registerAdapter(AttributesAdapter())
+    ..registerAdapter(BannerImageAdapter())
+    ..registerAdapter(DataAdapter())
+    ..registerAdapter(ImageDataModelAdapter())
+    ..registerAdapter(CtaAdapter())
+    ..registerAdapter(LinkAdapter())
+    ..registerAdapter(OfferingAdapter())
+    ..registerAdapter(OfferAdapter())
+    ..registerAdapter(ValueAdapter());
+  await Hive.openBox<List<dynamic>>(HOMEPAGE_DETAILS_BOX_NAME,compactionStrategy:(int total,int deleted)=> deleted > 2);
 }
 
 Future<void> initializeBoxForUserDetails() async {

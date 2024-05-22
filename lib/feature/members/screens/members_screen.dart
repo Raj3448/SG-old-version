@@ -7,7 +7,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/widgets/app_bar.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
@@ -27,95 +27,55 @@ class MembersScreen extends StatelessWidget {
             decelerationRate: ScrollDecelerationRate.fast,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FutureBuilder(
-                future: store.fetchMembers(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return const Center(
-                      child: Text('Some error occurred!'),
-                    );
-                  } else {
-                    final either = snapshot.data!;
-                    return either.fold(
-                      (l) => Column(
-                        children: [
-                          const Text(
-                            'No members found',
-                            style: AppTextStyle.bodyLargeBold,
-                          ),
-                          const SizedBox(height: Dimension.d6),
-                          CustomButton(
-                            ontap: () {
-                              context.pushNamed(
-                                RoutesConstants.addEditFamilyMemberRoute,
-                                pathParameters: {'edit': 'false'},
-                              );
-                            },
-                            title: 'Add new member',
-                            showIcon: false,
-                            iconPath: AppIcons.add,
-                            size: ButtonSize.normal,
-                            type: ButtonType.primary,
-                            expanded: true,
-                            iconColor: AppColors.white,
-                          ),
-                        ],
-                      ),
-                      (r) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Your Family Members'.tr(),
-                            style: AppTextStyle.bodyLargeBold,
-                          ),
-                          const SizedBox(height: 12),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(height: Dimension.d3);
-                            },
-                            itemCount: store.members.length,
-                            itemBuilder: (context, index) {
-                              final member = store.members[index];
-                              return MemberCard(
-                                onTap: () {},
-                                name: '${member.firstName} ${member.lastName}',
-                                relation: member.relation ?? 'Self',
-                                hasCareSub: true,
-                              );
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d6),
-                          CustomButton(
-                            ontap: () {
-                              context.pushNamed(
-                                RoutesConstants.addEditFamilyMemberRoute,
-                                pathParameters: {'edit': 'false'},
-                              );
-                            },
-                            title: 'Add new member',
-                            showIcon: false,
-                            iconPath: AppIcons.add,
-                            size: ButtonSize.normal,
-                            type: ButtonType.primary,
-                            expanded: true,
-                            iconColor: AppColors.white,
-                          ),
-                          const SizedBox(height: Dimension.d6),
-                        ],
-                      ),
-                    );
-                  }
+              Text(
+                'Your Family Members'.tr(),
+                style: AppTextStyle.bodyLargeBold,
+              ),
+              const SizedBox(height: 12),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: Dimension.d3);
+                },
+                itemCount: store.members.length,
+                itemBuilder: (context, index) {
+                  final member = store.members[index];
+                  return MemberCard(
+                    onTap: () {
+                      store.selectMember(member.id);
+                      context.pushNamed(
+                        RoutesConstants.memberDetailsRoute,
+                        pathParameters: {
+                          'memberId': '${member.id}',
+                        },
+                      );
+                    },
+                    name: '${member.firstName} ${member.lastName}',
+                    relation: member.relation ?? 'Self',
+                    hasCareSub: true,
+                  );
                 },
               ),
+              const SizedBox(height: Dimension.d6),
+              CustomButton(
+                ontap: () {
+                  context.pushNamed(
+                    RoutesConstants.addEditFamilyMemberRoute,
+                    pathParameters: {'edit': 'false'},
+                  );
+                },
+                title: 'Add new member',
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: ButtonType.primary,
+                expanded: true,
+                iconColor: AppColors.white,
+              ),
+              const SizedBox(height: Dimension.d6),
             ],
           ),
         ),

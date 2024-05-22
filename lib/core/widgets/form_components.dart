@@ -31,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.validationLogic,
     this.textInputAction,
+    this.initialValue,
     super.key,
   });
 
@@ -41,11 +42,13 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validationLogic;
   final TextInputAction? textInputAction;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      // initialValue: initialValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
