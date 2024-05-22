@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
@@ -37,14 +39,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    memberStore = GetIt.I<MembersStore>();
-    memberStore.fetchMembers();
+    memberStore = GetIt.I<MembersStore>()..init();
+    reaction((_) => memberStore.errorMessage, (loaded) {
+      if (memberStore.errorMessage == null) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: Failed to fetch member data!')),
+      );
+      memberStore.errorMessage = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<HomeStore>();
-    final memberStore = GetIt.I<MembersStore>();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
@@ -769,8 +777,12 @@ class _MemberInfo extends StatelessWidget {
                             age: '${calculateAge(activeMember.dateOfBirth)}',
                             updatedAt: activeMember.updatedAt,
                             onTap: () {
-                              GoRouter.of(context)
-                                  .push(RoutesConstants.eprRoute);
+                              GoRouter.of(context).pushNamed(
+                                RoutesConstants.eprRoute,
+                                pathParameters: {
+                                  'memberId': '${activeMember.id}',
+                                },
+                              );
                             },
                           );
                         } else if (memberStore.isActive == false) {

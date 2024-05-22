@@ -31,6 +31,8 @@ abstract class IMemberService {
   });
 }
 
+const baseUrl = 'http://api-dev.yoursilvergenie.com/api';
+
 class MemberServices implements IMemberService {
   MemberServices(this.httpClient);
 

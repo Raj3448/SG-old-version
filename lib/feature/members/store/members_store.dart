@@ -19,9 +19,6 @@ abstract class _MembersStoreBase with Store {
   List<Member> members = [];
 
   @observable
-  Either<Failure, void>? failure;
-
-  @observable
   String? errorMessage;
 
   @observable
@@ -45,33 +42,60 @@ abstract class _MembersStoreBase with Store {
   @observable
   bool isLoading = false;
 
+  @observable
+  bool initialLoaded = false;
+
   @action
   void selectMember(int memberId) {
     selectedMemberId = memberId;
   }
 
   @action
-  Future<Either<Failure, List<Member>>> fetchMembers() async {
+  Future<void> fetchMembers() async {
     isLoading = true;
     try {
       final membersOrFailure = await memberService.getMembers();
-      return membersOrFailure.fold(
+      membersOrFailure.fold(
         (failure) {
           errorMessage = 'failure';
           isLoading = false;
-          return Left(failure as Failure);
         },
         (membersList) {
           members = membersList;
           errorMessage = null;
           isLoading = false;
-          return Right(membersList);
         },
       );
     } catch (e) {
       errorMessage = 'An unexpected error occurred';
       isLoading = false;
-      return const Left(Failure.someThingWentWrong());
+    }
+  }
+
+  @action
+  Future<void> init() async {
+    if (initialLoaded) {
+      return;
+    }
+    isLoading = true;
+    try {
+      final membersOrFailure = await memberService.getMembers();
+      membersOrFailure.fold(
+        (failure) {
+          errorMessage = 'failure';
+          isLoading = false;
+        },
+        (membersList) {
+          members = membersList;
+          errorMessage = null;
+          isLoading = false;
+        },
+      );
+    } catch (e) {
+      errorMessage = 'An unexpected error occurred';
+      isLoading = false;
+    } finally {
+      initialLoaded = true;
     }
   }
 
