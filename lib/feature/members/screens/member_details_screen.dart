@@ -176,6 +176,7 @@ class _BasicDetailsBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeMember = GetIt.I<MembersStore>().activeMember;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
@@ -267,8 +268,12 @@ class _BasicDetailsBox extends StatelessWidget {
             ontap: () {
               GoRouter.of(context).pushNamed(
                 RoutesConstants.addEditFamilyMemberRoute,
-                pathParameters: {'edit': 'true'},
+                pathParameters: {
+                  'edit': 'true',
+                  'memberId': '${activeMember!.id}',
+                },
               );
+              print('${activeMember.id}');
             },
             title: 'Edit',
             showIcon: false,
