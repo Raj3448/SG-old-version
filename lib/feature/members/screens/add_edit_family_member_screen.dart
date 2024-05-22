@@ -19,11 +19,9 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
 class AddEditFamilyMemberScreen extends StatelessWidget {
-  AddEditFamilyMemberScreen(
-      {required this.edit, required this.index, super.key});
+  AddEditFamilyMemberScreen({required this.edit, super.key});
 
   final bool edit;
-  final String index;
   final firstNameContr = TextEditingController();
   final lastNameContr = TextEditingController();
   final MultiSelectController genderContr = MultiSelectController();
@@ -37,7 +35,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
   final cityContr = TextEditingController();
   final postalCodeContr = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  final memberService = GetIt.I<MemberService>();
+  final memberService = GetIt.I<MemberServices>();
   final memberStore = GetIt.I<MembersStore>();
 
   @override
@@ -87,7 +85,12 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: EditPic(storedProfileImage: null,imgUrl: null,)),
+              Center(
+                child: EditPic(
+                  storedProfileImage: null,
+                  imgUrl: null,
+                ),
+              ),
               const SizedBox(height: 16),
               Form(
                 key: formKey,

@@ -27,31 +27,50 @@ abstract class _MembersStoreBase with Store {
   @observable
   int selectedIndex = 0;
 
+  @computed
+  int? get activeMemberId =>
+      selectedMemberId != null ? selectedMemberId : members.firstOrNull?.id;
+
+  @computed
+  Member? get activeMember => activeMemberId != null
+      ? members.firstWhere((member) => member.id == activeMemberId)
+      : null;
+
   @observable
   bool isActive = true;
 
+  @observable
+  int? selectedMemberId;
+
+  @observable
+  bool isLoading = false;
+
   @action
-  void selectAvatar(int index) {
-    selectedIndex = index;
+  void selectMember(int memberId) {
+    selectedMemberId = memberId;
   }
 
   @action
   Future<Either<Failure, List<Member>>> fetchMembers() async {
+    isLoading = true;
     try {
       final membersOrFailure = await memberService.getMembers();
       return membersOrFailure.fold(
         (failure) {
           errorMessage = 'failure';
+          isLoading = false;
           return Left(failure as Failure);
         },
         (membersList) {
           members = membersList;
           errorMessage = null;
+          isLoading = false;
           return Right(membersList);
         },
       );
     } catch (e) {
       errorMessage = 'An unexpected error occurred';
+      isLoading = false;
       return const Left(Failure.someThingWentWrong());
     }
   }

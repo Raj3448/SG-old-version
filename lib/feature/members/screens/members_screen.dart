@@ -45,17 +45,11 @@ class MembersScreen extends StatelessWidget {
                   final member = store.members[index];
                   return MemberCard(
                     onTap: () {
+                      store.selectMember(member.id);
                       context.pushNamed(
                         RoutesConstants.memberDetailsRoute,
                         pathParameters: {
-                          'index': '$index',
-                          'name': '${member.firstName} ${member.lastName}',
-                          'age': '${calculateAge(member.dateOfBirth)}',
-                          'gender': member.gender,
-                          'relation': member.relation!,
-                          'mobileNo': member.phoneNumber,
-                          'hasCareSub': 'true',
-                          'address': 'address',
+                          'memberId': '${member.id}',
                         },
                       );
                     },

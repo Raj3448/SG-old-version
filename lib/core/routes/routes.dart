@@ -68,7 +68,7 @@ final GoRouter routes = GoRouter(
       },
       builder: (context, state) {
         /// Add splash screen here
-        return Container();
+        return const SplashscreenWidget();
       },
     ),
     ShellRoute(
@@ -82,7 +82,7 @@ final GoRouter routes = GoRouter(
           name: RoutesConstants.homeRoute,
           path: '/home',
           pageBuilder: (context, state) {
-            return NoTransitionPage(child: HomeScreen());
+            return const NoTransitionPage(child: HomeScreen());
           },
         ),
         GoRoute(
@@ -224,7 +224,6 @@ final GoRouter routes = GoRouter(
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
             edit: edit,
-            index: state.pathParameters['index']!,
           ),
         );
       },
@@ -276,22 +275,12 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path:
-          '/memberDetails/:name/:age/:gender/:relation/:mobileNo/:address/:hasCareSub',
+      path: '/memberDetails/:memberId',
       name: RoutesConstants.memberDetailsRoute,
       pageBuilder: (context, state) {
-        final hasCareSub =
-            state.pathParameters['hasCareSub']!.toLowerCase() == 'true';
         return MaterialPage(
           child: MemberDetailsScreen(
-            index: state.pathParameters['index']!,
-            name: state.pathParameters['name']!,
-            age: state.pathParameters['age']!,
-            gender: state.pathParameters['gender']!,
-            relation: state.pathParameters['relation']!,
-            mobileNo: state.pathParameters['mobileNo']!,
-            address: state.pathParameters['address']!,
-            hasCareSub: hasCareSub,
+            memberId: int.parse(state.pathParameters['memberId']!),
           ),
         );
       },
