@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: inference_failure_on_instance_creation, inference_failure_on_function_invocation, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -23,12 +25,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class UserProfile extends StatelessWidget {
   final UserDetailStore userDetailStore;
-  const UserProfile({super.key, required this.userDetailStore});
+  const UserProfile({
+    required this.userDetailStore,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    userDetailStore.getUserDetails();
-
     return Observer(
       builder: (context) {
         return Scaffold(
@@ -55,9 +58,19 @@ class UserProfile extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Avatar.fromSize(
-                                      imgPath: '',
-                                      size: AvatarSize.size44,
+                                    CircleAvatar(
+                                      radius: 44,
+                                      backgroundImage: userDetailStore
+                                                  .userDetails ==
+                                              null
+                                          ? null
+                                          : NetworkImage(
+                                              '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}'),
+                                      child: userDetailStore.userDetails != null
+                                          ? null
+                                          : Avatar.fromSize(
+                                              imgPath: '',
+                                              size: AvatarSize.size24),
                                     ),
                                     const SizedBox(
                                       width: Dimension.d2,
@@ -67,19 +80,28 @@ class UserProfile extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          userDetailStore.userDetails!.fold(
-                                              (l) => '',
-                                              (r) =>
-                                                  '${r.user.firstName} ${r.user.lastName}'),
+                                          userDetailStore.userDetails?.name ??
+                                              '',
                                           style: AppTextStyle.bodyXLSemiBold,
                                         ),
-                                        Text(
-                                          'Age: ${userDetailStore.userDetails!.fold((l) => '', (r) => calculateAge(r.user.dateOfBirth))} Relationship: ${userDetailStore.userDetails!.fold((l) => '', (r) => r.user.relation)}',
-                                          style: AppTextStyle.bodyMediumMedium
-                                              .copyWith(
-                                                  color:
-                                                      AppColors.grayscale600),
-                                        )
+                                        Text.rich(TextSpan(children: [
+                                          TextSpan(
+                                            text:
+                                                'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
+                                            style: AppTextStyle.bodyMediumMedium
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.grayscale600),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                ' Relationship: ${userDetailStore.userDetails!.relation}',
+                                            style: AppTextStyle.bodyMediumMedium
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.grayscale600),
+                                          )
+                                        ]))
                                       ],
                                     ),
                                   ],
@@ -88,18 +110,15 @@ class UserProfile extends StatelessWidget {
                                   height: Dimension.d4,
                                 ),
                                 CustomTextIcon(
-                                  iconpath: AppIcons.phone,
-                                  title: userDetailStore.userDetails!.fold(
-                                      (l) => '', (r) => r.user.phoneNumber),
-                                ),
+                                    iconpath: AppIcons.phone,
+                                    title: userDetailStore
+                                        .userDetails!.phoneNumber),
                                 const SizedBox(
                                   height: Dimension.d2,
                                 ),
                                 CustomTextIcon(
-                                  iconpath: AppIcons.home,
-                                  title: userDetailStore.userDetails!
-                                      .fold((l) => '', (r) => r.user.email),
-                                ),
+                                    iconpath: AppIcons.home,
+                                    title: userDetailStore.userDetails!.email),
                                 const SizedBox(
                                   height: Dimension.d4,
                                 ),

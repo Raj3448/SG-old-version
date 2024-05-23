@@ -51,12 +51,65 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   bool _isInitialize = false;
   final store = GetIt.I<UserDetailStore>();
+  bool isAlreadyhaveProfileImg = false;
+  bool isImageUpdate = false;
+  void _updateProfileImage(File image) {
+    storedImageFile = image;
+    isImageUpdate = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    final userDetails = store.userDetails!;
+    _firstNameController.text = userDetails.firstName;
+    _lastNameController.text = userDetails.lastName;
+    _dobController.text =
+        DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
+    _mobileController.text = userDetails.phoneNumber;
+    _emailController.text = userDetails.email;
+
+    // Set profile image if available
+    if (userDetails.profileImg != null) {
+      isAlreadyhaveProfileImg = true;
+      profileImgUrl = userDetails.profileImg!.url;
+    }
+
+    // Set address fields if available
+    if (userDetails.address != null) {
+      _cityController.text = userDetails.address!.city;
+      _stateController.text = userDetails.address!.state;
+      _countryController.text = userDetails.address!.country;
+      _addressController.text = userDetails.address!.streetAddress;
+      _postalController.text = userDetails.address!.postalCode;
+    }
+    
+    try {
+      final userGender = userDetails.gender;
+      final selectedGenderIndex =
+          _genderItems.indexWhere((item) => item.value == userGender);
+
+      if (_genderItems.isNotEmpty &&
+          selectedGenderIndex >= 0 &&
+          selectedGenderIndex < _genderItems.length) {
+        _genderController
+            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+      }
+    } catch (e) {}
+
+    if (!_isInitialize) {
+      setState(() {
+        _isInitialize = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    store.getUserDetails().then((value) {
-      _initializeControllers(store);
-    });
     return Observer(
       builder: (context) {
         return Stack(
@@ -68,31 +121,40 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               floatingActionButton: FixedButton(
                 ontap: () async {
                   User? user;
-                  store.userDetails!.map((a) {
-                    user = a.user;
-                  });
-                  String dateString = _dobController.text;
-                  List<String> dateParts = dateString.split('/');
-                  String formattedDateString =
-                      '${dateParts[2]}-${dateParts[1]}-${dateParts[0]}';
+                  try {
+                    user = store.userDetails!;
+                  } catch (error) {
+                    _checkWhatToDo();
+                  }
                   user = user!.copyWith(
                     firstName: _firstNameController.text,
                     lastName: _lastNameController.text,
                     email: _emailController.text,
                     phoneNumber: _mobileController.text,
-                    dateOfBirth: DateTime.parse(formattedDateString),
+                    dateOfBirth: DateTime.parse(_dobController.text),
                     gender: _genderController.selectedOptions.first.value
                         .toString(),
                     address: Address(
-                        id: 1,
+                        id: user.address!.id,
                         state: _stateController.text,
                         city: _cityController.text,
                         streetAddress: _addressController.text,
                         postalCode: _postalController.text,
                         country: _countryController.text),
                   );
-                  await store.updateUserDetails(user!);
-                  context.pop();
+                  if (storedImageFile != null) {
+                    store.updateUserDataWithProfileImg(
+                        fileImage: storedImageFile!, userInstance: user);
+                    _checkWhatToDo();
+
+                    return;
+                  } else if (isAlreadyhaveProfileImg && isImageUpdate) {
+                    if (storedImageFile == null) {
+                      user = user.copyWith(profileImg: null);
+                    }
+                  }
+                  await store.updateUserDetails(user);
+                  _checkWhatToDo();
                 },
                 btnTitle: 'Save details',
                 showIcon: false,
@@ -110,7 +172,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     children: [
                       Center(
                           child: EditPic(
-                        storedProfileImage: storedImageFile,
+                        onImageSelected: _updateProfileImage,
                         imgUrl: profileImgUrl,
                       )),
                       const SizedBox(height: Dimension.d5),
@@ -272,54 +334,23 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 ),
               ),
             ),
-            if (store.isLoadingUserInfo || !_isInitialize) const LoadingWidget()
+            if (store.isUpdatingUserInfo || !_isInitialize)
+              const LoadingWidget()
           ],
         );
       },
     );
   }
 
-  void _initializeControllers(UserDetailStore store) {
-    store.userDetails!.map((userDetails) {
-      _firstNameController.text = userDetails.user.firstName;
-      _lastNameController.text = userDetails.user.lastName;
-      _dobController.text =
-          DateFormat('dd/MM/yyyy').format(userDetails.user.dateOfBirth);
-      final int selectedGenderIndex = userDetails.user.gender == 'Male'
-          ? 0
-          : userDetails.user.gender == 'Female'
-              ? 1
-              : 2;
+  void _checkWhatToDo() {
+    if (store.updateFailureMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(store.updateFailureMessage!),
+        duration: const Duration(seconds: 3),
+      ));
 
-      if (_genderItems.isNotEmpty &&
-          selectedGenderIndex >= 0 &&
-          selectedGenderIndex < _genderItems.length) {
-        print("Selected Gender: ${selectedGenderIndex}");
-
-        try {
-          _genderController
-              .setSelectedOptions([_genderItems[selectedGenderIndex]]);
-        } catch (error) {
-          //print(error);
-        }
-      }
-      _mobileController.text = userDetails.user.phoneNumber;
-      _emailController.text = userDetails.user.email;
-      if (userDetails.user.profileImg != null) {
-        profileImgUrl = userDetails.user.profileImg;
-      }
-      if (userDetails.user.address != null) {
-        _cityController.text = userDetails.user.address!.city;
-        _stateController.text = userDetails.user.address!.state;
-        _countryController.text = userDetails.user.address!.country;
-        _addressController.text = userDetails.user.address!.streetAddress;
-        _postalController.text = userDetails.user.address!.postalCode;
-      }
-      if (!_isInitialize) {
-        setState(() {
-          _isInitialize = true;
-        });
-      }
-    });
+      return;
+    }
+    context.pop();
   }
 }

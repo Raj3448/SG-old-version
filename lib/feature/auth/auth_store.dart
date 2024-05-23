@@ -19,17 +19,27 @@ abstract class _AuthStoreBase with Store {
   @observable
   bool authTokenExits = false;
 
+  @observable
+  bool userDetailsCacheExists = false;
+
   @computed
-  bool get isAuthenticated => authTokenExits;
+  bool get isAuthenticated => authTokenExits && userDetailsCacheExists;
 
   @action
   void refresh() {
     tokenManager.getToken().then(
-          (value) => {
-            if (value != null) {authTokenExits = true},
-            initialised = true
-          },
-        );
+      (value) {
+        if (value != null) {
+          authTokenExits = true;
+        }
+        userCache.getUserDetails().then((user) {
+          if (user != null) {
+            userDetailsCacheExists = true;
+          }
+        });
+        initialised = true;
+      },
+    );
   }
 
   @action

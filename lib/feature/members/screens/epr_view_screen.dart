@@ -29,9 +29,8 @@ class EPRViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    store.getUserDetails();
     if (memberId.isEmpty) {
-      return SafeArea(
+      return const SafeArea(
         child: Scaffold(
           body: ErrorStateComponent(
             errorType: ErrorType.pageNotFound,
@@ -62,16 +61,15 @@ class EPRViewScreen extends StatelessWidget {
               final data = snapshot.data!;
               final userDetails = store.userDetails;
 
-              if (userDetails == null || userDetails.isLeft()) {
+              if (userDetails == null) {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
 
-              final UserDetails userInfo = userDetails
-                  .getOrElse((_) => throw 'Error while fetching userInfo');
+              final userInfo = userDetails;
 
               if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
-                return _PersonalDetailsComponent(userInfo: userInfo.user);
+                return _PersonalDetailsComponent(userInfo: userInfo);
               }
 
               if (data.isLeft()) {
@@ -92,7 +90,7 @@ class EPRViewScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _PersonalDetailsComponent(
-                              userInfo: userInfo.user,
+                              userInfo: userInfo,
                             ),
                             const SizedBox(
                               height: Dimension.d3,
