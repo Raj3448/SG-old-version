@@ -2,12 +2,15 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/epr_card.dart';
@@ -15,35 +18,31 @@ import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
-  const MemberDetailsScreen({
-    required this.name,
-    required this.age,
-    required this.gender,
-    required this.relation,
-    required this.mobileNo,
-    required this.address,
-    required this.hasCareSub,
+  MemberDetailsScreen({
+    required this.memberId,
     super.key,
   });
 
-  final String name;
-  final String age;
-  final String gender;
-  final String relation;
-  final String mobileNo;
-  final String address;
-  final bool hasCareSub;
-
+  final int memberId;
+  final activeMember = GetIt.I<MembersStore>().activeMember;
   @override
   Widget build(BuildContext context) {
+    if (activeMember == null) {
+      return SafeArea(
+        child: Scaffold(
+          body: Container(),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Member details'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: hasCareSub
+      floatingActionButton: true
           ? FixedButton(
               ontap: () {
                 showDialog(
@@ -82,12 +81,15 @@ class MemberDetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _BasicDetailsBox(
-                name: name,
-                age: age,
-                gender: gender,
-                relation: relation,
-                mobileNo: mobileNo,
-                address: address,
+                name: [
+                  activeMember?.firstName ?? '',
+                  activeMember?.lastName ?? '',
+                ].join(' ').trim(),
+                age: '${calculateAge(activeMember!.dateOfBirth)}',
+                gender: activeMember!.gender,
+                relation: activeMember!.relation,
+                mobileNo: activeMember!.phoneNumber,
+                address: 'activeMember.address',
               ),
               const SizedBox(height: 20),
               Text(
@@ -96,14 +98,19 @@ class MemberDetailsScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale900),
               ),
               const SizedBox(height: 16),
-              if (hasCareSub)
+              if (true)
                 Column(
                   children: [
                     HealthCard(
                       isEpr: true,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        GoRouter.of(context).push(RoutesConstants.eprRoute);
+                        GoRouter.of(context).pushNamed(
+                          RoutesConstants.eprRoute,
+                          pathParameters: {
+                            'memberId': '$memberId',
+                          },
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
@@ -168,7 +175,7 @@ class _BasicDetailsBox extends StatelessWidget {
   final String name;
   final String age;
   final String gender;
-  final String relation;
+  final String? relation;
   final String mobileNo;
   final String address;
 

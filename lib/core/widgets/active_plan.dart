@@ -172,9 +172,15 @@ class ActivePlanComponent extends StatelessWidget {
   const ActivePlanComponent({
     required this.name,
     required this.onTap,
+    required this.relation,
+    required this.age,
+    required this.updatedAt,
     super.key,
   });
   final String name;
+  final String relation;
+  final String age;
+  final DateTime updatedAt;
   final VoidCallback onTap;
 
   @override
@@ -207,13 +213,13 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d1,
             ),
-            const Row(
+            Row(
               children: [
-                AnalogComponent(text1: 'Relation', text2: 'Father'),
-                SizedBox(
+                AnalogComponent(text1: 'Relation', text2: relation),
+                const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(text1: 'Age', text2: '62'),
+                AnalogComponent(text1: 'Age', text2: age),
               ],
             ),
             const SizedBox(
@@ -231,9 +237,9 @@ class ActivePlanComponent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Dimension.d2),
-            const AnalogComponent(
+            AnalogComponent(
               text1: 'Last Updated',
-              text2: 'Today at 10:15AM',
+              text2: updatedAt.toString(),
             ),
             const SizedBox(height: Dimension.d2),
             Row(

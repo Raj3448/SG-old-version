@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -20,16 +23,36 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final store = GetIt.I<HomeStore>();
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  late final MembersStore memberStore;
+  @override
+  void initState() {
+    super.initState();
+    memberStore = GetIt.I<MembersStore>()..init();
+    reaction((_) => memberStore.errorMessage, (loaded) {
+      if (memberStore.errorMessage == null) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: Failed to fetch member data!')),
+      );
+      memberStore.errorMessage = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
@@ -43,14 +66,20 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Observer(
                     builder: (_) {
-                      return Column(
-                        children: [
-                          if (store.familyMembers.isEmpty)
-                            const NoMember()
-                          else
-                            const _MemberInfo(),
-                        ],
-                      );
+                      if (memberStore.isLoading) {
+                        return const SizedBox(
+                          height: Dimension.d20,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        );
+                      } else if (memberStore.members.isEmpty) {
+                        return const NoMember();
+                      } else {
+                        return const _MemberInfo();
+                      }
                     },
                   ),
                   _EmergencyActivation(),
@@ -71,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Health Care Service',
-                              'isConvenience': false.toString()
+                              'isConvenience': false.toString(),
                             },
                           );
                         },
@@ -84,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Home Care Service',
-                              'isConvenience': false.toString()
+                              'isConvenience': false.toString(),
                             },
                           );
                         },
@@ -97,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                             RoutesConstants.servicesCareScreen,
                             pathParameters: {
                               'pageTitle': 'Convenience care services',
-                              'isConvenience': true.toString()
+                              'isConvenience': true.toString(),
                             },
                           );
                         },
@@ -120,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  _HomeScreenComponents()
+                  _HomeScreenComponents(),
                 ],
               ),
             ),
@@ -168,38 +197,41 @@ class _HomeScreenComponents extends StatelessWidget {
       }
     }
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Column(
-        children: [
-          ...widgetList,
-          Text(
-            'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
-            style: AppTextStyle.bodyLargeMedium.copyWith(
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
-              height: 1.4,
-              color: AppColors.grayscale700,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            ...widgetList,
+            Text(
+              'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
+              style: AppTextStyle.bodyLargeMedium.copyWith(
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                height: 1.4,
+                color: AppColors.grayscale700,
+              ),
             ),
-          ),
-          const SizedBox(
-            height: Dimension.d4,
-          ),
-          CustomButton(
-            ontap: () {},
-            iconColor: AppColors.error,
-            title: 'Subscribe',
-            showIcon: false,
-            iconPath: AppIcons.add,
-            size: ButtonSize.normal,
-            type: ButtonType.secondary,
-            expanded: true,
-          ),
-          const SizedBox(
-            height: Dimension.d10,
-          ),
-        ],
-      ),
-    ]);
+            const SizedBox(
+              height: Dimension.d4,
+            ),
+            CustomButton(
+              ontap: () {},
+              iconColor: AppColors.error,
+              title: 'Subscribe',
+              showIcon: false,
+              iconPath: AppIcons.add,
+              size: ButtonSize.normal,
+              type: ButtonType.secondary,
+              expanded: true,
+            ),
+            const SizedBox(
+              height: Dimension.d10,
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -238,13 +270,14 @@ class _TestmonialsComponent extends StatelessWidget {
                   controller: _testimonialsCardController,
                   scrollDirection: Axis.horizontal,
                   children: List.generate(
-                      testimonialsModel.testimonials.data.length,
-                      (index) => _TestmonialsCard(
-                            testifierName: testimonialsModel.testimonials
-                                .data[index].attributes.testifierName,
-                            content: testimonialsModel
-                                .testimonials.data[index].attributes.content,
-                          )),
+                    testimonialsModel.testimonials.data.length,
+                    (index) => _TestmonialsCard(
+                      testifierName: testimonialsModel
+                          .testimonials.data[index].attributes.testifierName,
+                      content: testimonialsModel
+                          .testimonials.data[index].attributes.content,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -337,9 +370,10 @@ class _AboutUsOfferComponent extends StatelessWidget {
               (index) => _HomeScreenOfferCard(
                 offerTitle: aboutUsOfferModel.offering.offers[index].title,
                 content: List.generate(
-                    aboutUsOfferModel.offering.offers[index].values.length,
-                    (i) => aboutUsOfferModel
-                        .offering.offers[index].values[i].value),
+                  aboutUsOfferModel.offering.offers[index].values.length,
+                  (i) =>
+                      aboutUsOfferModel.offering.offers[index].values[i].value,
+                ),
               ),
             ),
           ),
@@ -687,6 +721,7 @@ class _MemberInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<HomeStore>();
+    final memberStore = GetIt.I<MembersStore>();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -702,14 +737,16 @@ class _MemberInfo extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      for (var i = 0; i < store.familyMembers.length; i++)
+                      for (var i = 0; i < memberStore.members.length; i++)
                         Row(
                           children: [
                             SelectableAvatar(
-                              imgPath: store.familyMembers[i].imagePath,
+                              imgPath: 'assets/icon/default _profile.png',
                               maxRadius: 24,
-                              isSelected: store.selectedIndex == i,
-                              ontap: () => store.selectAvatar(i),
+                              isSelected: memberStore.members[i].id ==
+                                  memberStore.activeMemberId,
+                              ontap: () => memberStore
+                                  .selectMember(memberStore.members[i].id),
                             ),
                             const SizedBox(width: Dimension.d4),
                           ],
@@ -728,33 +765,43 @@ class _MemberInfo extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: Dimension.d4),
-                  if (store.selectedIndex != -1)
+                  if (memberStore.selectedIndex != -1)
                     Observer(
-                      builder: (_) {
-                        final selectedMember =
-                            store.familyMembers[store.selectedIndex];
-                        return selectedMember != null
-                            ? selectedMember.isActive
-                                ? ActivePlanComponent(
-                                    name: selectedMember.name,
-                                    onTap: () {
-                                      GoRouter.of(context)
-                                          .push(RoutesConstants.eprRoute);
-                                    },
-                                  )
-                                : InactivePlanComponent(
-                                    name: selectedMember.name,
-                                  )
-                            : const SizedBox();
+                      builder: (context) {
+                        final activeMember = memberStore.activeMember;
+                        if (activeMember != null && memberStore.isActive) {
+                          return ActivePlanComponent(
+                            name:
+                                '${activeMember.firstName} ${activeMember.lastName}',
+                            relation: '${activeMember.relation}',
+                            age: '${calculateAge(activeMember.dateOfBirth)}',
+                            updatedAt: activeMember.updatedAt,
+                            onTap: () {
+                              GoRouter.of(context).pushNamed(
+                                RoutesConstants.eprRoute,
+                                pathParameters: {
+                                  'memberId': '${activeMember.id}',
+                                },
+                              );
+                            },
+                          );
+                        } else if (memberStore.isActive == false) {
+                          return InactivePlanComponent(
+                            name: activeMember != null
+                                ? '${activeMember.firstName} ${activeMember.lastName}'
+                                : 'No active member',
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
                       },
                     ),
-                  const SizedBox(height: Dimension.d4),
                   if (store.selectedIndex != -1)
                     Observer(
                       builder: (_) {
                         final selectedMember =
-                            store.familyMembers[store.selectedIndex];
-                        return selectedMember != null && selectedMember.isActive
+                            memberStore.members[memberStore.selectedIndex];
+                        return selectedMember != null && memberStore.isActive
                             ? const CoachContact(
                                 imgpath: '',
                                 name: 'Suma Latha',
@@ -878,7 +925,9 @@ class _HomeScreenOfferCard extends StatelessWidget {
                       child: Text(
                         content[index],
                         style: AppTextStyle.bodyMediumMedium.copyWith(
-                            color: AppColors.grayscale700, height: 1.7),
+                          color: AppColors.grayscale700,
+                          height: 1.7,
+                        ),
                       ),
                     ),
                   ],
