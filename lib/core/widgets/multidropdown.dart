@@ -23,12 +23,6 @@ class MultiDropdown extends StatefulWidget {
 
 class _MultiDropdownState extends State<MultiDropdown> {
   @override
-  void dispose() {
-    widget.controller!.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: 52,
@@ -73,16 +67,21 @@ class _MultiDropdownState extends State<MultiDropdown> {
 }
 
 class RelationDropdown extends StatelessWidget {
-  const RelationDropdown({super.key});
+  const RelationDropdown({super.key, this.controller});
+
+  final MultiSelectController? controller;
 
   @override
   Widget build(BuildContext context) {
     return MultiDropdown(
+      controller: controller,
       values: [
         ValueItem(label: 'Father'.tr(), value: 'Father'),
         ValueItem(label: 'Mother'.tr(), value: 'Mother'),
         ValueItem(label: 'Sister'.tr(), value: 'Sister'),
+        ValueItem(label: 'Brother'.tr(), value: 'Brother'),
         ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
+        ValueItem(label: 'Son'.tr(), value: 'Son'),
         ValueItem(label: 'Wife'.tr(), value: 'Wife'),
         ValueItem(label: 'Self'.tr(), value: 'Self'),
       ],
@@ -91,11 +90,14 @@ class RelationDropdown extends StatelessWidget {
 }
 
 class GenderDropdown extends StatelessWidget {
-  const GenderDropdown({super.key});
+  const GenderDropdown({super.key, this.controller});
+
+  final MultiSelectController? controller;
 
   @override
   Widget build(BuildContext context) {
     return MultiDropdown(
+      controller: controller,
       values: [
         ValueItem(label: 'Male'.tr(), value: 'Male'),
         ValueItem(label: 'Female'.tr(), value: 'Female'),

@@ -83,11 +83,23 @@ void main() async {
           tokenManager: GetIt.instance.get<TokenManager>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => HomeService(
+      GetIt.instance.registerLazySingleton(
+        () => HomeService(
           httpClient: GetIt.I<HttpClient>(),
           homePageComponentDetailscache:
-              GetIt.I<HomePageComponentDetailscache>()));
-      GetIt.instance.registerLazySingleton(() => MembersStore());
+              GetIt.I<HomePageComponentDetailscache>(),
+        ),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => MemberServices(
+          GetIt.instance.get<HttpClient>(),
+        ),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => MembersStore(
+          GetIt.instance.get<MemberServices>(),
+        ),
+      );
       GetIt.instance.registerLazySingleton(
         () => LoginStore(
           GetIt.instance.get<AuthService>(),
@@ -113,12 +125,13 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
-      GetIt.instance.registerLazySingleton(() =>
-          HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData());
-      GetIt.instance
-          .registerLazySingleton(() => MemberServices(GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(
-          () => UserDetailStore(GetIt.I<UserDetailServices>()));
+        () =>
+            HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData(),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => UserDetailStore(GetIt.I<UserDetailServices>()),
+      );
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
