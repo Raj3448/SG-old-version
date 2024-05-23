@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: strict_raw_type, library_private_types_in_public_api
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,13 +10,15 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 
 class MultiDropdown extends StatefulWidget {
   const MultiDropdown({
+    Key? key,
     required this.values,
     this.controller,
-    super.key,
-  });
+    required this.selectedOptions,
+  }) : super(key: key);
 
   final List<ValueItem> values;
   final MultiSelectController? controller;
+  final List<ValueItem<dynamic>> selectedOptions;
 
   @override
   State<MultiDropdown> createState() => _MultiDropdownState();
@@ -34,6 +37,7 @@ class _MultiDropdownState extends State<MultiDropdown> {
       child: MultiSelectDropDown(
         controller: widget.controller,
         onOptionSelected: (selectedOptions) {},
+        selectedOptions: widget.selectedOptions,
         options: widget.values,
         selectionType: SelectionType.single,
         optionTextStyle: AppTextStyle.bodyLargeMedium,
@@ -75,6 +79,7 @@ class RelationDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiDropdown(
       controller: controller,
+      selectedOptions: [],
       values: [
         ValueItem(label: 'Father'.tr(), value: 'Father'),
         ValueItem(label: 'Mother'.tr(), value: 'Mother'),
@@ -98,6 +103,7 @@ class GenderDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiDropdown(
       controller: controller,
+      selectedOptions: [],
       values: [
         ValueItem(label: 'Male'.tr(), value: 'Male'),
         ValueItem(label: 'Female'.tr(), value: 'Female'),

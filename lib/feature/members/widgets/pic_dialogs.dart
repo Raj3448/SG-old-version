@@ -23,7 +23,7 @@ class EditPic extends StatefulWidget {
     required this.onImageSelected,
     super.key,
   });
-  void Function(File) onImageSelected;
+  void Function(File?) onImageSelected;
   String? imgUrl;
 
   @override
@@ -32,9 +32,12 @@ class EditPic extends StatefulWidget {
 
 class _EditPicState extends State<EditPic> {
   File? storedProfileImage;
-  void _updateProfileImage(File image) {
+  void _updateProfileImage(File? image) {
     setState(() {
       storedProfileImage = image;
+      if (image == null) {
+        widget.imgUrl = null;
+      }
     });
     widget.onImageSelected(image);
   }
@@ -59,7 +62,7 @@ class _EditPicState extends State<EditPic> {
             alignment: Alignment.bottomRight,
             children: [
               if (widget.imgUrl == null && storedProfileImage == null)
-                Avatar.fromSize(imgPath: 'imgPath', size: AvatarSize.size56)
+                Avatar.fromSize(imgPath: '', size: AvatarSize.size56)
               else
                 CircleAvatar(
                   radius: 56,
@@ -90,7 +93,7 @@ class _EditPicState extends State<EditPic> {
 
 class ChangePicDialog extends StatelessWidget {
   File? storedProfileImage;
-  final Function(File) onImageSelected;
+  final Function(File?) onImageSelected;
   ChangePicDialog({
     required this.storedProfileImage,
     required this.onImageSelected,
@@ -205,7 +208,7 @@ class ChangePicDialog extends StatelessWidget {
   }
 
   Future<void> removeProfileImage() async {
-    storedProfileImage = null;
+    onImageSelected(null);
   }
 
   Future<CroppedFile?> _cropImage(File imageFile) async {

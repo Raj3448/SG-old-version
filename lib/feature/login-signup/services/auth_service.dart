@@ -1,13 +1,11 @@
 // ignore_for_file: inference_AuthFailure_on_function_invocation, inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars, use_build_context_synchronously, avoid_dynamic_calls
 
 import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/failure/auth_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
-import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 abstract class IAuthService {
   Future<Either<AuthFailure, void>> login(String identifier);
