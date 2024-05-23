@@ -58,20 +58,7 @@ class UserProfile extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    CircleAvatar(
-                                      radius: 44,
-                                      backgroundImage: userDetailStore
-                                                  .userDetails ==
-                                              null
-                                          ? null
-                                          : NetworkImage(
-                                              '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}'),
-                                      child: userDetailStore.userDetails != null
-                                          ? null
-                                          : Avatar.fromSize(
-                                              imgPath: '',
-                                              size: AvatarSize.size24),
-                                    ),
+                                    Avatar(imgPath: userDetailStore.userDetails!.profileImgUrl!, maxRadius: 44,isNetworkImage: userDetailStore.userDetails!.profileImgUrl == null ? false: true),
                                     const SizedBox(
                                       width: Dimension.d2,
                                     ),
