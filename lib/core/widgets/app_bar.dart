@@ -42,10 +42,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                       },
                       child: CircleAvatar(
                         radius: 24,
-                        backgroundImage: user == null
-                            ? null
-                            : NetworkImage(
-                                '${Env.serverUrl}${user.profileImg!.url}'),
+                        backgroundImage: user?.profileImgUrl != null
+                            ? NetworkImage(user?.profileImgUrl ?? '')
+                            : null,
                         child: user != null
                             ? null
                             : Avatar.fromSize(
