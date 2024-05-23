@@ -32,11 +32,6 @@ abstract class _UserDetailStoreBase with Store {
   String? updateFailureMessage;
 
   @computed
-  String? get profileImgUrl => userDetails?.profileImg?.url != null
-      ? '${Env.serverUrl}${userDetails?.profileImg?.url}'
-      : null;
-
-  @computed
   String get name => userDetails == null
       ? '---'
       : [userDetails?.firstName ?? '', userDetails?.lastName ?? '']
@@ -109,23 +104,9 @@ abstract class _UserDetailStoreBase with Store {
 
 extension UserExtension on User {
   String? get profileImgUrl => profileImg?.url != null
-      ? '${Env.serverUrl.removeTrailingSlash()}${profileImg?.url}'
+      ? '${Env.serverUrl}${profileImg?.url}'
       : null;
 
   String get name => [firstName, lastName].join(' ').trim();
 }
 
-extension StringExtension on String {
-  // Method to remove trailing slash
-  String removeTrailingSlash() {
-    // Check if the string ends with '/'
-    if (endsWith('/')) {
-      // Remove the last character
-
-      final result = substring(0, length - 1);
-      return result;
-    }
-    // Return the original string if there's no trailing '/'
-    return this;
-  }
-}

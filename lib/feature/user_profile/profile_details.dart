@@ -59,9 +59,57 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _initializeControllers(store);
+  void initState() {
+    super.initState();
+    _initializeControllers();
+  }
 
+  void _initializeControllers() {
+    final userDetails = store.userDetails!;
+    _firstNameController.text = userDetails.firstName;
+    _lastNameController.text = userDetails.lastName;
+    _dobController.text =
+        DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
+    _mobileController.text = userDetails.phoneNumber;
+    _emailController.text = userDetails.email;
+
+    // Set profile image if available
+    if (userDetails.profileImg != null) {
+      isAlreadyhaveProfileImg = true;
+      profileImgUrl = userDetails.profileImg!.url;
+    }
+
+    // Set address fields if available
+    if (userDetails.address != null) {
+      _cityController.text = userDetails.address!.city;
+      _stateController.text = userDetails.address!.state;
+      _countryController.text = userDetails.address!.country;
+      _addressController.text = userDetails.address!.streetAddress;
+      _postalController.text = userDetails.address!.postalCode;
+    }
+    
+    try {
+      final userGender = userDetails.gender;
+      final selectedGenderIndex =
+          _genderItems.indexWhere((item) => item.value == userGender);
+
+      if (_genderItems.isNotEmpty &&
+          selectedGenderIndex >= 0 &&
+          selectedGenderIndex < _genderItems.length) {
+        _genderController
+            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+      }
+    } catch (e) {}
+
+    if (!_isInitialize) {
+      setState(() {
+        _isInitialize = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
         return Stack(
@@ -286,59 +334,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 ),
               ),
             ),
-            if (store.isLoadingUserInfo || !_isInitialize) const LoadingWidget()
+            if (store.isUpdatingUserInfo || !_isInitialize)
+              const LoadingWidget()
           ],
         );
       },
     );
   }
 
-  void _initializeControllers(UserDetailStore store) {
-    final userDetails = store.userDetails!;
-
-    _firstNameController.text = userDetails.firstName;
-    _lastNameController.text = userDetails.lastName;
-    _dobController.text =
-        DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
-    final int selectedGenderIndex = userDetails.gender == 'Male'
-        ? 0
-        : userDetails.gender == 'Female'
-            ? 1
-            : 2;
-
-    if (_genderItems.isNotEmpty &&
-        selectedGenderIndex >= 0 &&
-        selectedGenderIndex < _genderItems.length) {
-      try {
-        _genderController
-            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
-      } catch (error) {}
-    }
-    _mobileController.text = userDetails.phoneNumber;
-    _emailController.text = userDetails.email;
-    if (userDetails.profileImg != null) {
-      isAlreadyhaveProfileImg = true;
-      profileImgUrl = userDetails.profileImg!.url;
-    }
-    if (userDetails.address != null) {
-      _cityController.text = userDetails.address!.city;
-      _stateController.text = userDetails.address!.state;
-      _countryController.text = userDetails.address!.country;
-      _addressController.text = userDetails.address!.streetAddress;
-      _postalController.text = userDetails.address!.postalCode;
-    }
-    if (!_isInitialize) {
-      setState(() {
-        _isInitialize = true;
-      });
-    }
-  }
-
   void _checkWhatToDo() {
     if (store.updateFailureMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Something went wrong!'),
-        duration: Duration(seconds: 3),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(store.updateFailureMessage!),
+        duration: const Duration(seconds: 3),
       ));
 
       return;

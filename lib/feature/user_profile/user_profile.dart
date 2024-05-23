@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -57,14 +58,19 @@ class UserProfile extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Avatar.fromSize(
-                                      isnetworkImage: userDetailStore
-                                              .userDetails?.profileImgUrl !=
-                                          null,
-                                      imgPath: userDetailStore
-                                              .userDetails?.profileImgUrl ??
-                                          '',
-                                      size: AvatarSize.size44,
+                                    CircleAvatar(
+                                      radius: 44,
+                                      backgroundImage: userDetailStore
+                                                  .userDetails ==
+                                              null
+                                          ? null
+                                          : NetworkImage(
+                                              '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}'),
+                                      child: userDetailStore.userDetails != null
+                                          ? null
+                                          : Avatar.fromSize(
+                                              imgPath: '',
+                                              size: AvatarSize.size24),
                                     ),
                                     const SizedBox(
                                       width: Dimension.d2,
@@ -78,13 +84,24 @@ class UserProfile extends StatelessWidget {
                                               '',
                                           style: AppTextStyle.bodyXLSemiBold,
                                         ),
-                                        Text(
-                                          'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())} Relationship: ${userDetailStore.userDetails!.relation}}',
-                                          style: AppTextStyle.bodyMediumMedium
-                                              .copyWith(
-                                                  color:
-                                                      AppColors.grayscale600),
-                                        )
+                                        Text.rich(TextSpan(children: [
+                                          TextSpan(
+                                            text:
+                                                'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
+                                            style: AppTextStyle.bodyMediumMedium
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.grayscale600),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                ' Relationship: ${userDetailStore.userDetails!.relation}',
+                                            style: AppTextStyle.bodyMediumMedium
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.grayscale600),
+                                          )
+                                        ]))
                                       ],
                                     ),
                                   ],

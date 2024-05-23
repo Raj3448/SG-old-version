@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -6,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -38,9 +40,16 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                         GoRouter.of(context)
                             .pushNamed(RoutesConstants.userProfileRoute);
                       },
-                      child: Avatar.fromSize(
-                        imgPath: user?.profileImgUrl ?? "",
-                        size: AvatarSize.size24,
+                      child: CircleAvatar(
+                        radius: 24,
+                        backgroundImage: user == null
+                            ? null
+                            : NetworkImage(
+                                '${Env.serverUrl}${user.profileImg!.url}'),
+                        child: user != null
+                            ? null
+                            : Avatar.fromSize(
+                                imgPath: '', size: AvatarSize.size24),
                       ),
                     ),
                     const SizedBox(width: 12),

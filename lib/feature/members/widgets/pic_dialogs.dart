@@ -11,6 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/utils/image_store/image_store.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
@@ -64,7 +65,7 @@ class _EditPicState extends State<EditPic> {
                   radius: 56,
                   backgroundImage: storedProfileImage != null
                       ? FileImage(storedProfileImage!) as ImageProvider
-                      : NetworkImage('http://api-dev.yoursilvergenie.com${widget.imgUrl!}'),
+                      : NetworkImage('${Env.serverUrl}${widget.imgUrl!}'),
                 ),
               Container(
                 height: 32,
