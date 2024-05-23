@@ -51,3 +51,10 @@ abstract class _UserDetailStoreBase with Store {
     isLoadingUserInfo = false;
   }
 }
+
+extension UserExtension on User {
+  String? get profileImgUrl =>
+      profileImg?.url != null ? '${Env.serverUrl}${profileImg?.url}' : null;
+
+  String get name => [firstName, lastName].join(' ').trim();
+}
