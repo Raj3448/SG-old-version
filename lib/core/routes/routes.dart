@@ -231,9 +231,16 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.eprRoute,
+      path: '/eprPhr/:memberId',
+      name: RoutesConstants.eprRoute,
       pageBuilder: (context, state) {
-        return MaterialPage(child: EPRViewScreen());
+        final memberId = state.pathParameters['memberId'];
+
+        return MaterialPage(
+          child: EPRViewScreen(
+            memberId: memberId ?? '',
+          ),
+        );
       },
     ),
     GoRoute(
@@ -344,7 +351,11 @@ final GoRouter routes = GoRouter(
       },
     ),
   ],
-  errorBuilder: (_, __) => const ErrorStateComponent(
-    errorType: ErrorType.pageNotFound,
+  errorBuilder: (_, __) => const SafeArea(
+    child: Scaffold(
+      body: ErrorStateComponent(
+        errorType: ErrorType.pageNotFound,
+      ),
+    ),
   ),
 );

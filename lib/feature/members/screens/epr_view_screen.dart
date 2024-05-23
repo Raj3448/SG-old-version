@@ -22,20 +22,29 @@ import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class EPRViewScreen extends StatelessWidget {
-  EPRViewScreen({super.key});
+  EPRViewScreen({required this.memberId, super.key});
   final store = GetIt.I<UserDetailStore>();
+
+  final String memberId;
 
   @override
   Widget build(BuildContext context) {
-    store.getUserDetails();
-
+    if (memberId.isEmpty) {
+      return const SafeArea(
+        child: Scaffold(
+          body: ErrorStateComponent(
+            errorType: ErrorType.pageNotFound,
+          ),
+        ),
+      );
+    }
     return Observer(
       builder: (context) {
         return Scaffold(
           appBar: const PageAppbar(title: 'EPR'),
           backgroundColor: AppColors.white,
           body: FutureBuilder(
-            future: GetIt.I<MemberServices>().getEPRData(memberId: '11'),
+            future: GetIt.I<MemberServices>().getEPRData(memberId: memberId),
             builder: (context, snapshot) {
               if (store.isLoadingUserInfo ||
                   snapshot.connectionState == ConnectionState.waiting) {
@@ -52,16 +61,15 @@ class EPRViewScreen extends StatelessWidget {
               final data = snapshot.data!;
               final userDetails = store.userDetails;
 
-              if (userDetails == null || userDetails.isLeft()) {
+              if (userDetails == null) {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
 
-              final UserDetails userInfo = userDetails
-                  .getOrElse((_) => throw 'Error while fetching userInfo');
+              final userInfo = userDetails;
 
               if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
-                return _PersonalDetailsComponent(userInfo: userInfo.user);
+                return _PersonalDetailsComponent(userInfo: userInfo);
               }
 
               if (data.isLeft()) {
@@ -82,7 +90,7 @@ class EPRViewScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _PersonalDetailsComponent(
-                              userInfo: userInfo.user,
+                              userInfo: userInfo,
                             ),
                             const SizedBox(
                               height: Dimension.d3,
@@ -242,10 +250,10 @@ class _PersonalDetailsComponent extends StatelessWidget {
 
 class _ExpandedButton extends StatefulWidget {
   const _ExpandedButton({
+    required this.title,
     this.emrgencyContactList,
     this.userInsurance,
     this.preferredServices,
-    required this.title,
     Key? key,
   }) : super(key: key);
   final List<EmergencyContact>? emrgencyContactList;
@@ -342,9 +350,9 @@ class _UserInsuranceComponent extends StatelessWidget {
   final String titleName;
 
   const _UserInsuranceComponent({
-    Key? key,
     required this.titleName,
     required this.assignedElements,
+    Key? key,
   }) : super(key: key);
 
   final UserInsurance assignedElements;

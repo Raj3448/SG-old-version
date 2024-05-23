@@ -1,9 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-//import 'dart:convert';
-// ignore_for_file: lines_longer_than_80_chars
+import 'dart:io';
 
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:silver_genie/core/failure/failure.dart';
@@ -31,14 +28,13 @@ class UserDetailServices implements IUserFacades {
       phoneNumber: '+91 1234567890',
       email: 'example@gmail.com',
       address: Address(
-        streetAddress:
-            'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
-        country: 'India',
-        state: 'Maharashtra',
-        city: 'Pune',
-        postalCode: '411065',
-        id: 1,
-      ),
+          id: 1,
+          streetAddress:
+              'No 10 Anna nagar 1 st street, near nehru park, chennai, TamilNadu 600028',
+          country: 'India',
+          state: 'Maharashtra',
+          city: 'Pune',
+          postalCode: '411065'),
       username: '',
       confirmed: false,
       blocked: false,
@@ -85,42 +81,38 @@ class UserDetailServices implements IUserFacades {
     ],
   );
   final baseURL = 'api';
-  @override
-  Future<Either<Failure, UserDetails>> fetchUserDetailsFromApi() async {
-    //  API call here to fetch user details
-    try {
-      final cachedUserDetails = await _userDetailCache.getUserDetails();
-      if (cachedUserDetails != null) {
-        //returning catched details
-        print('Cache User Details : => $cachedUserDetails');
-        _userDetails = _userDetails.copyWith(user: cachedUserDetails);
-        return Right(_userDetails);
-      } else {
-        // Return the fetched user details from api
-        await _userDetailCache.saveUserDetails(_userDetails.user);
-        print('Fetched User Details : => $_userDetails');
-        return Right(_userDetails);
-      }
-    } on SocketException {
-      return const Left(Failure.socketException());
-    } catch (error) {
-      return const Left(Failure.someThingWentWrong());
-    }
-  }
 
   @override
-  Future<Either<Failure, UserDetails>> updateUserDetails({
-    required User user,
-  }) async {
+  Future<Either<Failure, User>> updateUserDetails(
+      {required User user, String? imageId}) async {
     try {
-      final response = await httpClient.put<String>('$baseURL/users/${user.id}',
-          data: user.toJson());
+      var userData = user.toJson();
+
+      userData = {
+        "firstName": userData['firstName'],
+        "lastName": userData['lastName'],
+        "gender": userData['gender'],
+        "profileImg": userData['profileImg'],
+        "dateOfBirth": userData['dateOfBirth'],
+        "address": {
+          "id": userData['address']['id'],
+          "state": userData['address']['state'],
+          "city": userData['address']['city'],
+          "streetAddress": userData['address']['streetAddress'],
+          "postalCode": userData['address']['postalCode'],
+          "country": userData['address']['country']
+        }
+      };
+      if (imageId != null) {
+        userData.update('profileImg', (value) => imageId,
+            ifAbsent: () => imageId);
+      }
+      final response = await httpClient
+          .put<String>('/$baseURL/users/${user.id}', data: userData);
 
       if (response.statusCode == 200) {
-        await _userDetailCache.saveUserDetails(user);
-        print(response.data);
-        _userDetails = _userDetails.copyWith(user: user);
-        return Right(_userDetails);
+        await fetchUserDetailsFromServer();
+        return Right(_userDetails.user);
       } else {
         return const Left(Failure.badResponse());
       }
@@ -128,6 +120,61 @@ class UserDetailServices implements IUserFacades {
       return const Left(Failure.socketException());
     } on HiveError {
       return const Left(Failure.hiveError());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> fetchUserDetailsFromServer() async {
+    try {
+      final response = await httpClient.get('/$baseURL/users/me?populate=*');
+
+      if (response.statusCode == 200) {
+        if (response.data != null) {
+          final userdata = User.fromJson(response.data as Map<String, dynamic>);
+          await _userDetailCache.saveUserDetails(userdata);
+          _userDetails = _userDetails.copyWith(user: userdata);
+          return Right(userdata);
+        } else {
+          return const Left(Failure.badResponse());
+        }
+      }
+      return const Left(Failure.someThingWentWrong());
+    } on SocketException {
+      return const Left(Failure.socketException());
+    } catch (error) {
+      return const Left(Failure.badResponse());
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUserDataWithProfileImg(
+      {required File fileImage, required User userInfo}) async {
+    try {
+      var formData = FormData.fromMap({
+        'files': await MultipartFile.fromFile(
+          fileImage.path,
+        )
+      });
+      final response = await httpClient.post('/$baseURL/upload',
+          data: formData,
+          options: Options(
+            headers: {'Content-Type': 'multipart/form-data'},
+          ));
+      if (response.statusCode == 200) {
+        final imageId = response.data[0]['id'];
+        if (imageId != null) {
+          await updateUserDetails(user: userInfo, imageId: imageId.toString());
+          return Right(userInfo);
+        } else {
+          return const Left(Failure.badResponse());
+        }
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on SocketException {
+      return const Left(Failure.socketException());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }

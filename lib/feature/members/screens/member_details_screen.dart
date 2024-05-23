@@ -106,7 +106,12 @@ class MemberDetailsScreen extends StatelessWidget {
                       isEpr: true,
                       dateUpdated: '25/03/2024',
                       ontap: () {
-                        GoRouter.of(context).push(RoutesConstants.eprRoute);
+                        GoRouter.of(context).pushNamed(
+                          RoutesConstants.eprRoute,
+                          pathParameters: {
+                            'memberId': '$memberId',
+                          },
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
