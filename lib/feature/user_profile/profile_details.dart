@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
@@ -67,6 +69,30 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   void initState() {
     super.initState();
     _initializeControllers();
+
+    reaction((_) => store.updateFailureMessage, (_) {
+      if (store.updateFailureMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(store.updateFailureMessage!),
+          duration: const Duration(seconds: 3),
+        ));
+
+        store.updateFailureMessage = null;
+      }
+    });
+
+    reaction((_) => store.updateSuccess, (_) {
+      if (store.updateSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Updated successfully!'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+        store.updateSuccess = false;
+        context.pop();
+      }
+    });
   }
 
   void _initializeControllers() {
@@ -106,12 +132,20 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return Stack(
-          children: [
-            SafeArea(
-              child: Scaffold(
+    return SafeArea(
+      child: Observer(
+        builder: (context) {
+          var user = store.userDetails;
+
+          if (user == null) {
+            return const SafeArea(
+              child:
+                  ErrorStateComponent(errorType: ErrorType.somethinWentWrong),
+            );
+          }
+          return Stack(
+            children: [
+              Scaffold(
                 backgroundColor: AppColors.white,
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerDocked,
@@ -120,12 +154,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     if (!globalkey.currentState!.validate()) {
                       return;
                     }
-                    User? user;
-                    try {
-                      user = store.userDetails!;
-                    } catch (error) {
-                      _checkWhatToDo();
-                    }
+
                     user = user!.copyWith(
                       firstName: _firstNameController.text,
                       lastName: _lastNameController.text,
@@ -135,7 +164,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       gender: _genderController.selectedOptions.first.value
                           .toString(),
                       address: Address(
-                          id: user.address!.id,
+                          id: user!.address?.id ?? -1,
                           state: _stateController.text,
                           city: _cityController.text,
                           streetAddress: _addressController.text,
@@ -144,20 +173,18 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
 
                     if (storedImageFile != null) {
-                      store
-                        ..updateUserDataWithProfileImg(
-                            fileImage: storedImageFile!, userInstance: user)
-                        ..getUserDetails();
-                      _checkWhatToDo();
+                      store.updateUserDataWithProfileImg(
+                          fileImage: storedImageFile!, userInstance: user!);
+
                       return;
-                    } else if (isAlreadyhaveProfileImg && isImageUpdate) {
+                    }
+
+                    if (isAlreadyhaveProfileImg && isImageUpdate) {
                       if (storedImageFile == null) {
-                        user = user.copyWith(profileImg: null);
+                        user = user?.copyWith(profileImg: null);
                       }
                     }
-                    await store.updateUserDetails(user);
-                    store.getUserDetails();
-                    _checkWhatToDo();
+                    store.updateUserDetails(user!);
                   },
                   btnTitle: 'Save details',
                   showIcon: false,
@@ -393,11 +420,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   ),
                 ),
               ),
-            ),
-            if (store.isUpdatingUserInfo) const LoadingWidget()
-          ],
-        );
-      },
+              if (store.isUpdatingUserInfo) const LoadingWidget()
+            ],
+          );
+        },
+      ),
     );
   }
 

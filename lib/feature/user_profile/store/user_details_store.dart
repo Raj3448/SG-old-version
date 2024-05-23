@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -12,12 +11,17 @@ part 'user_details_store.g.dart';
 class UserDetailStore = _UserDetailStoreBase with _$UserDetailStore;
 
 abstract class _UserDetailStoreBase with Store {
-  _UserDetailStoreBase(this.userDetailServices);
+  _UserDetailStoreBase(this.userDetailServices, this.userDetailsCache);
 
   final IUserFacades userDetailServices;
 
+  final UserDetailsCache userDetailsCache;
+
   @observable
   bool isInitialised = false;
+
+  @observable
+  bool updateSuccess = false;
 
   @observable
   User? userDetails;
@@ -61,42 +65,59 @@ abstract class _UserDetailStoreBase with Store {
   }
 
   @action
-  Future<void> updateUserDetails(User newInstance) async {
+  void updateUserDetails(User newInstance) {
+    updateSuccess = false;
     updateFailureMessage = null;
     isUpdatingUserInfo = true;
-    final userDetailsResult =
-        await userDetailServices.updateUserDetails(user: newInstance);
-    userDetailsResult.fold((l) {
-      updateFailureMessage = l.maybeMap(
-          socketException: (_) =>
-              'Failed to update, check your internet connection!',
-          orElse: () => 'Failed to update the user data');
-    }, (r) {
-      userDetails = r;
+    userDetailServices
+        .updateUserDetails(user: newInstance)
+        .then((userDetailsResult) {
+      userDetailsResult.fold((l) {
+        updateFailureMessage = l.maybeMap(
+            socketException: (_) =>
+                'Failed to update, check your internet connection!',
+            orElse: () => 'Failed to update the user data');
+      }, (r) {
+        userDetails = r;
+        updateSuccess = true;
+      });
+      isUpdatingUserInfo = false;
     });
-    isUpdatingUserInfo = false;
   }
 
   @action
   Future<void> fetchUserDetailsFromCache() async {
     isLoadingUserInfo = true;
-    final userInfo = await GetIt.I<UserDetailsCache>().getUserDetails();
-    if (userInfo != null) {
-      userDetails = userInfo;
-    }
-    isLoadingUserInfo = false;
-    return;
+
+    final userInfo = await userDetailsCache.getUserDetails();
+
+    runInAction(() {
+      if (userInfo != null) {
+        userDetails = userInfo;
+      }
+      isLoadingUserInfo = false;
+    });
   }
 
   @action
   void updateUserDataWithProfileImg(
       {required File fileImage, required User userInstance}) {
     isUpdatingUserInfo = true;
+    updateSuccess = false;
+    updateFailureMessage = null;
     userDetailServices
         .updateUserDataWithProfileImg(
             fileImage: fileImage, userInfo: userInstance)
         .then((user) {
-      user.fold((l) => null, (r) => userDetails = r);
+      user.fold((l) {
+        updateFailureMessage = l.maybeMap(
+            socketException: (_) =>
+                'Failed to update, check your internet connection!',
+            orElse: () => 'Failed to update the user data');
+      }, (r) {
+        userDetails = r;
+        updateSuccess = true;
+      });
       isUpdatingUserInfo = false;
     });
   }
