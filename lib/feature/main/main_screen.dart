@@ -1,11 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/app_bar.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
@@ -20,6 +22,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    GetIt.I<UserDetailStore>().init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

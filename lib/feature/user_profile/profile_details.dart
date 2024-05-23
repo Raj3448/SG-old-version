@@ -60,9 +60,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   @override
   Widget build(BuildContext context) {
-    store.getUserDetails().then((value) {
-      _initializeControllers(store);
-    });
+    _initializeControllers(store);
+
     return Observer(
       builder: (context) {
         return Stack(
@@ -75,7 +74,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 ontap: () async {
                   User? user;
                   try {
-                    user = store.userDetails!.getOrElse((l) => throw 'Error');
+                    user = store.userDetails!;
                   } catch (error) {
                     _checkWhatToDo();
                   }
@@ -96,7 +95,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         country: _countryController.text),
                   );
                   if (storedImageFile != null) {
-                    await store.updateUserDataWithProfileImg(
+                    store.updateUserDataWithProfileImg(
                         fileImage: storedImageFile!, userInstance: user);
                     _checkWhatToDo();
 
@@ -295,58 +294,55 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   }
 
   void _initializeControllers(UserDetailStore store) {
-    store.userDetails!.map((userDetails) {
-      _firstNameController.text = userDetails.firstName;
-      _lastNameController.text = userDetails.lastName;
-      _dobController.text =
-          DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
-      final int selectedGenderIndex = userDetails.gender == 'Male'
-          ? 0
-          : userDetails.gender == 'Female'
-              ? 1
-              : 2;
+    final userDetails = store.userDetails!;
 
-      if (_genderItems.isNotEmpty &&
-          selectedGenderIndex >= 0 &&
-          selectedGenderIndex < _genderItems.length) {
-        print("Selected Gender: ${selectedGenderIndex}");
+    _firstNameController.text = userDetails.firstName;
+    _lastNameController.text = userDetails.lastName;
+    _dobController.text =
+        DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
+    final int selectedGenderIndex = userDetails.gender == 'Male'
+        ? 0
+        : userDetails.gender == 'Female'
+            ? 1
+            : 2;
 
-        try {
-          _genderController
-              .setSelectedOptions([_genderItems[selectedGenderIndex]]);
-        } catch (error) {}
-      }
-      _mobileController.text = userDetails.phoneNumber;
-      _emailController.text = userDetails.email;
-      if (userDetails.profileImg != null) {
-        print('Is Im reached here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        isAlreadyhaveProfileImg = true;
-        profileImgUrl = userDetails.profileImg!.url;
-      }
-      if (userDetails.address != null) {
-        _cityController.text = userDetails.address!.city;
-        _stateController.text = userDetails.address!.state;
-        _countryController.text = userDetails.address!.country;
-        _addressController.text = userDetails.address!.streetAddress;
-        _postalController.text = userDetails.address!.postalCode;
-      }
-      if (!_isInitialize) {
-        setState(() {
-          _isInitialize = true;
-        });
-      }
-    });
+    if (_genderItems.isNotEmpty &&
+        selectedGenderIndex >= 0 &&
+        selectedGenderIndex < _genderItems.length) {
+      try {
+        _genderController
+            .setSelectedOptions([_genderItems[selectedGenderIndex]]);
+      } catch (error) {}
+    }
+    _mobileController.text = userDetails.phoneNumber;
+    _emailController.text = userDetails.email;
+    if (userDetails.profileImg != null) {
+      isAlreadyhaveProfileImg = true;
+      profileImgUrl = userDetails.profileImg!.url;
+    }
+    if (userDetails.address != null) {
+      _cityController.text = userDetails.address!.city;
+      _stateController.text = userDetails.address!.state;
+      _countryController.text = userDetails.address!.country;
+      _addressController.text = userDetails.address!.streetAddress;
+      _postalController.text = userDetails.address!.postalCode;
+    }
+    if (!_isInitialize) {
+      setState(() {
+        _isInitialize = true;
+      });
+    }
   }
 
   void _checkWhatToDo() {
-    if (store.userDetails!.isRight()) {
-      context.pop();
-    }
-    if (store.userDetails!.isLeft()) {
+    if (store.updateFailureMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Something went wrong!'),
         duration: Duration(seconds: 3),
       ));
+
+      return;
     }
+    context.pop();
   }
 }

@@ -81,28 +81,6 @@ class UserDetailServices implements IUserFacades {
     ],
   );
   final baseURL = 'api';
-  @override
-  Future<Either<Failure, User>> fetchUserDetails() async {
-    //  API call here to fetch user details
-    try {
-      final cachedUserDetails = await _userDetailCache.getUserDetails();
-      if (cachedUserDetails != null) {
-        //returning catched details
-        print('Cache User Details : => $cachedUserDetails');
-        _userDetails = _userDetails.copyWith(user: cachedUserDetails);
-        return Right(_userDetails.user);
-      } else {
-        // Return the fetched user details from api
-        await fetchUserDetailsFromServer();
-        print('Fetched User Details : => $_userDetails');
-        return Right(_userDetails.user);
-      }
-    } on SocketException {
-      return const Left(Failure.socketException());
-    } catch (error) {
-      return const Left(Failure.someThingWentWrong());
-    }
-  }
 
   @override
   Future<Either<Failure, User>> updateUserDetails(
@@ -154,7 +132,6 @@ class UserDetailServices implements IUserFacades {
 
       if (response.statusCode == 200) {
         if (response.data != null) {
-      
           final userdata = User.fromJson(response.data as Map<String, dynamic>);
           await _userDetailCache.saveUserDetails(userdata);
           _userDetails = _userDetails.copyWith(user: userdata);
@@ -166,8 +143,6 @@ class UserDetailServices implements IUserFacades {
       return const Left(Failure.someThingWentWrong());
     } on SocketException {
       return const Left(Failure.socketException());
-    } on HiveError {
-      return const Left(Failure.hiveError());
     } catch (error) {
       return const Left(Failure.badResponse());
     }

@@ -27,8 +27,6 @@ class EPRViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    store.getUserDetails();
-
     return Observer(
       builder: (context) {
         return Scaffold(
@@ -52,13 +50,12 @@ class EPRViewScreen extends StatelessWidget {
               final data = snapshot.data!;
               final userDetails = store.userDetails;
 
-              if (userDetails == null || userDetails.isLeft()) {
+              if (userDetails == null) {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
 
-              final User userInfo = userDetails
-                  .getOrElse((_) => throw 'Error while fetching userInfo');
+              final userInfo = userDetails;
 
               if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
                 return _PersonalDetailsComponent(userInfo: userInfo);

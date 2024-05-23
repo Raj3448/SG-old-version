@@ -25,12 +25,12 @@ import 'package:url_launcher/url_launcher.dart';
 class UserProfile extends StatelessWidget {
   final UserDetailStore userDetailStore;
   const UserProfile({
-    required this.userDetailStore, Key? key,
+    required this.userDetailStore,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Observer(
       builder: (context) {
         return Scaffold(
@@ -58,23 +58,12 @@ class UserProfile extends StatelessWidget {
                                 Row(
                                   children: [
                                     Avatar.fromSize(
-                                      isnetworkImage:
-                                          userDetailStore.userDetails!.fold(
-                                        (l) => false,
-                                        (r) {
-                                          if (r.profileImg != null) {
-                                            return true;
-                                          } else {
-                                            return false;
-                                          }
-                                        },
-                                      ),
-                                      imgPath: userDetailStore.userDetails!
-                                          .fold((l) => '', (r) {
-                                        print(
-                                            'http://api-dev.yoursilvergenie.com${r.profileImg!.url}');
-                                        return 'http://api-dev.yoursilvergenie.com${r.profileImg!.url}';
-                                      }),
+                                      isnetworkImage: userDetailStore
+                                              .userDetails?.profileImgUrl !=
+                                          null,
+                                      imgPath: userDetailStore
+                                              .userDetails?.profileImgUrl ??
+                                          '',
                                       size: AvatarSize.size44,
                                     ),
                                     const SizedBox(
@@ -85,14 +74,12 @@ class UserProfile extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          userDetailStore.userDetails!.fold(
-                                              (l) => '',
-                                              (r) =>
-                                                  '${r.firstName} ${r.lastName}'),
+                                          userDetailStore.userDetails?.name ??
+                                              '',
                                           style: AppTextStyle.bodyXLSemiBold,
                                         ),
                                         Text(
-                                          'Age: ${userDetailStore.userDetails!.fold((l) => '', (r) => calculateAge(r.dateOfBirth))} Relationship: ${userDetailStore.userDetails!.fold((l) => '', (r) => r.relation)}',
+                                          'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())} Relationship: ${userDetailStore.userDetails!.relation}}',
                                           style: AppTextStyle.bodyMediumMedium
                                               .copyWith(
                                                   color:
@@ -106,18 +93,15 @@ class UserProfile extends StatelessWidget {
                                   height: Dimension.d4,
                                 ),
                                 CustomTextIcon(
-                                  iconpath: AppIcons.phone,
-                                  title: userDetailStore.userDetails!
-                                      .fold((l) => '', (r) => r.phoneNumber),
-                                ),
+                                    iconpath: AppIcons.phone,
+                                    title: userDetailStore
+                                        .userDetails!.phoneNumber),
                                 const SizedBox(
                                   height: Dimension.d2,
                                 ),
                                 CustomTextIcon(
-                                  iconpath: AppIcons.home,
-                                  title: userDetailStore.userDetails!
-                                      .fold((l) => '', (r) => r.email),
-                                ),
+                                    iconpath: AppIcons.home,
+                                    title: userDetailStore.userDetails!.email),
                                 const SizedBox(
                                   height: Dimension.d4,
                                 ),

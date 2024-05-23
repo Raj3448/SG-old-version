@@ -15,7 +15,11 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<UserDetailStore>();
+    final user = GetIt.I<UserDetailStore>().userDetails;
+    // if (user == null) {
+    //   /// should never exist
+    //   return Container();
+    // }
     return Observer(
       builder: (context) {
         return Padding(
@@ -35,7 +39,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                             .pushNamed(RoutesConstants.userProfileRoute);
                       },
                       child: Avatar.fromSize(
-                        imgPath: '',
+                        imgPath: user?.profileImgUrl ?? "",
                         size: AvatarSize.size24,
                       ),
                     ),
@@ -50,7 +54,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                             color: AppColors.grayscale900,
                             height: 1.4,
                           ),
-                        ).tr(args: [store.firstName]),
+                        ).tr(args: [user?.name ?? '---']),
                         Text(
                           'How do you feel today?'.tr(),
                           style: AppTextStyle.bodyMediumMedium.copyWith(
