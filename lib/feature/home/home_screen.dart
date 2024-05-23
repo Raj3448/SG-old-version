@@ -253,7 +253,7 @@ class _TestmonialsComponent extends StatelessWidget {
               Center(
                 child: SmoothPageIndicator(
                   controller: _testimonialsCardController,
-                  count: 3,
+                  count: testimonialsModel.testimonials.data.length,
                   effect: const ExpandingDotsEffect(
                     activeDotColor: AppColors.primary,
                     dotColor: AppColors.grayscale300,
@@ -395,7 +395,7 @@ class _BannerImageComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.network(
       'http://api-dev.yoursilvergenie.com${bannerImageModel.bannerImage.data.attributes.url}',
-      height: bannerImageModel.bannerImage.data.attributes.height,
+      height: 250,
       width: bannerImageModel.bannerImage.data.attributes.width,
       errorBuilder: (context, error, stackTrace) {
         return const SizedBox();

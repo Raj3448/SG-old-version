@@ -15,7 +15,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<UserDetailStore>()..fetchUserDetailsFromCache();
+    final store = GetIt.I<UserDetailStore>();
     return Observer(
       builder: (context) {
         return Padding(

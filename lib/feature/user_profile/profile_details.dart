@@ -51,6 +51,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   bool _isInitialize = false;
   final store = GetIt.I<UserDetailStore>();
+  bool isAlreadyhaveProfileImg = false;
+  bool isImageUpdate = false;
+  void _updateProfileImage(File image) {
+    storedImageFile = image;
+    isImageUpdate = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,31 +74,40 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               floatingActionButton: FixedButton(
                 ontap: () async {
                   User? user;
-                  store.userDetails!.map((a) {
-                    user = a.user;
-                  });
-                  String dateString = _dobController.text;
-                  List<String> dateParts = dateString.split('/');
-                  String formattedDateString =
-                      '${dateParts[2]}-${dateParts[1]}-${dateParts[0]}';
+                  try {
+                    user = store.userDetails!.getOrElse((l) => throw 'Error');
+                  } catch (error) {
+                    _checkWhatToDo();
+                  }
                   user = user!.copyWith(
                     firstName: _firstNameController.text,
                     lastName: _lastNameController.text,
                     email: _emailController.text,
                     phoneNumber: _mobileController.text,
-                    dateOfBirth: DateTime.parse(formattedDateString),
+                    dateOfBirth: DateTime.parse(_dobController.text),
                     gender: _genderController.selectedOptions.first.value
                         .toString(),
                     address: Address(
-                        id: 1,
+                        id: user.address!.id,
                         state: _stateController.text,
                         city: _cityController.text,
                         streetAddress: _addressController.text,
                         postalCode: _postalController.text,
                         country: _countryController.text),
                   );
-                  await store.updateUserDetails(user!);
-                  context.pop();
+                  if (storedImageFile != null) {
+                    await store.updateUserDataWithProfileImg(
+                        fileImage: storedImageFile!, userInstance: user);
+                    _checkWhatToDo();
+
+                    return;
+                  } else if (isAlreadyhaveProfileImg && isImageUpdate) {
+                    if (storedImageFile == null) {
+                      user = user.copyWith(profileImg: null);
+                    }
+                  }
+                  await store.updateUserDetails(user);
+                  _checkWhatToDo();
                 },
                 btnTitle: 'Save details',
                 showIcon: false,
@@ -110,7 +125,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     children: [
                       Center(
                           child: EditPic(
-                        storedProfileImage: storedImageFile,
+                        onImageSelected: _updateProfileImage,
                         imgUrl: profileImgUrl,
                       )),
                       const SizedBox(height: Dimension.d5),
@@ -281,13 +296,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   void _initializeControllers(UserDetailStore store) {
     store.userDetails!.map((userDetails) {
-      _firstNameController.text = userDetails.user.firstName;
-      _lastNameController.text = userDetails.user.lastName;
+      _firstNameController.text = userDetails.firstName;
+      _lastNameController.text = userDetails.lastName;
       _dobController.text =
-          DateFormat('dd/MM/yyyy').format(userDetails.user.dateOfBirth);
-      final int selectedGenderIndex = userDetails.user.gender == 'Male'
+          DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
+      final int selectedGenderIndex = userDetails.gender == 'Male'
           ? 0
-          : userDetails.user.gender == 'Female'
+          : userDetails.gender == 'Female'
               ? 1
               : 2;
 
@@ -299,21 +314,21 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         try {
           _genderController
               .setSelectedOptions([_genderItems[selectedGenderIndex]]);
-        } catch (error) {
-          //print(error);
-        }
+        } catch (error) {}
       }
-      _mobileController.text = userDetails.user.phoneNumber;
-      _emailController.text = userDetails.user.email;
-      if (userDetails.user.profileImg != null) {
-        profileImgUrl = userDetails.user.profileImg;
+      _mobileController.text = userDetails.phoneNumber;
+      _emailController.text = userDetails.email;
+      if (userDetails.profileImg != null) {
+        print('Is Im reached here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        isAlreadyhaveProfileImg = true;
+        profileImgUrl = userDetails.profileImg!.url;
       }
-      if (userDetails.user.address != null) {
-        _cityController.text = userDetails.user.address!.city;
-        _stateController.text = userDetails.user.address!.state;
-        _countryController.text = userDetails.user.address!.country;
-        _addressController.text = userDetails.user.address!.streetAddress;
-        _postalController.text = userDetails.user.address!.postalCode;
+      if (userDetails.address != null) {
+        _cityController.text = userDetails.address!.city;
+        _stateController.text = userDetails.address!.state;
+        _countryController.text = userDetails.address!.country;
+        _addressController.text = userDetails.address!.streetAddress;
+        _postalController.text = userDetails.address!.postalCode;
       }
       if (!_isInitialize) {
         setState(() {
@@ -321,5 +336,17 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         });
       }
     });
+  }
+
+  void _checkWhatToDo() {
+    if (store.userDetails!.isRight()) {
+      context.pop();
+    }
+    if (store.userDetails!.isLeft()) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Something went wrong!'),
+        duration: Duration(seconds: 3),
+      ));
+    }
   }
 }

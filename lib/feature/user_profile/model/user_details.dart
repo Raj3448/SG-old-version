@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
 
 part 'user_details.freezed.dart';
@@ -6,6 +7,7 @@ part 'user_details.g.dart';
 
 @freezed
 class UserDetails with _$UserDetails {
+  @JsonSerializable(explicitToJson: true)
   const factory UserDetails({
     required User user,
     required List<EmergencyContact> emergencyContacts,
@@ -13,140 +15,94 @@ class UserDetails with _$UserDetails {
     required List<PreferredService> preferredServices,
   }) = _UserDetails;
 
-  factory UserDetails.fromJson(Map<String, dynamic> json) =>
-      _$UserDetailsFromJson(json);
+  factory UserDetails.fromJson(Map<String, dynamic> json) => _$UserDetailsFromJson(json);
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-  createFactory: true,
-)
-class User {
-  @JsonKey(name: "id")
-  final int id;
-  @JsonKey(name: "username")
-  final String username;
-  @JsonKey(name: "email")
-  final String email;
-  @JsonKey(name: "confirmed")
-  final bool confirmed;
-  @JsonKey(name: "blocked")
-  final bool blocked;
-  @JsonKey(name: "gender")
-  final String gender;
-  @JsonKey(name: "phoneNumber")
-  final String phoneNumber;
-  @JsonKey(name: "dateOfBirth")
-  final DateTime dateOfBirth;
-  @JsonKey(name: "relation")
-  String? relation;
-  @JsonKey(name: "uniqueKey")
-  final String uniqueKey;
-  @JsonKey(name: "firstName")
-  final String firstName;
-  @JsonKey(name: "lastName")
-  final String lastName;
-  @JsonKey(name: "userTags")
-  final dynamic userTags;
-  @JsonKey(name: "createdAt")
-  final DateTime createdAt;
-  @JsonKey(name: "updatedAt")
-  final DateTime updatedAt;
-  @JsonKey(name: "address")
-  Address? address;
-  String? profileImg;
-
-  User({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.confirmed,
-    required this.blocked,
-    required this.gender,
-    required this.phoneNumber,
-    required this.dateOfBirth,
-    required this.uniqueKey,
-    required this.firstName,
-    required this.lastName,
-    required this.userTags,
-    required this.createdAt,
-    required this.updatedAt,
-    this.relation = 'Self',
-    this.address,
-    this.profileImg
-  });
+@freezed
+@HiveType(typeId: 20)
+class User with _$User {
+  @JsonSerializable(explicitToJson: true)
+  const factory User({
+    @HiveField(0) required int id,
+    @HiveField(1) required String username,
+    @HiveField(2) required String email,
+    @HiveField(3) dynamic provider,
+    @HiveField(4) required bool confirmed,
+    @HiveField(5) required bool blocked,
+    @HiveField(6) required String gender,
+    @HiveField(7) required String phoneNumber,
+    @HiveField(8) required DateTime dateOfBirth,
+    @HiveField(9) @Default('Self') String relation,
+    @HiveField(10) required String uniqueKey,
+    @HiveField(11) required String firstName,
+    @HiveField(12) required String lastName,
+    @HiveField(13) dynamic userTags,
+    @HiveField(14) required DateTime createdAt,
+    @HiveField(15) required DateTime updatedAt,
+    @HiveField(16) Address? address,
+    @HiveField(17) ProfileImg? profileImg,
+    @HiveField(18) @Default([]) List<UserDetails> members,
+  }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserToJson(this);
-
-  User copyWith({
-    int? id,
-    String? username,
-    String? email,
-    bool? confirmed,
-    bool? blocked,
-    String? gender,
-    String? phoneNumber,
-    DateTime? dateOfBirth,
-    String? relation,
-    String? uniqueKey,
-    String? firstName,
-    String? lastName,
-    dynamic userTags,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    Address? address,
-    String? profileImg
-  }) {
-    return User(
-      id: id ?? this.id,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      confirmed: confirmed ?? this.confirmed,
-      blocked: blocked ?? this.blocked,
-      gender: gender ?? this.gender,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      relation: relation ?? this.relation,
-      uniqueKey: uniqueKey ?? this.uniqueKey,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      userTags: userTags ?? this.userTags,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      address: address ?? this.address,
-      profileImg: profileImg ?? this.profileImg,
-    );
-  }
 }
 
-@JsonSerializable()
-class Address {
-  @JsonKey(name: "id")
-  final int id;
-  @JsonKey(name: "state")
-  final String state;
-  @JsonKey(name: "city")
-  final String city;
-  @JsonKey(name: "streetAddress")
-  final String streetAddress;
-  @JsonKey(name: "postalCode")
-  final String postalCode;
-  @JsonKey(name: "country")
-  final String country;
+@freezed
+@HiveType(typeId: 22)
+class Address with _$Address {
+  @JsonSerializable(explicitToJson: true)
+  const factory Address({
+    @HiveField(0) required int id,
+    @HiveField(1) required String state,
+    @HiveField(2) required String city,
+    @HiveField(3) required String streetAddress,
+    @HiveField(4) required String postalCode,
+    @HiveField(5) required String country,
+  }) = _Address;
 
-  Address({
-    required this.id,
-    required this.state,
-    required this.city,
-    required this.streetAddress,
-    required this.postalCode,
-    required this.country,
-  });
+  factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
+}
 
-  factory Address.fromJson(Map<String, dynamic> json) =>
-      _$AddressFromJson(json);
+@freezed
+@HiveType(typeId: 23)
+class ProfileImg with _$ProfileImg {
+  @JsonSerializable(explicitToJson: true)
+  const factory ProfileImg({
+    @HiveField(0) required int id,
+    @HiveField(1) required String name,
+    @HiveField(2) required int width,
+    @HiveField(3) required int height,
+    @HiveField(4) required Formats formats,
+    @HiveField(5) required String ext,
+    @HiveField(6) required String url,
+    @HiveField(7) required DateTime createdAt,
+    @HiveField(8) required DateTime updatedAt,
+  }) = _ProfileImg;
 
-  Map<String, dynamic> toJson() => _$AddressToJson(this);
+  factory ProfileImg.fromJson(Map<String, dynamic> json) => _$ProfileImgFromJson(json);
+}
+
+@freezed
+@HiveType(typeId: 24)
+class Formats with _$Formats {
+  @JsonSerializable(explicitToJson: true)
+  const factory Formats({
+    @HiveField(0) required Thumbnail thumbnail,
+  }) = _Formats;
+
+  factory Formats.fromJson(Map<String, dynamic> json) => _$FormatsFromJson(json);
+}
+
+@freezed
+@HiveType(typeId: 25)
+class Thumbnail with _$Thumbnail {
+  @JsonSerializable(explicitToJson: true)
+  const factory Thumbnail({
+    @HiveField(0) required String ext,
+    @HiveField(1) required String url,
+    @HiveField(2) required int width,
+    @HiveField(3) required int height,
+  }) = _Thumbnail;
+
+  factory Thumbnail.fromJson(Map<String, dynamic> json) => _$ThumbnailFromJson(json);
 }

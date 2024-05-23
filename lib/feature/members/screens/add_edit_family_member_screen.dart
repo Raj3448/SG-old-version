@@ -70,7 +70,11 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: EditPic(storedProfileImage: null,imgUrl: null,)),
+              Center(
+                  child: EditPic(
+                onImageSelected: (_) {},
+                imgUrl: null,
+              )),
               const SizedBox(height: 16),
               const AsteriskLabel(label: 'First name'),
               const SizedBox(height: 8),

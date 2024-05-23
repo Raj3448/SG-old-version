@@ -57,11 +57,11 @@ class EPRViewScreen extends StatelessWidget {
                     errorType: ErrorType.somethinWentWrong);
               }
 
-              final UserDetails userInfo = userDetails
+              final User userInfo = userDetails
                   .getOrElse((_) => throw 'Error while fetching userInfo');
 
               if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
-                return _PersonalDetailsComponent(userInfo: userInfo.user);
+                return _PersonalDetailsComponent(userInfo: userInfo);
               }
 
               if (data.isLeft()) {
@@ -82,7 +82,7 @@ class EPRViewScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _PersonalDetailsComponent(
-                              userInfo: userInfo.user,
+                              userInfo: userInfo,
                             ),
                             const SizedBox(
                               height: Dimension.d3,

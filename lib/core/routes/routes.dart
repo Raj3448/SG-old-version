@@ -60,6 +60,7 @@ final GoRouter routes = GoRouter(
             return RoutesConstants.onboardingRoute;
           }
           if (authStore.isAuthenticated) {
+            
             return RoutesConstants.homeRoute;
           }
           if (!authStore.initialised) return null;

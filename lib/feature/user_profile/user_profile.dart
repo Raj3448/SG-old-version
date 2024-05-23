@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: inference_failure_on_instance_creation, inference_failure_on_function_invocation, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
@@ -23,11 +24,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class UserProfile extends StatelessWidget {
   final UserDetailStore userDetailStore;
-  const UserProfile({super.key, required this.userDetailStore});
+  const UserProfile({
+    required this.userDetailStore, Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    userDetailStore.getUserDetails();
 
     return Observer(
       builder: (context) {
@@ -56,7 +58,23 @@ class UserProfile extends StatelessWidget {
                                 Row(
                                   children: [
                                     Avatar.fromSize(
-                                      imgPath: '',
+                                      isnetworkImage:
+                                          userDetailStore.userDetails!.fold(
+                                        (l) => false,
+                                        (r) {
+                                          if (r.profileImg != null) {
+                                            return true;
+                                          } else {
+                                            return false;
+                                          }
+                                        },
+                                      ),
+                                      imgPath: userDetailStore.userDetails!
+                                          .fold((l) => '', (r) {
+                                        print(
+                                            'http://api-dev.yoursilvergenie.com${r.profileImg!.url}');
+                                        return 'http://api-dev.yoursilvergenie.com${r.profileImg!.url}';
+                                      }),
                                       size: AvatarSize.size44,
                                     ),
                                     const SizedBox(
@@ -70,11 +88,11 @@ class UserProfile extends StatelessWidget {
                                           userDetailStore.userDetails!.fold(
                                               (l) => '',
                                               (r) =>
-                                                  '${r.user.firstName} ${r.user.lastName}'),
+                                                  '${r.firstName} ${r.lastName}'),
                                           style: AppTextStyle.bodyXLSemiBold,
                                         ),
                                         Text(
-                                          'Age: ${userDetailStore.userDetails!.fold((l) => '', (r) => calculateAge(r.user.dateOfBirth))} Relationship: ${userDetailStore.userDetails!.fold((l) => '', (r) => r.user.relation)}',
+                                          'Age: ${userDetailStore.userDetails!.fold((l) => '', (r) => calculateAge(r.dateOfBirth))} Relationship: ${userDetailStore.userDetails!.fold((l) => '', (r) => r.relation)}',
                                           style: AppTextStyle.bodyMediumMedium
                                               .copyWith(
                                                   color:
@@ -89,8 +107,8 @@ class UserProfile extends StatelessWidget {
                                 ),
                                 CustomTextIcon(
                                   iconpath: AppIcons.phone,
-                                  title: userDetailStore.userDetails!.fold(
-                                      (l) => '', (r) => r.user.phoneNumber),
+                                  title: userDetailStore.userDetails!
+                                      .fold((l) => '', (r) => r.phoneNumber),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d2,
@@ -98,7 +116,7 @@ class UserProfile extends StatelessWidget {
                                 CustomTextIcon(
                                   iconpath: AppIcons.home,
                                   title: userDetailStore.userDetails!
-                                      .fold((l) => '', (r) => r.user.email),
+                                      .fold((l) => '', (r) => r.email),
                                 ),
                                 const SizedBox(
                                   height: Dimension.d4,

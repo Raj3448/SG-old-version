@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -16,7 +18,7 @@ abstract class _UserDetailStoreBase with Store {
   final IUserFacades userDetailServices;
 
   @observable
-  Either<Failure, UserDetails>? userDetails;
+  Either<Failure, User>? userDetails;
 
   @observable
   bool isLoadingUserInfo = false;
@@ -27,14 +29,14 @@ abstract class _UserDetailStoreBase with Store {
   @action
   Future<void> getUserDetails() async {
     isLoadingUserInfo = true;
-    userDetails = await userDetailServices.fetchUserDetailsFromApi();
+    userDetails = await userDetailServices.fetchUserDetails();
     isLoadingUserInfo = false;
   }
 
   @action
   Future<void> updateUserDetails(User newInstance) async {
     isLoadingUserInfo = true;
-    final Either<Failure, UserDetails> userDetailsResult =
+    final userDetailsResult =
         await userDetailServices.updateUserDetails(user: newInstance);
     userDetailsResult.fold((l) {}, (r) {
       userDetails = userDetailsResult;
@@ -42,12 +44,24 @@ abstract class _UserDetailStoreBase with Store {
     isLoadingUserInfo = false;
   }
 
-  Future<void> fetchUserDetailsFromCache() async {
+  @action
+  Future<User> fetchUserDetailsFromCache() async {
     isLoadingUserInfo = true;
     final userInfo = await GetIt.I<UserDetailsCache>().getUserDetails();
     if (userInfo != null) {
       firstName = userInfo.firstName;
+      userDetails = right(userInfo);
     }
+    isLoadingUserInfo = false;
+    return userInfo!;
+  }
+
+  @action
+  Future<void> updateUserDataWithProfileImg(
+      {required File fileImage, required User userInstance}) async {
+    isLoadingUserInfo = true;
+    userDetails = await userDetailServices.updateUserDataWithProfileImg(
+        fileImage: fileImage, userInfo: userInstance);
     isLoadingUserInfo = false;
   }
 }
