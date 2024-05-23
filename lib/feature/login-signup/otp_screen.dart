@@ -128,6 +128,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           controller: otpController,
                           appContext: context,
                           mainAxisAlignment: MainAxisAlignment.center,
+                          enablePinAutofill: false,
                           length: 4,
                           keyboardType: TextInputType.number,
                           cursorColor: AppColors.black,
