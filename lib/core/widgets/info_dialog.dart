@@ -55,6 +55,7 @@ class InfoDialog extends StatelessWidget {
             Text(
               title.tr(),
               style: AppTextStyle.bodyXLBold.copyWith(height: 1.5),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
