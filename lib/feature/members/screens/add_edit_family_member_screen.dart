@@ -24,8 +24,11 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
 class AddEditFamilyMemberScreen extends StatefulWidget {
-  const AddEditFamilyMemberScreen(
-      {required this.edit, required this.memberId, super.key});
+  const AddEditFamilyMemberScreen({
+    required this.edit,
+    required this.memberId,
+    super.key,
+  });
 
   final bool edit;
   final int memberId;
@@ -85,7 +88,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
 
   @override
   Widget build(BuildContext context) {
-    initController();
+    // initController();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: PageAppbar(
@@ -119,6 +122,14 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                         ? relationContr.selectedOptions[0].value.toString()
                         : '';
                 if (formKey.currentState!.validate()) {
+                  print(relationSelectedValue == 'Self' ? true : false);
+                  print(relationSelectedValue);
+                  print(genderSelectedValue);
+                  print(firstNameContr.text);
+                  print(lastNameContr.text);
+                  print(dobContr.text);
+                  print(emailContr.text);
+                  print(phoneNumberContr.text);
                   final result = await memberService.addMember(
                     relationSelectedValue == 'Self' ? true : false,
                     relationSelectedValue,
@@ -208,7 +219,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Enter your first name',
-                      initialValue: _member.firstName,
+                      // initialValue: widget.edit ? _member.firstName : null,
                       keyboardType: TextInputType.name,
                       controller: firstNameContr,
                       large: false,
@@ -228,7 +239,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       hintText: 'Enter your last name',
                       keyboardType: TextInputType.name,
                       controller: lastNameContr,
-                      initialValue: _member.lastName,
+                      // initialValue: widget.edit ? _member.lastName : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -257,7 +268,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       hintText: 'Enter mobile number',
                       keyboardType: TextInputType.number,
                       controller: phoneNumberContr,
-                      initialValue: _member.phoneNumber,
+                      // initialValue: widget.edit ? _member.phoneNumber : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -274,7 +285,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       hintText: 'Enter email address',
                       keyboardType: TextInputType.emailAddress,
                       controller: emailContr,
-                      initialValue: _member.email,
+                      // initialValue: widget.edit ? _member.email : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -304,7 +315,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Type here...',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       controller: countryContr,
                       large: false,
                       enabled: true,
@@ -320,7 +331,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Type here...',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       controller: stateContr,
                       large: false,
                       enabled: true,
@@ -330,7 +341,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Type here...',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       controller: cityContr,
                       large: false,
                       enabled: true,
@@ -356,11 +367,4 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       ),
     );
   }
-
-  // void _initializeController(MembersStore store) {
-  //   store.members.map((memberDetails) {
-  //     firstNameContr.text = memberDetails.firstName;
-  //     print(memberDetails.firstName);
-  //   });
-  // }
 }

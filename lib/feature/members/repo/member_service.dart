@@ -31,7 +31,7 @@ abstract class IMemberService {
   });
 }
 
-const baseUrl = 'http://api-dev.yoursilvergenie.com/api';
+const baseUrl = 'api';
 
 class MemberServices implements IMemberService {
   MemberServices(this.httpClient);
@@ -98,11 +98,13 @@ class MemberServices implements IMemberService {
 
       if (response.statusCode == 200) {
         final responseData = response.data;
+        print(responseData);
         final member = Member.fromJson(responseData as Map<String, dynamic>);
         return Right(member);
       }
       if (response.statusCode == 400) {
         final responseData = response.data;
+        print(responseData);
         final errorMessage =
             responseData['error']['message'] ?? 'Validation error occurred';
         final errorDetails =

@@ -28,6 +28,7 @@ class MemberDetailsScreen extends StatelessWidget {
   });
 
   final int memberId;
+  final bool hasCareSub = false;
   final activeMember = GetIt.I<MembersStore>().activeMember;
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class MemberDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Member details'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: true
+      floatingActionButton: hasCareSub
           ? FixedButton(
               ontap: () {
                 showDialog(
@@ -98,7 +99,7 @@ class MemberDetailsScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale900),
               ),
               const SizedBox(height: 16),
-              if (true)
+              if (hasCareSub)
                 Column(
                   children: [
                     HealthCard(

@@ -24,8 +24,7 @@ abstract class IAuthService {
   });
 }
 
-// const baseUrl = 'api';
-const baseUrl = 'http://api-dev.yoursilvergenie.com/api';
+const baseUrl = 'api';
 
 class AuthService implements IAuthService {
   AuthService({
