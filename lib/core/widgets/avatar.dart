@@ -19,9 +19,11 @@ class Avatar extends StatelessWidget {
   const Avatar({
     required this.imgPath,
     required this.maxRadius,
+    this.isNetworkImage = false,
     super.key,
   });
   factory Avatar.fromSize({
+    bool isnetworkImage = false,
     required String imgPath,
     required AvatarSize size,
   }) {
@@ -54,12 +56,12 @@ class Avatar extends StatelessWidget {
   }
   final String imgPath;
   final double maxRadius;
-
+  final bool isNetworkImage;
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
       maxRadius: maxRadius,
-      backgroundImage: const AssetImage('assets/icon/default _profile.png'),
+      backgroundImage: isNetworkImage? NetworkImage(imgPath) as ImageProvider:const AssetImage('assets/icon/default _profile.png'),
       // backgroundImage: NetworkImage(imgPath),
     );
   }
@@ -78,7 +80,7 @@ class SelectableAvatar extends Avatar {
 
   @override
   Widget build(BuildContext context) {
-    final imageProvider = imgPath.isNotEmpty
+    final imageProvider = isNetworkImage? NetworkImage(imgPath) as ImageProvider:imgPath.isNotEmpty
         ? AssetImage(imgPath)
         : const AssetImage('assets/icon/default _profile.png');
     return GestureDetector(

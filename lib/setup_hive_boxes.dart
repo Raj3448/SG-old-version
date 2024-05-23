@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
-import 'package:silver_genie/feature/user_profile/hive_adaptor/user_details_adapter.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 const TOKEN_BOX_NAME = 'jwt_token_box';
@@ -39,11 +38,17 @@ Future<void> initializeBoxForHomePageDetails() async {
     ..registerAdapter(OfferingAdapter())
     ..registerAdapter(OfferAdapter())
     ..registerAdapter(ValueAdapter());
-  await Hive.openBox<List<dynamic>>(HOMEPAGE_DETAILS_BOX_NAME,compactionStrategy:(int total,int deleted)=> deleted > 2);
+  await Hive.openBox<List<dynamic>>(HOMEPAGE_DETAILS_BOX_NAME,
+      compactionStrategy: (int total, int deleted) => deleted > 2);
 }
 
 Future<void> initializeBoxForUserDetails() async {
-  Hive.registerAdapter(UserAdapter());
+  Hive
+    ..registerAdapter(UserAdapter())
+    ..registerAdapter(AddressAdapter())
+    ..registerAdapter(ProfileImgAdapter())
+    ..registerAdapter(FormatsAdapter())
+    ..registerAdapter(ThumbnailAdapter());
 
   await Hive.openBox<User>(
     USER_DETAILS_BOX_NAME,

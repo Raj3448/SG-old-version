@@ -11,6 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/utils/image_store/image_store.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
@@ -18,11 +19,11 @@ import 'package:silver_genie/core/widgets/selector.dart';
 
 class EditPic extends StatefulWidget {
   EditPic({
-    required this.storedProfileImage,
     required this.imgUrl,
-    Key? key,
-  }) : super(key: key);
-  File? storedProfileImage;
+    required this.onImageSelected,
+    super.key,
+  });
+  void Function(File) onImageSelected;
   String? imgUrl;
 
   @override
@@ -30,12 +31,12 @@ class EditPic extends StatefulWidget {
 }
 
 class _EditPicState extends State<EditPic> {
-
-
-  void _updateProfileImage(File? image) {
+  File? storedProfileImage;
+  void _updateProfileImage(File image) {
     setState(() {
-      widget.storedProfileImage = image;
+      storedProfileImage = image;
     });
+    widget.onImageSelected(image);
   }
 
   @override
@@ -48,7 +49,7 @@ class _EditPicState extends State<EditPic> {
               context: context,
               builder: (context) {
                 return ChangePicDialog(
-                  storedProfileImage: widget.storedProfileImage,
+                  storedProfileImage: storedProfileImage,
                   onImageSelected: _updateProfileImage,
                 );
               },
@@ -57,14 +58,14 @@ class _EditPicState extends State<EditPic> {
           child: Stack(
             alignment: Alignment.bottomRight,
             children: [
-              if (widget.imgUrl == null && widget.storedProfileImage == null)
+              if (widget.imgUrl == null && storedProfileImage == null)
                 Avatar.fromSize(imgPath: 'imgPath', size: AvatarSize.size56)
               else
                 CircleAvatar(
                   radius: 56,
-                  backgroundImage: widget.storedProfileImage != null
-                      ? FileImage(widget.storedProfileImage!) as ImageProvider
-                      : NetworkImage(widget.imgUrl!),
+                  backgroundImage: storedProfileImage != null
+                      ? FileImage(storedProfileImage!) as ImageProvider
+                      : NetworkImage('${Env.serverUrl}${widget.imgUrl!}'),
                 ),
               Container(
                 height: 32,
@@ -92,8 +93,9 @@ class ChangePicDialog extends StatelessWidget {
   final Function(File) onImageSelected;
   ChangePicDialog({
     required this.storedProfileImage,
-    required this.onImageSelected, Key? key,
-  }) : super(key: key);
+    required this.onImageSelected,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

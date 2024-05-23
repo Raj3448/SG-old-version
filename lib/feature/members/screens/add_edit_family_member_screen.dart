@@ -86,11 +86,10 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: EditPic(
-                  storedProfileImage: null,
-                  imgUrl: null,
-                ),
-              ),
+                  child: EditPic(
+                onImageSelected: (_) {},
+                imgUrl: null,
+              )),
               const SizedBox(height: 16),
               Form(
                 key: formKey,
