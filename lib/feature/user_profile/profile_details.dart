@@ -243,7 +243,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const AsteriskLabel(label: 'Gender'),
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
-                            key: globalkey,
                             values: _genderItems,
                             controller: _genderController,
                             selectedOptions: [

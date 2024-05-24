@@ -59,8 +59,11 @@ class UserProfile extends StatelessWidget {
                                 Row(
                                   children: [
                                     Avatar(
-                                        imgPath:userDetailStore.userDetails!.profileImg == null ? '':
-                                            '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
+                                        imgPath: userDetailStore
+                                                    .userDetails!.profileImg ==
+                                                null
+                                            ? ''
+                                            : '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
                                         maxRadius: 44,
                                         isNetworkImage: userDetailStore
                                                     .userDetails!
@@ -71,34 +74,41 @@ class UserProfile extends StatelessWidget {
                                     const SizedBox(
                                       width: Dimension.d2,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          userDetailStore.userDetails?.name ??
-                                              '',
-                                          style: AppTextStyle.bodyXLSemiBold,
-                                        ),
-                                        Text.rich(TextSpan(children: [
-                                          TextSpan(
-                                            text:
-                                                'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
-                                            style: AppTextStyle.bodyMediumMedium
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            userDetailStore.userDetails?.name ??
+                                                '',
+                                            style: AppTextStyle.bodyXLSemiBold
                                                 .copyWith(
-                                                    color:
-                                                        AppColors.grayscale600),
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
                                           ),
-                                          TextSpan(
-                                            text:
-                                                ' Relationship: ${userDetailStore.userDetails!.relation}',
-                                            style: AppTextStyle.bodyMediumMedium
-                                                .copyWith(
-                                                    color:
-                                                        AppColors.grayscale600),
-                                          )
-                                        ]))
-                                      ],
+                                          Text.rich(TextSpan(children: [
+                                            TextSpan(
+                                              text:
+                                                  'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
+                                              style: AppTextStyle
+                                                  .bodyMediumMedium
+                                                  .copyWith(
+                                                      color: AppColors
+                                                          .grayscale600),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                                  ' Relationship: ${userDetailStore.userDetails!.relation}',
+                                              style: AppTextStyle
+                                                  .bodyMediumMedium
+                                                  .copyWith(
+                                                      color: AppColors
+                                                          .grayscale600),
+                                            )
+                                          ]))
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
