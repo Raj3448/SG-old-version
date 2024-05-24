@@ -16,10 +16,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final user = GetIt.I<UserDetailStore>().userDetails;
-    // if (user == null) {
-    //   /// should never exist
-    //   return Container();
-    // }
+
     return Observer(
       builder: (context) {
         return Padding(
@@ -40,9 +37,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                       },
                       child: CircleAvatar(
                         radius: 24,
-                        backgroundImage: user?.profileImgUrl != null
-                            ? NetworkImage(user?.profileImgUrl ?? '')
-                            : null,
+                        backgroundImage: user == null
+                            ? null
+                            : NetworkImage(user.profileImgUrl ?? ''),
                         child: user != null
                             ? null
                             : Avatar.fromSize(

@@ -18,8 +18,6 @@ class UserDetailServices implements IUserFacades {
     this.httpClient,
   );
 
-  final baseURL = 'api';
-
   @override
   Future<Either<Failure, User>> updateUserDetails(
       {required User user, String? imageId}) async {
@@ -30,7 +28,6 @@ class UserDetailServices implements IUserFacades {
         'firstName': userData['firstName'],
         'lastName': userData['lastName'],
         'gender': userData['gender'],
-        'profileImg': userData['profileImg'],
         'dateOfBirth': userData['dateOfBirth'],
         'address': {
           'state': userData['address']['state'],
@@ -43,11 +40,15 @@ class UserDetailServices implements IUserFacades {
       if (userData['address']['id'] != -1) {
         data['address']['id'] = userData['address']['id'];
       }
+
       if (imageId != null) {
-        data.update('profileImg', (value) => imageId, ifAbsent: () => imageId);
+        data['profileImg'] = imageId;
+      } else if (userData['profileImg'] == null) {
+        data['profileImg'] = null;
       }
-      final response = await httpClient
-          .put<String>('/$baseURL/users/${user.id}', data: userData);
+
+      final response =
+          await httpClient.put<String>('/api/users/${user.id}', data: data);
 
       if (response.statusCode == 200) {
         /// WE should do single
@@ -67,7 +68,7 @@ class UserDetailServices implements IUserFacades {
   @override
   Future<Either<Failure, User>> fetchUserDetailsFromServer() async {
     try {
-      final response = await httpClient.get('/$baseURL/users/me?populate=*');
+      final response = await httpClient.get('/api/users/me?populate=*');
 
       if (response.statusCode == 200) {
         if (response.data != null) {
@@ -95,7 +96,7 @@ class UserDetailServices implements IUserFacades {
           fileImage.path,
         )
       });
-      final response = await httpClient.post('/$baseURL/upload',
+      final response = await httpClient.post('/api/upload',
           data: formData,
           options: Options(
             headers: {'Content-Type': 'multipart/form-data'},

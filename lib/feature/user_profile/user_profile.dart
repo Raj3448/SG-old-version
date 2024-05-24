@@ -32,161 +32,165 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: const PageAppbar(title: 'User Profile'),
-          body: userDetailStore.isLoadingUserInfo
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(Dimension.d3),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Dimension.d1),
-                            border: Border.all(
-                              color: AppColors.secondary,
-                              width: 2,
+    return SafeArea(
+      child: Observer(
+        builder: (context) {
+          return Scaffold(
+            backgroundColor: AppColors.white,
+            appBar: const PageAppbar(title: 'User Profile'),
+            body: userDetailStore.isLoadingUserInfo
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Dimension.d3),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(Dimension.d1),
+                              border: Border.all(
+                                color: AppColors.secondary,
+                                width: 2,
+                              ),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(Dimension.d3),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Avatar(
-                                        imgPath: userDetailStore
-                                                    .userDetails!.profileImg ==
-                                                null
-                                            ? ''
-                                            : '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
-                                        maxRadius: 44,
-                                        isNetworkImage: userDetailStore
-                                                    .userDetails!
-                                                    .profileImgUrl ==
-                                                null
-                                            ? false
-                                            : true),
-                                    const SizedBox(
-                                      width: Dimension.d2,
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            userDetailStore.userDetails?.name ??
-                                                '',
-                                            style: AppTextStyle.bodyXLSemiBold
-                                                .copyWith(
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
-                                          ),
-                                          Text.rich(TextSpan(children: [
-                                            TextSpan(
-                                              text:
-                                                  'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
-                                              style: AppTextStyle
-                                                  .bodyMediumMedium
+                            child: Padding(
+                              padding: const EdgeInsets.all(Dimension.d3),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Avatar(
+                                          imgPath: userDetailStore.userDetails!
+                                                      .profileImg ==
+                                                  null
+                                              ? ''
+                                              : '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
+                                          maxRadius: 44,
+                                          isNetworkImage: userDetailStore
+                                                      .userDetails!
+                                                      .profileImgUrl ==
+                                                  null
+                                              ? false
+                                              : true),
+                                      const SizedBox(
+                                        width: Dimension.d2,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              userDetailStore
+                                                      .userDetails?.name ??
+                                                  '',
+                                              style: AppTextStyle.bodyXLSemiBold
                                                   .copyWith(
-                                                      color: AppColors
-                                                          .grayscale600),
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
                                             ),
-                                            TextSpan(
-                                              text:
-                                                  ' Relationship: ${userDetailStore.userDetails!.relation}',
-                                              style: AppTextStyle
-                                                  .bodyMediumMedium
-                                                  .copyWith(
-                                                      color: AppColors
-                                                          .grayscale600),
-                                            )
-                                          ]))
-                                        ],
+                                            Text.rich(TextSpan(children: [
+                                              TextSpan(
+                                                text:
+                                                    'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
+                                                style: AppTextStyle
+                                                    .bodyMediumMedium
+                                                    .copyWith(
+                                                        color: AppColors
+                                                            .grayscale600),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    ' Relationship: ${userDetailStore.userDetails!.relation}',
+                                                style: AppTextStyle
+                                                    .bodyMediumMedium
+                                                    .copyWith(
+                                                        color: AppColors
+                                                            .grayscale600),
+                                              )
+                                            ]))
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: Dimension.d4,
-                                ),
-                                CustomTextIcon(
-                                    iconpath: AppIcons.phone,
-                                    title: userDetailStore
-                                        .userDetails!.phoneNumber),
-                                const SizedBox(
-                                  height: Dimension.d2,
-                                ),
-                                CustomTextIcon(
-                                    iconpath: AppIcons.home,
-                                    title: userDetailStore.userDetails!.email),
-                                const SizedBox(
-                                  height: Dimension.d4,
-                                ),
-                                CustomButton(
-                                  ontap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ProfileDetails(),
-                                      ),
-                                    );
-                                  },
-                                  title: 'Edit',
-                                  showIcon: false,
-                                  iconPath: Icons.not_interested,
-                                  size: ButtonSize.small,
-                                  type: ButtonType.secondary,
-                                  expanded: true,
-                                  iconColor: AppColors.primary,
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: Dimension.d4,
+                                  ),
+                                  CustomTextIcon(
+                                      iconpath: AppIcons.phone,
+                                      title: userDetailStore
+                                          .userDetails!.phoneNumber),
+                                  const SizedBox(
+                                    height: Dimension.d2,
+                                  ),
+                                  CustomTextIcon(
+                                      iconpath: AppIcons.home,
+                                      title:
+                                          userDetailStore.userDetails!.email),
+                                  const SizedBox(
+                                    height: Dimension.d4,
+                                  ),
+                                  CustomButton(
+                                    ontap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ProfileDetails(),
+                                        ),
+                                      );
+                                    },
+                                    title: 'Edit',
+                                    showIcon: false,
+                                    iconPath: Icons.not_interested,
+                                    size: ButtonSize.small,
+                                    type: ButtonType.secondary,
+                                    expanded: true,
+                                    iconColor: AppColors.primary,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: Dimension.d6,
-                        ),
-                        ProfileNav(
-                          title: 'Subscriptions',
-                          onTap: () {
-                            context.pushNamed(
-                              RoutesConstants.subscriptionsScreen,
-                            );
-                          },
-                        ),
-                        ProfileNav(
-                          title: 'About',
-                          onTap: () async {
-                            await launchUrl(
-                              Uri.parse(
-                                  'https://www.yoursilvergenie.com/about-us/'),
-                            );
-                          },
-                        ),
-                        ProfileNav(
-                          title: 'Logout',
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return _LogOutComponent();
-                              },
-                            );
-                          },
-                        ),
-                      ],
+                          const SizedBox(
+                            height: Dimension.d6,
+                          ),
+                          ProfileNav(
+                            title: 'Subscriptions',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.subscriptionsScreen,
+                              );
+                            },
+                          ),
+                          ProfileNav(
+                            title: 'About',
+                            onTap: () async {
+                              await launchUrl(
+                                Uri.parse(
+                                    'https://www.yoursilvergenie.com/about-us/'),
+                              );
+                            },
+                          ),
+                          ProfileNav(
+                            title: 'Logout',
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return _LogOutComponent();
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

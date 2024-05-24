@@ -419,7 +419,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   ),
                 ),
               ),
-              if (store.isUpdatingUserInfo) const LoadingWidget()
+              if (store.isUpdatingUserInfo)
+                const Material(
+                    color: Colors.transparent, child: LoadingWidget())
             ],
           );
         },
