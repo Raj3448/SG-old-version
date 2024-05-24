@@ -15,7 +15,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = GetIt.I<UserDetailStore>().userDetails;
+    final userStore = GetIt.I<UserDetailStore>();
 
     return Observer(
       builder: (context) {
@@ -37,10 +37,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                       },
                       child: CircleAvatar(
                         radius: 24,
-                        backgroundImage: user == null
-                            ? null
-                            : NetworkImage(user.profileImgUrl ?? ''),
-                        child: user != null
+                        backgroundImage:
+                            userStore.userDetails?.profileImg == null
+                                ? null
+                                : NetworkImage(
+                                    userStore.userDetails?.profileImgUrl ?? ''),
+                        child: userStore.userDetails?.profileImg != null
                             ? null
                             : Avatar.fromSize(
                                 imgPath: '', size: AvatarSize.size24),
@@ -58,7 +60,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                 color: AppColors.grayscale900,
                                 height: 1.4,
                                 overflow: TextOverflow.ellipsis),
-                          ).tr(args: [user?.name ?? '---']),
+                          ).tr(args: [userStore.userDetails?.name ?? '---']),
                           Text(
                             'How do you feel today?'.tr(),
                             style: AppTextStyle.bodyMediumMedium.copyWith(
@@ -67,7 +69,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                    
                     _IconContainer(
                       iconPath: 'assets/icon/bell-Unread.svg',
                       onPressed: () {
