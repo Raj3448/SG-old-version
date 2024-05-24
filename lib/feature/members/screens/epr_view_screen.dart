@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, inference_failure_on_function_invocation
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/assigning_component.dart';
@@ -18,7 +18,7 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class EPRViewScreen extends StatelessWidget {
@@ -59,7 +59,8 @@ class EPRViewScreen extends StatelessWidget {
               }
 
               final data = snapshot.data!;
-              final userDetails = store.userDetails;
+              final userDetails =
+                  GetIt.I<MembersStore>().memberById(int.tryParse(memberId));
 
               if (userDetails == null) {
                 return const ErrorStateComponent(
@@ -68,11 +69,28 @@ class EPRViewScreen extends StatelessWidget {
 
               final userInfo = userDetails;
 
-              if (data.isLeft() && data.getLeft() is MemberDontHaveEPRInfo) {
-                return _PersonalDetailsComponent(userInfo: userInfo);
-              }
-
               if (data.isLeft()) {
+                final failure = data
+                    .getLeft()
+                    .getOrElse(() => throw 'error, in calling data.getLeft()');
+
+                final NoEprRecordCase =
+                    failure.whenOrNull(memberDontHaveEPRInfo: () => true);
+
+                if (NoEprRecordCase ?? false) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: Dimension.d3),
+                    child: _PersonalDetailsComponent(
+                      name: userInfo.name,
+                      email: userInfo.email,
+                      phoneNumber: userInfo.phoneNumber,
+                      relation: userInfo.relation,
+                      dateOfBirth: userInfo.dateOfBirth,
+                    ),
+                  );
+                }
+
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
@@ -90,7 +108,11 @@ class EPRViewScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _PersonalDetailsComponent(
-                              userInfo: userInfo,
+                              name: userInfo.name,
+                              email: userInfo.email,
+                              phoneNumber: userInfo.phoneNumber,
+                              relation: userInfo.relation,
+                              dateOfBirth: userInfo.dateOfBirth,
                             ),
                             const SizedBox(
                               height: Dimension.d3,
@@ -153,11 +175,20 @@ class EPRViewScreen extends StatelessWidget {
 
 class _PersonalDetailsComponent extends StatelessWidget {
   const _PersonalDetailsComponent({
-    required this.userInfo,
     super.key,
+    required this.email,
+    required this.phoneNumber,
+    this.streetAddress,
+    required this.name,
+    this.relation,
+    required this.dateOfBirth,
   });
-
-  final User userInfo;
+  final String email;
+  final String phoneNumber;
+  final String? streetAddress;
+  final String? relation;
+  final String name;
+  final DateTime dateOfBirth;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -178,7 +209,6 @@ class _PersonalDetailsComponent extends StatelessWidget {
             vertical: 5,
             horizontal: 3,
           ),
-          height: 248,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: Border.all(
@@ -191,7 +221,6 @@ class _PersonalDetailsComponent extends StatelessWidget {
               vertical: 10,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
@@ -206,7 +235,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${userInfo.firstName} ${userInfo.lastName}',
+                          name,
                           style: AppTextStyle.bodyLargeMedium.copyWith(
                             color: AppColors.grayscale900,
                             fontSize: 16,
@@ -214,7 +243,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Relation: ${userInfo.relation}  Age: ${calculateAge(userInfo.dateOfBirth)}',
+                          'Relation: ${relation ?? "Self"}  Age: ${calculateAge(dateOfBirth)}',
                           style: AppTextStyle.bodyMediumMedium.copyWith(
                             color: AppColors.grayscale800,
                             height: 1.5,
@@ -224,21 +253,32 @@ class _PersonalDetailsComponent extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: Dimension.d4,
+                ),
                 IconTitleDetailsComponent(
                   icon: Icons.email_outlined,
                   title: 'Email',
-                  details: userInfo.email,
+                  details: email,
+                ),
+                const SizedBox(
+                  height: Dimension.d1,
                 ),
                 IconTitleDetailsComponent(
                   icon: Icons.phone_outlined,
                   title: 'Contact',
-                  details: userInfo.phoneNumber,
+                  details: phoneNumber,
                 ),
-                IconTitleDetailsComponent(
-                  icon: AppIcons.home,
-                  title: 'Address',
-                  details: userInfo.address!.streetAddress,
-                ),
+                if (streetAddress != null) ...[
+                  const SizedBox(
+                    height: Dimension.d4,
+                  ),
+                  IconTitleDetailsComponent(
+                    icon: AppIcons.home,
+                    title: 'Address',
+                    details: streetAddress ?? '---',
+                  ),
+                ]
               ],
             ),
           ),
