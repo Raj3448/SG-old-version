@@ -43,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (memberStore.errorMessage == null) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error: Failed to fetch member data!')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Error: Failed to fetch member data!')),
+      // );
       memberStore.errorMessage = null;
     });
   }

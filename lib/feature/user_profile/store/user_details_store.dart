@@ -121,6 +121,15 @@ abstract class _UserDetailStoreBase with Store {
       isUpdatingUserInfo = false;
     });
   }
+
+  void clear() {
+    isInitialised = false;
+    updateSuccess = false;
+    userDetails = null;
+    isLoadingUserInfo = false;
+    isUpdatingUserInfo = false;
+    updateFailureMessage = null;
+  }
 }
 
 extension UserExtension on User {

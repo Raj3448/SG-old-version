@@ -8,7 +8,6 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
@@ -39,124 +38,127 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Member details'),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: hasCareSub
-          ? FixedButton(
-              ontap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const InfoDialog(
-                      showIcon: false,
-                      title: 'Hi there!!',
-                      desc:
-                          'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                      btnTitle: 'Contact Genie',
-                      showBtnIcon: true,
-                      btnIconPath: AppIcons.phone,
-                    );
-                  },
-                );
-              },
-              btnTitle: 'Update Health record',
-              showIcon: false,
-              iconPath: AppIcons.clinical_notes,
-            )
-          : null,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-          decelerationRate: ScrollDecelerationRate.fast,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Basic details'.tr(),
-                style: AppTextStyle.bodyXLMedium
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-              const SizedBox(height: 16),
-              _BasicDetailsBox(
-                name: [
-                  activeMember?.firstName ?? '',
-                  activeMember?.lastName ?? '',
-                ].join(' ').trim(),
-                age: '${calculateAge(activeMember!.dateOfBirth)}',
-                gender: activeMember!.gender,
-                relation: activeMember!.relation,
-                mobileNo: activeMember!.phoneNumber,
-                address: 'activeMember.address',
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Health Records',
-                style: AppTextStyle.bodyXLMedium
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-              const SizedBox(height: 16),
-              if (hasCareSub)
-                Column(
-                  children: [
-                    HealthCard(
-                      isEpr: true,
-                      dateUpdated: '25/03/2024',
-                      ontap: () {
-                        GoRouter.of(context).pushNamed(
-                          RoutesConstants.eprRoute,
-                          pathParameters: {
-                            'memberId': '$memberId',
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    HealthCard(
-                      isEpr: false,
-                      dateUpdated: '25/03/2024',
-                      ontap: () {
-                        GoRouter.of(context)
-                            .push(RoutesConstants.phrPdfViewPage);
-                      },
-                    ),
-                    const SizedBox(height: Dimension.d17),
-                  ],
-                )
-              else
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SubscribeCard(),
-                    const SizedBox(height: Dimension.d8),
-                    Text(
-                      'Signup for care packages',
-                      style: AppTextStyle.bodyXLBold
-                          .copyWith(color: AppColors.grayscale900),
-                    ),
-                    const SizedBox(height: Dimension.d6),
-                    const SubscriptionPkg(
-                      expanded: true,
-                      type: SubscriptionType.companion,
-                    ),
-                    const SizedBox(height: Dimension.d3),
-                    const SubscriptionPkg(
-                      expanded: true,
-                      type: SubscriptionType.wellness,
-                    ),
-                    const SizedBox(height: Dimension.d3),
-                    const SubscriptionPkg(
-                      expanded: true,
-                      type: SubscriptionType.emergency,
-                    ),
-                    const SizedBox(height: Dimension.d3),
-                    const SizedBox(height: 16),
-                  ],
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: const PageAppbar(title: 'Member details'),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: true
+            ? FixedButton(
+                ontap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: false,
+                        title: 'Hi there!!',
+                        desc:
+                            'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: true,
+                        btnIconPath: AppIcons.phone,
+                      );
+                    },
+                  );
+                },
+                btnTitle: 'Update Health record',
+                showIcon: false,
+                iconPath: AppIcons.clinical_notes,
+              )
+            : null,
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+            decelerationRate: ScrollDecelerationRate.fast,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Basic details'.tr(),
+                  style: AppTextStyle.bodyXLMedium
+                      .copyWith(color: AppColors.grayscale900),
                 ),
-            ],
+                const SizedBox(height: 16),
+                _BasicDetailsBox(
+                  name: [
+                    activeMember?.firstName ?? '',
+                    activeMember?.lastName ?? '',
+                  ].join(' ').trim(),
+                  age: '${calculateAge(activeMember!.dateOfBirth)}',
+                  gender: activeMember!.gender,
+                  relation: activeMember!.relation,
+                  mobileNo: activeMember!.phoneNumber,
+                  address: 'activeMember.address',
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Health Records',
+                  style: AppTextStyle.bodyXLMedium
+                      .copyWith(color: AppColors.grayscale900),
+                ),
+                const SizedBox(height: 16),
+                if (true)
+                  Column(
+                    children: [
+                      HealthCard(
+                        isEpr: true,
+                        dateUpdated: '25/03/2024',
+                        ontap: () {
+                          GoRouter.of(context).pushNamed(
+                            RoutesConstants.eprRoute,
+                            pathParameters: {
+                              'memberId': '$memberId',
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      HealthCard(
+                        isEpr: false,
+                        dateUpdated: '25/03/2024',
+                        ontap: () {
+                          GoRouter.of(context)
+                              .push(RoutesConstants.phrPdfViewPage);
+                        },
+                      ),
+                      const SizedBox(height: Dimension.d17),
+                    ],
+                  )
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SubscribeCard(),
+                      const SizedBox(height: Dimension.d8),
+                      Text(
+                        'Signup for care packages',
+                        style: AppTextStyle.bodyXLBold
+                            .copyWith(color: AppColors.grayscale900),
+                      ),
+                      const SizedBox(height: Dimension.d6),
+                      const SubscriptionPkg(
+                        expanded: true,
+                        type: SubscriptionType.companion,
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      const SubscriptionPkg(
+                        expanded: true,
+                        type: SubscriptionType.wellness,
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      const SubscriptionPkg(
+                        expanded: true,
+                        type: SubscriptionType.emergency,
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
