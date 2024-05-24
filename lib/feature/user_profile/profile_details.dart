@@ -20,6 +20,7 @@ import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -90,6 +91,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           ),
         );
         store.updateSuccess = false;
+
+        /// Refreshing the member store, name there can get updated
+        GetIt.I<MembersStore>().refresh();
         context.pop();
       }
     });
