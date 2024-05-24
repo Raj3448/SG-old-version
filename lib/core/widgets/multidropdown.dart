@@ -14,7 +14,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
     Key? key,
     required List<ValueItem> values,
     MultiSelectController? controller,
-    required List<ValueItem<dynamic>> selectedOptions,
+    List<ValueItem<dynamic>>? selectedOptions,
     FormFieldSetter<List<ValueItem<dynamic>>>? onSaved,
     FormFieldValidator<List<ValueItem<dynamic>>>? validator,
   }) : super(

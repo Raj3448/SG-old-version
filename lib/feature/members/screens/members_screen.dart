@@ -68,7 +68,7 @@ class MembersScreen extends StatelessWidget {
                       pathParameters: {
                         'edit': 'false',
                         'memberId': '${store.activeMember!.id}',
-                        // 'memberId': '1',
+                        
                       },
                     );
                   },

@@ -220,10 +220,11 @@ final GoRouter routes = GoRouter(
       path: '/addEditFamilyMember/:edit/:memberId',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
-        final edit = state.pathParameters['edit']!.toLowerCase() == 'true';
+        final edit =
+            state.pathParameters['edit']!.toLowerCase();
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
-            edit: edit,
+            edit: bool.parse(edit),
             memberId: int.parse(state.pathParameters['memberId']!),
           ),
         );

@@ -1,17 +1,14 @@
 // ignore_for_file: deprecated_member_use, inference_failure_on_function_invocation, lines_longer_than_80_chars, strict_raw_type, avoid_bool_literals_in_conditional_expressions
 
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
-import 'package:multi_dropdown/models/value_item.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
@@ -55,40 +52,67 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   final memberService = GetIt.I<MemberServices>();
   final memberStore = GetIt.I<MembersStore>();
 
-  late MembersStore _memberStore;
-  late Member _member;
-
   final List<ValueItem<String>> _genderItems = [
     const ValueItem(label: 'Male', value: 'Male'),
     const ValueItem(label: 'Female', value: 'Female'),
     const ValueItem(label: 'Other', value: 'Other'),
   ];
+  final List<ValueItem<String>> _relationList = [
+    ValueItem(label: 'Father'.tr(), value: 'Father'),
+    ValueItem(label: 'Mother'.tr(), value: 'Mother'),
+    ValueItem(label: 'Sister'.tr(), value: 'Sister'),
+    ValueItem(label: 'Brother'.tr(), value: 'Brother'),
+    ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
+    ValueItem(label: 'Son'.tr(), value: 'Son'),
+    ValueItem(label: 'Wife'.tr(), value: 'Wife'),
+    ValueItem(label: 'Self'.tr(), value: 'Self'),
+  ];
+  late Member _member;
+  late final int? selectedGenderIndex;
+  late final int? relationIndex;
+  String? profileImgUrl;
+  File? storeImageFile;
+  bool isImageUpdate = false;
 
-  void initController() {
-    _memberStore = GetIt.I<MembersStore>();
-    _member = _memberStore.members
-        .firstWhere((member) => member.id == widget.memberId);
-    final selectedGenderIndex = _member.gender == 'Male'
-        ? 0
-        : _member.gender == 'Female'
-            ? 1
-            : 2;
-    firstNameContr.text = _member.firstName;
-    lastNameContr.text = _member.lastName;
-    try {
-      genderContr.setSelectedOptions([_genderItems[selectedGenderIndex]]);
-    } catch (e) {
-      print(e);
+  bool isAlreadyhaveProfileImg = false;
+
+  void _updateImageFile(File? imageFile) {
+    storeImageFile = imageFile;
+    isImageUpdate = true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.edit) {
+      _member = memberStore.activeMember!;
+      selectedGenderIndex =
+          _genderItems.indexWhere((element) => element.value == _member.gender);
+      firstNameContr.text = _member.firstName;
+      lastNameContr.text = _member.lastName;
+      dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
+      print(_member.relation);
+      relationIndex = _relationList
+          .indexWhere((element) => element.value == _member.relation);
+      phoneNumberContr.text = _member.phoneNumber;
+      emailContr.text = _member.email;
+      if (_member.profileImg != null) {
+        isAlreadyhaveProfileImg = true;
+        profileImgUrl = _member.profileImg!.url;
+      }
+      if (_member.address != null) {
+        stateContr.text = _member.address!.state;
+        cityContr.text = _member.address!.city;
+        memberAddressContr.text = _member.address!.streetAddress;
+        countryContr.text = _member.address!.country;
+        postalCodeContr.text = _member.address!.postalCode;
+      }
     }
-    dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
-    // relationContr.setSelectedOptions(options)
-    phoneNumberContr.text = _member.phoneNumber;
-    emailContr.text = _member.email;
   }
 
   @override
   Widget build(BuildContext context) {
-    // initController();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: PageAppbar(
@@ -205,8 +229,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
             children: [
               Center(
                   child: EditPic(
-                onImageSelected: (_) {},
-                imgUrl: null,
+                onImageSelected: _updateImageFile,
+                imgUrl: profileImgUrl,
               )),
               const SizedBox(height: 16),
               Form(
@@ -218,7 +242,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Enter your first name',
-                      // initialValue: widget.edit ? _member.firstName : null,
                       keyboardType: TextInputType.name,
                       controller: firstNameContr,
                       large: false,
@@ -238,7 +261,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       hintText: 'Enter your last name',
                       keyboardType: TextInputType.name,
                       controller: lastNameContr,
-                      // initialValue: widget.edit ? _member.lastName : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -251,7 +273,13 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 16),
                     const AsteriskLabel(label: 'Gender'),
                     const SizedBox(height: 8),
-                    GenderDropdown(controller: genderContr),
+                    MultiSelectFormField(
+                      selectedOptions: widget.edit
+                          ? [_genderItems[selectedGenderIndex!]]
+                          : null,
+                      controller: genderContr,
+                      values: _genderItems,
+                    ),
                     const SizedBox(height: 16),
                     const AsteriskLabel(label: 'Date of birth'),
                     const SizedBox(height: 8),
@@ -259,7 +287,12 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     const SizedBox(height: 16),
                     const AsteriskLabel(label: 'Relation'),
                     const SizedBox(height: 8),
-                    RelationDropdown(controller: relationContr),
+                    MultiSelectFormField(
+                      selectedOptions:
+                          widget.edit ? [_relationList[relationIndex!]] : null,
+                      controller: relationContr,
+                      values: _relationList,
+                    ),
                     const SizedBox(height: 16),
                     const AsteriskLabel(label: 'Mobile number'),
                     const SizedBox(height: 8),
@@ -267,7 +300,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       hintText: 'Enter mobile number',
                       keyboardType: TextInputType.number,
                       controller: phoneNumberContr,
-                      // initialValue: widget.edit ? _member.phoneNumber : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -284,7 +316,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       hintText: 'Enter email address',
                       keyboardType: TextInputType.emailAddress,
                       controller: emailContr,
-                      // initialValue: widget.edit ? _member.email : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {

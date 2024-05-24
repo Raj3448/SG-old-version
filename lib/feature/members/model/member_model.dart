@@ -35,6 +35,7 @@
 // }
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 part 'member_model.freezed.dart';
 part 'member_model.g.dart';
@@ -52,9 +53,32 @@ class Member with _$Member {
     required String lastName,
     required DateTime createdAt,
     required DateTime updatedAt,
+    ProfileImg? profileImg,
     String? relation,
-    // String? address,
+    Address? address,
+    PhrModel? phrModel,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
+}
+
+@freezed
+class PhrModel with _$PhrModel {
+  @JsonSerializable(createToJson: true)
+  const factory PhrModel({
+    required int id,
+    required String firstName,
+    required String lastName,
+    required int age,
+    required String email,
+    required String gender,
+    required String bloodGroup,
+    required bool downloadPhr,
+    required String uniqueKey,
+    required String additionalInformation,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _PhrModel;
+
+  factory PhrModel.fromJson(Map<String, dynamic> json) => _$PhrModelFromJson(json);
 }

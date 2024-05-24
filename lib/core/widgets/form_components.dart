@@ -49,8 +49,8 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: initialValue != null ? null : controller,
-      initialValue: initialValue,
+      controller: controller,
+      // initialValue: initialValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
