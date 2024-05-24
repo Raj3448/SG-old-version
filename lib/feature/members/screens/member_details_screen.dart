@@ -27,6 +27,7 @@ class MemberDetailsScreen extends StatelessWidget {
   });
 
   final int memberId;
+  final bool hasCareSub = false;
   final activeMember = GetIt.I<MembersStore>().activeMember;
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,7 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -182,6 +184,7 @@ class _BasicDetailsBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeMember = GetIt.I<MembersStore>().activeMember;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
@@ -273,7 +276,10 @@ class _BasicDetailsBox extends StatelessWidget {
             ontap: () {
               GoRouter.of(context).pushNamed(
                 RoutesConstants.addEditFamilyMemberRoute,
-                pathParameters: {'edit': 'true'},
+                pathParameters: {
+                  'edit': 'true',
+                  
+                },
               );
             },
             title: 'Edit',

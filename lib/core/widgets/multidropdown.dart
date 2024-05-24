@@ -14,9 +14,9 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
     Key? key,
     required List<ValueItem> values,
     MultiSelectController? controller,
-    required List<ValueItem<dynamic>> selectedOptions,
+    List<ValueItem<dynamic>>? selectedOptions,
     FormFieldSetter<List<ValueItem<dynamic>>>? onSaved,
-    FormFieldValidator<List<ValueItem<dynamic>>>? validator,
+    String? Function(List<ValueItem<dynamic>>?)? validator,
   }) : super(
           key: key,
           onSaved: onSaved,
@@ -190,98 +190,92 @@ class GenderDropdown extends StatelessWidget {
   }
 }
 
-class DateDropdown extends StatefulWidget {
-  const DateDropdown({
-    required this.controller,
-    super.key,
-  });
+class DateDropdown extends FormField<DateTime> {
+  DateDropdown({
+    Key? key,
+    required TextEditingController controller,
+    FormFieldSetter<DateTime>? onSaved,
+    FormFieldValidator<DateTime>? validator,
+  }) : super(
+          key: key,
+          onSaved: onSaved,
+          validator: validator,
+          initialValue: controller.text.isEmpty
+              ? null
+              : DateFormat('yyyy-MM-dd').parse(controller.text),
+          builder: (FormFieldState<DateTime> state) {
+            return GestureDetector(
+              onTap: () async {
+                final pickedDate = await showDatePicker(
+                  context: state.context,
+                  firstDate: DateTime(1950),
+                  lastDate: DateTime.now(),
+                  initialDate: state.value ?? DateTime.now(),
+                );
 
-  final TextEditingController controller;
-
-  @override
-  _DateDropdownState createState() => _DateDropdownState();
-}
-
-class _DateDropdownState extends State<DateDropdown> {
-  late TextEditingController _dateController;
-  DateTime? _selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-    _dateController = widget.controller;
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        final pickedDate = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
-          initialDate: _selectedDate ?? DateTime.now(),
-        );
-
-        if (pickedDate != null && pickedDate != _selectedDate) {
-          setState(() {
-            _selectedDate = pickedDate;
-            _dateController.text =
-                DateFormat('yyyy-MM-dd').format(_selectedDate!);
-          });
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.line),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: _dateController,
-                decoration: const InputDecoration(
-                  hintText: 'Select',
-                  border: InputBorder.none,
+                if (pickedDate != null && pickedDate != state.value) {
+                  state.didChange(pickedDate);
+                  controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey),
                 ),
-                readOnly: true,
-                onTap: () async {
-                  final pickedDate = await showDatePicker(
-                    context: context,
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime.now(),
-                    initialDate: _selectedDate ?? DateTime.now(),
-                  );
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: controller,
+                            decoration: const InputDecoration(
+                              hintText: 'Select',
+                              border: InputBorder.none,
+                            ),
+                            readOnly: true,
+                            onTap: () async {
+                              final pickedDate = await showDatePicker(
+                                context: state.context,
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime.now(),
+                                initialDate: state.value ?? DateTime.now(),
+                              );
 
-                  if (pickedDate != null && pickedDate != _selectedDate) {
-                    setState(() {
-                      _selectedDate = pickedDate;
-                      _dateController.text =
-                          DateFormat('yyyy-MM-dd').format(_selectedDate!);
-                    });
-                  }
-                },
+                              if (pickedDate != null && pickedDate != state.value) {
+                                state.didChange(pickedDate);
+                                controller.text =
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: Colors.grey,
+                          size: 18,
+                        ),
+                      ],
+                    ),
+                    if (state.hasError)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          state.errorText!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            const Icon(
-              AppIcons.calendar,
-              color: AppColors.grayscale700,
-              size: 18,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            );
+          },
+        );
 }

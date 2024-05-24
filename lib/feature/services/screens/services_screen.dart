@@ -6,7 +6,6 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
 
 class ServicesScreen extends StatelessWidget {

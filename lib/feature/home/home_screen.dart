@@ -734,34 +734,37 @@ class _MemberInfo extends StatelessWidget {
             builder: (_) {
               return Column(
                 children: [
-                  Row(
-                    children: [
-                      for (var i = 0; i < memberStore.members.length; i++)
-                        Row(
-                          children: [
-                            SelectableAvatar(
-                              imgPath: 'assets/icon/default _profile.png',
-                              maxRadius: 24,
-                              isSelected: memberStore.members[i].id ==
-                                  memberStore.activeMemberId,
-                              ontap: () => memberStore
-                                  .selectMember(memberStore.members[i].id),
-                            ),
-                            const SizedBox(width: Dimension.d4),
-                          ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (var i = 0; i < memberStore.members.length; i++)
+                          Row(
+                            children: [
+                              SelectableAvatar(
+                                imgPath: 'assets/icon/default _profile.png',
+                                maxRadius: 24,
+                                isSelected: memberStore.members[i].id ==
+                                    memberStore.activeMemberId,
+                                ontap: () => memberStore
+                                    .selectMember(memberStore.members[i].id),
+                              ),
+                              const SizedBox(width: Dimension.d4),
+                            ],
+                          ),
+                        SelectableAvatar(
+                          imgPath: 'assets/icon/44Px.png',
+                          maxRadius: 24,
+                          isSelected: false,
+                          ontap: () {
+                            context.pushNamed(
+                              RoutesConstants.addEditFamilyMemberRoute,
+                              pathParameters: {'edit': 'false'},
+                            );
+                          },
                         ),
-                      SelectableAvatar(
-                        imgPath: 'assets/icon/44Px.png',
-                        maxRadius: 24,
-                        isSelected: false,
-                        ontap: () {
-                          context.pushNamed(
-                            RoutesConstants.addEditFamilyMemberRoute,
-                            pathParameters: {'edit': 'false'},
-                          );
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: Dimension.d4),
                   if (memberStore.selectedIndex != -1)
@@ -774,7 +777,7 @@ class _MemberInfo extends StatelessWidget {
                                 '${activeMember.firstName} ${activeMember.lastName}',
                             relation: '${activeMember.relation}',
                             age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: activeMember.updatedAt,
+                            updatedAt: activeMember.updatedAt!,
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
