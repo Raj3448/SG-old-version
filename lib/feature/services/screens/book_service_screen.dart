@@ -76,6 +76,7 @@ class BookServiceScreen extends StatelessWidget {
               ),
               const SizedBox(height: Dimension.d2),
               MultiDropdown(
+                selectedOptions: [],
                 values: [
                   ValueItem(
                     label: '30 mins'.tr(),

@@ -31,7 +31,7 @@ abstract class IMemberService {
   });
 }
 
-const baseUrl = 'api';
+const baseUrl = '/api';
 
 class MemberServices implements IMemberService {
   MemberServices(this.httpClient);

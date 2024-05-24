@@ -2,7 +2,6 @@
 
 import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
-import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';

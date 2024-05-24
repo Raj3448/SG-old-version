@@ -36,6 +36,9 @@ class IconTitleDetailsComponent extends StatelessWidget {
             color: AppColors.grayscale600,
           ),
         ),
+        const SizedBox(
+          width: Dimension.d5,
+        ),
         Expanded(
           child: Text(
             details,

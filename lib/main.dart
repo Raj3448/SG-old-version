@@ -130,7 +130,10 @@ void main() async {
             HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData(),
       );
       GetIt.instance.registerLazySingleton(
-        () => UserDetailStore(GetIt.I<UserDetailServices>()),
+        () => UserDetailStore(
+          GetIt.I<UserDetailServices>(),
+          GetIt.I<UserDetailsCache>(),
+        ),
       );
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
@@ -167,7 +170,7 @@ void main() async {
           child: const MyApp(),
         ),
       );
-      
+
       FlutterNativeSplash.remove();
     },
     (exception, stackTrace) {

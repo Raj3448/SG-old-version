@@ -52,7 +52,7 @@ class Avatar extends StatelessWidget {
       case AvatarSize.size12:
         radius = 12;
     }
-    return Avatar(imgPath: imgPath, maxRadius: radius);
+    return Avatar(imgPath: imgPath, maxRadius: radius,);
   }
   final String imgPath;
   final double maxRadius;
