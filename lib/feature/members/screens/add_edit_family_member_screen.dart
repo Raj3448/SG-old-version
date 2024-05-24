@@ -2,26 +2,43 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_dropdown/models/value_item.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
 
-class AddEditFamilyMemberScreen extends StatelessWidget {
-  AddEditFamilyMemberScreen({required this.edit, super.key});
+class AddEditFamilyMemberScreen extends StatefulWidget {
+  const AddEditFamilyMemberScreen({
+    required this.edit,
+    required this.memberId,
+    super.key,
+  });
 
   final bool edit;
+  final int memberId;
+
+  @override
+  State<AddEditFamilyMemberScreen> createState() =>
+      _AddEditFamilyMemberScreenState();
+}
+
+class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   final firstNameContr = TextEditingController();
   final lastNameContr = TextEditingController();
   final MultiSelectController genderContr = MultiSelectController();
@@ -38,39 +55,140 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
   final memberService = GetIt.I<MemberServices>();
   final memberStore = GetIt.I<MembersStore>();
 
+  late MembersStore _memberStore;
+  late Member _member;
+
+  final List<ValueItem<String>> _genderItems = [
+    const ValueItem(label: 'Male', value: 'Male'),
+    const ValueItem(label: 'Female', value: 'Female'),
+    const ValueItem(label: 'Other', value: 'Other'),
+  ];
+
+  void initController() {
+    _memberStore = GetIt.I<MembersStore>();
+    _member = _memberStore.members
+        .firstWhere((member) => member.id == widget.memberId);
+    final selectedGenderIndex = _member.gender == 'Male'
+        ? 0
+        : _member.gender == 'Female'
+            ? 1
+            : 2;
+    firstNameContr.text = _member.firstName;
+    lastNameContr.text = _member.lastName;
+    try {
+      genderContr.setSelectedOptions([_genderItems[selectedGenderIndex]]);
+    } catch (e) {
+      print(e);
+    }
+    dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
+    // relationContr.setSelectedOptions(options)
+    phoneNumberContr.text = _member.phoneNumber;
+    emailContr.text = _member.email;
+  }
+
   @override
   Widget build(BuildContext context) {
+    // initController();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: PageAppbar(
-        title: edit ? 'Member details'.tr() : 'Add new family member'.tr(),
+        title:
+            widget.edit ? 'Member details'.tr() : 'Add new family member'.tr(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: edit
+      floatingActionButton: widget.edit
           ? FixedButton(
               ontap: () {
-                GoRouter.of(context).pop();
+                print(firstNameContr.text);
+                print(lastNameContr.text);
+                print(genderContr.value);
+                print(dobContr.text);
+                print(phoneNumberContr.text);
+                print(emailContr.text);
+                // GoRouter.of(context).pop();
               },
               btnTitle: 'Save details',
               showIcon: false,
               iconPath: AppIcons.check,
             )
           : FixedButton(
-              ontap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const InfoDialog(
-                      showIcon: true,
-                      title: 'New family member added',
-                      desc:
-                          'New family member successfully\nadded to the Health profile.',
-                      btnTitle: 'Continue',
-                      showBtnIcon: false,
-                      btnIconPath: AppIcons.check,
-                    );
-                  },
-                );
+              ontap: () async {
+                final genderSelectedValue =
+                    genderContr.selectedOptions.isNotEmpty
+                        ? genderContr.selectedOptions[0].value.toString()
+                        : '';
+                final relationSelectedValue =
+                    relationContr.selectedOptions.isNotEmpty
+                        ? relationContr.selectedOptions[0].value.toString()
+                        : '';
+                if (formKey.currentState!.validate()) {
+                  print(relationSelectedValue == 'Self' ? true : false);
+                  print(relationSelectedValue);
+                  print(genderSelectedValue);
+                  print(firstNameContr.text);
+                  print(lastNameContr.text);
+                  print(dobContr.text);
+                  print(emailContr.text);
+                  print(phoneNumberContr.text);
+                  final result = await memberService.addMember(
+                    relationSelectedValue == 'Self' ? true : false,
+                    relationSelectedValue,
+                    genderSelectedValue,
+                    firstNameContr.text,
+                    lastNameContr.text,
+                    dobContr.text,
+                    emailContr.text,
+                    '91 ${phoneNumberContr.text}',
+                  );
+
+                  result.fold(
+                    (l) {
+                      print('Failure message: $l');
+                      l.maybeWhen(
+                        validationError: (message) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(message),
+                            ),
+                          );
+                        },
+                        badResponse: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Bad response from server'),
+                            ),
+                          );
+                        },
+                        orElse: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Something Went wrong',
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    (r) {
+                      print('Member added success');
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const InfoDialog(
+                            showIcon: true,
+                            title: 'New family member added',
+                            desc:
+                                'New family member successfully\nadded to the Health profile.',
+                            btnTitle: 'Continue',
+                            showBtnIcon: false,
+                            btnIconPath: AppIcons.check,
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
               },
               btnTitle: 'Add new member',
               showIcon: false,
@@ -100,12 +218,12 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Enter your first name',
-                      initialValue:
-                          edit ? memberStore.members[0].firstName : '',
+                      // initialValue: widget.edit ? _member.firstName : null,
                       keyboardType: TextInputType.name,
                       controller: firstNameContr,
                       large: false,
                       enabled: true,
+                      onChanged: (value) => firstNameContr.text = value,
                       validationLogic: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your first name';
@@ -120,6 +238,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                       hintText: 'Enter your last name',
                       keyboardType: TextInputType.name,
                       controller: lastNameContr,
+                      // initialValue: widget.edit ? _member.lastName : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -148,6 +267,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                       hintText: 'Enter mobile number',
                       keyboardType: TextInputType.number,
                       controller: phoneNumberContr,
+                      // initialValue: widget.edit ? _member.phoneNumber : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -164,6 +284,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                       hintText: 'Enter email address',
                       keyboardType: TextInputType.emailAddress,
                       controller: emailContr,
+                      // initialValue: widget.edit ? _member.email : null,
                       large: false,
                       enabled: true,
                       validationLogic: (value) {
@@ -184,6 +305,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                       hintText: 'Enter address',
                       keyboardType: TextInputType.streetAddress,
                       controller: memberAddressContr,
+                      // initialValue: _member.address,
                       large: true,
                       enabled: true,
                     ),
@@ -192,7 +314,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Type here...',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       controller: countryContr,
                       large: false,
                       enabled: true,
@@ -208,7 +330,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Type here...',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       controller: stateContr,
                       large: false,
                       enabled: true,
@@ -218,7 +340,7 @@ class AddEditFamilyMemberScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     CustomTextField(
                       hintText: 'Type here...',
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.name,
                       controller: cityContr,
                       large: false,
                       enabled: true,

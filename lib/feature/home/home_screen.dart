@@ -774,7 +774,7 @@ class _MemberInfo extends StatelessWidget {
                                 '${activeMember.firstName} ${activeMember.lastName}',
                             relation: '${activeMember.relation}',
                             age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: activeMember.updatedAt,
+                            updatedAt: activeMember.updatedAt!,
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,

@@ -98,11 +98,13 @@ class MemberServices implements IMemberService {
 
       if (response.statusCode == 200) {
         final responseData = response.data;
+        print(responseData);
         final member = Member.fromJson(responseData as Map<String, dynamic>);
         return Right(member);
       }
       if (response.statusCode == 400) {
         final responseData = response.data;
+        print(responseData);
         final errorMessage =
             responseData['error']['message'] ?? 'Validation error occurred';
         final errorDetails =
@@ -120,11 +122,8 @@ class MemberServices implements IMemberService {
         return const Left(MemberServiceFailure.addMemberError());
       }
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      print(e);
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 

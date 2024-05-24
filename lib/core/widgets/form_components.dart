@@ -32,6 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.validationLogic,
     this.textInputAction,
     this.initialValue,
+    this.onChanged,
     super.key,
   });
 
@@ -43,12 +44,13 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validationLogic;
   final TextInputAction? textInputAction;
   final String? initialValue;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      // initialValue: initialValue,
+      controller: initialValue != null ? null : controller,
+      initialValue: initialValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
@@ -57,6 +59,7 @@ class CustomTextField extends StatelessWidget {
         color: enabled ? AppColors.grayscale700 : AppColors.grayscale900,
       ),
       maxLines: 8,
+      onChanged: onChanged,
       minLines: large ? 5 : 1,
       decoration: InputDecoration(
         hintText: hintText.tr(),

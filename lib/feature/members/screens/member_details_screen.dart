@@ -28,6 +28,7 @@ class MemberDetailsScreen extends StatelessWidget {
   });
 
   final int memberId;
+  final bool hasCareSub = false;
   final activeMember = GetIt.I<MembersStore>().activeMember;
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class MemberDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Member details'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: true
+      floatingActionButton: hasCareSub
           ? FixedButton(
               ontap: () {
                 showDialog(
@@ -98,7 +99,7 @@ class MemberDetailsScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale900),
               ),
               const SizedBox(height: 16),
-              if (true)
+              if (hasCareSub)
                 Column(
                   children: [
                     HealthCard(
@@ -181,6 +182,7 @@ class _BasicDetailsBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeMember = GetIt.I<MembersStore>().activeMember;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
@@ -272,8 +274,12 @@ class _BasicDetailsBox extends StatelessWidget {
             ontap: () {
               GoRouter.of(context).pushNamed(
                 RoutesConstants.addEditFamilyMemberRoute,
-                pathParameters: {'edit': 'true'},
+                pathParameters: {
+                  'edit': 'true',
+                  'memberId': '${activeMember!.id}',
+                },
               );
+              print('${activeMember.id}');
             },
             title: 'Edit',
             showIcon: false,
