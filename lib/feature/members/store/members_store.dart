@@ -24,8 +24,7 @@ abstract class _MembersStoreBase with Store {
   int selectedIndex = 0;
 
   @computed
-  int? get activeMemberId =>
-      selectedMemberId != null ? selectedMemberId : members.firstOrNull?.id;
+  int? get activeMemberId => selectedMemberId ?? members.firstOrNull?.id;
 
   @computed
   Member? get activeMember => activeMemberId != null
@@ -40,6 +39,8 @@ abstract class _MembersStoreBase with Store {
 
   @observable
   bool isLoading = false;
+  @observable
+  bool isRefreshing = false;
 
   @observable
   bool initialLoaded = false;
@@ -99,10 +100,43 @@ abstract class _MembersStoreBase with Store {
   }
 
   @action
+  Future<void> refresh() async {
+    isRefreshing = true;
+    try {
+      final membersOrFailure = await memberService.getMembers();
+      membersOrFailure.fold(
+        (failure) {},
+        (membersList) {
+          members = membersList;
+          errorMessage = null;
+        },
+      );
+    } catch (e) {
+    } finally {
+      isRefreshing = false;
+    }
+  }
+
+  @action
   Future<Future<Either<MemberServiceFailure, Member>>> updateMember(
     int id,
     Map<String, dynamic> updatedData,
   ) async {
     return memberService.updateMember(id, updatedData);
   }
+
+  Member? memberById(int? id) {
+    if (id == null) return null;
+
+    for (final member in members) {
+      if (member.id == id) {
+        return member;
+      }
+    }
+    return null;
+  }
+}
+
+extension MemberExtension on Member {
+  String get name => [firstName, lastName].join(' ').trim();
 }
