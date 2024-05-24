@@ -135,6 +135,17 @@ abstract class _MembersStoreBase with Store {
     }
     return null;
   }
+
+  void clear() {
+    members = [];
+    errorMessage = null;
+    selectedIndex = 0;
+    selectedMemberId = null;
+    isActive = false;
+    isLoading = false;
+    isRefreshing = false;
+    initialLoaded = false;
+  }
 }
 
 extension MemberExtension on Member {

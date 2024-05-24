@@ -54,7 +54,6 @@ class MemberServices implements IMemberService {
               ),
             )
             .toList();
-        print(parsedMembers);
         return Right(parsedMembers as List<Member>);
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
