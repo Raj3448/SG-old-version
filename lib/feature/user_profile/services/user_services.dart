@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -24,24 +26,25 @@ class UserDetailServices implements IUserFacades {
     try {
       var userData = user.toJson();
 
-      userData = {
-        "firstName": userData['firstName'],
-        "lastName": userData['lastName'],
-        "gender": userData['gender'],
-        "profileImg": userData['profileImg'],
-        "dateOfBirth": userData['dateOfBirth'],
-        "address": {
-          "id": userData['address']['id'],
-          "state": userData['address']['state'],
-          "city": userData['address']['city'],
-          "streetAddress": userData['address']['streetAddress'],
-          "postalCode": userData['address']['postalCode'],
-          "country": userData['address']['country']
+      var data = {
+        'firstName': userData['firstName'],
+        'lastName': userData['lastName'],
+        'gender': userData['gender'],
+        'profileImg': userData['profileImg'],
+        'dateOfBirth': userData['dateOfBirth'],
+        'address': {
+          'state': userData['address']['state'],
+          'city': userData['address']['city'],
+          'streetAddress': userData['address']['streetAddress'],
+          'postalCode': userData['address']['postalCode'],
+          'country': userData['address']['country']
         }
       };
+      if (userData['address']['id'] != -1) {
+        data['address']['id'] = userData['address']['id'];
+      }
       if (imageId != null) {
-        userData.update('profileImg', (value) => imageId,
-            ifAbsent: () => imageId);
+        data.update('profileImg', (value) => imageId, ifAbsent: () => imageId);
       }
       final response = await httpClient
           .put<String>('/$baseURL/users/${user.id}', data: userData);

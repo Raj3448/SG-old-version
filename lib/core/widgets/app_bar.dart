@@ -50,25 +50,27 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hi',
-                          style: AppTextStyle.bodyXLBold.copyWith(
-                            color: AppColors.grayscale900,
-                            height: 1.4,
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Hi',
+                            style: AppTextStyle.bodyXLBold.copyWith(
+                                color: AppColors.grayscale900,
+                                height: 1.4,
+                                overflow: TextOverflow.ellipsis),
+                          ).tr(args: [user?.name ?? '---']),
+                          Text(
+                            'How do you feel today?'.tr(),
+                            style: AppTextStyle.bodyMediumMedium.copyWith(
+                                color: AppColors.grayscale600, height: 1.42),
                           ),
-                        ).tr(args: [user?.name ?? '---']),
-                        Text(
-                          'How do you feel today?'.tr(),
-                          style: AppTextStyle.bodyMediumMedium.copyWith(
-                              color: AppColors.grayscale600, height: 1.42),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    const Spacer(),
+                    
                     _IconContainer(
                       iconPath: 'assets/icon/bell-Unread.svg',
                       onPressed: () {

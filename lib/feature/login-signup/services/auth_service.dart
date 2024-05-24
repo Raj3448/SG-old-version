@@ -24,8 +24,6 @@ abstract class IAuthService {
   });
 }
 
-const baseUrl = 'api';
-
 class AuthService implements IAuthService {
   AuthService({
     required this.httpClient,
@@ -47,7 +45,7 @@ class AuthService implements IAuthService {
     };
     try {
       final request = await httpClient.post(
-        '$baseUrl/login/',
+        '/api/login/',
         data: data,
       );
       if (request.statusCode == 200) {
@@ -94,7 +92,7 @@ class AuthService implements IAuthService {
     };
     try {
       final request = await httpClient.post(
-        '$baseUrl/auth/register-app-user',
+        '/api/auth/register-app-user',
         data: data,
       );
       if (request.statusCode == 200) {
@@ -146,11 +144,11 @@ class AuthService implements IAuthService {
     try {
       final phoneNumberVerificationResponse = isFromLoginPage
           ? await httpClient.post(
-              '$baseUrl/verify-otp/',
+              '/api/verify-otp/',
               data: loginData,
             )
           : await httpClient.post(
-              '$baseUrl/auth/register-complete',
+              '/api/auth/register-complete',
               data: signUpData,
             );
       if (phoneNumberVerificationResponse.statusCode == 200) {
