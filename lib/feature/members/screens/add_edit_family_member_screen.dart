@@ -101,36 +101,28 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       }
     });
 
-    reaction((_) => memberStore.addNewMemberSuccessfully, (_) {
-      if (memberStore.addNewMemberFailure != null) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return InfoDialog(
-              showIcon: true,
-              title: memberStore.addNewMemberFailure!,
-              desc:
-                  'New family member successfully\nadded to the Health profile.',
-              btnTitle: 'Continue',
-              showBtnIcon: false,
-              btnIconPath: AppIcons.check,
-            );
-          },
-        ).then((value) {
-          context.pop();
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(memberStore.addNewMemberFailure!),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-        memberStore.addNewMemberFailure = null;
+    reaction((_) => memberStore.addNewMemberSuccessfully, (successValue) async {
+      if (successValue == null) return;
 
-        /// Refreshing the member store, name there can get updated
-        GetIt.I<MembersStore>().refresh();
-        context.pop();
-      }
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return InfoDialog(
+            showIcon: true,
+            title: successValue,
+            desc:
+                'New family member successfully\nadded to the Health profile.',
+            btnTitle: 'Continue',
+            showBtnIcon: false,
+            btnIconPath: AppIcons.check,
+          );
+        },
+      );
+
+      /// Refreshing the member store, name there can get updated
+      GetIt.I<MembersStore>().refresh();
+      context.pop();
+      memberStore.addNewMemberSuccessfully = null;
     });
   }
 
@@ -152,14 +144,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: widget.edit
                     ? FixedButton(
-                        ontap: () {
-                          print(firstNameContr.text);
-                          print(lastNameContr.text);
-                          print(genderContr.value);
-                          print(dobContr.text);
-                          print(phoneNumberContr.text);
-                          print(emailContr.text);
-                        },
+                        ontap: () {},
                         btnTitle: 'Save details',
                         showIcon: false,
                         iconPath: AppIcons.check,
@@ -433,7 +418,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                   ),
                 ),
               ),
-              if (memberStore.isLoading)
+              if (memberStore.isAddOrEditLoading)
                 const Material(
                     color: Colors.transparent, child: LoadingWidget())
             ],

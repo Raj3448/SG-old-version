@@ -40,6 +40,10 @@ abstract class _MembersStoreBase with Store {
 
   @observable
   bool isLoading = false;
+
+  @observable
+  bool isAddOrEditLoading = false;
+
   @observable
   bool isRefreshing = false;
 
@@ -107,17 +111,18 @@ abstract class _MembersStoreBase with Store {
   }
 
   @action
-  Future<void> refresh() async {
+  void refresh() {
     isRefreshing = true;
     try {
-      final membersOrFailure = await memberService.getMembers();
-      membersOrFailure.fold(
-        (failure) {},
-        (membersList) {
-          members = membersList;
-          errorMessage = null;
-        },
-      );
+      memberService.getMembers().then((membersOrFailure) {
+        membersOrFailure.fold(
+          (failure) {},
+          (membersList) {
+            members = membersList;
+            errorMessage = null;
+          },
+        );
+      });
     } catch (e) {
     } finally {
       isRefreshing = false;
@@ -155,7 +160,7 @@ abstract class _MembersStoreBase with Store {
     required String phoneNumber,
     required Address address,
   }) {
-    isLoading = true;
+    isAddOrEditLoading = true;
     memberService
         .addMember(self, relation, gender, firstName, lastName, dob, email,
             phoneNumber, address)
@@ -169,7 +174,7 @@ abstract class _MembersStoreBase with Store {
       }, (r) {
         addNewMemberSuccessfully = 'New Family Member Added Successfully';
       });
-      isLoading = false;
+      isAddOrEditLoading = false;
     });
   }
 
@@ -182,6 +187,9 @@ abstract class _MembersStoreBase with Store {
     isLoading = false;
     isRefreshing = false;
     initialLoaded = false;
+    addNewMemberFailure = null;
+    addNewMemberSuccessfully = null;
+    isAddOrEditLoading = false;
   }
 }
 
