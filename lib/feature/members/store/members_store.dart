@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 part 'members_store.g.dart';
 
 class MembersStore = _MembersStoreBase with _$MembersStore;
@@ -44,6 +45,12 @@ abstract class _MembersStoreBase with Store {
 
   @observable
   bool initialLoaded = false;
+
+  @observable
+  String? addNewMemberFailure;
+
+  @observable
+  String? addNewMemberSuccessfully;
 
   @action
   void selectMember(int memberId) {
@@ -134,6 +141,36 @@ abstract class _MembersStoreBase with Store {
       }
     }
     return null;
+  }
+
+  @action
+  void addNewFamilyMember({
+    required bool self,
+    required String relation,
+    required String gender,
+    required String firstName,
+    required String lastName,
+    required String dob,
+    required String email,
+    required String phoneNumber,
+    required Address address,
+  }) {
+    isLoading = true;
+    memberService
+        .addMember(self, relation, gender, firstName, lastName, dob, email,
+            phoneNumber, address)
+        .then((value) {
+      value.fold((l) {
+        l.maybeMap(socketException: (value) {
+          addNewMemberFailure = 'No internet connection';
+        }, orElse: () {
+          addNewMemberFailure = 'Something went wrong';
+        });
+      }, (r) {
+        addNewMemberSuccessfully = 'New Family Member Added Successfully';
+      });
+      isLoading = false;
+    });
   }
 
   void clear() {

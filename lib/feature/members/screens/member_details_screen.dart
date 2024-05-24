@@ -275,10 +275,9 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
-                  'memberId': '${activeMember!.id}',
+                  
                 },
               );
-              print('${activeMember.id}');
             },
             title: 'Edit',
             showIcon: false,

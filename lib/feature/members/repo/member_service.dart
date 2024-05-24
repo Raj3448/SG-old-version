@@ -7,6 +7,7 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
 import 'package:silver_genie/feature/members/model/member_health_info_model.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 abstract class IMemberService {
   Future<Either<MemberServiceFailure, List<Member>>> getMembers();
@@ -19,6 +20,7 @@ abstract class IMemberService {
     String dob,
     String email,
     String phoneNumber,
+    Address address
   );
   Future<Either<MemberServiceFailure, Member>> updateMember(
     int id,
@@ -77,6 +79,7 @@ class MemberServices implements IMemberService {
     String dob,
     String email,
     String phoneNumber,
+    Address address,
   ) async {
     final newMemberData = {
       'self': self,
@@ -87,6 +90,13 @@ class MemberServices implements IMemberService {
       'dob': dob,
       'email': email,
       'phoneNumber': phoneNumber,
+      'address' : {
+        'state': address.state,
+        'city': address.city,
+        'streetAddress': address.streetAddress,
+        'postalCode': address.postalCode,
+        'country': address.country
+      }
     };
 
     try {
@@ -96,9 +106,9 @@ class MemberServices implements IMemberService {
       );
 
       if (response.statusCode == 200) {
-        final responseData = response.data;
+        final responseData = response.data['data']['users'] as List<dynamic>;
         print(responseData);
-        final member = Member.fromJson(responseData as Map<String, dynamic>);
+        final member = Member.fromJson( responseData.last as Map<String, dynamic>);
         return Right(member);
       }
       if (response.statusCode == 400) {

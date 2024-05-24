@@ -432,16 +432,4 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       ),
     );
   }
-
-  void _checkWhatToDo() {
-    if (store.updateFailureMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(store.updateFailureMessage!),
-        duration: const Duration(seconds: 3),
-      ));
-
-      return;
-    }
-    context.pop();
-  }
 }

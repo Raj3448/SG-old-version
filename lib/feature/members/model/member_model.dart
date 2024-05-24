@@ -54,7 +54,7 @@ class Member with _$Member {
     required DateTime createdAt,
     required DateTime updatedAt,
     ProfileImg? profileImg,
-    String? relation,
+    @Default('Self')String relation,
     Address? address,
     PhrModel? phrModel,
   }) = _Member;

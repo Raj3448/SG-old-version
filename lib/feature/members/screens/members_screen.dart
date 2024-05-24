@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -9,7 +8,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
 
@@ -67,8 +65,6 @@ class MembersScreen extends StatelessWidget {
                       RoutesConstants.addEditFamilyMemberRoute,
                       pathParameters: {
                         'edit': 'false',
-                        'memberId': '${store.activeMember!.id}',
-                        
                       },
                     );
                   },

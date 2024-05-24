@@ -217,7 +217,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/addEditFamilyMember/:edit/:memberId',
+      path: '/addEditFamilyMember/:edit',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
         final edit =
@@ -225,7 +225,7 @@ final GoRouter routes = GoRouter(
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
             edit: bool.parse(edit),
-            memberId: int.parse(state.pathParameters['memberId']!),
+            
           ),
         );
       },
