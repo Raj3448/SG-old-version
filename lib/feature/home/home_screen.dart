@@ -237,8 +237,7 @@ class _HomeScreenComponents extends StatelessWidget {
 class _TestmonialsComponent extends StatelessWidget {
   _TestmonialsComponent({
     required this.testimonialsModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final PageController _testimonialsCardController = PageController();
   final TestimonialsModel testimonialsModel;
@@ -321,8 +320,7 @@ class _TestmonialsComponent extends StatelessWidget {
 class _AboutUsOfferComponent extends StatelessWidget {
   _AboutUsOfferComponent({
     required this.aboutUsOfferModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final AboutUsOfferModel aboutUsOfferModel;
   final PageController _offerPageController = PageController();
@@ -420,8 +418,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
 class _BannerImageComponent extends StatelessWidget {
   const _BannerImageComponent({
     required this.bannerImageModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final BannerImageModel bannerImageModel;
   @override
@@ -461,8 +458,7 @@ class _TestmonialsCard extends StatelessWidget {
   const _TestmonialsCard({
     required this.testifierName,
     required this.content,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final String testifierName;
   final String content;
@@ -733,24 +729,32 @@ class _MemberInfo extends StatelessWidget {
           Observer(
             builder: (_) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(
+                      decelerationRate: ScrollDecelerationRate.fast,
+                    ),
                     scrollDirection: Axis.horizontal,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         for (var i = 0; i < memberStore.members.length; i++)
-                          Row(
-                            children: [
-                              SelectableAvatar(
-                                imgPath: 'assets/icon/default _profile.png',
-                                maxRadius: 24,
-                                isSelected: memberStore.members[i].id ==
-                                    memberStore.activeMemberId,
-                                ontap: () => memberStore
-                                    .selectMember(memberStore.members[i].id),
-                              ),
-                              const SizedBox(width: Dimension.d4),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Row(
+                              children: [
+                                SelectableAvatar(
+                                  imgPath: 'assets/icon/default _profile.png',
+                                  maxRadius: 24,
+                                  isSelected: memberStore.members[i].id ==
+                                      memberStore.activeMemberId,
+                                  ontap: () => memberStore
+                                      .selectMember(memberStore.members[i].id),
+                                ),
+                                const SizedBox(width: Dimension.d4),
+                              ],
+                            ),
                           ),
                         SelectableAvatar(
                           imgPath: 'assets/icon/44Px.png',
@@ -766,7 +770,6 @@ class _MemberInfo extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: Dimension.d4),
                   if (memberStore.selectedIndex != -1)
                     Observer(
                       builder: (context) {
@@ -775,9 +778,9 @@ class _MemberInfo extends StatelessWidget {
                           return ActivePlanComponent(
                             name:
                                 '${activeMember.firstName} ${activeMember.lastName}',
-                            relation: '${activeMember.relation}',
+                            relation: activeMember.relation,
                             age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: activeMember.updatedAt!,
+                            updatedAt: activeMember.updatedAt,
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -804,9 +807,14 @@ class _MemberInfo extends StatelessWidget {
                         final selectedMember =
                             memberStore.members[memberStore.selectedIndex];
                         return selectedMember != null && memberStore.isActive
-                            ? const CoachContact(
-                                imgpath: '',
-                                name: 'Suma Latha',
+                            ? const Column(
+                                children: [
+                                  SizedBox(height: Dimension.d4),
+                                  CoachContact(
+                                    imgpath: '',
+                                    name: 'Suma Latha',
+                                  ),
+                                ],
                               )
                             : const SizedBox();
                       },

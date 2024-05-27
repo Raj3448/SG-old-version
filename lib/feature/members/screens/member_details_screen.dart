@@ -27,7 +27,7 @@ class MemberDetailsScreen extends StatelessWidget {
   });
 
   final int memberId;
-  final bool hasCareSub = false;
+  final bool hasCareSub = true;
   final activeMember = GetIt.I<MembersStore>().activeMember;
   @override
   Widget build(BuildContext context) {
@@ -44,29 +44,27 @@ class MemberDetailsScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         appBar: const PageAppbar(title: 'Member details'),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: true
-            ? FixedButton(
-                ontap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const InfoDialog(
-                        showIcon: false,
-                        title: 'Hi there!!',
-                        desc:
-                            'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                        btnTitle: 'Contact Genie',
-                        showBtnIcon: true,
-                        btnIconPath: AppIcons.phone,
-                      );
-                    },
-                  );
-                },
-                btnTitle: 'Update Health record',
-                showIcon: false,
-                iconPath: AppIcons.clinical_notes,
-              )
-            : null,
+        floatingActionButton: FixedButton(
+          ontap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const InfoDialog(
+                  showIcon: false,
+                  title: 'Hi there!!',
+                  desc:
+                      'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                  btnTitle: 'Contact Genie',
+                  showBtnIcon: true,
+                  btnIconPath: AppIcons.phone,
+                );
+              },
+            );
+          },
+          btnTitle: 'Update Health record',
+          showIcon: false,
+          iconPath: AppIcons.clinical_notes,
+        ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(
             decelerationRate: ScrollDecelerationRate.fast,
@@ -91,7 +89,9 @@ class MemberDetailsScreen extends StatelessWidget {
                   gender: activeMember!.gender,
                   relation: activeMember!.relation,
                   mobileNo: activeMember!.phoneNumber,
-                  address: 'activeMember.address',
+                  address: activeMember!.address != null
+                      ? '${activeMember!.address!.streetAddress}, ${activeMember!.address!.city}, ${activeMember!.address!.state}, ${activeMember!.address!.country}'
+                      : 'n/a',
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -100,7 +100,7 @@ class MemberDetailsScreen extends StatelessWidget {
                       .copyWith(color: AppColors.grayscale900),
                 ),
                 const SizedBox(height: 16),
-                if (true)
+                if (hasCareSub)
                   Column(
                     children: [
                       HealthCard(
@@ -173,14 +173,14 @@ class _BasicDetailsBox extends StatelessWidget {
     required this.gender,
     required this.relation,
     required this.mobileNo,
-    required this.address,
+    this.address,
   });
   final String name;
   final String age;
   final String gender;
   final String? relation;
   final String mobileNo;
-  final String address;
+  final String? address;
 
   @override
   Widget build(BuildContext context) {
@@ -254,17 +254,21 @@ class _BasicDetailsBox extends StatelessWidget {
           ),
           const SizedBox(height: Dimension.d3),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
-                AppIcons.home,
-                color: AppColors.grayscale700,
-                size: 17,
+              const Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Icon(
+                  AppIcons.home,
+                  color: AppColors.grayscale700,
+                  size: 17,
+                ),
               ),
               const SizedBox(width: Dimension.d3),
               SizedBox(
                 width: 300,
                 child: Text(
-                  address,
+                  address!,
                   style: AppTextStyle.bodyLargeMedium
                       .copyWith(color: AppColors.grayscale900),
                 ),
@@ -278,7 +282,6 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
-                  
                 },
               );
             },

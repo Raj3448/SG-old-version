@@ -3,7 +3,9 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -91,12 +93,15 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     if (widget.edit) {
       _initializeControllers();
     }
+
     reaction((_) => memberStore.addNewMemberFailure, (_) {
       if (memberStore.addNewMemberFailure != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(memberStore.addNewMemberFailure!),
-          duration: const Duration(seconds: 3),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(memberStore.addNewMemberFailure!),
+            duration: const Duration(seconds: 3),
+          ),
+        );
         memberStore.addNewMemberFailure = null;
       }
     });
@@ -124,6 +129,42 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       context.pop();
       memberStore.addNewMemberSuccessfully = null;
     });
+
+    reaction((_) => memberStore.updateMemberFailure, (_) {
+      if (memberStore.updateMemberFailure != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(memberStore.updateMemberFailure!),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        memberStore.updateMemberFailure = null;
+      }
+    });
+
+    reaction((_) => memberStore.updateMemberSuccessfully, (successValue) async {
+      if (successValue == null) return;
+
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return InfoDialog(
+            showIcon: true,
+            title: successValue,
+            desc: 'Family member updated successfully.',
+            btnTitle: 'Continue',
+            showBtnIcon: false,
+            btnIconPath: AppIcons.check,
+          );
+        },
+      );
+
+      GetIt.I<MembersStore>().refresh();
+      context
+        ..pop()
+        ..pop();
+      memberStore.updateMemberSuccessfully = null;
+    });
   }
 
   @override
@@ -144,7 +185,39 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: widget.edit
                     ? FixedButton(
-                        ontap: () {},
+                        ontap: () {
+                          final genderSelectedValue =
+                              genderContr.selectedOptions.first;
+                          final relationSelectedValue =
+                              relationContr.selectedOptions.first;
+                          Map<String, dynamic> updatedData = {
+                            'firstName': firstNameContr.text,
+                            'lastName': lastNameContr.text,
+                            'dob': dobContr.text,
+                            'relation':
+                                relationSelectedValue.value.toString().trim(),
+                            'gender':
+                                genderSelectedValue.value.toString().trim(),
+                          };
+                          if (storeImageFile != null) {
+                            memberStore.updateMemberDataWithProfileImg(
+                              id: _member.id.toString(),
+                              fileImage: storeImageFile!,
+                              memberInstance: updatedData,
+                            );
+                            return;
+                          }
+                          if (isAlreadyhaveProfileImg && isImageUpdate) {
+                            if (storeImageFile == null) {
+                              updatedData['profileImg'] = null;
+                            }
+                          }
+                          memberStore.updateMember(
+                            id: _member.id,
+                            updatedData: updatedData,
+                          );
+                          print(dobContr.text);
+                        },
                         btnTitle: 'Save details',
                         showIcon: false,
                         iconPath: AppIcons.check,
@@ -159,22 +232,15 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           final relationSelectedValue =
                               relationContr.selectedOptions.first;
 
-                          print(relationSelectedValue == 'Self' ? true : false);
-                          print(relationSelectedValue);
-                          print(genderSelectedValue);
-                          print(firstNameContr.text);
-                          print(lastNameContr.text);
-                          print(dobContr.text);
-                          print(emailContr.text);
-                          print(phoneNumberContr.text);
                           memberStore.addNewFamilyMember(
                             address: Address(
-                                id: -1,
-                                state: stateContr.text.trim(),
-                                city: cityContr.text.trim(),
-                                streetAddress: memberAddressContr.text.trim(),
-                                postalCode: postalCodeContr.text.trim(),
-                                country: countryContr.text.trim()),
+                              id: -1,
+                              state: stateContr.text.trim(),
+                              city: cityContr.text.trim(),
+                              streetAddress: memberAddressContr.text.trim(),
+                              postalCode: postalCodeContr.text.trim(),
+                              country: countryContr.text.trim(),
+                            ),
                             dob: dobContr.text,
                             email: emailContr.text.trim(),
                             firstName: firstNameContr.text.trim(),
@@ -204,10 +270,11 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Center(
-                            child: EditPic(
-                          onImageSelected: _updateImageFile,
-                          imgUrl: profileImgUrl,
-                        )),
+                          child: EditPic(
+                            onImageSelected: _updateImageFile,
+                            imgUrl: profileImgUrl,
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         Form(
                           key: formKey,
@@ -294,38 +361,79 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'Mobile number'),
                               const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Enter mobile number',
-                                keyboardType: TextInputType.number,
-                                controller: phoneNumberContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your mobile number';
+                              GestureDetector(
+                                onTap: () {
+                                  if (widget.edit) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const InfoDialog(
+                                          showIcon: true,
+                                          title:
+                                              'Want to Update mobile number?',
+                                          desc:
+                                              'Please contact the SilverGenie team for changing mobile number.',
+                                          btnTitle: 'Contact Genie',
+                                          showBtnIcon: true,
+                                          btnIconPath: AppIcons.phone,
+                                        );
+                                      },
+                                    );
                                   }
-                                  return null;
                                 },
+                                child: CustomTextField(
+                                  hintText: 'Enter mobile number',
+                                  keyboardType: TextInputType.number,
+                                  controller: phoneNumberContr,
+                                  large: false,
+                                  enabled: widget.edit ? false : true,
+                                  validationLogic: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your mobile number';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'Email ID'),
                               const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Enter email address',
-                                keyboardType: TextInputType.emailAddress,
-                                controller: emailContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  const regex =
-                                      r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your email address';
-                                  } else if (!RegExp(regex).hasMatch(value)) {
-                                    return 'Please enter a valid email address';
+                              GestureDetector(
+                                onTap: () {
+                                  if (widget.edit) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const InfoDialog(
+                                          showIcon: true,
+                                          title: 'Want to Update Email ID?',
+                                          desc:
+                                              'Please contact the SilverGenie team for changing Email ID.',
+                                          btnTitle: 'Contact Genie',
+                                          showBtnIcon: true,
+                                          btnIconPath: AppIcons.phone,
+                                        );
+                                      },
+                                    );
                                   }
-                                  return null;
                                 },
+                                child: CustomTextField(
+                                  hintText: 'Enter email address',
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: emailContr,
+                                  large: false,
+                                  enabled: widget.edit ? false : true,
+                                  validationLogic: (value) {
+                                    const regex =
+                                        r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your email address';
+                                    } else if (!RegExp(regex).hasMatch(value)) {
+                                      return 'Please enter a valid email address';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'Member Address'),
@@ -420,7 +528,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
               ),
               if (memberStore.isAddOrEditLoading)
                 const Material(
-                    color: Colors.transparent, child: LoadingWidget())
+                  color: Colors.transparent,
+                  child: LoadingWidget(),
+                ),
             ],
           );
         },

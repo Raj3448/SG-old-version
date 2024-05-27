@@ -1,8 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:fpdart/fpdart.dart';
+import 'dart:io';
+
 import 'package:mobx/mobx.dart';
-import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -55,6 +55,20 @@ abstract class _MembersStoreBase with Store {
 
   @observable
   String? addNewMemberSuccessfully;
+
+  @observable
+  String? updateMemberFailure;
+
+  @observable
+  String? updateMemberSuccessfully;
+
+  @observable
+  bool isUpdatingMemberInfo = false;
+  @observable
+  bool updateSuccess = false;
+
+  @observable
+  String? updateFailureMessage;
 
   @action
   void selectMember(int memberId) {
@@ -130,11 +144,62 @@ abstract class _MembersStoreBase with Store {
   }
 
   @action
-  Future<Future<Either<MemberServiceFailure, Member>>> updateMember(
-    int id,
-    Map<String, dynamic> updatedData,
-  ) async {
-    return memberService.updateMember(id, updatedData);
+  void updateMember({
+    required int id,
+    required Map<String, dynamic> updatedData,
+  }) {
+    isAddOrEditLoading = true;
+    memberService.updateMember(id.toString(), updatedData, null).then((value) {
+      value.fold((l) {
+        l.maybeMap(
+          socketException: (value) {
+            updateMemberFailure = 'No internet connection';
+          },
+          orElse: () {
+            // updateMemberFailure = 'Something went wrong';
+            updateMemberFailure = '$value';
+          },
+        );
+      }, (r) {
+        updateMemberSuccessfully = 'Family Member Updated Successfully';
+      });
+      isAddOrEditLoading = false;
+    });
+  }
+
+  @action
+  void updateMemberDataWithProfileImg({
+    required String id,
+    required File fileImage,
+    required Map<String, dynamic> memberInstance,
+  }) {
+    isAddOrEditLoading = true;
+    updateSuccess = false;
+    updateFailureMessage = null;
+    memberService
+        .updateMemberDataWithProfileImg(
+      id: id,
+      fileImage: fileImage,
+      memberInfo: memberInstance,
+    )
+        .then((value) {
+      value.fold((l) {
+        l.maybeMap(
+          socketException: (value) {
+            updateMemberFailure = 'No internet connection';
+            return null;
+          },
+          orElse: () {
+            updateMemberFailure = '$value';
+            return null;
+          },
+        );
+      }, (r) {
+        // updateSuccess = true;
+        updateMemberSuccessfully = 'Family Member Updated Successfully';
+      });
+      isAddOrEditLoading = false;
+    });
   }
 
   Member? memberById(int? id) {
@@ -162,15 +227,27 @@ abstract class _MembersStoreBase with Store {
   }) {
     isAddOrEditLoading = true;
     memberService
-        .addMember(self, relation, gender, firstName, lastName, dob, email,
-            phoneNumber, address)
+        .addMember(
+      self,
+      relation,
+      gender,
+      firstName,
+      lastName,
+      dob,
+      email,
+      phoneNumber,
+      address,
+    )
         .then((value) {
       value.fold((l) {
-        l.maybeMap(socketException: (value) {
-          addNewMemberFailure = 'No internet connection';
-        }, orElse: () {
-          addNewMemberFailure = 'Something went wrong';
-        });
+        l.maybeMap(
+          socketException: (value) {
+            addNewMemberFailure = 'No internet connection';
+          },
+          orElse: () {
+            addNewMemberFailure = 'Something went wrong';
+          },
+        );
       }, (r) {
         addNewMemberSuccessfully = 'New Family Member Added Successfully';
       });
