@@ -354,7 +354,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           MultiSelectFormField(
                             values: _countryItems,
                             controller: _countryController,
-                            selectedOptions: [if (_selectedCountryIndex == -1) _countryItems[0] else _countryItems[_selectedCountryIndex!]],
+                            selectedOptions: _selectedCountryIndex == -1 ? null : [_countryItems[_selectedCountryIndex!]],
                             validator: (selectedItems) {
                               if (selectedItems == null ||
                                   selectedItems.isEmpty) {
