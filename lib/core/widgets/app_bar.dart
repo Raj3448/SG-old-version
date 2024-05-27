@@ -35,18 +35,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                         GoRouter.of(context)
                             .pushNamed(RoutesConstants.userProfileRoute);
                       },
-                      child: CircleAvatar(
-                        radius: 24,
-                        backgroundImage:
-                            userStore.userDetails?.profileImg == null
-                                ? null
-                                : NetworkImage(
-                                    userStore.userDetails?.profileImgUrl ?? ''),
-                        child: userStore.userDetails?.profileImg != null
-                            ? null
-                            : Avatar.fromSize(
-                                imgPath: '', size: AvatarSize.size24),
-                      ),
+                      child: Avatar(
+                          imgPath: userStore.userDetails!.profileImgUrl!,
+                          maxRadius: 22),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
