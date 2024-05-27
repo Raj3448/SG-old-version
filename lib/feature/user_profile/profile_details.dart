@@ -12,6 +12,7 @@ import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
@@ -37,9 +38,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final MultiSelectController _genderController = MultiSelectController();
+  final MultiSelectController _countryController = MultiSelectController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
+
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _postalController = TextEditingController();
@@ -53,7 +55,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     const ValueItem(label: 'Other', value: 'Other'),
   ];
 
-  bool _isInitialize = false;
+  final List<ValueItem<String>> _countryItems = List.generate(
+    countries.length,
+    (index) => ValueItem(
+      label: countries[index].name,
+      value: countries[index].isoCode,
+    ),
+  );
   final store = GetIt.I<UserDetailStore>();
   bool isAlreadyhaveProfileImg = false;
   bool isImageUpdate = false;
@@ -118,14 +126,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     if (userDetails.address != null) {
       _cityController.text = userDetails.address!.city;
       _stateController.text = userDetails.address!.state;
-      _countryController.text = userDetails.address!.country;
       _addressController.text = userDetails.address!.streetAddress;
       _postalController.text = userDetails.address!.postalCode;
     }
-
-    final userGender = userDetails.gender;
     selectedGenderIndex =
-        _genderItems.indexWhere((item) => item.value == userGender);
+        _genderItems.indexWhere((item) => item.value == userDetails.gender);
 
     // if (!_isInitialize) {
     //   setState(() {
@@ -156,9 +161,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 floatingActionButton: FixedButton(
                   ontap: () async {
                     if (!globalkey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Please fill all the fields'),
+                        duration: Duration(seconds: 3),
+                      ));
                       return;
                     }
-
                     user = user!.copyWith(
                       firstName: _firstNameController.text,
                       lastName: _lastNameController.text,
@@ -173,16 +181,15 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           city: _cityController.text,
                           streetAddress: _addressController.text,
                           postalCode: _postalController.text,
-                          country: _countryController.text),
+                          country: _countryController
+                              .selectedOptions.first.value
+                              .toString()),
                     );
-
                     if (storedImageFile != null) {
                       store.updateUserDataWithProfileImg(
                           fileImage: storedImageFile!, userInstance: user!);
-
                       return;
                     }
-
                     if (isAlreadyhaveProfileImg && isImageUpdate) {
                       if (storedImageFile == null) {
                         user = user?.copyWith(profileImg: null);
@@ -346,15 +353,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const AsteriskLabel(label: 'Country'),
                           const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'Country',
-                            keyboardType: TextInputType.emailAddress,
-                            large: false,
-                            enabled: true,
+                          MultiSelectFormField(
+                            values: _countryItems,
                             controller: _countryController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter the country';
+                            validator: (selectedItems) {
+                              if (selectedItems == null ||
+                                  selectedItems.isEmpty) {
+                                return 'Please select country';
                               }
                               return null;
                             },
