@@ -71,6 +71,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   }
 
   int? selectedGenderIndex;
+  int? _selectedCountryIndex;
 
   final globalkey = GlobalKey<FormState>();
 
@@ -120,10 +121,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     if (userDetails.profileImg != null) {
       isAlreadyhaveProfileImg = true;
       profileImgUrl = userDetails.profileImg!.url;
+      
     }
 
     // Set address fields if available
     if (userDetails.address != null) {
+      _selectedCountryIndex = _countryItems.indexWhere((element) => element.value == userDetails.address!.country);
       _cityController.text = userDetails.address!.city;
       _stateController.text = userDetails.address!.state;
       _addressController.text = userDetails.address!.streetAddress;
@@ -131,12 +134,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     }
     selectedGenderIndex =
         _genderItems.indexWhere((item) => item.value == userDetails.gender);
-
-    // if (!_isInitialize) {
-    //   setState(() {
-    //     _isInitialize = true;
-    //   });
-    // }
+    
   }
 
   @override
@@ -356,6 +354,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           MultiSelectFormField(
                             values: _countryItems,
                             controller: _countryController,
+                            selectedOptions: [if (_selectedCountryIndex == -1) _countryItems[0] else _countryItems[_selectedCountryIndex!]],
                             validator: (selectedItems) {
                               if (selectedItems == null ||
                                   selectedItems.isEmpty) {

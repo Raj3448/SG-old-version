@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 
@@ -17,7 +16,7 @@ enum AvatarSize {
   size56,
 }
 
-class Avatar extends StatefulWidget {
+class Avatar extends StatelessWidget {
   const Avatar({
     required this.imgPath,
     required this.maxRadius,
@@ -66,45 +65,23 @@ class Avatar extends StatefulWidget {
   final bool isNetworkImage;
 
   @override
-  State<Avatar> createState() => _AvatarState();
-}
-
-class _AvatarState extends State<Avatar> {
-
-  bool _isConnected = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkConnectivity();
-  }
-
-  Future<void> _checkConnectivity() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    setState(() {
-      _isConnected = !connectivityResult.contains(ConnectivityResult.none);
-    });
-  }
-
-
-  @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.maxRadius * 2,
-      width: widget.maxRadius * 2,
+      height: maxRadius * 2,
+      width: maxRadius * 2,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
           shape: BoxShape.circle,
-          image: widget.imgPath == '' || (widget.isNetworkImage && !_isConnected)
+          image: imgPath == ''
               ? const DecorationImage(
                   image: AssetImage('assets/icon/default _profile.png'))
               : null),
-      child: widget.imgPath == ''
+      child: imgPath == ''
           ? null
           : ClipRRect(
               child: CachedNetworkImage(
                 fit: BoxFit.cover,
-                imageUrl: widget.imgPath,
+                imageUrl: imgPath,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                 CircularProgressIndicator(value: downloadProgress.progress),
                 
