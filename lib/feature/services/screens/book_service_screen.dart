@@ -75,8 +75,8 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              MultiDropdown(
-                selectedOptions: [],
+              MultiSelectFormField(
+                
                 values: [
                   ValueItem(
                     label: '30 mins'.tr(),

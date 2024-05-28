@@ -175,6 +175,7 @@ class ActivePlanComponent extends StatelessWidget {
     required this.relation,
     required this.age,
     required this.updatedAt,
+    required this.memberPhrId,
     super.key,
   });
   final String name;
@@ -182,6 +183,7 @@ class ActivePlanComponent extends StatelessWidget {
   final String age;
   final String updatedAt;
   final VoidCallback onTap;
+  final int memberPhrId;
 
   @override
   Widget build(BuildContext context) {
@@ -247,10 +249,15 @@ class ActivePlanComponent extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: () {
-                      GoRouter.of(context)
-                          .pushNamed(RoutesConstants.phrPdfViewPage);
-                    },
+                    ontap: memberPhrId == -1
+                        ? null
+                        : () {
+                            GoRouter.of(context).pushNamed(
+                                RoutesConstants.phrPdfViewPage,
+                                pathParameters: {
+                                  'memberPhrId': memberPhrId.toString()
+                                });
+                          },
                     title: 'View PHR',
                     showIcon: false,
                     iconPath: Icons.not_interested,

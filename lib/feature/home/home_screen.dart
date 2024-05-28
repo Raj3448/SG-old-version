@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -10,6 +11,7 @@ import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -424,13 +426,21 @@ class _BannerImageComponent extends StatelessWidget {
   final BannerImageModel bannerImageModel;
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      'http://api-dev.yoursilvergenie.com${bannerImageModel.bannerImage.data.attributes.url}',
-      height: 250,
-      width: bannerImageModel.bannerImage.data.attributes.width,
-      errorBuilder: (context, error, stackTrace) {
-        return const SizedBox();
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Dimension.d2),
+        child: CachedNetworkImage(
+          fit: BoxFit.cover,
+          height: 250,
+          width: bannerImageModel.bannerImage.data.attributes.width,
+          imageUrl:
+              '${Env.serverUrl}${bannerImageModel.bannerImage.data.attributes.url}',
+          progressIndicatorBuilder: (context, url, downloadProgress) =>
+              CircularProgressIndicator(value: downloadProgress.progress),
+          errorWidget: (context, url, error) => const SizedBox(),
+        ),
+      ),
     );
   }
 }
@@ -791,6 +801,9 @@ class _MemberInfo extends StatelessWidget {
                                 },
                               );
                             },
+                            memberPhrId: activeMember.phrModel != null
+                                ? activeMember.phrModel!.id
+                                : -1,
                           );
                         } else if (memberStore.isActive == false) {
                           return InactivePlanComponent(

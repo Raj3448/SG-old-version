@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
     required this.iconColor,
     super.key,
   });
-  final VoidCallback ontap;
+  final VoidCallback? ontap;
   final String title;
   final bool showIcon;
   final IconData iconPath;

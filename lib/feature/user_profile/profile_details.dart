@@ -121,12 +121,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     if (userDetails.profileImg != null) {
       isAlreadyhaveProfileImg = true;
       profileImgUrl = userDetails.profileImg!.url;
-      
     }
 
     // Set address fields if available
     if (userDetails.address != null) {
-      _selectedCountryIndex = _countryItems.indexWhere((element) => element.value == userDetails.address!.country);
+      _selectedCountryIndex = _countryItems.indexWhere(
+          (element) => element.value == userDetails.address!.country);
       _cityController.text = userDetails.address!.city;
       _stateController.text = userDetails.address!.state;
       _addressController.text = userDetails.address!.streetAddress;
@@ -134,7 +134,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     }
     selectedGenderIndex =
         _genderItems.indexWhere((item) => item.value == userDetails.gender);
-    
   }
 
   @override
@@ -252,14 +251,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const AsteriskLabel(label: 'Gender'),
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
-                            values: _genderItems,
                             controller: _genderController,
-                            selectedOptions: [
-                              _genderItems[selectedGenderIndex!]
-                            ],
+                            values: _genderItems,
+                            selectedOptions: [_genderItems[selectedGenderIndex!]],
                             validator: (selectedItems) {
-                              if (selectedItems == null ||
-                                  selectedItems.isEmpty) {
+                              if (selectedItems == null) {
                                 return 'Please select a gender';
                               }
                               return null;
@@ -295,6 +291,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               keyboardType: TextInputType.number,
                               large: false,
                               enabled: false,
+                              isTextColorDisable: true,
                               controller: _mobileController,
                             ),
                           ),
@@ -325,6 +322,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               keyboardType: TextInputType.emailAddress,
                               large: false,
                               enabled: false,
+                              isTextColorDisable: true,
                               controller: _emailController,
                             ),
                           ),
@@ -352,16 +350,17 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
-                            values: _countryItems,
                             controller: _countryController,
-                            selectedOptions: [if (_selectedCountryIndex == -1) _countryItems[0] else _countryItems[_selectedCountryIndex!]],
+                            values: _countryItems,
                             validator: (selectedItems) {
-                              if (selectedItems == null ||
-                                  selectedItems.isEmpty) {
+                              if (selectedItems == null) {
                                 return 'Please select country';
                               }
                               return null;
                             },
+                            selectedOptions: _selectedCountryIndex == -1 || _selectedCountryIndex == null
+                                ? null
+                                : [_countryItems[_selectedCountryIndex!]],
                           ),
                           const SizedBox(height: Dimension.d4),
                           const SizedBox(height: Dimension.d4),

@@ -14,6 +14,8 @@ enum AvatarSize {
   size44,
   size48,
   size56,
+  size58,
+  size60
 }
 
 class Avatar extends StatelessWidget {
@@ -53,6 +55,10 @@ class Avatar extends StatelessWidget {
         radius = 14;
       case AvatarSize.size12:
         radius = 12;
+      case AvatarSize.size58:
+        radius = 58;
+      case AvatarSize.size60:
+        radius = 60;
     }
     return Avatar(
       imgPath: imgPath,
@@ -74,22 +80,20 @@ class Avatar extends StatelessWidget {
         shape: BoxShape.circle,
         image: imgPath == ''
             ? const DecorationImage(
-                image: AssetImage('assets/icon/default _profile.png'),
                 fit: BoxFit.cover,
+                image: AssetImage('assets/icon/default _profile.png'),
               )
             : null,
       ),
       child: imgPath == ''
           ? null
-          : ClipRRect(
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: imgPath,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    CircularProgressIndicator(value: downloadProgress.progress),
-                errorWidget: (context, url, error) =>
-                    Image.asset('assets/icon/default _profile.png'),
-              ),
+          : CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: imgPath,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) =>
+                  Image.asset('assets/icon/default _profile.png'),
             ),
     );
   }
@@ -108,11 +112,6 @@ class SelectableAvatar extends Avatar {
 
   @override
   Widget build(BuildContext context) {
-    final imageProvider = isNetworkImage
-        ? NetworkImage(imgPath) as ImageProvider
-        : imgPath.isNotEmpty
-            ? AssetImage(imgPath)
-            : const AssetImage('assets/icon/default _profile.png');
     return GestureDetector(
       onTap: ontap,
       child: Container(
@@ -133,10 +132,7 @@ class SelectableAvatar extends Avatar {
         ),
         child: Opacity(
           opacity: isSelected ? 1.0 : 0.7,
-          child: CircleAvatar(
-            maxRadius: maxRadius, backgroundImage: imageProvider,
-            // backgroundImage: NetworkImage(imgPath),
-          ),
+          child: Avatar(imgPath: imgPath, maxRadius: maxRadius),
         ),
       ),
     );

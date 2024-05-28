@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
@@ -40,9 +39,10 @@ abstract class IMemberService {
     required File fileImage,
     required Map<String, dynamic> memberInfo,
   });
+  Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
+    required String memberPhrId,
+  });
 }
-
-const baseUrl = '/api';
 
 class MemberServices implements IMemberService {
   MemberServices(this.httpClient);
@@ -52,7 +52,7 @@ class MemberServices implements IMemberService {
   @override
   Future<Either<MemberServiceFailure, List<Member>>> getMembers() async {
     try {
-      final response = await httpClient.get('$baseUrl/user/family');
+      final response = await httpClient.get('/api/user/family');
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
@@ -69,12 +69,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -110,7 +108,7 @@ class MemberServices implements IMemberService {
 
     try {
       final response = await httpClient.post(
-        '$baseUrl/user/add-family',
+        '/api/user/add-family',
         data: newMemberData,
       );
 
@@ -138,8 +136,9 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.addMemberError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      print(e);
       return const Left(MemberServiceFailure.badResponse());
     }
   }
@@ -156,7 +155,7 @@ class MemberServices implements IMemberService {
       }
 
       final response = await httpClient.put(
-        '$baseUrl/family/$id/update',
+        '/api/family/$id/update',
         data: updateData,
       );
 
@@ -167,10 +166,11 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.memberDetailsEditError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      print(e);
       if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
+        return const Left(MemberServiceFailure.socketExceptionError());
       } else {
         return const Left(MemberServiceFailure.badResponse());
       }
@@ -211,7 +211,7 @@ class MemberServices implements IMemberService {
         return const Left(MemberServiceFailure.badResponse());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketException());
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (error) {
       return const Left(MemberServiceFailure.badResponse());
     }
@@ -229,12 +229,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -251,12 +249,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -279,12 +275,35 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
+      return const Left(MemberServiceFailure.badResponse());
+    }
+  }
+
+  Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
+    required String memberPhrId,
+  }) async {
+    try {
+      final response =
+          await httpClient.get('/api/phr/pdf/$memberPhrId/generate');
+      if (response.statusCode == 200) {
+        if (response.data['details'] != null &&
+            response.data['details']['name'] == 'NO_PHR_FOUND') {
+          return const Left(MemberServiceFailure.memberPHRNotFound());
+        }
+        if (response.data['pdfPath'] != null) {
+          return Right(response.data['pdfPath'] as String);
+        }
+        return const Left(MemberServiceFailure.badResponse());
       } else {
         return const Left(MemberServiceFailure.badResponse());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
+    } catch (error) {
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 }
