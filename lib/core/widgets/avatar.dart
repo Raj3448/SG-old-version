@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 
@@ -28,6 +29,7 @@ class Avatar extends StatelessWidget {
     required AvatarSize size,
   }) {
     double radius;
+    bool isNetworkImage = isnetworkImage;
     switch (size) {
       case AvatarSize.size16:
         radius = 16;
@@ -52,17 +54,41 @@ class Avatar extends StatelessWidget {
       case AvatarSize.size12:
         radius = 12;
     }
-    return Avatar(imgPath: imgPath, maxRadius: radius,);
+    return Avatar(
+      imgPath: imgPath,
+      maxRadius: radius,
+      isNetworkImage: isNetworkImage,
+    );
   }
   final String imgPath;
   final double maxRadius;
   final bool isNetworkImage;
+
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      maxRadius: maxRadius,
-      backgroundImage: isNetworkImage? NetworkImage(imgPath) as ImageProvider:const AssetImage('assets/icon/default _profile.png'),
-      // backgroundImage: NetworkImage(imgPath),
+    return Container(
+      height: maxRadius * 2,
+      width: maxRadius * 2,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: imgPath == ''
+              ? const DecorationImage(
+                  image: AssetImage('assets/icon/default _profile.png'))
+              : null),
+      child: imgPath == ''
+          ? null
+          : ClipRRect(
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: imgPath,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                CircularProgressIndicator(value: downloadProgress.progress),
+                
+                errorWidget: (context, url, error) =>
+                    Image.asset('assets/icon/default _profile.png'),
+              ),
+            ),
     );
   }
 }
@@ -80,9 +106,11 @@ class SelectableAvatar extends Avatar {
 
   @override
   Widget build(BuildContext context) {
-    final imageProvider = isNetworkImage? NetworkImage(imgPath) as ImageProvider:imgPath.isNotEmpty
-        ? AssetImage(imgPath)
-        : const AssetImage('assets/icon/default _profile.png');
+    final imageProvider = isNetworkImage
+        ? NetworkImage(imgPath) as ImageProvider
+        : imgPath.isNotEmpty
+            ? AssetImage(imgPath)
+            : const AssetImage('assets/icon/default _profile.png');
     return GestureDetector(
       onTap: ontap,
       child: Container(
