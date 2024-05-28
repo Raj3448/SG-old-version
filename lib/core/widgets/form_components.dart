@@ -34,12 +34,14 @@ class CustomTextField extends StatelessWidget {
     this.initialValue,
     this.onChanged,
     super.key,
+    this.isTextColorDisable = false,
   });
 
   final String hintText;
   final TextInputType keyboardType;
   final bool large;
   final bool enabled;
+  final bool isTextColorDisable;
   final TextEditingController? controller;
   final String? Function(String?)? validationLogic;
   final TextInputAction? textInputAction;
@@ -50,13 +52,12 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      // initialValue: initialValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       style: AppTextStyle.bodyLargeMedium.copyWith(
-        color: enabled ? AppColors.grayscale700 : AppColors.grayscale900,
+        color: isTextColorDisable ? AppColors.grayscale700 : AppColors.grayscale900,
       ),
       maxLines: 8,
       onChanged: onChanged,

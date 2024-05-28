@@ -299,7 +299,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.number,
                                 controller: phoneNumberContr,
                                 large: false,
-                                enabled: true,
+                                enabled: false,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your mobile number';
@@ -315,7 +315,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 controller: emailContr,
                                 large: false,
-                                enabled: true,
+                                enabled: false,
                                 validationLogic: (value) {
                                   const regex =
                                       r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';

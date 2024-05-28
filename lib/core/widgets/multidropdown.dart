@@ -85,78 +85,21 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
         );
 }
 
-class MultiDropdown extends StatefulWidget {
-  const MultiDropdown({
-    Key? key,
-    required this.values,
-    this.controller,
-    required this.selectedOptions,
-  }) : super(key: key);
 
-  final List<ValueItem> values;
-  final MultiSelectController? controller;
-  final List<ValueItem<dynamic>> selectedOptions;
-
-  @override
-  State<MultiDropdown> createState() => _MultiDropdownState();
-}
-
-class _MultiDropdownState extends State<MultiDropdown> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.line),
-      ),
-      padding: const EdgeInsets.only(right: 10),
-      child: MultiSelectDropDown(
-        controller: widget.controller,
-        onOptionSelected: (selectedOptions) {},
-        selectedOptions: widget.selectedOptions,
-        options: widget.values,
-        selectionType: SelectionType.single,
-        optionTextStyle: AppTextStyle.bodyLargeMedium,
-        hintStyle: AppTextStyle.bodyLargeMedium
-            .copyWith(color: AppColors.grayscale600),
-        singleSelectItemStyle: AppTextStyle.bodyLargeMedium
-            .copyWith(color: AppColors.grayscale900),
-        dropdownHeight: 160,
-        borderRadius: 8,
-        dropdownBorderRadius: 8,
-        selectedOptionTextColor: AppColors.primary,
-        selectedOptionIcon: const Icon(
-          AppIcons.check,
-          color: AppColors.primary,
-          size: 15,
-        ),
-        clearIcon: const Icon(
-          Icons.clear_outlined,
-          color: AppColors.grayscale700,
-          size: 20,
-        ),
-        suffixIcon: const Icon(
-          AppIcons.arrow_down_ios,
-          color: AppColors.grayscale700,
-          size: 7,
-        ),
-        inputDecoration: const BoxDecoration(),
-      ),
-    );
-  }
-}
 
 class RelationDropdown extends StatelessWidget {
-  const RelationDropdown({super.key, this.controller});
+  const RelationDropdown({
+    Key? key,
+    this.controller,
+    this.selectedOption,
+  }) : super(key: key);
 
   final MultiSelectController? controller;
-
+  final ValueItem<String>? selectedOption;
   @override
   Widget build(BuildContext context) {
-    return MultiDropdown(
-      controller: controller,
-      selectedOptions: [],
+    return MultiSelectFormField(
+      selectedOptions: selectedOption == null? [] : [selectedOption!],
       values: [
         ValueItem(label: 'Father'.tr(), value: 'Father'),
         ValueItem(label: 'Mother'.tr(), value: 'Mother'),
@@ -166,25 +109,6 @@ class RelationDropdown extends StatelessWidget {
         ValueItem(label: 'Son'.tr(), value: 'Son'),
         ValueItem(label: 'Wife'.tr(), value: 'Wife'),
         ValueItem(label: 'Self'.tr(), value: 'Self'),
-      ],
-    );
-  }
-}
-
-class GenderDropdown extends StatelessWidget {
-  const GenderDropdown({super.key, this.controller});
-
-  final MultiSelectController? controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiDropdown(
-      controller: controller,
-      selectedOptions: [],
-      values: [
-        ValueItem(label: 'Male'.tr(), value: 'Male'),
-        ValueItem(label: 'Female'.tr(), value: 'Female'),
-        ValueItem(label: 'Other'.tr(), value: 'Other'),
       ],
     );
   }
@@ -221,7 +145,7 @@ class DateDropdown extends FormField<DateTime> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: AppColors.grayscale300),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -232,6 +156,8 @@ class DateDropdown extends FormField<DateTime> {
                         Expanded(
                           child: TextFormField(
                             controller: controller,
+                            style: AppTextStyle.bodyLargeMedium
+                                .copyWith(color: AppColors.grayscale900),
                             decoration: const InputDecoration(
                               hintText: 'Select',
                               border: InputBorder.none,
@@ -245,7 +171,8 @@ class DateDropdown extends FormField<DateTime> {
                                 initialDate: state.value ?? DateTime.now(),
                               );
 
-                              if (pickedDate != null && pickedDate != state.value) {
+                              if (pickedDate != null &&
+                                  pickedDate != state.value) {
                                 state.didChange(pickedDate);
                                 controller.text =
                                     DateFormat('yyyy-MM-dd').format(pickedDate);
