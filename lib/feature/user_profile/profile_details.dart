@@ -358,7 +358,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               }
                               return null;
                             },
-                            selectedOptions: _selectedCountryIndex == -1
+                            selectedOptions: _selectedCountryIndex == -1 || _selectedCountryIndex == null
                                 ? null
                                 : [_countryItems[_selectedCountryIndex!]],
                           ),

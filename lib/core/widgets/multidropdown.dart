@@ -99,7 +99,7 @@ class RelationDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiSelectFormField(
-      selectedOptions: [selectedOption!],
+      selectedOptions: selectedOption == null? [] : [selectedOption!],
       values: [
         ValueItem(label: 'Father'.tr(), value: 'Father'),
         ValueItem(label: 'Mother'.tr(), value: 'Mother'),

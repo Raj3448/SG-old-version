@@ -14,6 +14,8 @@ enum AvatarSize {
   size44,
   size48,
   size56,
+  size58,
+  size60
 }
 
 class Avatar extends StatelessWidget {
@@ -53,6 +55,10 @@ class Avatar extends StatelessWidget {
         radius = 14;
       case AvatarSize.size12:
         radius = 12;
+      case AvatarSize.size58:
+        radius = 58;
+      case AvatarSize.size60:
+        radius = 60;
     }
     return Avatar(
       imgPath: imgPath,
@@ -74,20 +80,18 @@ class Avatar extends StatelessWidget {
           shape: BoxShape.circle,
           image: imgPath == ''
               ? const DecorationImage(
+                  fit: BoxFit.cover,
                   image: AssetImage('assets/icon/default _profile.png'))
               : null),
       child: imgPath == ''
           ? null
-          : ClipRRect(
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: imgPath,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                CircularProgressIndicator(value: downloadProgress.progress),
-                
-                errorWidget: (context, url, error) =>
-                    Image.asset('assets/icon/default _profile.png'),
-              ),
+          : CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: imgPath,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) =>
+                  Image.asset('assets/icon/default _profile.png'),
             ),
     );
   }
