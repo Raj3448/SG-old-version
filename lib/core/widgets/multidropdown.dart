@@ -85,66 +85,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
         );
 }
 
-class SingleSelectFormField extends FormField<ValueItem> {
-  SingleSelectFormField({
-    Key? key,
-    required List<ValueItem> values,
-    ValueItem<String>? selectedOption,
-    FormFieldSetter<ValueItem>? onSaved,
-    String? Function(ValueItem?)? validator,
-  }) : super(
-          key: key,
-          onSaved: onSaved,
-          validator: validator,
-          initialValue: selectedOption,
-          builder: (FormFieldState<ValueItem> state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 52,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.grayscale300),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<ValueItem>(
-                      value: state.value,
-                      hint: const Text('Select an option'),
-                      isExpanded: true,
-                      onChanged: (ValueItem? newValue) {
-                        state.didChange(newValue);
-                      },
-                      items: values.map((ValueItem item) {
-                        return DropdownMenuItem<ValueItem>(
-                          value: item,
-                          child: Text(
-                            item.label,
-                            style: AppTextStyle.bodyLargeMedium
-                                .copyWith(color: AppColors.grayscale900),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      state.errorText ?? '',
-                      style: const TextStyle(
-                        color: AppColors.error,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
-        );
-}
+
 
 class RelationDropdown extends StatelessWidget {
   const RelationDropdown({
@@ -157,8 +98,8 @@ class RelationDropdown extends StatelessWidget {
   final ValueItem<String>? selectedOption;
   @override
   Widget build(BuildContext context) {
-    return SingleSelectFormField(
-      selectedOption: selectedOption,
+    return MultiSelectFormField(
+      selectedOptions: [selectedOption!],
       values: [
         ValueItem(label: 'Father'.tr(), value: 'Father'),
         ValueItem(label: 'Mother'.tr(), value: 'Mother'),

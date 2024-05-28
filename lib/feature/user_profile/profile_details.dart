@@ -250,9 +250,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Gender'),
                           const SizedBox(height: Dimension.d2),
-                          SingleSelectFormField(
+                          MultiSelectFormField(
+                            controller: _genderController,
                             values: _genderItems,
-                            selectedOption: _genderItems[selectedGenderIndex!],
+                            selectedOptions: [_genderItems[selectedGenderIndex!]],
                             validator: (selectedItems) {
                               if (selectedItems == null) {
                                 return 'Please select a gender';
@@ -348,7 +349,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const AsteriskLabel(label: 'Country'),
                           const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
-                          SingleSelectFormField(
+                          MultiSelectFormField(
+                            controller: _countryController,
                             values: _countryItems,
                             validator: (selectedItems) {
                               if (selectedItems == null) {
@@ -356,9 +358,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               }
                               return null;
                             },
-                            selectedOption: _selectedCountryIndex == -1
+                            selectedOptions: _selectedCountryIndex == -1
                                 ? null
-                                : _countryItems[_selectedCountryIndex!],
+                                : [_countryItems[_selectedCountryIndex!]],
                           ),
                           const SizedBox(height: Dimension.d4),
                           const SizedBox(height: Dimension.d4),

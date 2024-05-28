@@ -75,7 +75,7 @@ class BookServiceScreen extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(height: Dimension.d2),
-              SingleSelectFormField(
+              MultiSelectFormField(
                 
                 values: [
                   ValueItem(
