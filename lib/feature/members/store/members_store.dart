@@ -138,7 +138,7 @@ abstract class _MembersStoreBase with Store {
     memberService.updateMember(id.toString(), updatedData, null).then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketException: (value) {
+          socketExceptionError: (value) {
             addOrEditMemberFailure = 'No internet connection';
           },
           orElse: () {
@@ -168,7 +168,7 @@ abstract class _MembersStoreBase with Store {
         .then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketException: (value) {
+          socketExceptionError: (value) {
             addOrEditMemberFailure = 'No internet connection';
             return null;
           },
@@ -223,7 +223,7 @@ abstract class _MembersStoreBase with Store {
         .then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketException: (value) {
+          socketExceptionError: (value) {
             addOrEditMemberFailure = 'No internet connection';
           },
           orElse: () {

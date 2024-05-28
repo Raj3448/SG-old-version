@@ -756,7 +756,10 @@ class _MemberInfo extends StatelessWidget {
                             child: Row(
                               children: [
                                 SelectableAvatar(
-                                  imgPath: 'assets/icon/default _profile.png',
+                                  imgPath: memberStore.members[i].profileImg !=
+                                          null
+                                      ? '${Env.serverUrl}${memberStore.members[i].profileImg!.url}'
+                                      : '',
                                   maxRadius: 24,
                                   isSelected: memberStore.members[i].id ==
                                       memberStore.activeMemberId,

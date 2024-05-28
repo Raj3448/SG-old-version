@@ -26,7 +26,9 @@ class MembersScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Observer(
           builder: (context) {
-            if (store.members.isNotEmpty) {
+            if (store.members.isEmpty) {
+              return const NoMember();
+            } else {
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast,
@@ -93,8 +95,6 @@ class MembersScreen extends StatelessWidget {
                   },
                 ),
               );
-            } else {
-              return const NoMember();
             }
           },
         ),
