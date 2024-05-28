@@ -787,7 +787,7 @@ class _MemberInfo extends StatelessWidget {
                                 '${activeMember.firstName} ${activeMember.lastName}',
                             relation: '${activeMember.relation}',
                             age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: activeMember.updatedAt!,
+                            updatedAt: activeMember.updatedAt,
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -795,7 +795,7 @@ class _MemberInfo extends StatelessWidget {
                                   'memberId': '${activeMember.id}',
                                 },
                               );
-                            },
+                            }, memberPhrId: activeMember.phrModel != null ?  activeMember.phrModel!.id : -1,
                           );
                         } else if (memberStore.isActive == false) {
                           return InactivePlanComponent(

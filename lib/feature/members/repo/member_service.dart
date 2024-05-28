@@ -1,7 +1,8 @@
 // ignore_for_file: inference_failure_on_function_invocation, avoid_dynamic_calls, lines_longer_than_80_chars, inference_failure_on_untyped_parameter
 
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
-import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
@@ -12,16 +13,15 @@ import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 abstract class IMemberService {
   Future<Either<MemberServiceFailure, List<Member>>> getMembers();
   Future<Either<MemberServiceFailure, Member>> addMember(
-    bool self,
-    String relation,
-    String gender,
-    String firstName,
-    String lastName,
-    String dob,
-    String email,
-    String phoneNumber,
-    Address address
-  );
+      bool self,
+      String relation,
+      String gender,
+      String firstName,
+      String lastName,
+      String dob,
+      String email,
+      String phoneNumber,
+      Address address);
   Future<Either<MemberServiceFailure, Member>> updateMember(
     int id,
     Map<String, dynamic> updateData,
@@ -31,9 +31,10 @@ abstract class IMemberService {
   Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
     required String memberId,
   });
+  Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
+    required String memberPhrId,
+  });
 }
-
-const baseUrl = '/api';
 
 class MemberServices implements IMemberService {
   MemberServices(this.httpClient);
@@ -43,7 +44,7 @@ class MemberServices implements IMemberService {
   @override
   Future<Either<MemberServiceFailure, List<Member>>> getMembers() async {
     try {
-      final response = await httpClient.get('$baseUrl/user/family');
+      final response = await httpClient.get('/api/user/family');
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
@@ -60,12 +61,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -90,7 +89,7 @@ class MemberServices implements IMemberService {
       'dob': dob,
       'email': email,
       'phoneNumber': phoneNumber,
-      'address' : {
+      'address': {
         'state': address.state,
         'city': address.city,
         'streetAddress': address.streetAddress,
@@ -101,14 +100,15 @@ class MemberServices implements IMemberService {
 
     try {
       final response = await httpClient.post(
-        '$baseUrl/user/add-family',
+        '/api/user/add-family',
         data: newMemberData,
       );
 
       if (response.statusCode == 200) {
         final responseData = response.data['data']['users'] as List<dynamic>;
         print(responseData);
-        final member = Member.fromJson( responseData.last as Map<String, dynamic>);
+        final member =
+            Member.fromJson(responseData.last as Map<String, dynamic>);
         return Right(member);
       }
       if (response.statusCode == 400) {
@@ -130,8 +130,9 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.addMemberError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      print(e);
       return const Left(MemberServiceFailure.badResponse());
     }
   }
@@ -143,7 +144,7 @@ class MemberServices implements IMemberService {
   ) async {
     try {
       final response = await httpClient.put(
-        '$baseUrl/family/$id/update',
+        '/api/family/$id/update',
         data: updateData,
       );
 
@@ -155,12 +156,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.memberDetailsEditError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -176,12 +175,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -198,12 +195,10 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
-      } else {
-        return const Left(MemberServiceFailure.badResponse());
-      }
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 
@@ -226,12 +221,34 @@ class MemberServices implements IMemberService {
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
-      if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketException());
+      return const Left(MemberServiceFailure.badResponse());
+    }
+  }
+
+  Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
+    required String memberPhrId,
+  }) async {
+    try {
+      final response =
+          await httpClient.get('/api/phr/pdf/$memberPhrId/generate');
+      if (response.statusCode == 200) {
+        if (response.data['details'] != null && response.data['details']['name'] == 'NO_PHR_FOUND') {
+          return const Left(MemberServiceFailure.memberPHRNotFound());
+        }
+        if (response.data['pdfPath'] != null) {
+          return Right(response.data['pdfPath'] as String);
+        }
+        return const Left(MemberServiceFailure.badResponse());
       } else {
         return const Left(MemberServiceFailure.badResponse());
       }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
+    } catch (error) {
+      return const Left(MemberServiceFailure.badResponse());
     }
   }
 }

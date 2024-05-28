@@ -193,10 +193,14 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/eprPhrPdfViewPage',
+      path: '/eprPhrPdfViewPage/:memberPhrId',
       name: RoutesConstants.phrPdfViewPage,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: PhrPdfViewPage());
+        final memberPhrId = state.pathParameters['memberPhrId'].toString();
+        return MaterialPage(
+            child: PhrPdfViewPage(
+          memberPhrId: memberPhrId,
+        ));
       },
     ),
     GoRoute(
@@ -220,12 +224,10 @@ final GoRouter routes = GoRouter(
       path: '/addEditFamilyMember/:edit',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
-        final edit =
-            state.pathParameters['edit']!.toLowerCase();
+        final edit = state.pathParameters['edit']!.toLowerCase();
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
             edit: bool.parse(edit),
-            
           ),
         );
       },

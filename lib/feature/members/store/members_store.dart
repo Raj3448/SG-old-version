@@ -166,7 +166,7 @@ abstract class _MembersStoreBase with Store {
             phoneNumber, address)
         .then((value) {
       value.fold((l) {
-        l.maybeMap(socketException: (value) {
+        l.maybeMap(socketExceptionError: (value) {
           addNewMemberFailure = 'No internet connection';
         }, orElse: () {
           addNewMemberFailure = 'Something went wrong';
