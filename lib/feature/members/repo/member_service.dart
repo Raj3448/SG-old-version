@@ -116,14 +116,12 @@ class MemberServices implements IMemberService {
 
       if (response.statusCode == 200) {
         final responseData = response.data['data']['users'] as List<dynamic>;
-        print(responseData);
         final member =
             Member.fromJson(responseData.last as Map<String, dynamic>);
         return Right(member);
       }
       if (response.statusCode == 400) {
         final responseData = response.data;
-        print(responseData);
         final errorMessage =
             responseData['error']['message'] ?? 'Validation error occurred';
         final errorDetails =
@@ -164,9 +162,7 @@ class MemberServices implements IMemberService {
 
       if (response.statusCode == 200) {
         final data = response.data['data'];
-        print(data);
         final member = Member.fromJson(Map<String, dynamic>.from(data as Map));
-        // final member = Member.fromJson(responseData as Map<String, dynamic>);
         return Right(member);
       } else {
         return const Left(MemberServiceFailure.memberDetailsEditError());

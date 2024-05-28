@@ -94,19 +94,20 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       _initializeControllers();
     }
 
-    reaction((_) => memberStore.addNewMemberFailure, (_) {
-      if (memberStore.addNewMemberFailure != null) {
+    reaction((_) => memberStore.addOrEditMemberFailure, (_) {
+      if (memberStore.addOrEditMemberFailure != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(memberStore.addNewMemberFailure!),
+            content: Text(memberStore.addOrEditMemberFailure!),
             duration: const Duration(seconds: 3),
           ),
         );
-        memberStore.addNewMemberFailure = null;
+        memberStore.addOrEditMemberFailure = null;
       }
     });
 
-    reaction((_) => memberStore.addNewMemberSuccessfully, (successValue) async {
+    reaction((_) => memberStore.addOrEditMemberSuccessful,
+        (successValue) async {
       if (successValue == null) return;
 
       await showDialog(
@@ -115,55 +116,20 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
           return InfoDialog(
             showIcon: true,
             title: successValue,
-            desc:
-                'New family member successfully\nadded to the Health profile.',
+            desc: widget.edit
+                ? 'Family member updated successfully.'
+                : 'New family member successfully\nadded to the Health profile.',
             btnTitle: 'Continue',
             showBtnIcon: false,
             btnIconPath: AppIcons.check,
           );
         },
       );
-
-      /// Refreshing the member store, name there can get updated
-      GetIt.I<MembersStore>().refresh();
-      context.pop();
-      memberStore.addNewMemberSuccessfully = null;
-    });
-
-    reaction((_) => memberStore.updateMemberFailure, (_) {
-      if (memberStore.updateMemberFailure != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(memberStore.updateMemberFailure!),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-        memberStore.updateMemberFailure = null;
-      }
-    });
-
-    reaction((_) => memberStore.updateMemberSuccessfully, (successValue) async {
-      if (successValue == null) return;
-
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return InfoDialog(
-            showIcon: true,
-            title: successValue,
-            desc: 'Family member updated successfully.',
-            btnTitle: 'Continue',
-            showBtnIcon: false,
-            btnIconPath: AppIcons.check,
-          );
-        },
-      );
-
       GetIt.I<MembersStore>().refresh();
       context
         ..pop()
         ..pop();
-      memberStore.updateMemberSuccessfully = null;
+      memberStore.addOrEditMemberSuccessful = null;
     });
   }
 
@@ -198,6 +164,15 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 relationSelectedValue.value.toString().trim(),
                             'gender':
                                 genderSelectedValue.value.toString().trim(),
+                            'address': {
+                              'state': stateContr.text,
+                              'city': cityContr.text,
+                              'streetAddress': memberAddressContr.text,
+                              'postalCode': postalCodeContr.text,
+                              'country': countryContr.text,
+                            },
+                            'profileImg':
+                                memberStore.activeMember!.profileImg?.id,
                           };
                           if (storeImageFile != null) {
                             memberStore.updateMemberDataWithProfileImg(

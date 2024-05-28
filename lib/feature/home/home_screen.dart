@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -774,13 +775,14 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
+
                         if (activeMember != null && memberStore.isActive) {
                           return ActivePlanComponent(
                             name:
                                 '${activeMember.firstName} ${activeMember.lastName}',
                             relation: activeMember.relation,
                             age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: activeMember.updatedAt,
+                            updatedAt: formatDateTime(activeMember.updatedAt),
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -948,5 +950,19 @@ class _HomeScreenOfferCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+String formatDateTime(DateTime dateTime) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  String formattedTime = DateFormat('h:mma').format(dateTime);
+
+  if (date == today) {
+    return 'Today at $formattedTime';
+  } else {
+    return DateFormat('MMM d, y').format(dateTime) + ' at $formattedTime';
   }
 }

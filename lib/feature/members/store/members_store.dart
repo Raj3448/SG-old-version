@@ -51,24 +51,10 @@ abstract class _MembersStoreBase with Store {
   bool initialLoaded = false;
 
   @observable
-  String? addNewMemberFailure;
+  String? addOrEditMemberFailure;
 
   @observable
-  String? addNewMemberSuccessfully;
-
-  @observable
-  String? updateMemberFailure;
-
-  @observable
-  String? updateMemberSuccessfully;
-
-  @observable
-  bool isUpdatingMemberInfo = false;
-  @observable
-  bool updateSuccess = false;
-
-  @observable
-  String? updateFailureMessage;
+  String? addOrEditMemberSuccessful;
 
   @action
   void selectMember(int memberId) {
@@ -153,15 +139,14 @@ abstract class _MembersStoreBase with Store {
       value.fold((l) {
         l.maybeMap(
           socketException: (value) {
-            updateMemberFailure = 'No internet connection';
+            addOrEditMemberFailure = 'No internet connection';
           },
           orElse: () {
-            // updateMemberFailure = 'Something went wrong';
-            updateMemberFailure = '$value';
+            addOrEditMemberFailure = '$value';
           },
         );
       }, (r) {
-        updateMemberSuccessfully = 'Family Member Updated Successfully';
+        addOrEditMemberSuccessful = 'Family Member Updated Successfully';
       });
       isAddOrEditLoading = false;
     });
@@ -174,8 +159,6 @@ abstract class _MembersStoreBase with Store {
     required Map<String, dynamic> memberInstance,
   }) {
     isAddOrEditLoading = true;
-    updateSuccess = false;
-    updateFailureMessage = null;
     memberService
         .updateMemberDataWithProfileImg(
       id: id,
@@ -186,17 +169,16 @@ abstract class _MembersStoreBase with Store {
       value.fold((l) {
         l.maybeMap(
           socketException: (value) {
-            updateMemberFailure = 'No internet connection';
+            addOrEditMemberFailure = 'No internet connection';
             return null;
           },
           orElse: () {
-            updateMemberFailure = '$value';
+            addOrEditMemberFailure = '$value';
             return null;
           },
         );
       }, (r) {
-        // updateSuccess = true;
-        updateMemberSuccessfully = 'Family Member Updated Successfully';
+        addOrEditMemberSuccessful = 'Family Member Updated Successfully';
       });
       isAddOrEditLoading = false;
     });
@@ -242,14 +224,14 @@ abstract class _MembersStoreBase with Store {
       value.fold((l) {
         l.maybeMap(
           socketException: (value) {
-            addNewMemberFailure = 'No internet connection';
+            addOrEditMemberFailure = 'No internet connection';
           },
           orElse: () {
-            addNewMemberFailure = 'Something went wrong';
+            addOrEditMemberFailure = 'Something went wrong';
           },
         );
       }, (r) {
-        addNewMemberSuccessfully = 'New Family Member Added Successfully';
+        addOrEditMemberSuccessful = 'New Family Member Added Successfully';
       });
       isAddOrEditLoading = false;
     });
@@ -264,12 +246,26 @@ abstract class _MembersStoreBase with Store {
     isLoading = false;
     isRefreshing = false;
     initialLoaded = false;
-    addNewMemberFailure = null;
-    addNewMemberSuccessfully = null;
+    addOrEditMemberFailure = null;
+    addOrEditMemberSuccessful = null;
     isAddOrEditLoading = false;
   }
 }
 
 extension MemberExtension on Member {
   String get name => [firstName, lastName].join(' ').trim();
+  String get fullAddress {
+    final address = this.address;
+    if (address == null) {
+      return '';
+    }
+
+    return [
+      address.streetAddress,
+      address.city,
+      address.state,
+      address.country,
+      address.postalCode,
+    ].where((part) => part != null && part.isNotEmpty).join(', ');
+  }
 }

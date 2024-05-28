@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -89,9 +90,10 @@ class MemberDetailsScreen extends StatelessWidget {
                   gender: activeMember!.gender,
                   relation: activeMember!.relation,
                   mobileNo: activeMember!.phoneNumber,
-                  address: activeMember!.address != null
-                      ? '${activeMember!.address!.streetAddress}, ${activeMember!.address!.city}, ${activeMember!.address!.state}, ${activeMember!.address!.country}'
-                      : 'n/a',
+                  address: activeMember?.fullAddress ?? 'n/a',
+                  imgPath: activeMember!.profileImg != null
+                      ? '${Env.serverUrl}${activeMember!.profileImg!.url}'
+                      : '',
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -173,6 +175,7 @@ class _BasicDetailsBox extends StatelessWidget {
     required this.gender,
     required this.relation,
     required this.mobileNo,
+    required this.imgPath,
     this.address,
   });
   final String name;
@@ -181,10 +184,10 @@ class _BasicDetailsBox extends StatelessWidget {
   final String? relation;
   final String mobileNo;
   final String? address;
+  final String imgPath;
 
   @override
   Widget build(BuildContext context) {
-    final activeMember = GetIt.I<MembersStore>().activeMember;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
@@ -195,7 +198,7 @@ class _BasicDetailsBox extends StatelessWidget {
         children: [
           Row(
             children: [
-              Avatar.fromSize(imgPath: 'imgPath', size: AvatarSize.size32),
+              Avatar.fromSize(imgPath: imgPath, size: AvatarSize.size32),
               const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
