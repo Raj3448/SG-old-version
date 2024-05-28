@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,54 +43,45 @@ class _EditPicState extends State<EditPic> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        return GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return ChangePicDialog(
-                  storedProfileImage: storedProfileImage,
-                  onImageSelected: _updateProfileImage,
-                );
-              },
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ChangePicDialog(
+              storedProfileImage: storedProfileImage,
+              onImageSelected: _updateProfileImage,
             );
           },
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              if (widget.imgUrl == null && storedProfileImage == null)
-                const Avatar(
-                  imgPath: '',
-                  maxRadius: 56,
-                )
-              else
-                storedProfileImage != null
-                    ? CircleAvatar(
-                        radius: 56,
-                        backgroundImage: FileImage(storedProfileImage!),
-                      )
-                    : Avatar(
-                        imgPath: '${Env.serverUrl}${widget.imgUrl!}',
-                        maxRadius: 56),
-              Container(
-                height: 32,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.white, width: 3),
-                  color: AppColors.primary,
-                ),
-                padding: const EdgeInsets.all(6),
-                child: SvgPicture.asset(
-                  'assets/icon/edit.svg',
-                  color: AppColors.white,
-                ),
-              ),
-            ],
-          ),
         );
       },
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          if (widget.imgUrl == null && storedProfileImage == null)
+            Avatar.fromSize(imgPath: '', size: AvatarSize.size56)
+          else
+            CircleAvatar(
+              radius: 56,
+              backgroundImage: storedProfileImage != null
+                  ? FileImage(storedProfileImage!) as ImageProvider
+                  : NetworkImage('${Env.serverUrl}${widget.imgUrl!}'),
+            ),
+          Container(
+            height: 32,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.white, width: 3),
+              color: AppColors.primary,
+            ),
+            padding: const EdgeInsets.all(6),
+            child: SvgPicture.asset(
+              'assets/icon/edit.svg',
+              color: AppColors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

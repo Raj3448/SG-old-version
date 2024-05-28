@@ -14,6 +14,7 @@ class MemberCard extends StatelessWidget {
     required this.name,
     required this.relation,
     required this.hasCareSub,
+    required this.imgPath,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class MemberCard extends StatelessWidget {
   final String relation;
   final bool hasCareSub;
   final VoidCallback onTap;
+  final String imgPath;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class MemberCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Avatar.fromSize(imgPath: '', size: AvatarSize.size32),
+                Avatar.fromSize(imgPath: imgPath, size: AvatarSize.size32),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

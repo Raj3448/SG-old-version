@@ -77,12 +77,14 @@ class Avatar extends StatelessWidget {
       width: maxRadius * 2,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: imgPath == ''
-              ? const DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage('assets/icon/default _profile.png'))
-              : null),
+        shape: BoxShape.circle,
+        image: imgPath == ''
+            ? const DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/icon/default _profile.png'),
+              )
+            : null,
+      ),
       child: imgPath == ''
           ? null
           : CachedNetworkImage(
@@ -90,8 +92,11 @@ class Avatar extends StatelessWidget {
               imageUrl: imgPath,
               progressIndicatorBuilder: (context, url, downloadProgress) =>
                   CircularProgressIndicator(value: downloadProgress.progress),
-              errorWidget: (context, url, error) =>
-                  Image.asset('assets/icon/default _profile.png'),
+              errorWidget: (context, url, error) => Image.asset(
+                imgPath == 'assets/icon/44Px.png'
+                    ? imgPath
+                    : 'assets/icon/default _profile.png',
+              ),
             ),
     );
   }

@@ -1,8 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:fpdart/fpdart.dart';
+import 'dart:io';
+
 import 'package:mobx/mobx.dart';
-import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -51,10 +51,10 @@ abstract class _MembersStoreBase with Store {
   bool initialLoaded = false;
 
   @observable
-  String? addNewMemberFailure;
+  String? addOrEditMemberFailure;
 
   @observable
-  String? addNewMemberSuccessfully;
+  String? addOrEditMemberSuccessful;
 
   @action
   void selectMember(int memberId) {
@@ -130,11 +130,58 @@ abstract class _MembersStoreBase with Store {
   }
 
   @action
-  Future<Future<Either<MemberServiceFailure, Member>>> updateMember(
-    int id,
-    Map<String, dynamic> updatedData,
-  ) async {
-    return memberService.updateMember(id, updatedData);
+  void updateMember({
+    required int id,
+    required Map<String, dynamic> updatedData,
+  }) {
+    isAddOrEditLoading = true;
+    memberService.updateMember(id.toString(), updatedData, null).then((value) {
+      value.fold((l) {
+        l.maybeMap(
+          socketExceptionError: (value) {
+            addOrEditMemberFailure = 'No internet connection';
+          },
+          orElse: () {
+            addOrEditMemberFailure = '$value';
+          },
+        );
+      }, (r) {
+        addOrEditMemberSuccessful = 'Family Member Updated Successfully';
+      });
+      isAddOrEditLoading = false;
+    });
+  }
+
+  @action
+  void updateMemberDataWithProfileImg({
+    required String id,
+    required File fileImage,
+    required Map<String, dynamic> memberInstance,
+  }) {
+    isAddOrEditLoading = true;
+    memberService
+        .updateMemberDataWithProfileImg(
+      id: id,
+      fileImage: fileImage,
+      memberInfo: memberInstance,
+    )
+        .then((value) {
+      value.fold((l) {
+        l.maybeMap(
+          socketExceptionError: (value) {
+            addOrEditMemberFailure = 'No internet connection';
+            return null;
+          },
+          orElse: () {
+            addOrEditMemberFailure = '$value';
+            return null;
+          },
+        );
+      }, (r) {
+        addOrEditMemberSuccessful = 'Family Member Updated Successfully';
+      });
+      isAddOrEditLoading = false;
+    });
   }
 
   Member? memberById(int? id) {
@@ -162,17 +209,29 @@ abstract class _MembersStoreBase with Store {
   }) {
     isAddOrEditLoading = true;
     memberService
-        .addMember(self, relation, gender, firstName, lastName, dob, email,
-            phoneNumber, address)
+        .addMember(
+      self,
+      relation,
+      gender,
+      firstName,
+      lastName,
+      dob,
+      email,
+      phoneNumber,
+      address,
+    )
         .then((value) {
       value.fold((l) {
-        l.maybeMap(socketExceptionError: (value) {
-          addNewMemberFailure = 'No internet connection';
-        }, orElse: () {
-          addNewMemberFailure = 'Something went wrong';
-        });
+        l.maybeMap(
+          socketExceptionError: (value) {
+            addOrEditMemberFailure = 'No internet connection';
+          },
+          orElse: () {
+            addOrEditMemberFailure = 'Something went wrong';
+          },
+        );
       }, (r) {
-        addNewMemberSuccessfully = 'New Family Member Added Successfully';
+        addOrEditMemberSuccessful = 'New Family Member Added Successfully';
       });
       isAddOrEditLoading = false;
     });
@@ -187,12 +246,26 @@ abstract class _MembersStoreBase with Store {
     isLoading = false;
     isRefreshing = false;
     initialLoaded = false;
-    addNewMemberFailure = null;
-    addNewMemberSuccessfully = null;
+    addOrEditMemberFailure = null;
+    addOrEditMemberSuccessful = null;
     isAddOrEditLoading = false;
   }
 }
 
 extension MemberExtension on Member {
   String get name => [firstName, lastName].join(' ').trim();
+  String get fullAddress {
+    final address = this.address;
+    if (address == null) {
+      return '';
+    }
+
+    return [
+      address.streetAddress,
+      address.city,
+      address.state,
+      address.country,
+      address.postalCode,
+    ].where((part) => part != null && part.isNotEmpty).join(', ');
+  }
 }

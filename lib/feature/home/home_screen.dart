@@ -2,6 +2,7 @@
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -239,8 +240,7 @@ class _HomeScreenComponents extends StatelessWidget {
 class _TestmonialsComponent extends StatelessWidget {
   _TestmonialsComponent({
     required this.testimonialsModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final PageController _testimonialsCardController = PageController();
   final TestimonialsModel testimonialsModel;
@@ -323,8 +323,7 @@ class _TestmonialsComponent extends StatelessWidget {
 class _AboutUsOfferComponent extends StatelessWidget {
   _AboutUsOfferComponent({
     required this.aboutUsOfferModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final AboutUsOfferModel aboutUsOfferModel;
   final PageController _offerPageController = PageController();
@@ -422,8 +421,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
 class _BannerImageComponent extends StatelessWidget {
   const _BannerImageComponent({
     required this.bannerImageModel,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final BannerImageModel bannerImageModel;
   @override
@@ -471,8 +469,7 @@ class _TestmonialsCard extends StatelessWidget {
   const _TestmonialsCard({
     required this.testifierName,
     required this.content,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final String testifierName;
   final String content;
@@ -743,24 +740,35 @@ class _MemberInfo extends StatelessWidget {
           Observer(
             builder: (_) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(
+                      decelerationRate: ScrollDecelerationRate.fast,
+                    ),
                     scrollDirection: Axis.horizontal,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         for (var i = 0; i < memberStore.members.length; i++)
-                          Row(
-                            children: [
-                              SelectableAvatar(
-                                imgPath: 'assets/icon/default _profile.png',
-                                maxRadius: 24,
-                                isSelected: memberStore.members[i].id ==
-                                    memberStore.activeMemberId,
-                                ontap: () => memberStore
-                                    .selectMember(memberStore.members[i].id),
-                              ),
-                              const SizedBox(width: Dimension.d4),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Row(
+                              children: [
+                                SelectableAvatar(
+                                  imgPath: memberStore.members[i].profileImg !=
+                                          null
+                                      ? '${Env.serverUrl}${memberStore.members[i].profileImg!.url}'
+                                      : '',
+                                  maxRadius: 24,
+                                  isSelected: memberStore.members[i].id ==
+                                      memberStore.activeMemberId,
+                                  ontap: () => memberStore
+                                      .selectMember(memberStore.members[i].id),
+                                ),
+                                const SizedBox(width: Dimension.d4),
+                              ],
+                            ),
                           ),
                         SelectableAvatar(
                           imgPath: 'assets/icon/44Px.png',
@@ -776,18 +784,18 @@ class _MemberInfo extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: Dimension.d4),
                   if (memberStore.selectedIndex != -1)
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
+
                         if (activeMember != null && memberStore.isActive) {
                           return ActivePlanComponent(
                             name:
                                 '${activeMember.firstName} ${activeMember.lastName}',
-                            relation: '${activeMember.relation}',
+                            relation: activeMember.relation,
                             age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: activeMember.updatedAt,
+                            updatedAt: formatDateTime(activeMember.updatedAt),
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -795,7 +803,10 @@ class _MemberInfo extends StatelessWidget {
                                   'memberId': '${activeMember.id}',
                                 },
                               );
-                            }, memberPhrId: activeMember.phrModel != null ?  activeMember.phrModel!.id : -1,
+                            },
+                            memberPhrId: activeMember.phrModel != null
+                                ? activeMember.phrModel!.id
+                                : -1,
                           );
                         } else if (memberStore.isActive == false) {
                           return InactivePlanComponent(
@@ -814,9 +825,14 @@ class _MemberInfo extends StatelessWidget {
                         final selectedMember =
                             memberStore.members[memberStore.selectedIndex];
                         return selectedMember != null && memberStore.isActive
-                            ? const CoachContact(
-                                imgpath: '',
-                                name: 'Suma Latha',
+                            ? const Column(
+                                children: [
+                                  SizedBox(height: Dimension.d4),
+                                  CoachContact(
+                                    imgpath: '',
+                                    name: 'Suma Latha',
+                                  ),
+                                ],
                               )
                             : const SizedBox();
                       },
@@ -950,5 +966,19 @@ class _HomeScreenOfferCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+String formatDateTime(DateTime dateTime) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  String formattedTime = DateFormat('h:mma').format(dateTime);
+
+  if (date == today) {
+    return 'Today at $formattedTime';
+  } else {
+    return DateFormat('MMM d, y').format(dateTime) + ' at $formattedTime';
   }
 }

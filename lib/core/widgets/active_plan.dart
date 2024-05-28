@@ -181,7 +181,7 @@ class ActivePlanComponent extends StatelessWidget {
   final String name;
   final String relation;
   final String age;
-  final DateTime updatedAt;
+  final String updatedAt;
   final VoidCallback onTap;
   final int memberPhrId;
 
