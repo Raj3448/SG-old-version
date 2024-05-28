@@ -191,7 +191,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             id: _member.id,
                             updatedData: updatedData,
                           );
-                          print(dobContr.text);
                         },
                         btnTitle: 'Save details',
                         showIcon: false,
@@ -520,7 +519,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     firstNameContr.text = _member.firstName;
     lastNameContr.text = _member.lastName;
     dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
-    print(_member.relation);
     relationIndex = _relationList
         .indexWhere((element) => element.value == _member.relation);
     phoneNumberContr.text = _member.phoneNumber;
