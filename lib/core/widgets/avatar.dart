@@ -110,11 +110,6 @@ class SelectableAvatar extends Avatar {
 
   @override
   Widget build(BuildContext context) {
-    final imageProvider = isNetworkImage
-        ? NetworkImage(imgPath) as ImageProvider
-        : imgPath.isNotEmpty
-            ? AssetImage(imgPath)
-            : const AssetImage('assets/icon/default _profile.png');
     return GestureDetector(
       onTap: ontap,
       child: Container(
@@ -135,10 +130,7 @@ class SelectableAvatar extends Avatar {
         ),
         child: Opacity(
           opacity: isSelected ? 1.0 : 0.7,
-          child: CircleAvatar(
-            maxRadius: maxRadius, backgroundImage: imageProvider,
-            // backgroundImage: NetworkImage(imgPath),
-          ),
+          child: Avatar(imgPath: imgPath, maxRadius: maxRadius),
         ),
       ),
     );
