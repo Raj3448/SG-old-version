@@ -354,10 +354,12 @@ final GoRouter routes = GoRouter(
       },
     ),
   ],
-  errorBuilder: (_, __) => const SafeArea(
-    child: Scaffold(
-      body: ErrorStateComponent(
-        errorType: ErrorType.pageNotFound,
+  errorPageBuilder: (_, __) => const MaterialPage(
+    child: SafeArea(
+      child: Scaffold(
+        body: ErrorStateComponent(
+          errorType: ErrorType.pageNotFound,
+        ),
       ),
     ),
   ),
