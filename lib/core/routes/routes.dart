@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
+import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
@@ -275,6 +277,12 @@ final GoRouter routes = GoRouter(
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
         final defination = state.pathParameters['defination'] ?? '';
         final headline = state.pathParameters['headline'] ?? '';
+        // final subscriptionTypeString = state.pathParameters['subscriptionType'] ?? '';
+        
+        // final SubscriptionsType subscriptionType = SubscriptionsType.values.firstWhereOrNull(
+        //   (e) => e.toString().split('.').last == subscriptionTypeString,
+        // ) ?? SubscriptionsType.companion;
+
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,

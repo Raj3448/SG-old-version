@@ -10,7 +10,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 
-enum SubscriptionType { companion, wellness, emergency, inActive }
+enum SubscriptionsType { companion, wellness, emergency, inActive }
 
 class SubscriptionPkg extends StatelessWidget {
   const SubscriptionPkg({
@@ -20,56 +20,56 @@ class SubscriptionPkg extends StatelessWidget {
   });
 
   final bool expanded;
-  final SubscriptionType type;
+  final SubscriptionsType type;
 
   Color getContainerBorderColor() {
     switch (type) {
-      case SubscriptionType.companion:
+      case SubscriptionsType.companion:
         return AppColors.warning;
-      case SubscriptionType.wellness:
+      case SubscriptionsType.wellness:
         return AppColors.primary;
-      case SubscriptionType.emergency:
+      case SubscriptionsType.emergency:
         return AppColors.grayscale600;
-      case SubscriptionType.inActive:
+      case SubscriptionsType.inActive:
         return AppColors.line;
     }
   }
 
   Color getContainerColor() {
     switch (type) {
-      case SubscriptionType.companion:
+      case SubscriptionsType.companion:
         return AppColors.lightGold;
-      case SubscriptionType.wellness:
+      case SubscriptionsType.wellness:
         return AppColors.secondary;
-      case SubscriptionType.emergency:
+      case SubscriptionsType.emergency:
         return AppColors.grayscale200;
-      case SubscriptionType.inActive:
+      case SubscriptionsType.inActive:
         return AppColors.grayscale200;
     }
   }
 
   String getLeadingIcon() {
     switch (type) {
-      case SubscriptionType.companion:
+      case SubscriptionsType.companion:
         return 'assets/icon/companion_genie.svg';
-      case SubscriptionType.wellness:
+      case SubscriptionsType.wellness:
         return 'assets/icon/wellness_genie.svg';
-      case SubscriptionType.emergency:
+      case SubscriptionsType.emergency:
         return 'assets/icon/emergency_genie.svg';
-      case SubscriptionType.inActive:
+      case SubscriptionsType.inActive:
         return '';
     }
   }
 
   String getPkgName() {
     switch (type) {
-      case SubscriptionType.companion:
+      case SubscriptionsType.companion:
         return 'Companion Genie';
-      case SubscriptionType.wellness:
+      case SubscriptionsType.wellness:
         return 'Wellness Genie';
-      case SubscriptionType.emergency:
+      case SubscriptionsType.emergency:
         return 'Emergency Genie';
-      case SubscriptionType.inActive:
+      case SubscriptionsType.inActive:
         return 'In-Active';
     }
   }
@@ -87,7 +87,7 @@ class SubscriptionPkg extends StatelessWidget {
     if (expanded) {
       return GestureDetector(
         onTap: () {
-          if (type == SubscriptionType.companion) {
+          if (type == SubscriptionsType.companion) {
             GoRouter.of(context).pushNamed(
               RoutesConstants.geniePage,
               pathParameters: {
@@ -96,9 +96,11 @@ class SubscriptionPkg extends StatelessWidget {
                     'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
                 'headline':
                     'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                // 'subscriptionsType':
+                //     SubscriptionsType.emergency.toString().split('.').last,
               },
             );
-          } else if (type == SubscriptionType.wellness) {
+          } else if (type == SubscriptionsType.wellness) {
             GoRouter.of(context).pushNamed(
               RoutesConstants.geniePage,
               pathParameters: {
@@ -107,6 +109,8 @@ class SubscriptionPkg extends StatelessWidget {
                     'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
                 'headline':
                     'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                // 'subscriptionsType':
+                //     SubscriptionsType.wellness.toString().split('.').last,
               },
             );
           } else {
@@ -118,6 +122,8 @@ class SubscriptionPkg extends StatelessWidget {
                     'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
                 'headline':
                     'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                // 'subscriptionsType':
+                //     SubscriptionsType.emergency.toString().split('.').last,
               },
             );
           }
@@ -140,7 +146,7 @@ class SubscriptionPkg extends StatelessWidget {
                 Text(
                   getPkgName(),
                   style: AppTextStyle.bodyMediumBold.copyWith(
-                    color: type == SubscriptionType.emergency
+                    color: type == SubscriptionsType.emergency
                         ? AppColors.grayscale700
                         : AppColors.grayscale900,
                   ),
@@ -160,7 +166,7 @@ class SubscriptionPkg extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           color: getContainerColor(),
-          border: type == SubscriptionType.companion
+          border: type == SubscriptionsType.companion
               ? Border.all(color: AppColors.warning)
               : Border.all(color: AppColors.line),
           borderRadius: BorderRadius.circular(getContainerBorderRadius()),
@@ -170,7 +176,7 @@ class SubscriptionPkg extends StatelessWidget {
           child: Text(
             getPkgName(),
             style: AppTextStyle.bodySmallMedium.copyWith(
-              color: type == SubscriptionType.inActive
+              color: type == SubscriptionsType.inActive
                   ? AppColors.grayscale600
                   : getContainerBorderColor(),
             ),

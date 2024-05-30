@@ -38,6 +38,7 @@ class _SGSubcscriptionPageState extends State<SGSubcscriptionPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const GenieOverviewComponent(
+                subHeading: 'uyweuwe',
                   title: 'SG+ Subscription plans',
                   headline:
                       'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
@@ -118,6 +119,7 @@ class _SGSubcscriptionPageState extends State<SGSubcscriptionPage> {
                             });
                           },
                           child: PlanDisplayComponent(
+                            planPriceDetails: null,
                             plan: store.emergencyServiceModel.plans[index],
                             isSelected: store.emergencyServiceModel.plans[index].isSelected,
                           ),

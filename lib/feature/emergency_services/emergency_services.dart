@@ -179,6 +179,7 @@ class _EmergencyServicesState extends State<EmergencyServices> {
                             });
                           },
                           child: PlanDisplayComponent(
+                            planPriceDetails: null,
                             plan: store.emergencyServiceModel.plans[index],
                             isSelected: store.emergencyServiceModel.plans[index].isSelected,
                           ),

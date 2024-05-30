@@ -183,7 +183,7 @@ class ActivePlanComponent extends StatelessWidget {
   final String age;
   final String updatedAt;
   final VoidCallback onTap;
-  final int memberPhrId;
+  final int? memberPhrId;
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +208,7 @@ class ActivePlanComponent extends StatelessWidget {
                 ),
                 const SubscriptionPkg(
                   expanded: false,
-                  type: SubscriptionType.wellness,
+                  type: SubscriptionsType.wellness,
                 ),
               ],
             ),
@@ -249,7 +249,7 @@ class ActivePlanComponent extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: memberPhrId == -1
+                    ontap: memberPhrId == null
                         ? null
                         : () {
                             GoRouter.of(context).pushNamed(
@@ -262,7 +262,9 @@ class ActivePlanComponent extends StatelessWidget {
                     showIcon: false,
                     iconPath: Icons.not_interested,
                     size: ButtonSize.small,
-                    type: ButtonType.secondary,
+                    type: memberPhrId == null
+                        ? ButtonType.disable
+                        : ButtonType.secondary,
                     expanded: true,
                     iconColor: AppColors.primary,
                   ),
@@ -300,12 +302,14 @@ class ActivePlanComponent extends StatelessWidget {
                   'defination':
                       'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
                   'headline':
-                      'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.'
+                      'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
+                  
+                  
                 });
               },
               child: const SubscriptionPkg(
                 expanded: true,
-                type: SubscriptionType.wellness,
+                type: SubscriptionsType.wellness,
               ),
             )
           ],

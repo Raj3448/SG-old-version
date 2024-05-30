@@ -205,7 +205,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
                               relationContr.selectedOptions.first;
-
                           memberStore.addNewFamilyMember(
                             address: Address(
                               id: -1,

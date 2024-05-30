@@ -23,7 +23,7 @@ class CouplePlanPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PlanPricingDetailsComponent(planName: pageTitle),
+              PlanPricingDetailsComponent(planName: pageTitle, pricingDetailsList: [],),
               Text(
                 '1. Select family member',
                 style: AppTextStyle.bodyMediumMedium

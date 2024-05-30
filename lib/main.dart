@@ -19,6 +19,8 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
+import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/repository/local/home_page_details.dart';
 import 'package:silver_genie/feature/home/services/home_services.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
@@ -140,7 +142,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
-
+      GetIt.instance.registerLazySingleton(() => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(() => ProductListingStore(productListingService: GetIt.I<ProductLisitingServices>()));
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 

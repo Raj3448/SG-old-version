@@ -60,12 +60,14 @@ class _EditPicState extends State<EditPic> {
         children: [
           if (widget.imgUrl == null && storedProfileImage == null)
             Avatar.fromSize(imgPath: '', size: AvatarSize.size56)
+          else if (storedProfileImage == null && widget.imgUrl != null)
+            Avatar(imgPath: '${Env.serverUrl}${widget.imgUrl!}', maxRadius: 56)
           else
             CircleAvatar(
               radius: 56,
               backgroundImage: storedProfileImage != null
-                  ? FileImage(storedProfileImage!) as ImageProvider
-                  : NetworkImage('${Env.serverUrl}${widget.imgUrl!}'),
+                  ? FileImage(storedProfileImage!)
+                  : null,
             ),
           Container(
             height: 32,

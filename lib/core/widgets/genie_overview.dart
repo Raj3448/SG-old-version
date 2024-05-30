@@ -10,17 +10,19 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
-import 'package:silver_genie/feature/emergency_services/model/emergency_service_model.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class GenieOverviewComponent extends StatelessWidget {
   final String title;
   final String headline;
   final String defination;
+  final String subHeading;
   const GenieOverviewComponent({
     required this.title,
     required this.headline,
     required this.defination,
+    required this.subHeading,
     Key? key,
   }) : super(key: key);
 
@@ -63,7 +65,7 @@ class GenieOverviewComponent extends StatelessWidget {
           height: Dimension.d3,
         ),
         Text(
-          'What is ${title.toLowerCase()}?',
+          'What is ${subHeading.toLowerCase()}?',
           style: AppTextStyle.bodyMediumMedium.copyWith(
             color: AppColors.grayscale900,
             fontSize: 18,
@@ -149,15 +151,19 @@ class ServiceProvideComponent extends StatelessWidget {
 }
 
 class PlanPricingDetailsComponent extends StatefulWidget {
-  PlanPricingDetailsComponent({required this.planName, super.key});
+  PlanPricingDetailsComponent(
+      {required this.planName, required this.pricingDetailsList, super.key});
 
   final String planName;
+  final List<Price> pricingDetailsList;
 
   @override
-  State<PlanPricingDetailsComponent> createState() => _PlanPricingDetailsComponentState();
+  State<PlanPricingDetailsComponent> createState() =>
+      _PlanPricingDetailsComponentState();
 }
 
-class _PlanPricingDetailsComponentState extends State<PlanPricingDetailsComponent> {
+class _PlanPricingDetailsComponentState
+    extends State<PlanPricingDetailsComponent> {
   final store = GetIt.I<EmergencyServiceStore>();
 
   @override
@@ -180,22 +186,28 @@ class _PlanPricingDetailsComponentState extends State<PlanPricingDetailsComponen
         ),
         Column(
           children: List.generate(
-              store.emergencyServiceModel.plans.length,
+              widget.pricingDetailsList.length,
               (index) => GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              final updatedPlans = List<Plan>.from(store.emergencyServiceModel.plans);
-                              for (int i = 0; i < updatedPlans.length; i++) {
-                                updatedPlans[i] = updatedPlans[i].copyWith(isSelected: i == index);
-                              }
-                              store.emergencyServiceModel = store.emergencyServiceModel.copyWith(plans: updatedPlans);
-                            });
-                          },
-                          child: PlanDisplayComponent(
-                            plan: store.emergencyServiceModel.plans[index],
-                            isSelected: store.emergencyServiceModel.plans[index].isSelected,
-                          ),
-                        )),
+                    onTap: () {
+                      // setState(() {
+                      //   final updatedPlans =
+                      //       List<Plan>.from(store.emergencyServiceModel.plans);
+                      //   for (int i = 0; i < updatedPlans.length; i++) {
+                      //     updatedPlans[i] =
+                      //         updatedPlans[i].copyWith(isSelected: i == index);
+                      //   }
+                      //   store.emergencyServiceModel = store
+                      //       .emergencyServiceModel
+                      //       .copyWith(plans: updatedPlans);
+                      // });
+                    },
+                    child: PlanDisplayComponent(
+                      planPriceDetails: widget.pricingDetailsList[index],
+                      plan: store.emergencyServiceModel.plans[index],
+                      isSelected:
+                          store.emergencyServiceModel.plans[index].isSelected,
+                    ),
+                  )),
         )
       ],
     );
@@ -203,9 +215,11 @@ class _PlanPricingDetailsComponentState extends State<PlanPricingDetailsComponen
 }
 
 class ExploreNowComponent extends StatelessWidget {
-  const ExploreNowComponent({required this.pageTitle, super.key});
+  const ExploreNowComponent({required this.pageTitle, required this.btnLabel, required this.planHeading, super.key});
 
   final String pageTitle;
+  final String btnLabel;
+  final String planHeading;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -220,7 +234,7 @@ class ExploreNowComponent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Unlock even more benefits and discounts with our Couple Plan.',
+            planHeading,
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale700),
           ),
@@ -250,7 +264,7 @@ class ExploreNowComponent extends StatelessWidget {
                     width: Dimension.d3,
                   ),
                   Text(
-                    'Explore Now',
+                    btnLabel,
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
