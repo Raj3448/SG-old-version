@@ -19,6 +19,7 @@ import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -130,7 +131,7 @@ class UserProfile extends StatelessWidget {
                                                   .userDetails!.address ==
                                               null
                                           ? 'N/A'
-                                          : '${userDetailStore.userDetails!.address!.streetAddress}'),
+                                          : userDetailStore.userDetails!.address!.fullAddress),
                                   const SizedBox(
                                     height: Dimension.d4,
                                   ),

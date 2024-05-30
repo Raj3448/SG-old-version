@@ -75,7 +75,7 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FixedButton(
         ontap: () {
-          context.pushNamed(RoutesConstants.SGSubcscriptionPage);
+          //context.pushNamed(RoutesConstants.SGSubcscriptionPage);
         },
         btnTitle: 'Buy new subscription',
         showIcon: false,
