@@ -14,6 +14,7 @@ import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
@@ -49,7 +50,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   final phoneNumberContr = TextEditingController();
   final emailContr = TextEditingController();
   final memberAddressContr = TextEditingController();
-  final countryContr = TextEditingController();
+  final MultiSelectController countryContr = MultiSelectController();
   final stateContr = TextEditingController();
   final cityContr = TextEditingController();
   final postalCodeContr = TextEditingController();
@@ -85,6 +86,16 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     storeImageFile = imageFile;
     isImageUpdate = true;
   }
+
+  int? _selectedCountryIndex;
+
+  final List<ValueItem<String>> _countryItems = List.generate(
+    countries.length,
+    (index) => ValueItem(
+      label: countries[index].name,
+      value: countries[index].isoCode,
+    ),
+  );
 
   @override
   void initState() {
@@ -152,6 +163,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                 floatingActionButton: widget.edit
                     ? FixedButton(
                         ontap: () {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
                           final genderSelectedValue =
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
@@ -169,7 +183,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               'city': cityContr.text,
                               'streetAddress': memberAddressContr.text,
                               'postalCode': postalCodeContr.text,
-                              'country': countryContr.text,
+                              'country': countryContr
+                                  .selectedOptions.first.value
+                                  .toString(),
                             },
                             'profileImg':
                                 memberStore.activeMember!.profileImg?.id,
@@ -212,7 +228,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               city: cityContr.text.trim(),
                               streetAddress: memberAddressContr.text.trim(),
                               postalCode: postalCodeContr.text.trim(),
-                              country: countryContr.text.trim(),
+                              country: countryContr.selectedOptions.first.value
+                                  .toString(),
                             ),
                             dob: dobContr.text,
                             email: emailContr.text.trim(),
@@ -428,18 +445,19 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'Country'),
                               const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Type here...',
-                                keyboardType: TextInputType.name,
+                              MultiSelectFormField(
                                 controller: countryContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your country';
+                                values: _countryItems,
+                                validator: (selectedItems) {
+                                  if (selectedItems == null) {
+                                    return 'Please select country';
                                   }
                                   return null;
                                 },
+                                selectedOptions: _selectedCountryIndex == -1 ||
+                                        _selectedCountryIndex == null
+                                    ? null
+                                    : [_countryItems[_selectedCountryIndex!]],
                               ),
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'State'),
@@ -530,7 +548,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       stateContr.text = _member.address!.state;
       cityContr.text = _member.address!.city;
       memberAddressContr.text = _member.address!.streetAddress;
-      countryContr.text = _member.address!.country;
+      _selectedCountryIndex = _countryItems.indexWhere(
+        (element) => element.value == _member.address!.country,
+      );
       postalCodeContr.text = _member.address!.postalCode;
     }
   }
