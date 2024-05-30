@@ -39,7 +39,7 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
-
+    print('PHR Data of memeber = ${activeMember!.phrModel}');
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -121,10 +121,16 @@ class MemberDetailsScreen extends StatelessWidget {
                       HealthCard(
                         isEpr: false,
                         dateUpdated: '25/03/2024',
-                        ontap: () {
-                          GoRouter.of(context)
-                              .push(RoutesConstants.phrPdfViewPage);
-                        },
+                        ontap: activeMember!.phrModel == null
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                    RoutesConstants.phrPdfViewPage,
+                                    pathParameters: {
+                                      'memberPhrId':
+                                          activeMember!.phrModel!.id.toString()
+                                    });
+                              },
                       ),
                       const SizedBox(height: Dimension.d17),
                     ],
@@ -143,17 +149,17 @@ class MemberDetailsScreen extends StatelessWidget {
                       const SizedBox(height: Dimension.d6),
                       const SubscriptionPkg(
                         expanded: true,
-                        type: SubscriptionType.companion,
+                        type: SubscriptionsType.companion,
                       ),
                       const SizedBox(height: Dimension.d3),
                       const SubscriptionPkg(
                         expanded: true,
-                        type: SubscriptionType.wellness,
+                        type: SubscriptionsType.wellness,
                       ),
                       const SizedBox(height: Dimension.d3),
                       const SubscriptionPkg(
                         expanded: true,
-                        type: SubscriptionType.emergency,
+                        type: SubscriptionsType.emergency,
                       ),
                       const SizedBox(height: Dimension.d3),
                       const SizedBox(height: 16),
@@ -235,7 +241,7 @@ class _BasicDetailsBox extends StatelessWidget {
               const SizedBox(width: Dimension.d2),
               const SubscriptionPkg(
                 expanded: false,
-                type: SubscriptionType.wellness,
+                type: SubscriptionsType.wellness,
               ),
             ],
           ),

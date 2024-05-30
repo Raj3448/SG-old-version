@@ -56,7 +56,7 @@ class Member with _$Member {
     ProfileImg? profileImg,
     @Default('Self')String relation,
     Address? address,
-    PhrModel? phrModel,
+    @JsonKey(name: 'phr') PhrModel? phrModel,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);

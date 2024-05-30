@@ -18,6 +18,7 @@ import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
+import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
@@ -46,9 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
       if (memberStore.errorMessage == null) {
         return;
       }
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Error: Failed to fetch member data!')),
-      // );
       memberStore.errorMessage = null;
     });
   }
@@ -183,8 +181,8 @@ class _HomeScreenComponents extends StatelessWidget {
       }
       if (component is BannerImageModel) {
         widgetList.add(
-          _BannerImageComponent(
-            bannerImageModel: component,
+          BannerImageComponent(
+            imageUrl: component.bannerImage.data.attributes.url,
           ),
         );
         continue;
@@ -418,32 +416,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
   }
 }
 
-class _BannerImageComponent extends StatelessWidget {
-  const _BannerImageComponent({
-    required this.bannerImageModel,
-  });
 
-  final BannerImageModel bannerImageModel;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimension.d2),
-        child: CachedNetworkImage(
-          fit: BoxFit.cover,
-          height: 250,
-          width: bannerImageModel.bannerImage.data.attributes.width,
-          imageUrl:
-              '${Env.serverUrl}${bannerImageModel.bannerImage.data.attributes.url}',
-          progressIndicatorBuilder: (context, url, downloadProgress) =>
-              CircularProgressIndicator(value: downloadProgress.progress),
-          errorWidget: (context, url, error) => const SizedBox(),
-        ),
-      ),
-    );
-  }
-}
 
 class _ActiveBookingComponent extends StatelessWidget {
   @override
@@ -788,7 +761,6 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
-
                         if (activeMember != null && memberStore.isActive) {
                           return ActivePlanComponent(
                             name:
@@ -806,7 +778,7 @@ class _MemberInfo extends StatelessWidget {
                             },
                             memberPhrId: activeMember.phrModel != null
                                 ? activeMember.phrModel!.id
-                                : -1,
+                                : null,
                           );
                         } else if (memberStore.isActive == false) {
                           return InactivePlanComponent(

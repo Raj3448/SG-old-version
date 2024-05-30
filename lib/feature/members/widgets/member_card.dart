@@ -67,7 +67,7 @@ class MemberCard extends StatelessWidget {
                   SizedBox(height: 8),
                   SubscriptionPkg(
                     expanded: false,
-                    type: SubscriptionType.wellness,
+                    type: SubscriptionsType.wellness,
                   ),
                 ],
               ),

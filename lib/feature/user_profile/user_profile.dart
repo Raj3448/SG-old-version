@@ -126,8 +126,11 @@ class UserProfile extends StatelessWidget {
                                   ),
                                   CustomTextIcon(
                                       iconpath: AppIcons.home,
-                                      title:
-                                          userDetailStore.userDetails!.email),
+                                      title: userDetailStore
+                                                  .userDetails!.address ==
+                                              null
+                                          ? 'N/A'
+                                          : '${userDetailStore.userDetails!.address!.streetAddress}'),
                                   const SizedBox(
                                     height: Dimension.d4,
                                   ),

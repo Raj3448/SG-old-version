@@ -15,7 +15,7 @@ class HealthCard extends StatelessWidget {
 
   final bool isEpr;
   final String dateUpdated;
-  final VoidCallback ontap;
+  final VoidCallback? ontap;
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +62,10 @@ class HealthCard extends StatelessWidget {
             showIcon: true,
             iconPath: AppIcons.visibility_on,
             size: ButtonSize.small,
-            type: ButtonType.secondary,
+            type: ontap == null ? ButtonType.disable : ButtonType.secondary,
             expanded: false,
-            iconColor: AppColors.primary,
+            iconColor:
+                ontap == null ? AppColors.grayscale600 : AppColors.primary,
           ),
         ],
       ),

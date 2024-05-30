@@ -69,7 +69,7 @@ class InactivePlanComponent extends StatelessWidget {
                 ),
                 const SubscriptionPkg(
                   expanded: false,
-                  type: SubscriptionType.inActive,
+                  type: SubscriptionsType.inActive,
                 ),
               ],
             ),
@@ -94,17 +94,17 @@ class InactivePlanComponent extends StatelessWidget {
             const SizedBox(height: Dimension.d3),
             const SubscriptionPkg(
               expanded: true,
-              type: SubscriptionType.companion,
+              type: SubscriptionsType.companion,
             ),
             const SizedBox(height: Dimension.d3),
             const SubscriptionPkg(
               expanded: true,
-              type: SubscriptionType.wellness,
+              type: SubscriptionsType.wellness,
             ),
             const SizedBox(height: Dimension.d3),
             const SubscriptionPkg(
               expanded: true,
-              type: SubscriptionType.emergency,
+              type: SubscriptionsType.emergency,
             ),
           ],
         ),

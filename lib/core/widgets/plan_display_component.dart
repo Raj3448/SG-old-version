@@ -4,22 +4,27 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/feature/emergency_services/model/emergency_service_model.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class PlanDisplayComponent extends StatelessWidget {
   const PlanDisplayComponent({
     required this.plan,
     required this.isSelected,
+    required this.planPriceDetails,
     Key? key,
   }) : super(key: key);
   final Plan plan;
   final bool isSelected;
+  final Price? planPriceDetails;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        border: Border.all(width: 1,color: isSelected? AppColors.primary :AppColors.grayscale400),
+        border: Border.all(
+            width: 1,
+            color: isSelected ? AppColors.primary : AppColors.grayscale400),
         color: AppColors.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
@@ -30,7 +35,7 @@ class PlanDisplayComponent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                plan.title,
+                planPriceDetails!.label,
                 style: AppTextStyle.bodyMediumMedium.copyWith(
                   color: AppColors.grayscale900,
                   fontSize: 16,
@@ -38,18 +43,19 @@ class PlanDisplayComponent extends StatelessWidget {
                   height: 2.6,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(Dimension.d1),
-                decoration: BoxDecoration(
-                  color: AppColors.warning2,
-                  borderRadius: BorderRadius.circular(Dimension.d2),
+              if (planPriceDetails!.discountPercentage != null)
+                Container(
+                  padding: const EdgeInsets.all(Dimension.d1),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning2,
+                    borderRadius: BorderRadius.circular(Dimension.d2),
+                  ),
+                  child: Text(
+                    '${planPriceDetails!.discountPercentage}% off',
+                    style: AppTextStyle.bodySmallBold
+                        .copyWith(height: 1.6, color: AppColors.grayscale100),
+                  ),
                 ),
-                child: Text(
-                  '10% off',
-                  style: AppTextStyle.bodySmallBold
-                      .copyWith(height: 1.6, color: AppColors.grayscale100),
-                ),
-              ),
             ],
           ),
           Row(
@@ -60,7 +66,7 @@ class PlanDisplayComponent extends StatelessWidget {
                   SizedBox(
                     width: 150,
                     child: Text(
-                      plan.descrip,
+                      'Including all tax',
                       style: AppTextStyle.bodyMediumMedium.copyWith(
                         color: AppColors.grayscale700,
                         fontWeight: FontWeight.w400,
@@ -70,7 +76,7 @@ class PlanDisplayComponent extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    plan.duration,
+                    planPriceDetails!.recurringInterval,
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale900,
                       fontSize: 18,
@@ -85,7 +91,7 @@ class PlanDisplayComponent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '${plan.amount.toStringAsFixed(2)} Rs',
+                    ' ${planPriceDetails!.amountWithoutDiscount!=null? planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2): planPriceDetails!.unitAmount.toStringAsFixed(2)}} Rs',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale700,
                       fontWeight: FontWeight.w400,
@@ -95,7 +101,7 @@ class PlanDisplayComponent extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${plan.discountamount.toStringAsFixed(2)}Rs',
+                    '${planPriceDetails!.unitAmount.toStringAsFixed(2)}Rs',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale900,
                       fontSize: 18,
