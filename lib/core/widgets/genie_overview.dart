@@ -130,7 +130,7 @@ class ServiceProvideComponent extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             boxShadow: [
               BoxShadow(
                 color: AppColors.grayscale100,
@@ -140,7 +140,7 @@ class ServiceProvideComponent extends StatelessWidget {
             ],
           ),
           alignment: Alignment(0, 0),
-          child: Icon(
+          child: const Icon(
             AppIcons.arrow_down_ios,
             size: 6,
           ),
@@ -203,7 +203,7 @@ class _PlanPricingDetailsComponentState
                     },
                     child: PlanDisplayComponent(
                       planPriceDetails: widget.pricingDetailsList[index],
-                      plan: store.emergencyServiceModel.plans[index],
+                      
                       isSelected:
                           store.emergencyServiceModel.plans[index].isSelected,
                     ),

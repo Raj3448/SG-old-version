@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/feature/emergency_services/model/emergency_service_model.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class PlanDisplayComponent extends StatelessWidget {
   const PlanDisplayComponent({
-    required this.plan,
+    
     required this.isSelected,
     required this.planPriceDetails,
     Key? key,
   }) : super(key: key);
-  final Plan plan;
+  
   final bool isSelected;
   final Price? planPriceDetails;
   @override

@@ -120,7 +120,7 @@ class _SGSubcscriptionPageState extends State<SGSubcscriptionPage> {
                           },
                           child: PlanDisplayComponent(
                             planPriceDetails: null,
-                            plan: store.emergencyServiceModel.plans[index],
+                          
                             isSelected: store.emergencyServiceModel.plans[index].isSelected,
                           ),
                         )),

@@ -72,7 +72,7 @@ extension AddressExtension on Address {
       city,
       state,
       country,
-      postalCode,
+      '$postalCode.',
     ].where((part) => part.isNotEmpty).join(', ');
   }
 }

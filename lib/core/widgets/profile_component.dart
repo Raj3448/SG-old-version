@@ -25,10 +25,11 @@ class CustomTextIcon extends StatelessWidget {
         const SizedBox(
           width: Dimension.d3,
         ),
-        Text(
-          title,
-          style: AppTextStyle.bodyLargeMedium
-              .copyWith(overflow: TextOverflow.ellipsis),
+        Expanded(
+          child: Text(
+            title,
+            style: AppTextStyle.bodyLargeMedium,
+          ),
         ),
       ],
     );
