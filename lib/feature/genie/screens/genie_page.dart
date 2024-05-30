@@ -40,7 +40,9 @@ class GeniePage extends StatelessWidget {
               future: services.getAllProducts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const LoadingWidget();
+                  return const LoadingWidget(
+                    showShadow: false,
+                  );
                 }
                 if (snapshot.hasError || !snapshot.hasData) {
                   return const ErrorStateComponent(

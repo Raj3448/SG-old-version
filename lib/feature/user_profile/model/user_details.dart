@@ -61,6 +61,20 @@ class Address with _$Address {
   }) = _Address;
 
   factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
+
+
+  
+}
+extension AddressExtension on Address {
+  String get fullAddress {
+    return [
+      streetAddress,
+      city,
+      state,
+      country,
+      postalCode,
+    ].where((part) => part.isNotEmpty).join(', ');
+  }
 }
 
 @freezed

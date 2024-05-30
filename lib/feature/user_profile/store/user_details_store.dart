@@ -138,3 +138,4 @@ extension UserExtension on User {
 
   String get name => [firstName, lastName].join(' ').trim();
 }
+
