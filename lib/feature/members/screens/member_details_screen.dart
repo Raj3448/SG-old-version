@@ -107,7 +107,9 @@ class MemberDetailsScreen extends StatelessWidget {
                     children: [
                       HealthCard(
                         isEpr: true,
-                        dateUpdated: formatDateTime(activeMember!.updatedAt),
+                        dateUpdated: activeMember?.updatedAt == null
+                            ? 'n/a'
+                            : formatDateTime(activeMember!.updatedAt),
                         ontap: () {
                           GoRouter.of(context).pushNamed(
                             RoutesConstants.eprRoute,
@@ -121,7 +123,11 @@ class MemberDetailsScreen extends StatelessWidget {
                       if (activeMember!.phrModel != null)
                         HealthCard(
                           isEpr: false,
-                          dateUpdated: formatDateTime(activeMember!.updatedAt),
+                          dateUpdated: activeMember?.phrModel?.updatedAt == null
+                              ? 'n/a'
+                              : formatDateTime(
+                                  activeMember!.phrModel!.updatedAt,
+                                ),
                           ontap: activeMember!.phrModel == null
                               ? null
                               : () {
