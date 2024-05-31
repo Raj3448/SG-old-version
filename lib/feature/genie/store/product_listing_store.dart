@@ -12,25 +12,10 @@ abstract class _ProductListingStoreBase with Store {
   final IProductListingService productListingService;
 
   @observable
-  bool isLoading = false;
+  bool fetchProductLoading = false;
 
   @observable
-  List<ProductListingModel>? productListingModelList;
-
-  @computed
-  ProductListingModel? get getCompanionGenie =>
-      productListingModelList?.firstWhereOrNull(
-          (element) => element.product.name == 'Companion Genie');
-
-  @computed
-  ProductListingModel? get getEmergencyGenie =>
-      productListingModelList?.firstWhereOrNull(
-          (element) => element.product.name == 'Emergency Genie');
-
-  @computed
-  ProductListingModel? get getWellnessGenie =>
-      productListingModelList?.firstWhereOrNull(
-          (element) => element.product.name == 'Wellness Genie');
+  List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
   @observable
   String? getProductFailure;
@@ -38,27 +23,44 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   bool? hasGotProductSuccesfully;
 
-  void getAllProducts() {
-    isLoading = true;
-    if (productListingModelList == null) {
-      // ignore: unawaited_futures
-      productListingService.getAllProducts().then((value) =>
-      
-        value.fold((l) {
-          l.maybeMap(socketException: (value) {
-            getProductFailure = 'No Internet';
-          }, orElse: () {
-            getProductFailure = 'Something went wrong';
-          });
-          hasGotProductSuccesfully = false;
-        }, (r) {
-          productListingModelList = r;
-          hasGotProductSuccesfully = true;
-        })
-      );
-        isLoading = false;
-    } else {
-      isLoading = false;
-    }
+  void initGetProductBasicDetails() {
+    fetchProductLoading = true;
+    productListingService.getAllProductBasicDetails().then((value) {
+      value.fold((l) {
+        l.maybeMap(
+            socketException: (value) => getProductFailure = 'No Internet',
+            orElse: () {
+              getProductFailure = 'Something went wrong';
+              print('I am failure to fetch product');
+            });
+      }, (r) {
+        productBasicDetailsModelList = r;
+      });
+      fetchProductLoading = false;
+    });
   }
+
+  // void getAllProducts() {
+  //   isLoading = true;
+  //   if (productListingModelList == null) {
+  //     // ignore: unawaited_futures
+  //     productListingService.getAllProducts().then((value) =>
+
+  //       value.fold((l) {
+  //         l.maybeMap(socketException: (value) {
+  //           getProductFailure = 'No Internet';
+  //         }, orElse: () {
+  //           getProductFailure = 'Something went wrong';
+  //         });
+  //         hasGotProductSuccesfully = false;
+  //       }, (r) {
+  //         productListingModelList = r;
+  //         hasGotProductSuccesfully = true;
+  //       })
+  //     );
+  //       isLoading = false;
+  //   } else {
+  //     isLoading = false;
+  //   }
+  // }
 }

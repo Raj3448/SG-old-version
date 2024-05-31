@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -203,31 +202,31 @@ class _HomeScreenComponents extends StatelessWidget {
         Column(
           children: [
             ...widgetList,
-            Text(
-              'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
-              style: AppTextStyle.bodyLargeMedium.copyWith(
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                height: 1.4,
-                color: AppColors.grayscale700,
-              ),
-            ),
-            const SizedBox(
-              height: Dimension.d4,
-            ),
-            CustomButton(
-              ontap: () {},
-              iconColor: AppColors.error,
-              title: 'Subscribe',
-              showIcon: false,
-              iconPath: AppIcons.add,
-              size: ButtonSize.normal,
-              type: ButtonType.secondary,
-              expanded: true,
-            ),
-            const SizedBox(
-              height: Dimension.d10,
-            ),
+            // Text(
+            //   'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
+            //   style: AppTextStyle.bodyLargeMedium.copyWith(
+            //     fontWeight: FontWeight.w400,
+            //     fontSize: 16,
+            //     height: 1.4,
+            //     color: AppColors.grayscale700,
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: Dimension.d4,
+            // ),
+            // CustomButton(
+            //   ontap: () {},
+            //   iconColor: AppColors.error,
+            //   title: 'Subscribe',
+            //   showIcon: false,
+            //   iconPath: AppIcons.add,
+            //   size: ButtonSize.normal,
+            //   type: ButtonType.secondary,
+            //   expanded: true,
+            // ),
+            // const SizedBox(
+            //   height: Dimension.d10,
+            // ),
           ],
         ),
       ],
@@ -294,18 +293,21 @@ class _TestmonialsComponent extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: Text(
-                  'Newsletter',
-                  textAlign: TextAlign.left,
-                  style: AppTextStyle.bodyXLSemiBold.copyWith(
-                    color: AppColors.grayscale900,
-                    height: 1.8,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                  ),
-                ),
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: Text(
+              //     'Newsletter',
+              //     textAlign: TextAlign.left,
+              //     style: AppTextStyle.bodyXLSemiBold.copyWith(
+              //       color: AppColors.grayscale900,
+              //       height: 1.8,
+              //       fontWeight: FontWeight.w500,
+              //       fontSize: 18,
+              //     ),
+              //   ),
+              // ),
+              const SizedBox(
+                height: Dimension.d3,
               ),
             ],
           ),
@@ -415,8 +417,6 @@ class _AboutUsOfferComponent extends StatelessWidget {
     );
   }
 }
-
-
 
 class _ActiveBookingComponent extends StatelessWidget {
   @override

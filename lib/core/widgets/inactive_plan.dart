@@ -1,12 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class IconTextComponent extends StatelessWidget {
   const IconTextComponent({required this.text, super.key});
@@ -44,8 +48,8 @@ class IconTextComponent extends StatelessWidget {
 }
 
 class InactivePlanComponent extends StatelessWidget {
-  const InactivePlanComponent({required this.name, super.key});
-
+  InactivePlanComponent({required this.name, super.key});
+  final store = GetIt.I<ProductListingStore>();
   final String name;
 
   @override
@@ -86,29 +90,46 @@ class InactivePlanComponent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Dimension.d3),
-            Text(
-              'Signup to Personalized care packages',
-              style: AppTextStyle.bodyMediumBold
-                  .copyWith(color: AppColors.grayscale900),
-            ),
-            const SizedBox(height: Dimension.d3),
-            const SubscriptionPkg(
-              expanded: true,
-              type: SubscriptionsType.companion,
-            ),
-            const SizedBox(height: Dimension.d3),
-            const SubscriptionPkg(
-              expanded: true,
-              type: SubscriptionsType.wellness,
-            ),
-            const SizedBox(height: Dimension.d3),
-            const SubscriptionPkg(
-              expanded: true,
-              type: SubscriptionsType.emergency,
-            ),
+            if (store.productBasicDetailsModelList != null)
+              _SignupPersonalizedCareComponent(productBasicDetailsList: store.productBasicDetailsModelList!,)
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SignupPersonalizedCareComponent extends StatelessWidget {
+  final List<ProductBasicDetailsModel> productBasicDetailsList;
+  const _SignupPersonalizedCareComponent({
+    required this.productBasicDetailsList, Key? key,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Signup to Personalized care packages',
+          style: AppTextStyle.bodyMediumBold
+              .copyWith(color: AppColors.grayscale900),
+        ),
+        const SizedBox(height: Dimension.d3),
+        const SubscriptionPkg(
+          expanded: true,
+          type: SubscriptionsType.companion,
+        ),
+        const SizedBox(height: Dimension.d3),
+        const SubscriptionPkg(
+          expanded: true,
+          type: SubscriptionsType.wellness,
+        ),
+        const SizedBox(height: Dimension.d3),
+        const SubscriptionPkg(
+          expanded: true,
+          type: SubscriptionsType.emergency,
+        ),
+      ],
     );
   }
 }

@@ -83,3 +83,29 @@ class SubscriptionContent with _$SubscriptionContent {
   factory SubscriptionContent.fromJson(Map<String, dynamic> json) =>
       _$SubscriptionContentFromJson(json);
 }
+
+
+@freezed
+class ProductBasicDetailsModel with _$ProductBasicDetailsModel {
+    const factory ProductBasicDetailsModel({
+        required int id,
+        @JsonKey(name: 'attributes') required ProductMetaData attributes,
+    }) = _ProductBasicDetailsModel;
+
+    factory ProductBasicDetailsModel.fromJson(Map<String, dynamic> json) => _$ProductBasicDetailsModelFromJson(json);
+}
+
+@freezed
+class ProductMetaData with _$ProductMetaData {
+    const factory ProductMetaData({
+        required String name,
+        required String type,
+        required String code,
+        required bool isActive,
+        required String category,
+        required DateTime createdAt,
+        required DateTime updatedAt,
+    }) = _ProductMetaData;
+
+    factory ProductMetaData.fromJson(Map<String, dynamic> json) => _$ProductMetaDataFromJson(json);
+}

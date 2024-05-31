@@ -1,13 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
@@ -62,7 +61,9 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
                       controller: controller,
                       children: List.generate(
                         2,
-                        (index) => _SubscriptionUserComponent(),
+                        (index) => _SubscriptionUserComponent(
+                          isPrevious: index == 1 ? true : false,
+                        ),
                       ),
                     ),
                   ),
@@ -86,8 +87,9 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
 }
 
 class _SubscriptionUserComponent extends StatelessWidget {
-  _SubscriptionUserComponent();
+  _SubscriptionUserComponent({required this.isPrevious});
   final store = GetIt.I<SubscriptionStore>();
+  final bool isPrevious;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -96,6 +98,7 @@ class _SubscriptionUserComponent extends StatelessWidget {
           store.subscriptionMemberList.length,
           (index) => _UserDetailsComponent(
             memberDetails: store.subscriptionMemberList[index],
+            isPrevious: isPrevious,
           ),
         ),
       ),
@@ -104,8 +107,13 @@ class _SubscriptionUserComponent extends StatelessWidget {
 }
 
 class _UserDetailsComponent extends StatelessWidget {
-  const _UserDetailsComponent({required this.memberDetails});
+  const _UserDetailsComponent({
+    required this.memberDetails,
+    required this.isPrevious,
+    Key? key,
+  }) : super(key: key);
   final SubscriptionMemberModel memberDetails;
+  final bool isPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -164,25 +172,49 @@ class _UserDetailsComponent extends StatelessWidget {
                   IconTitleDetailsComponent(
                     icon: AppIcons.medical_services,
                     title: 'Status',
-                    details: memberDetails.status,
+                    details: isPrevious ? 'Expired' : memberDetails.status,
                   ),
                   IconTitleDetailsComponent(
                     icon: AppIcons.calendar,
                     title: 'Plan ends on',
-                    details: memberDetails.planEndsDate,
+                    details:
+                        isPrevious ? '10/2/2024' : memberDetails.planEndsDate,
                   ),
                 ],
               ),
             ),
-            CustomButton(
-              ontap: () {},
-              title: 'View Details',
-              showIcon: false,
-              iconPath: AppIcons.add,
-              size: ButtonSize.small,
-              type: ButtonType.secondary,
-              expanded: true,
-              iconColor: AppColors.primary,
+            Row(
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    ontap: () {},
+                    title: 'View Details',
+                    showIcon: false,
+                    iconPath: AppIcons.add,
+                    size: ButtonSize.small,
+                    type: ButtonType.secondary,
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
+                ),
+                if (isPrevious)
+                  const SizedBox(
+                    width: Dimension.d2,
+                  ),
+                if (isPrevious)
+                  Expanded(
+                    child: CustomButton(
+                      ontap: () {},
+                      title: 'Buy again',
+                      showIcon: false,
+                      iconPath: AppIcons.add,
+                      size: ButtonSize.small,
+                      type: ButtonType.primary,
+                      expanded: true,
+                      iconColor: AppColors.primary,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
