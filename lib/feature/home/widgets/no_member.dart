@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +9,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/member_creation.dart';
 
 class NoMember extends StatelessWidget {
   const NoMember({super.key});
@@ -44,9 +47,19 @@ class NoMember extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    GoRouter.of(context).pushNamed(
-                      RoutesConstants.addEditFamilyMemberRoute,
-                      pathParameters: {'edit': 'false'},
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return MemberCreation(
+                          selfOnTap: () {},
+                          memberOnTap: () {
+                            context.pushNamed(
+                              RoutesConstants.addEditFamilyMemberRoute,
+                              pathParameters: {'edit': 'false'},
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                   child: Container(
@@ -98,9 +111,19 @@ class NoMember extends StatelessWidget {
             const SizedBox(height: 12),
             CustomButton(
               ontap: () {
-                GoRouter.of(context).pushNamed(
-                  RoutesConstants.addEditFamilyMemberRoute,
-                  pathParameters: {'edit': 'false'},
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return MemberCreation(
+                      selfOnTap: () {},
+                      memberOnTap: () {
+                        context.pushNamed(
+                          RoutesConstants.addEditFamilyMemberRoute,
+                          pathParameters: {'edit': 'false'},
+                        );
+                      },
+                    );
+                  },
                 );
               },
               title: 'Add Member',
