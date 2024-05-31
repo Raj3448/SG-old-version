@@ -113,31 +113,31 @@ class SubscriptionPkg extends StatelessWidget {
                   },
                 );
               } else if (type == SubscriptionsType.wellness) {
-                GoRouter.of(context).pushNamed(
-                  RoutesConstants.geniePage,
-                  pathParameters: {
-                    'pageTitle': 'Wellness Genie',
-                    'defination':
-                        'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
-                    'headline':
-                        'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
-                    // 'subscriptionsType':
-                    //     SubscriptionsType.wellness.toString().split('.').last,
-                  },
-                );
+                // GoRouter.of(context).pushNamed(
+                //   RoutesConstants.geniePage,
+                //   pathParameters: {
+                //     'pageTitle': 'Wellness Genie',
+                //     'defination':
+                //         'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
+                //     'headline':
+                //         'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                //     // 'subscriptionsType':
+                //     //     SubscriptionsType.wellness.toString().split('.').last,
+                //   },
+                // );
               } else {
-                GoRouter.of(context).pushNamed(
-                  RoutesConstants.geniePage,
-                  pathParameters: {
-                    'pageTitle': 'Emergency Genie',
-                    'defination':
-                        'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
-                    'headline':
-                        'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
-                    // 'subscriptionsType':
-                    //     SubscriptionsType.emergency.toString().split('.').last,
-                  },
-                );
+                // GoRouter.of(context).pushNamed(
+                //   RoutesConstants.geniePage,
+                //   pathParameters: {
+                //     'pageTitle': 'Emergency Genie',
+                //     'defination':
+                //         'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
+                //     'headline':
+                //         'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
+                //     // 'subscriptionsType':
+                //     //     SubscriptionsType.emergency.toString().split('.').last,
+                //   },
+                // );
               }
             },
         child: Container(
