@@ -9,21 +9,17 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
 import 'package:silver_genie/feature/members/model/member_health_info_model.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 abstract class IMemberService {
   Future<Either<MemberServiceFailure, List<Member>>> getMembers();
   Future<Either<MemberServiceFailure, Member>> addMember(
-    bool self,
-    String relation,
-    String gender,
-    String firstName,
-    String lastName,
-    String dob,
-    String email,
-    String phoneNumber,
-    Address address,
+    Map<String, dynamic> memberData,
+    String? imgId,
   );
+  Future<Either<MemberServiceFailure, Member>> addMemberDataWithProfileImg({
+    required File fileImage,
+    required Map<String, dynamic> memberInfo,
+  });
   Future<Either<MemberServiceFailure, Member>> updateMember(
     String id,
     Map<String, dynamic> updateData,
@@ -78,38 +74,16 @@ class MemberServices implements IMemberService {
 
   @override
   Future<Either<MemberServiceFailure, Member>> addMember(
-    bool self,
-    String relation,
-    String gender,
-    String firstName,
-    String lastName,
-    String dob,
-    String email,
-    String phoneNumber,
-    Address address,
+    Map<String, dynamic> memberData,
+    String? imgId,
   ) async {
-    final newMemberData = {
-      'self': self,
-      'relation': relation,
-      'gender': gender,
-      'firstName': firstName,
-      'lastName': lastName,
-      'dob': dob,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'address': {
-        'state': address.state,
-        'city': address.city,
-        'streetAddress': address.streetAddress,
-        'postalCode': address.postalCode,
-        'country': address.country,
-      },
-    };
-
     try {
+      if (imgId != null) {
+        memberData['profileImg'] = imgId;
+      }
       final response = await httpClient.post(
         '/api/user/add-family',
-        data: newMemberData,
+        data: memberData,
       );
 
       if (response.statusCode == 200) {
@@ -139,6 +113,44 @@ class MemberServices implements IMemberService {
     } on SocketException {
       return const Left(MemberServiceFailure.socketExceptionError());
     } catch (e) {
+      return const Left(MemberServiceFailure.badResponse());
+    }
+  }
+
+  @override
+  Future<Either<MemberServiceFailure, Member>> addMemberDataWithProfileImg({
+    required File fileImage,
+    required Map<String, dynamic> memberInfo,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'files': await MultipartFile.fromFile(
+          fileImage.path,
+        ),
+      });
+      final response = await httpClient.post(
+        '/api/upload',
+        data: formData,
+        options: Options(
+          headers: {'Content-Type': 'multipart/form-data'},
+        ),
+      );
+      if (response.statusCode == 200) {
+        final imageId = response.data[0]['id'];
+        if (imageId != null) {
+          return await addMember(
+            memberInfo,
+            imageId.toString(),
+          );
+        } else {
+          return const Left(MemberServiceFailure.badResponse());
+        }
+      } else {
+        return const Left(MemberServiceFailure.badResponse());
+      }
+    } on SocketException {
+      return const Left(MemberServiceFailure.socketExceptionError());
+    } catch (error) {
       return const Left(MemberServiceFailure.badResponse());
     }
   }
@@ -184,7 +196,7 @@ class MemberServices implements IMemberService {
     required Map<String, dynamic> memberInfo,
   }) async {
     try {
-      var formData = FormData.fromMap({
+      final formData = FormData.fromMap({
         'files': await MultipartFile.fromFile(
           fileImage.path,
         ),

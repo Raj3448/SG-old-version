@@ -26,7 +26,7 @@ import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class AddEditFamilyMemberScreen extends StatefulWidget {
   const AddEditFamilyMemberScreen({
@@ -221,29 +221,34 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
                               relationContr.selectedOptions.first;
+                          final userStore = GetIt.I<UserDetailStore>();
                           memberStore.addNewFamilyMember(
-                            address: Address(
-                              id: -1,
-                              state: stateContr.text.trim(),
-                              city: cityContr.text.trim(),
-                              streetAddress: memberAddressContr.text.trim(),
-                              postalCode: postalCodeContr.text.trim(),
-                              country: countryContr.selectedOptions.first.value
-                                  .toString(),
-                            ),
-                            dob: dobContr.text,
-                            email: emailContr.text.trim(),
-                            firstName: firstNameContr.text.trim(),
-                            gender: genderSelectedValue.value.toString().trim(),
-                            lastName: lastNameContr.text.trim(),
-                            phoneNumber: '91 ${phoneNumberContr.text.trim()}',
-                            relation:
-                                relationSelectedValue.value.toString().trim(),
-                            self:
-                                relationSelectedValue.value.toString().trim() ==
-                                        'Self'
-                                    ? true
-                                    : false,
+                            memberData: {
+                              'self': userStore.userDetails!.email ==
+                                      emailContr.text
+                                  ? true
+                                  : false,
+                              'relation':
+                                  relationSelectedValue.value.toString().trim(),
+                              'gender':
+                                  genderSelectedValue.value.toString().trim(),
+                              'firstName': firstNameContr.text,
+                              'lastName': lastNameContr.text,
+                              'dob': dobContr.text,
+                              'email': emailContr.text,
+                              'phoneNumber':
+                                  '91 ${phoneNumberContr.text.trim()}',
+                              'address': {
+                                'state': stateContr.text.trim(),
+                                'city': cityContr.text.trim(),
+                                'streetAddress': memberAddressContr.text.trim(),
+                                'postalCode': postalCodeContr.text.trim(),
+                                'country': countryContr
+                                    .selectedOptions.first.value
+                                    .toString(),
+                              },
+                            },
+                            fileImage: storeImageFile,
                           );
                         },
                         btnTitle: 'Add new member',
