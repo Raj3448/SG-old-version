@@ -271,23 +271,17 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/geniePage/:pageTitle/:defination/:headline',
+      path: '/geniePage/:pageTitle/:id',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
-        final defination = state.pathParameters['defination'] ?? '';
-        final headline = state.pathParameters['headline'] ?? '';
-        // final subscriptionTypeString = state.pathParameters['subscriptionType'] ?? '';
+        final id = state.pathParameters['id'] ?? '';
         
-        // final SubscriptionsType subscriptionType = SubscriptionsType.values.firstWhereOrNull(
-        //   (e) => e.toString().split('.').last == subscriptionTypeString,
-        // ) ?? SubscriptionsType.companion;
 
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,
-            headline: headline,
-            definition: defination,
+            id: id,
           ),
         );
       },

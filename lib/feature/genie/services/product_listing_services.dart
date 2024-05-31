@@ -5,8 +5,10 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 abstract class IProductListingService {
-  Future<Either<Failure, List<ProductListingModel>>> getAllProducts();
-  Future<Either<Failure, List<ProductBasicDetailsModel>>> getAllProductBasicDetails();
+  Future<Either<Failure, List<ProductBasicDetailsModel>>>
+      getAllProductBasicDetails();
+  Future<Either<Failure, ProductListingModel>> getProductById(
+      {required String id});
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -14,18 +16,20 @@ class ProductLisitingServices extends IProductListingService {
   ProductLisitingServices({
     required this.httpClient,
   });
+
   @override
-  Future<Either<Failure, List<ProductListingModel>>> getAllProducts() async {
+  Future<Either<Failure, List<ProductBasicDetailsModel>>>
+      getAllProductBasicDetails() async {
     try {
-      final response = await httpClient.get('/api/products?populate=*');
+      final response = await httpClient
+          .get('/api/products?populate[0]=metadata&populate[1]=icon');
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
           final receivedList = response.data['data'] as List;
-          var allProductList = <ProductListingModel>[];
+          var allProductList = <ProductBasicDetailsModel>[];
           for (var data in receivedList) {
-            if(data['attributes']['type'] == 'subscription')
-                allProductList.add(ProductListingModel.fromJson(data as Map<String, dynamic>));
-              
+            allProductList.add(ProductBasicDetailsModel.fromJson(
+                data as Map<String, dynamic>));
           }
           return Right([...allProductList]);
         }
@@ -39,20 +43,19 @@ class ProductLisitingServices extends IProductListingService {
       return const Left(Failure.someThingWentWrong());
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<ProductBasicDetailsModel>>> getAllProductBasicDetails() async{
+  Future<Either<Failure, ProductListingModel>> getProductById(
+      {required String id}) async {
     try {
-      final response = await httpClient.get('/api/products');
+      final response = await httpClient.get(
+          '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent');
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
-          final receivedList = response.data['data'] as List;
-          var allProductList = <ProductBasicDetailsModel>[];
-          for (var data in receivedList) {
-            allProductList.add(
-                ProductBasicDetailsModel.fromJson(data as Map<String, dynamic>));
+          if(response.data['data']['attributes']['type'] == 'subscription'){
+          return Right(ProductListingModel.fromJson(
+              response.data['data'] as Map<String, dynamic>));
           }
-          return Right([...allProductList]);
         }
         return const Left(Failure.badResponse());
       } else {

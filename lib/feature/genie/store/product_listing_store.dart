@@ -1,7 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
-import 'package:collection/collection.dart';
 part 'product_listing_store.g.dart';
 
 class ProductListingStore = _ProductListingStoreBase with _$ProductListingStore;
@@ -21,6 +20,9 @@ abstract class _ProductListingStoreBase with Store {
   String? getProductFailure;
 
   @observable
+  bool isProductLoaded = false;
+
+  @observable
   bool? hasGotProductSuccesfully;
 
   void initGetProductBasicDetails() {
@@ -35,6 +37,7 @@ abstract class _ProductListingStoreBase with Store {
             });
       }, (r) {
         productBasicDetailsModelList = r;
+        isProductLoaded = true;
       });
       fetchProductLoading = false;
     });
