@@ -23,8 +23,9 @@ class ProductLisitingServices extends IProductListingService {
           final receivedList = response.data['data'] as List;
           var allProductList = <ProductListingModel>[];
           for (var data in receivedList) {
-            allProductList.add(
-                ProductListingModel.fromJson(data as Map<String, dynamic>));
+            if(data['attributes']['type'] == 'subscription')
+                allProductList.add(ProductListingModel.fromJson(data as Map<String, dynamic>));
+              
           }
           return Right([...allProductList]);
         }
