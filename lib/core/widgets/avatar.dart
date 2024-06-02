@@ -86,17 +86,20 @@ class Avatar extends StatelessWidget {
             : null,
       ),
       child: imgPath == ''
-          ? null : imgPath == 'assets/icon/44Px.png'
-                    ?Image.asset(imgPath)
-          : CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: imgPath,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  CircularProgressIndicator(value: downloadProgress.progress),
-              errorWidget: (context, url, error) => Image.asset(
-                'assets/icon/default _profile.png',
-              ),
-            ),
+          ? null
+          : imgPath == 'assets/icon/44Px.png'
+              ? Image.asset(imgPath)
+              : CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: imgPath,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    'assets/icon/default _profile.png',
+                  ),
+                ),
     );
   }
 }

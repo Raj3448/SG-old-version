@@ -51,11 +51,22 @@ class NoMember extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return MemberCreation(
-                          selfOnTap: () {},
+                          selfOnTap: () {
+                            context.pushNamed(
+                              RoutesConstants.addEditFamilyMemberRoute,
+                              pathParameters: {
+                                'edit': 'false',
+                                'isSelf': 'true',
+                              },
+                            );
+                          },
                           memberOnTap: () {
                             context.pushNamed(
                               RoutesConstants.addEditFamilyMemberRoute,
-                              pathParameters: {'edit': 'false'},
+                              pathParameters: {
+                                'edit': 'false',
+                                'isSelf': 'false',
+                              },
                             );
                           },
                         );

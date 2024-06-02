@@ -749,20 +749,43 @@ class _MemberInfo extends StatelessWidget {
                           maxRadius: 24,
                           isSelected: false,
                           ontap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return MemberCreation(
-                                  selfOnTap: () {},
-                                  memberOnTap: () {
-                                    context.pushNamed(
-                                      RoutesConstants.addEditFamilyMemberRoute,
-                                      pathParameters: {'edit': 'false'},
-                                    );
-                                  },
-                                );
-                              },
-                            );
+                            if (memberStore.hasSelfRelation) {
+                              context.pushNamed(
+                                RoutesConstants.addEditFamilyMemberRoute,
+                                pathParameters: {
+                                  'edit': 'false',
+                                  'isSelf': 'false',
+                                },
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return MemberCreation(
+                                    selfOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'true',
+                                        },
+                                      );
+                                    },
+                                    memberOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'false',
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            }
                           },
                         ),
                       ],

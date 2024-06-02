@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -10,6 +12,7 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
@@ -74,12 +77,43 @@ class MembersScreen extends StatelessWidget {
                         const SizedBox(height: Dimension.d6),
                         CustomButton(
                           ontap: () {
-                            context.pushNamed(
-                              RoutesConstants.addEditFamilyMemberRoute,
-                              pathParameters: {
-                                'edit': 'false',
-                              },
-                            );
+                            if (store.hasSelfRelation) {
+                              context.pushNamed(
+                                RoutesConstants.addEditFamilyMemberRoute,
+                                pathParameters: {
+                                  'edit': 'false',
+                                  'isSelf': 'false',
+                                },
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return MemberCreation(
+                                    selfOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'true',
+                                        },
+                                      );
+                                    },
+                                    memberOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'false',
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            }
                           },
                           title: 'Add new member',
                           showIcon: false,

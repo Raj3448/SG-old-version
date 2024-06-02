@@ -3,9 +3,7 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -31,10 +29,12 @@ import 'package:silver_genie/feature/user_profile/store/user_details_store.dart'
 class AddEditFamilyMemberScreen extends StatefulWidget {
   const AddEditFamilyMemberScreen({
     required this.edit,
+    required this.isSelf,
     super.key,
   });
 
   final bool edit;
+  final bool isSelf;
 
   @override
   State<AddEditFamilyMemberScreen> createState() =>
@@ -63,19 +63,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     const ValueItem(label: 'Female', value: 'Female'),
     const ValueItem(label: 'Other', value: 'Other'),
   ];
-  final List<ValueItem<String>> _relationList = [
-    ValueItem(label: 'Father'.tr(), value: 'Father'),
-    ValueItem(label: 'Mother'.tr(), value: 'Mother'),
-    ValueItem(label: 'Sister'.tr(), value: 'Sister'),
-    ValueItem(label: 'Brother'.tr(), value: 'Brother'),
-    ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
-    ValueItem(label: 'Son'.tr(), value: 'Son'),
-    ValueItem(label: 'Wife'.tr(), value: 'Wife'),
-    ValueItem(label: 'Self'.tr(), value: 'Self'),
-  ];
+  List<ValueItem<String>> _relationList = [];
   late Member _member;
   late final int? selectedGenderIndex;
-  late final int? relationIndex;
+  int? relationIndex;
   String? profileImgUrl;
   File? storeImageFile;
   bool isImageUpdate = false;
@@ -101,8 +92,21 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   void initState() {
     super.initState();
 
+    _relationList = [
+      ValueItem(label: 'Father'.tr(), value: 'Father'),
+      ValueItem(label: 'Mother'.tr(), value: 'Mother'),
+      ValueItem(label: 'Sister'.tr(), value: 'Sister'),
+      ValueItem(label: 'Brother'.tr(), value: 'Brother'),
+      ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
+      ValueItem(label: 'Son'.tr(), value: 'Son'),
+      ValueItem(label: 'Wife'.tr(), value: 'Wife'),
+      if (widget.isSelf == true) ValueItem(label: 'Self'.tr(), value: 'self'),
+    ];
+
     if (widget.edit) {
       _initializeControllers();
+    } else if (widget.isSelf) {
+      _initializeSelfMemberControllers();
     }
 
     reaction((_) => memberStore.addOrEditMemberFailure, (_) {
@@ -283,7 +287,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: firstNameContr,
                                 large: false,
-                                enabled: true,
+                                enabled: widget.isSelf ? false : true,
                                 onChanged: (value) =>
                                     firstNameContr.text = value,
                                 validationLogic: (value) {
@@ -301,7 +305,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: lastNameContr,
                                 large: false,
-                                enabled: true,
+                                enabled: widget.isSelf ? false : true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your last name';
@@ -341,13 +345,16 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const AsteriskLabel(label: 'Relation'),
                               const SizedBox(height: 8),
                               MultiSelectFormField(
-                                selectedOptions: widget.edit
+                                selectedOptions: widget.edit &&
+                                        relationIndex != null &&
+                                        relationIndex! >= 0 &&
+                                        relationIndex! < _relationList.length
                                     ? [_relationList[relationIndex!]]
-                                    : null,
+                                    : [],
                                 controller: relationContr,
                                 values: _relationList,
                                 validator: (value) {
-                                  if (value == null) {
+                                  if (value == null || value.isEmpty) {
                                     return 'Please select the relation';
                                   }
                                   return null;
@@ -358,7 +365,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               GestureDetector(
                                 onTap: () {
-                                  if (widget.edit) {
+                                  if (widget.edit || widget.isSelf) {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -381,7 +388,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   keyboardType: TextInputType.number,
                                   controller: phoneNumberContr,
                                   large: false,
-                                  enabled: widget.edit ? false : true,
+                                  enabled: widget.edit || widget.isSelf
+                                      ? false
+                                      : true,
                                   validationLogic: (value) {
                                     if (value!.isEmpty) {
                                       return 'Please enter your mobile number';
@@ -395,7 +404,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               GestureDetector(
                                 onTap: () {
-                                  if (widget.edit) {
+                                  if (widget.edit || widget.isSelf) {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -417,7 +426,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   keyboardType: TextInputType.emailAddress,
                                   controller: emailContr,
                                   large: false,
-                                  enabled: widget.edit ? false : true,
+                                  enabled: widget.edit || widget.isSelf
+                                      ? false
+                                      : true,
                                   validationLogic: (value) {
                                     const regex =
                                         r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
@@ -437,7 +448,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 hintText: 'Enter address',
                                 keyboardType: TextInputType.streetAddress,
                                 controller: memberAddressContr,
-                                // initialValue: _member.address,
                                 large: true,
                                 enabled: true,
                                 validationLogic: (value) {
@@ -516,7 +526,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           ),
                         ),
                         const SizedBox(height: Dimension.d20),
-                        const SizedBox(height: Dimension.d5),
+                        const SizedBox(height: Dimension.d10),
                       ],
                     ),
                   ),
@@ -543,6 +553,40 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
     relationIndex = _relationList
         .indexWhere((element) => element.value == _member.relation);
+    if (relationIndex == -1) {
+      relationIndex = null;
+    }
+
+    phoneNumberContr.text = _member.phoneNumber;
+    emailContr.text = _member.email;
+    if (_member.profileImg != null) {
+      isAlreadyhaveProfileImg = true;
+      profileImgUrl = _member.profileImg!.url;
+    }
+    if (_member.address != null) {
+      stateContr.text = _member.address!.state;
+      cityContr.text = _member.address!.city;
+      memberAddressContr.text = _member.address!.streetAddress;
+      _selectedCountryIndex = _countryItems.indexWhere(
+        (element) => element.value == _member.address!.country,
+      );
+      postalCodeContr.text = _member.address!.postalCode;
+    }
+  }
+
+  void _initializeSelfMemberControllers() {
+    _member = memberStore.selfRelationMember!;
+    selectedGenderIndex =
+        _genderItems.indexWhere((element) => element.value == _member.gender);
+    firstNameContr.text = _member.firstName;
+    lastNameContr.text = _member.lastName;
+    dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
+    relationIndex = _relationList
+        .indexWhere((element) => element.value == _member.relation);
+    if (relationIndex == -1) {
+      relationIndex = null;
+    }
+
     phoneNumberContr.text = _member.phoneNumber;
     emailContr.text = _member.email;
     if (_member.profileImg != null) {

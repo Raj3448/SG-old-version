@@ -309,6 +309,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
+                  'isSelf': relation == 'self' ? 'true' : 'false',
                 },
               );
             },

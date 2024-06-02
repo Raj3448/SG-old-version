@@ -55,6 +55,17 @@ abstract class _MembersStoreBase with Store {
   @observable
   String? addOrEditMemberSuccessful;
 
+  @computed
+  bool get hasSelfRelation =>
+      members.any((member) => member.relation == 'self');
+
+  @computed
+  Member? get selfRelationMember {
+    return members.firstWhere(
+      (member) => member.relation == 'self',
+    );
+  }
+
   @action
   void selectMember(int memberId) {
     selectedMemberId = memberId;
