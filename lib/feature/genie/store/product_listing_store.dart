@@ -51,8 +51,7 @@ abstract class _ProductListingStoreBase with Store {
           .expand((element) => element)
           .toList();
     }
-    
-  
+
 
   void initGetProductBasicDetails() {
     fetchProductLoading = true;

@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
@@ -205,8 +207,7 @@ class _PlanPricingDetailsComponentState
                     },
                     child: PlanDisplayComponent(
                       planPriceDetails: widget.pricingDetailsList[index],
-                      isSelected:
-                          store.emergencyServiceModel.plans[index].isSelected,
+                      
                     ),
                   )),
         )
@@ -222,13 +223,15 @@ class ExploreNowComponent extends StatelessWidget {
       required this.planHeading,
       required this.imgPath,
       required this.colorCode,
-      super.key});
+      required this.plansList,
+      super.key, });
 
   final String pageTitle;
   final String btnLabel;
   final String planHeading;
   final String imgPath;
   final String colorCode;
+  final List<Price> plansList;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -249,9 +252,12 @@ class ExploreNowComponent extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              final plansListJson = jsonEncode(plansList.map((plan) => plan.toJson()).toList());
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
                 pathParameters: {'pageTitle': pageTitle},
+                extra: {'plansList' : plansListJson},
+                
               );
             },
             child: Container(

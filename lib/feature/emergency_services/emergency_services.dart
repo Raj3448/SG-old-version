@@ -180,7 +180,7 @@ class _EmergencyServicesState extends State<EmergencyServices> {
                           },
                           child: PlanDisplayComponent(
                             planPriceDetails: null,
-                            isSelected: store.emergencyServiceModel.plans[index].isSelected,
+                            
                           ),
                         )),
               ),

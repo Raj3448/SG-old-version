@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
@@ -10,6 +12,7 @@ import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
@@ -262,9 +265,15 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.couplePlanPage,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
+        final extraData = state.extra as Map<String, dynamic>?;
+        final plansListJson = extraData?['plansList'] as String;
+        final planList = (jsonDecode(plansListJson) as List<dynamic>)
+            .map((plan) => Price.fromJson(plan as Map<String, dynamic>))
+            .toList();
         return MaterialPage(
           child: CouplePlanPage(
             pageTitle: pageTitle,
+            planList: planList,
           ),
         );
       },
