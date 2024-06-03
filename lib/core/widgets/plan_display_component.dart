@@ -7,12 +7,11 @@ import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class PlanDisplayComponent extends StatelessWidget {
   const PlanDisplayComponent({
-    required this.isSelected,
+    
     required this.planPriceDetails,
     Key? key,
   }) : super(key: key);
 
-  final bool isSelected;
   final Price? planPriceDetails;
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class PlanDisplayComponent extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
             width: 1,
-            color: isSelected ? AppColors.primary : AppColors.grayscale400),
+            color: AppColors.grayscale400),
         color: AppColors.secondary,
         borderRadius: BorderRadius.circular(10),
       ),

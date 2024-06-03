@@ -93,8 +93,8 @@ class GeniePage extends StatelessWidget {
                         PlanPricingDetailsComponent(
                           planName: productListingModel!
                               .product.subscriptionContent!.mainHeading,
-                          pricingDetailsList:
-                              productListingModel!.product.prices,
+                          pricingDetailsList: services.getPlansforNonCouple(
+                              productListingModel!.product.prices),
                         ),
                         CustomButton(
                           ontap: () {
@@ -113,7 +113,7 @@ class GeniePage extends StatelessWidget {
                               },
                             );
                           },
-                          title: isUpgradble? 'Upgrade care' : 'Book Care',
+                          title: isUpgradble ? 'Upgrade care' : 'Book Care',
                           showIcon: false,
                           iconPath: AppIcons.add,
                           size: ButtonSize.normal,
@@ -132,7 +132,7 @@ class GeniePage extends StatelessWidget {
                             imgPath: productListingModel!
                                 .product.icon.data.attributes.url,
                             colorCode: productListingModel!
-                                .product.metadata.first.value,
+                                .product.metadata.first.value, plansList: services.getPlansforCouple(productListingModel!.product.prices),
                           ),
                         FAQComponent(
                           questionsAndContentList: questionAndAnswerList,
