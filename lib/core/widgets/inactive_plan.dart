@@ -93,8 +93,15 @@ class InactivePlanComponent extends StatelessWidget {
             ),
             const SizedBox(height: Dimension.d3),
             if (store.getSubscriptActiveProdList.isNotEmpty)
-              _SignupPersonalizedCareComponent(
-                productBasicDetailsList: store.getSubscriptActiveProdList.toList(),
+              Text(
+                'Signup to Personalized care packages',
+                style: AppTextStyle.bodyMediumBold
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+            if (store.getSubscriptActiveProdList.isNotEmpty)
+              ProductListingCareComponent(
+                productBasicDetailsList: store.getSubscriptActiveProdList,
+                isUpgradable: false,
               )
           ],
         ),
@@ -103,10 +110,12 @@ class InactivePlanComponent extends StatelessWidget {
   }
 }
 
-class _SignupPersonalizedCareComponent extends StatelessWidget {
+class ProductListingCareComponent extends StatelessWidget {
   final List<ProductBasicDetailsModel> productBasicDetailsList;
-  _SignupPersonalizedCareComponent({
+  final bool isUpgradable;
+  ProductListingCareComponent({
     required this.productBasicDetailsList,
+    required this.isUpgradable,
     Key? key,
   }) : super(key: key);
 
@@ -120,8 +129,17 @@ class _SignupPersonalizedCareComponent extends StatelessWidget {
                 expanded: true,
                 type: SubscriptionsType.companion,
                 buttonlabel: productBasicDetailsList[index].attributes.name,
-                colorCode: productBasicDetailsList[index].attributes.metadata.first.value,
-                iconUrl: productBasicDetailsList[index].attributes.icon.data.attributes.url,
+                colorCode: productBasicDetailsList[index]
+                    .attributes
+                    .metadata
+                    .first
+                    .value,
+                iconUrl: productBasicDetailsList[index]
+                    .attributes
+                    .icon
+                    .data
+                    .attributes
+                    .url,
                 onTap: () {
                   GoRouter.of(context).pushNamed(
                     RoutesConstants.geniePage,
@@ -129,6 +147,7 @@ class _SignupPersonalizedCareComponent extends StatelessWidget {
                       'pageTitle':
                           productBasicDetailsList[index].attributes.name,
                       'id': productBasicDetailsList[index].id.toString(),
+                      'isUpgradble' : isUpgradable.toString()
                     },
                   );
                 },
@@ -141,14 +160,7 @@ class _SignupPersonalizedCareComponent extends StatelessWidget {
     initializeWidget(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Signup to Personalized care packages',
-          style: AppTextStyle.bodyMediumBold
-              .copyWith(color: AppColors.grayscale900),
-        ),
-        ...btnWidgetList
-      ],
+      children: [...btnWidgetList],
     );
   }
 }

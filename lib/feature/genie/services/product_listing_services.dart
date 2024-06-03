@@ -22,7 +22,7 @@ class ProductLisitingServices extends IProductListingService {
       getAllProductBasicDetails() async {
     try {
       final response = await httpClient
-          .get('/api/products?populate[0]=metadata&populate[1]=icon');
+          .get('/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata');
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
           final receivedList = response.data['data'] as List;

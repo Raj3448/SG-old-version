@@ -17,10 +17,22 @@ abstract class _ProductListingStoreBase with Store {
   List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
   @computed
-  Iterable<ProductBasicDetailsModel> get getSubscriptActiveProdList => productBasicDetailsModelList != null ? productBasicDetailsModelList!.where((element) => element.attributes.isActive && element.attributes.type == 'subscription') : [];
+  List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
+      productBasicDetailsModelList != null
+          ? productBasicDetailsModelList!
+              .where((element) =>
+                  element.attributes.isActive &&
+                  element.attributes.type == 'subscription')
+              .toList()
+          : [];
 
   @computed
-  Iterable<ProductBasicDetailsModel> get getSubscriptProdList => productBasicDetailsModelList != null ? productBasicDetailsModelList!.where((element) => element.attributes.type == 'subscription') : [];
+  List<ProductBasicDetailsModel> get getSubscriptProdList =>
+      productBasicDetailsModelList != null
+          ? productBasicDetailsModelList!
+              .where((element) => element.attributes.type == 'subscription')
+              .toList()
+          : [];
 
   @observable
   String? getProductFailure;
@@ -30,6 +42,17 @@ abstract class _ProductListingStoreBase with Store {
 
   @observable
   bool? hasGotProductSuccesfully;
+
+  @computed
+    List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
+      return getSubscriptProdList
+          .where((element) => element.id.toString() == id)
+          .map((element) => element.attributes.upgradableProducts.data)
+          .expand((element) => element)
+          .toList();
+    }
+    
+  
 
   void initGetProductBasicDetails() {
     fetchProductLoading = true;

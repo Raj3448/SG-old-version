@@ -203,6 +203,8 @@ class ProductMetaData with _$ProductMetaData {
         required DateTime updatedAt,
         required List<Metadatum> metadata,
         @JsonKey(name: 'icon') required IconImage icon,
+        @JsonKey(name: 'upgradeable_products') @Default(UpgradableProducts(data: [])) UpgradableProducts upgradableProducts,
+
     }) = _ProductMetaData;
 
     factory ProductMetaData.fromJson(Map<String, dynamic> json) => _$ProductMetaDataFromJson(json);
@@ -250,3 +252,11 @@ class IconImgMetaData with _$IconImgMetaData {
     factory IconImgMetaData.fromJson(Map<String, dynamic> json) => _$IconImgMetaDataFromJson(json);
 }
 
+@freezed
+class UpgradableProducts with _$UpgradableProducts {
+    const factory UpgradableProducts({
+        required List<ProductBasicDetailsModel> data,
+    }) = _UpgradableProducts;
+
+    factory UpgradableProducts.fromJson(Map<String, dynamic> json) => _$UpgradableProductsFromJson(json);
+}

@@ -18,11 +18,13 @@ class GeniePage extends StatelessWidget {
   GeniePage({
     required this.pageTitle,
     required this.id,
+    required this.isUpgradble,
     super.key,
   });
 
   final String pageTitle;
   final String id;
+  final bool isUpgradble;
   final services = GetIt.I<ProductLisitingServices>();
 
   @override
@@ -72,7 +74,14 @@ class GeniePage extends StatelessWidget {
                           defination: productListingModel!.product
                               .subscriptionContent!.subHeading1Description,
                           subHeading: productListingModel!
-                              .product.subscriptionContent!.subHeading1, imageUrl: productListingModel!.product.subscriptionContent!.productImage.data.attributes.url,
+                              .product.subscriptionContent!.subHeading1,
+                          imageUrl: productListingModel!
+                              .product
+                              .subscriptionContent!
+                              .productImage
+                              .data
+                              .attributes
+                              .url,
                         ),
                         ServiceProvideComponent(
                           heading: productListingModel!
@@ -104,7 +113,7 @@ class GeniePage extends StatelessWidget {
                               },
                             );
                           },
-                          title: 'Book Care',
+                          title: isUpgradble? 'Upgrade care' : 'Book Care',
                           showIcon: false,
                           iconPath: AppIcons.add,
                           size: ButtonSize.normal,
@@ -119,10 +128,18 @@ class GeniePage extends StatelessWidget {
                             btnLabel: productListingModel!.product
                                 .subscriptionContent!.exploreNowCtaLabel,
                             planHeading: productListingModel!.product
-                                .subscriptionContent!.exploreCouplePlansHeading, imgPath: productListingModel!.product.icon.data.attributes.url, colorCode: productListingModel!.product.metadata.first.value,
+                                .subscriptionContent!.exploreCouplePlansHeading,
+                            imgPath: productListingModel!
+                                .product.icon.data.attributes.url,
+                            colorCode: productListingModel!
+                                .product.metadata.first.value,
                           ),
                         FAQComponent(
-                          questionsAndContentList: questionAndAnswerList, heading: productListingModel!.product.subscriptionContent!.faqHeading, faqList: productListingModel!.product.subscriptionContent!.faq,
+                          questionsAndContentList: questionAndAnswerList,
+                          heading: productListingModel!
+                              .product.subscriptionContent!.faqHeading,
+                          faqList: productListingModel!
+                              .product.subscriptionContent!.faq,
                         ),
                       ],
                     ),
