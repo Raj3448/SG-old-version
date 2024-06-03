@@ -52,10 +52,8 @@ class ProductLisitingServices extends IProductListingService {
           '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent');
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
-          if(response.data['data']['attributes']['type'] == 'subscription'){
           return Right(ProductListingModel.fromJson(
               response.data['data'] as Map<String, dynamic>));
-          }
         }
         return const Left(Failure.badResponse());
       } else {

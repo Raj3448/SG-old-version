@@ -92,9 +92,9 @@ class InactivePlanComponent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Dimension.d3),
-            if (store.productBasicDetailsModelList != null)
+            if (store.getSubscriptActiveProdList.isNotEmpty)
               _SignupPersonalizedCareComponent(
-                productBasicDetailsList: store.productBasicDetailsModelList!,
+                productBasicDetailsList: store.getSubscriptActiveProdList.toList(),
               )
           ],
         ),

@@ -16,6 +16,12 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
+  @computed
+  Iterable<ProductBasicDetailsModel> get getSubscriptActiveProdList => productBasicDetailsModelList != null ? productBasicDetailsModelList!.where((element) => element.attributes.isActive && element.attributes.type == 'subscription') : [];
+
+  @computed
+  Iterable<ProductBasicDetailsModel> get getSubscriptProdList => productBasicDetailsModelList != null ? productBasicDetailsModelList!.where((element) => element.attributes.type == 'subscription') : [];
+
   @observable
   String? getProductFailure;
 
@@ -42,28 +48,4 @@ abstract class _ProductListingStoreBase with Store {
       fetchProductLoading = false;
     });
   }
-
-  // void getAllProducts() {
-  //   isLoading = true;
-  //   if (productListingModelList == null) {
-  //     // ignore: unawaited_futures
-  //     productListingService.getAllProducts().then((value) =>
-
-  //       value.fold((l) {
-  //         l.maybeMap(socketException: (value) {
-  //           getProductFailure = 'No Internet';
-  //         }, orElse: () {
-  //           getProductFailure = 'Something went wrong';
-  //         });
-  //         hasGotProductSuccesfully = false;
-  //       }, (r) {
-  //         productListingModelList = r;
-  //         hasGotProductSuccesfully = true;
-  //       })
-  //     );
-  //       isLoading = false;
-  //   } else {
-  //     isLoading = false;
-  //   }
-  // }
 }

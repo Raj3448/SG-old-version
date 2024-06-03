@@ -169,6 +169,7 @@ void main() async {
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
+          
           statusBarColor: AppColors.grayscale100));
       runApp(
         EasyLocalization(
