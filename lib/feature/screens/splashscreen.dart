@@ -29,7 +29,7 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
     reaction(
       (_) => Tuple3(
         homeStore.isHomepageDataLoaded,
-        productStore.fetchProductLoading,
+        productStore.isProductLoaded,
         authStore.isAuthenticated,
       ),
       (loaded) async {

@@ -3,10 +3,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -71,7 +73,7 @@ class InactivePlanComponent extends StatelessWidget {
                   name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
-                const SubscriptionPkg(
+                SubscriptionPkg(
                   expanded: false,
                   type: SubscriptionsType.inActive,
                 ),
@@ -90,8 +92,17 @@ class InactivePlanComponent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Dimension.d3),
-            if (store.productBasicDetailsModelList != null)
-              _SignupPersonalizedCareComponent(productBasicDetailsList: store.productBasicDetailsModelList!,)
+            if (store.getSubscriptActiveProdList.isNotEmpty)
+              Text(
+                'Signup to Personalized care packages',
+                style: AppTextStyle.bodyMediumBold
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+            if (store.getSubscriptActiveProdList.isNotEmpty)
+              ProductListingCareComponent(
+                productBasicDetailsList: store.getSubscriptActiveProdList,
+                isUpgradable: false,
+              )
           ],
         ),
       ),
@@ -99,37 +110,57 @@ class InactivePlanComponent extends StatelessWidget {
   }
 }
 
-class _SignupPersonalizedCareComponent extends StatelessWidget {
+class ProductListingCareComponent extends StatelessWidget {
   final List<ProductBasicDetailsModel> productBasicDetailsList;
-  const _SignupPersonalizedCareComponent({
-    required this.productBasicDetailsList, Key? key,
+  final bool isUpgradable;
+  ProductListingCareComponent({
+    required this.productBasicDetailsList,
+    required this.isUpgradable,
+    Key? key,
   }) : super(key: key);
+
+  List<Widget> btnWidgetList = [];
+  void initializeWidget(BuildContext context) {
+    btnWidgetList = List.generate(
+        productBasicDetailsList.length,
+        (index) => Padding(
+              padding: const EdgeInsets.only(top: Dimension.d2),
+              child: SubscriptionPkg(
+                expanded: true,
+                type: SubscriptionsType.companion,
+                buttonlabel: productBasicDetailsList[index].attributes.name,
+                colorCode: productBasicDetailsList[index]
+                    .attributes
+                    .metadata
+                    .first
+                    .value,
+                iconUrl: productBasicDetailsList[index]
+                    .attributes
+                    .icon
+                    .data
+                    .attributes
+                    .url,
+                onTap: () {
+                  GoRouter.of(context).pushNamed(
+                    RoutesConstants.geniePage,
+                    pathParameters: {
+                      'pageTitle':
+                          productBasicDetailsList[index].attributes.name,
+                      'id': productBasicDetailsList[index].id.toString(),
+                      'isUpgradble' : isUpgradable.toString()
+                    },
+                  );
+                },
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    initializeWidget(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Signup to Personalized care packages',
-          style: AppTextStyle.bodyMediumBold
-              .copyWith(color: AppColors.grayscale900),
-        ),
-        const SizedBox(height: Dimension.d3),
-        const SubscriptionPkg(
-          expanded: true,
-          type: SubscriptionsType.companion,
-        ),
-        const SizedBox(height: Dimension.d3),
-        const SubscriptionPkg(
-          expanded: true,
-          type: SubscriptionsType.wellness,
-        ),
-        const SizedBox(height: Dimension.d3),
-        const SubscriptionPkg(
-          expanded: true,
-          type: SubscriptionsType.emergency,
-        ),
-      ],
+      children: [...btnWidgetList],
     );
   }
 }

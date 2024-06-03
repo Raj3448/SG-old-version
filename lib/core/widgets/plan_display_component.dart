@@ -7,12 +7,11 @@ import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class PlanDisplayComponent extends StatelessWidget {
   const PlanDisplayComponent({
-    
     required this.isSelected,
     required this.planPriceDetails,
     Key? key,
   }) : super(key: key);
-  
+
   final bool isSelected;
   final Price? planPriceDetails;
   @override
@@ -75,7 +74,7 @@ class PlanDisplayComponent extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    planPriceDetails!.recurringInterval,
+                    '${planPriceDetails!.recurringIntervalCount} ${removeLastLy(planPriceDetails!.recurringInterval)}',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale900,
                       fontSize: 18,
@@ -90,7 +89,7 @@ class PlanDisplayComponent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    ' ${planPriceDetails!.amountWithoutDiscount!=null? planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2): planPriceDetails!.unitAmount.toStringAsFixed(2)}} Rs',
+                    ' ${planPriceDetails!.amountWithoutDiscount != null ? planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2) : planPriceDetails!.unitAmount.toStringAsFixed(2)}} Rs',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale700,
                       fontWeight: FontWeight.w400,
@@ -116,4 +115,10 @@ class PlanDisplayComponent extends StatelessWidget {
       ),
     );
   }
+}
+
+String removeLastLy(String input) {
+  int lastIndex = input.lastIndexOf('ly');
+  if (lastIndex == -1) return input;
+  return input.substring(0, lastIndex) + input.substring(lastIndex + 2);
 }

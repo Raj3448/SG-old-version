@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -23,10 +24,14 @@ class Avatar extends StatelessWidget {
     required this.imgPath,
     required this.maxRadius,
     this.isNetworkImage = false,
-    super.key,
-  });
+    this.isImageSquare = false,
+    this.fit = BoxFit.cover,
+    Key? key,
+  }) : super(key: key);
   factory Avatar.fromSize({
     bool isnetworkImage = false,
+    bool isImageSquare = false,
+    BoxFit fit = BoxFit.cover,
     required String imgPath,
     required AvatarSize size,
   }) {
@@ -64,11 +69,15 @@ class Avatar extends StatelessWidget {
       imgPath: imgPath,
       maxRadius: radius,
       isNetworkImage: isNetworkImage,
+      isImageSquare: isImageSquare,
+      fit: fit,
     );
   }
   final String imgPath;
   final double maxRadius;
   final bool isNetworkImage;
+  final bool isImageSquare;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -77,26 +86,32 @@ class Avatar extends StatelessWidget {
       width: maxRadius * 2,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
+        shape: isImageSquare ? BoxShape.rectangle : BoxShape.circle,
         image: imgPath == ''
-            ? const DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/icon/default _profile.png'),
+            ? DecorationImage(
+                fit: fit,
+                image: const AssetImage('assets/icon/default _profile.png'),
               )
             : null,
       ),
       child: imgPath == ''
-          ? null : imgPath == 'assets/icon/44Px.png'
-                    ?Image.asset(imgPath)
-          : CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: imgPath,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  CircularProgressIndicator(value: downloadProgress.progress),
-              errorWidget: (context, url, error) => Image.asset(
-                'assets/icon/default _profile.png',
-              ),
-            ),
+          ? null
+          : imgPath == 'assets/icon/44Px.png'
+              ? Image.asset(
+                  imgPath,
+                  fit: BoxFit.cover,
+                )
+              : CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: imgPath,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => Image.asset(
+                    'assets/icon/default _profile.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
     );
   }
 }
