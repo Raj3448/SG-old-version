@@ -225,13 +225,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
                               relationContr.selectedOptions.first;
-                          final userStore = GetIt.I<UserDetailStore>();
                           memberStore.addNewFamilyMember(
                             memberData: {
-                              'self': userStore.userDetails!.email ==
-                                      emailContr.text
-                                  ? true
-                                  : false,
+                              'self': widget.isSelf ? true : false,
                               'relation':
                                   relationSelectedValue.value.toString().trim(),
                               'gender':
@@ -345,12 +341,15 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const AsteriskLabel(label: 'Relation'),
                               const SizedBox(height: 8),
                               MultiSelectFormField(
-                                selectedOptions: widget.edit &&
-                                        relationIndex != null &&
-                                        relationIndex! >= 0 &&
-                                        relationIndex! < _relationList.length
-                                    ? [_relationList[relationIndex!]]
-                                    : [],
+                                selectedOptions: widget.isSelf
+                                    ? [_relationList[7]]
+                                    : widget.edit &&
+                                            relationIndex != null &&
+                                            relationIndex! >= 0 &&
+                                            relationIndex! <
+                                                _relationList.length
+                                        ? [_relationList[relationIndex!]]
+                                        : [],
                                 controller: relationContr,
                                 values: _relationList,
                                 validator: (value) {
@@ -575,32 +574,32 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   }
 
   void _initializeSelfMemberControllers() {
-    _member = memberStore.selfRelationMember!;
+    final user = GetIt.I<UserDetailStore>().userDetails;
     selectedGenderIndex =
-        _genderItems.indexWhere((element) => element.value == _member.gender);
-    firstNameContr.text = _member.firstName;
-    lastNameContr.text = _member.lastName;
-    dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
-    relationIndex = _relationList
-        .indexWhere((element) => element.value == _member.relation);
+        _genderItems.indexWhere((element) => element.value == user!.gender);
+    firstNameContr.text = user!.firstName;
+    lastNameContr.text = user.lastName;
+    dobContr.text = DateFormat('yyyy-MM-dd').format(user.dateOfBirth);
+    relationIndex =
+        _relationList.indexWhere((element) => element.value == user.relation);
     if (relationIndex == -1) {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = _member.phoneNumber;
-    emailContr.text = _member.email;
-    if (_member.profileImg != null) {
+    phoneNumberContr.text = user.phoneNumber;
+    emailContr.text = user.email;
+    if (user.profileImg != null) {
       isAlreadyhaveProfileImg = true;
-      profileImgUrl = _member.profileImg!.url;
+      profileImgUrl = user.profileImg!.url;
     }
-    if (_member.address != null) {
-      stateContr.text = _member.address!.state;
-      cityContr.text = _member.address!.city;
-      memberAddressContr.text = _member.address!.streetAddress;
+    if (user.address != null) {
+      stateContr.text = user.address!.state;
+      cityContr.text = user.address!.city;
+      memberAddressContr.text = user.address!.streetAddress;
       _selectedCountryIndex = _countryItems.indexWhere(
-        (element) => element.value == _member.address!.country,
+        (element) => element.value == user.address!.country,
       );
-      postalCodeContr.text = _member.address!.postalCode;
+      postalCodeContr.text = user.address!.postalCode;
     }
   }
 }

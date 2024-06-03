@@ -10,11 +10,14 @@ abstract class MemberServiceFailure with _$MemberServiceFailure {
       FetchMemberInfoErro;
   const factory MemberServiceFailure.badResponse() = BadResponse;
   const factory MemberServiceFailure.addMemberError() = AddMemberError;
-  const factory MemberServiceFailure.socketExceptionError() = SocketExceptionError;
+  const factory MemberServiceFailure.socketExceptionError() =
+      SocketExceptionError;
+  const factory MemberServiceFailure.internalServerError() =
+      InternalServerError;
+  const factory MemberServiceFailure.badGatewayError() = BadGatewayError;
   const factory MemberServiceFailure.validationError(String message) =
       ValidationError;
   const factory MemberServiceFailure.memberDontHaveEPRInfo() =
       MemberDontHaveEPRInfo;
-  const factory MemberServiceFailure.memberPHRNotFound() =
-      MemberPHRNotFound;
+  const factory MemberServiceFailure.memberPHRNotFound() = MemberPHRNotFound;
 }

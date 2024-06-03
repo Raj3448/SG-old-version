@@ -198,9 +198,10 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final memberPhrId = state.pathParameters['memberPhrId'].toString();
         return MaterialPage(
-            child: PhrPdfViewPage(
-          memberPhrId: memberPhrId,
-        ));
+          child: PhrPdfViewPage(
+            memberPhrId: memberPhrId,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -224,12 +225,12 @@ final GoRouter routes = GoRouter(
       path: '/addEditFamilyMember/:edit/:isSelf',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
-        final edit = state.pathParameters['edit']!.toLowerCase();
-        final isSelf = state.pathParameters['isSelf']!.toLowerCase();
+        final edit = state.pathParameters['edit']?.toLowerCase();
+        final isSelf = state.pathParameters['isSelf']?.toLowerCase();
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
-            edit: bool.parse(edit),
-            isSelf: bool.parse(isSelf),
+            edit: bool.tryParse(edit ?? 'false') ?? false,
+            isSelf: bool.tryParse(isSelf ?? 'false') ?? false,
           ),
         );
       },
@@ -277,12 +278,6 @@ final GoRouter routes = GoRouter(
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
         final defination = state.pathParameters['defination'] ?? '';
         final headline = state.pathParameters['headline'] ?? '';
-        // final subscriptionTypeString = state.pathParameters['subscriptionType'] ?? '';
-
-        // final SubscriptionsType subscriptionType = SubscriptionsType.values.firstWhereOrNull(
-        //   (e) => e.toString().split('.').last == subscriptionTypeString,
-        // ) ?? SubscriptionsType.companion;
-
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,
@@ -312,13 +307,13 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         return MaterialPage(
           child: ServiceDetailsScreen(
-            imgPath: state.pathParameters['imgPath']!,
-            name: state.pathParameters['name']!,
-            yoe: state.pathParameters['yoe']!,
-            type: state.pathParameters['type']!,
-            docInfo: state.pathParameters['docInfo']!,
-            hospital: state.pathParameters['hospital']!,
-            charges: state.pathParameters['charges']!,
+            imgPath: state.pathParameters['imgPath'] ?? '',
+            name: state.pathParameters['name'] ?? '',
+            yoe: state.pathParameters['yoe'] ?? '',
+            type: state.pathParameters['type'] ?? '',
+            docInfo: state.pathParameters['docInfo'] ?? '',
+            hospital: state.pathParameters['hospital'] ?? '',
+            charges: state.pathParameters['charges'] ?? '',
           ),
         );
       },
@@ -337,7 +332,7 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final bookingServiceStatusString =
             state.pathParameters['bookingServiceStatus'];
-        var bookingServiceStatus = BookingServiceStatus.values
+        final bookingServiceStatus = BookingServiceStatus.values
             .firstWhere((e) => e.toString() == bookingServiceStatusString);
         return MaterialPage(
           child: BookingSeviceStatusPage(

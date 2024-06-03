@@ -16,6 +16,7 @@ import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class MembersScreen extends StatelessWidget {
   const MembersScreen({super.key});
@@ -30,7 +31,47 @@ class MembersScreen extends StatelessWidget {
         child: Observer(
           builder: (context) {
             if (store.members.isEmpty) {
-              return const NoMember();
+              return NoMember(
+                ontap: () {
+                  final user = GetIt.I<UserDetailStore>().userDetails;
+                  final member = store.memberById(user!.id);
+                  if (member != null) {
+                    context.pushNamed(
+                      RoutesConstants.addEditFamilyMemberRoute,
+                      pathParameters: {
+                        'edit': 'false',
+                        'isSelf': 'false',
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return MemberCreation(
+                          selfOnTap: () {
+                            context.pushNamed(
+                              RoutesConstants.addEditFamilyMemberRoute,
+                              pathParameters: {
+                                'edit': 'false',
+                                'isSelf': 'true',
+                              },
+                            );
+                          },
+                          memberOnTap: () {
+                            context.pushNamed(
+                              RoutesConstants.addEditFamilyMemberRoute,
+                              pathParameters: {
+                                'edit': 'false',
+                                'isSelf': 'false',
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
+                },
+              );
             } else {
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(
@@ -77,7 +118,11 @@ class MembersScreen extends StatelessWidget {
                         const SizedBox(height: Dimension.d6),
                         CustomButton(
                           ontap: () {
-                            if (store.hasSelfRelation) {
+                            final userStore =
+                                GetIt.I<UserDetailStore>().userDetails;
+                            final memberId = store.memberById(userStore!.id);
+
+                            if (memberId!.id == userStore.id) {
                               context.pushNamed(
                                 RoutesConstants.addEditFamilyMemberRoute,
                                 pathParameters: {

@@ -20,6 +20,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
   MemberDetailsScreen({
@@ -202,6 +203,8 @@ class _BasicDetailsBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeMember = GetIt.I<MembersStore>().activeMember;
+    final user = GetIt.I<UserDetailStore>().userDetails;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
@@ -309,7 +312,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
-                  'isSelf': relation == 'self' ? 'true' : 'false',
+                  'isSelf': user!.id == activeMember!.id ? 'true' : 'false',
                 },
               );
             },
