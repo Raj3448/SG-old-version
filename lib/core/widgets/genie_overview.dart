@@ -7,8 +7,11 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -18,11 +21,13 @@ class GenieOverviewComponent extends StatelessWidget {
   final String headline;
   final String defination;
   final String subHeading;
+  final String imageUrl;
   const GenieOverviewComponent({
     required this.title,
     required this.headline,
     required this.defination,
     required this.subHeading,
+    required this.imageUrl,
     Key? key,
   }) : super(key: key);
 
@@ -54,13 +59,7 @@ class GenieOverviewComponent extends StatelessWidget {
         const SizedBox(
           height: Dimension.d5,
         ),
-        Center(
-          child: SvgPicture.asset(
-            'assets/emergency/rafiki.svg',
-            height: 206,
-            width: 277,
-          ),
-        ),
+        Center(child: BannerImageComponent(imageUrl: imageUrl)),
         const SizedBox(
           height: Dimension.d3,
         ),
@@ -93,8 +92,11 @@ class GenieOverviewComponent extends StatelessWidget {
 }
 
 class ServiceProvideComponent extends StatelessWidget {
-  final List<Map<String, dynamic>> serviceDetailsList;
-  const ServiceProvideComponent({required this.serviceDetailsList, Key? key})
+  final String heading;
+
+  final List<Datum> serviceList;
+  const ServiceProvideComponent(
+      {required this.heading, required this.serviceList, Key? key})
       : super(key: key);
 
   @override
@@ -103,7 +105,7 @@ class ServiceProvideComponent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Services we provide',
+          heading,
           style: AppTextStyle.bodyMediumMedium.copyWith(
             color: AppColors.grayscale900,
             fontSize: 18,
@@ -119,11 +121,11 @@ class ServiceProvideComponent extends StatelessWidget {
           height: 350,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: serviceDetailsList.length,
+            itemCount: serviceList.length,
             itemBuilder: (context, index) {
               return _ServiceCheckBox(
-                servicename: serviceDetailsList[index]['servicename'] as String,
-                isProvide: serviceDetailsList[index]['isProvide'] as bool,
+                servicename: serviceList[index].attributes.label,
+                isProvide: serviceList[index].attributes.isActive,
               );
             },
           ),
@@ -203,7 +205,6 @@ class _PlanPricingDetailsComponentState
                     },
                     child: PlanDisplayComponent(
                       planPriceDetails: widget.pricingDetailsList[index],
-                      
                       isSelected:
                           store.emergencyServiceModel.plans[index].isSelected,
                     ),
@@ -215,11 +216,19 @@ class _PlanPricingDetailsComponentState
 }
 
 class ExploreNowComponent extends StatelessWidget {
-  const ExploreNowComponent({required this.pageTitle, required this.btnLabel, required this.planHeading, super.key});
+  const ExploreNowComponent(
+      {required this.pageTitle,
+      required this.btnLabel,
+      required this.planHeading,
+      required this.imgPath,
+      required this.colorCode,
+      super.key});
 
   final String pageTitle;
   final String btnLabel;
   final String planHeading;
+  final String imgPath;
+  final String colorCode;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -251,14 +260,17 @@ class ExploreNowComponent extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
               decoration: BoxDecoration(
                 color: AppColors.secondary,
-                border: Border.all(width: 1, color: AppColors.primary),
+                border: Border.all(
+                    width: 1, color: Color(int.parse(colorCode, radix: 16))),
                 borderRadius: BorderRadius.circular(Dimension.d2),
               ),
               child: Row(
                 children: [
-                  Image.asset(
-                    'assets/icon/avg_time.png',
-                    height: 21,
+                  Avatar.fromSize(
+                    imgPath: '${Env.serverUrl}$imgPath',
+                    size: AvatarSize.size12,
+                    fit: BoxFit.contain,
+                    isImageSquare: true,
                   ),
                   const SizedBox(
                     width: Dimension.d3,
@@ -270,10 +282,10 @@ class ExploreNowComponent extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  const Icon(
+                  Icon(
                     AppIcons.arrow_forward,
                     size: 20,
-                    color: AppColors.primary,
+                    color: Color(int.parse(colorCode, radix: 16)),
                   ),
                 ],
               ),
@@ -285,18 +297,24 @@ class ExploreNowComponent extends StatelessWidget {
   }
 }
 
-class HowItWorkComponent extends StatelessWidget {
-  const HowItWorkComponent({required this.questionsAndContentList, super.key});
+class FAQComponent extends StatelessWidget {
+  const FAQComponent({
+    required this.questionsAndContentList,
+    required this.heading,
+    required this.faqList,
+    Key? key,
+  }) : super(key: key);
 
   final List<Map<String, dynamic>> questionsAndContentList;
-
+  final String heading;
+  final List<Faq> faqList;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'How It works?',
+          heading,
           style: AppTextStyle.bodyMediumMedium.copyWith(
             fontSize: 20,
             fontFamily: FontFamily.inter,
@@ -306,10 +324,10 @@ class HowItWorkComponent extends StatelessWidget {
         ),
         Column(
           children: List.generate(
-            questionsAndContentList.length,
+            faqList.length,
             (index) => ExpandingQuestionComponent(
-              question: questionsAndContentList[index]['question'] as String,
-              temp: questionsAndContentList[index]['answer'] as String,
+              question: faqList[index].question,
+              temp: faqList[index].answer,
             ),
           ),
         ),

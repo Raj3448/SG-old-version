@@ -61,10 +61,10 @@ class MemberCard extends StatelessWidget {
               ],
             ),
             if (hasCareSub)
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   SubscriptionPkg(
                     expanded: false,
                     type: SubscriptionsType.wellness,

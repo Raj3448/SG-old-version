@@ -156,17 +156,17 @@ class MemberDetailsScreen extends StatelessWidget {
                             .copyWith(color: AppColors.grayscale900),
                       ),
                       const SizedBox(height: Dimension.d6),
-                      const SubscriptionPkg(
+                      SubscriptionPkg(
                         expanded: true,
                         type: SubscriptionsType.companion,
                       ),
                       const SizedBox(height: Dimension.d3),
-                      const SubscriptionPkg(
+                      SubscriptionPkg(
                         expanded: true,
                         type: SubscriptionsType.wellness,
                       ),
                       const SizedBox(height: Dimension.d3),
-                      const SubscriptionPkg(
+                      SubscriptionPkg(
                         expanded: true,
                         type: SubscriptionsType.emergency,
                       ),
@@ -250,7 +250,7 @@ class _BasicDetailsBox extends StatelessWidget {
                     .copyWith(color: AppColors.grayscale700),
               ),
               const SizedBox(width: Dimension.d2),
-              const SubscriptionPkg(
+              SubscriptionPkg(
                 expanded: false,
                 type: SubscriptionsType.wellness,
               ),

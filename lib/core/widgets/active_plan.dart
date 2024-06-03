@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -6,7 +7,10 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class AnalogComponent extends StatelessWidget {
   const AnalogComponent({required this.text1, required this.text2, super.key});
@@ -169,7 +173,7 @@ class CustomComponentData {
 }
 
 class ActivePlanComponent extends StatelessWidget {
-  const ActivePlanComponent({
+  ActivePlanComponent({
     required this.name,
     required this.onTap,
     required this.relation,
@@ -184,7 +188,7 @@ class ActivePlanComponent extends StatelessWidget {
   final String updatedAt;
   final VoidCallback onTap;
   final int? memberPhrId;
-
+  final store = GetIt.I<ProductListingStore>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -206,7 +210,7 @@ class ActivePlanComponent extends StatelessWidget {
                   name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
-                const SubscriptionPkg(
+                SubscriptionPkg(
                   expanded: false,
                   type: SubscriptionsType.wellness,
                 ),
@@ -286,35 +290,43 @@ class ActivePlanComponent extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(color: AppColors.line),
-            const SizedBox(height: Dimension.d3),
-            const Text(
-              'Upgrade to Companion genie to benefit more',
-              style: AppTextStyle.bodySmallMedium,
-            ),
-            const SizedBox(
-              height: Dimension.d2,
-            ),
-            GestureDetector(
-              onTap: () {
-                context.pushNamed(RoutesConstants.geniePage, pathParameters: {
-                  'pageTitle': 'Wellness Genie',
-                  'defination':
-                      'We understand the unpredictability of life, but that shouldn’t hinder your well-being. With our comprehensive emergency support service, we’ll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver',
-                  'headline':
-                      'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
-                  
-                  
-                });
-              },
-              child: const SubscriptionPkg(
-                expanded: true,
-                type: SubscriptionsType.wellness,
-              ),
+            _UpgradeProdLisComponent(
+              productBasicDetailsList: store.getUpgardeProdListById('1'),
             )
           ],
         ),
       ),
     );
+  }
+}
+
+class _UpgradeProdLisComponent extends StatelessWidget {
+  const _UpgradeProdLisComponent(
+      {required this.productBasicDetailsList, super.key});
+
+  final List<ProductBasicDetailsModel> productBasicDetailsList;
+
+  @override
+  Widget build(BuildContext context) {
+    return productBasicDetailsList.isEmpty
+        ? const SizedBox()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(color: AppColors.line),
+              const SizedBox(height: Dimension.d3),
+              const Text(
+                'Upgrade to Companion genie to benefit more',
+                style: AppTextStyle.bodySmallMedium,
+              ),
+              const SizedBox(
+                height: Dimension.d2,
+              ),
+              ProductListingCareComponent(
+                isUpgradable: true,
+                productBasicDetailsList: productBasicDetailsList,
+              ),
+            ],
+          );
   }
 }

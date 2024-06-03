@@ -38,7 +38,8 @@ class _SGSubcscriptionPageState extends State<SGSubcscriptionPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const GenieOverviewComponent(
-                subHeading: 'uyweuwe',
+                  imageUrl: '',
+                  subHeading: 'uyweuwe',
                   title: 'SG+ Subscription plans',
                   headline:
                       'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
@@ -111,17 +112,21 @@ class _SGSubcscriptionPageState extends State<SGSubcscriptionPage> {
                     (index) => GestureDetector(
                           onTap: () {
                             setState(() {
-                              final updatedPlans = List<Plan>.from(store.emergencyServiceModel.plans);
+                              final updatedPlans = List<Plan>.from(
+                                  store.emergencyServiceModel.plans);
                               for (int i = 0; i < updatedPlans.length; i++) {
-                                updatedPlans[i] = updatedPlans[i].copyWith(isSelected: i == index);
+                                updatedPlans[i] = updatedPlans[i]
+                                    .copyWith(isSelected: i == index);
                               }
-                              store.emergencyServiceModel = store.emergencyServiceModel.copyWith(plans: updatedPlans);
+                              store.emergencyServiceModel = store
+                                  .emergencyServiceModel
+                                  .copyWith(plans: updatedPlans);
                             });
                           },
                           child: PlanDisplayComponent(
                             planPriceDetails: null,
-                          
-                            isSelected: store.emergencyServiceModel.plans[index].isSelected,
+                            isSelected: store
+                                .emergencyServiceModel.plans[index].isSelected,
                           ),
                         )),
               ),
