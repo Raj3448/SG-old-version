@@ -22,10 +22,12 @@ import 'package:silver_genie/core/widgets/booking_service_listile_component.dart
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
+import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -75,7 +77,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       } else if (memberStore.members.isEmpty) {
-                        return const NoMember();
+                        return NoMember(
+                          ontap: () {
+                            final user = GetIt.I<UserDetailStore>().userDetails;
+                            final member = memberStore.memberById(user!.id);
+                            if (member != null) {
+                              context.pushNamed(
+                                RoutesConstants.addEditFamilyMemberRoute,
+                                pathParameters: {
+                                  'edit': 'false',
+                                  'isSelf': 'false',
+                                },
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return MemberCreation(
+                                    selfOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'true',
+                                        },
+                                      );
+                                    },
+                                    memberOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'false',
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        );
                       } else {
                         return const _MemberInfo();
                       }
@@ -748,10 +792,45 @@ class _MemberInfo extends StatelessWidget {
                           maxRadius: 24,
                           isSelected: false,
                           ontap: () {
-                            context.pushNamed(
-                              RoutesConstants.addEditFamilyMemberRoute,
-                              pathParameters: {'edit': 'false'},
-                            );
+                            final user = GetIt.I<UserDetailStore>().userDetails;
+                            final member = memberStore.memberById(user!.id);
+                            if (member != null) {
+                              context.pushNamed(
+                                RoutesConstants.addEditFamilyMemberRoute,
+                                pathParameters: {
+                                  'edit': 'false',
+                                  'isSelf': 'false',
+                                },
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return MemberCreation(
+                                    selfOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'true',
+                                        },
+                                      );
+                                    },
+                                    memberOnTap: () {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'false',
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            }
                           },
                         ),
                       ],

@@ -53,7 +53,7 @@ class AuthService implements IAuthService {
       }
 
       if (request.statusCode == 400) {
-        final dynamic code = request.data?['error']?['details']?["name"];
+        final dynamic code = request.data?['error']?['details']?['name'];
         final errorCode = code is String ? code : null;
 
         if (errorCode == null) {
@@ -67,8 +67,11 @@ class AuthService implements IAuthService {
           return const Left(AuthFailure.userNotFound());
         }
         return const Left(AuthFailure.unknownError('Error unknown'));
+      } else if (request.statusCode == 500) {
+        return const Left(AuthFailure.internalServerError());
+      } else if (request.statusCode == 502) {
+        return const Left(AuthFailure.badGatewayError());
       }
-
       return const Left(AuthFailure.unknownError('Error unknown'));
     } catch (_) {
       return const Left(AuthFailure.unknownError('Error unknown'));
@@ -100,7 +103,7 @@ class AuthService implements IAuthService {
       }
 
       if (request.statusCode == 400) {
-        final dynamic code = request.data?['error']?['details']?["name"];
+        final dynamic code = request.data?['error']?['details']?['name'];
         final errorCode = code is String ? code : null;
 
         if (errorCode == null) {
@@ -117,6 +120,10 @@ class AuthService implements IAuthService {
         }
 
         return const Left(AuthFailure.unknownError('Unknown error'));
+      } else if (request.statusCode == 500) {
+        return const Left(AuthFailure.internalServerError());
+      } else if (request.statusCode == 502) {
+        return const Left(AuthFailure.badGatewayError());
       }
 
       return const Left(AuthFailure.unknownError('Unknown error'));
@@ -168,7 +175,7 @@ class AuthService implements IAuthService {
         return const Right(null);
       } else if (phoneNumberVerificationResponse.statusCode == 400) {
         final dynamic code =
-            phoneNumberVerificationResponse.data?['error']?['details']?["name"];
+            phoneNumberVerificationResponse.data?['error']?['details']?['name'];
         final errorCode = code is String ? code : null;
 
         if (errorCode == null) {

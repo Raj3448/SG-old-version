@@ -11,16 +11,13 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 
 class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
   MultiSelectFormField({
-    Key? key,
     required List<ValueItem> values,
+    super.key,
     MultiSelectController? controller,
     List<ValueItem<dynamic>>? selectedOptions,
-    FormFieldSetter<List<ValueItem<dynamic>>>? onSaved,
-    String? Function(List<ValueItem<dynamic>>?)? validator,
+    super.onSaved,
+    super.validator,
   }) : super(
-          key: key,
-          onSaved: onSaved,
-          validator: validator,
           initialValue: selectedOptions,
           builder: (FormFieldState<List<ValueItem<dynamic>>> state) {
             return Column(
@@ -85,21 +82,19 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
         );
 }
 
-
-
 class RelationDropdown extends StatelessWidget {
   const RelationDropdown({
-    Key? key,
+    super.key,
     this.controller,
     this.selectedOption,
-  }) : super(key: key);
+  });
 
   final MultiSelectController? controller;
   final ValueItem<String>? selectedOption;
   @override
   Widget build(BuildContext context) {
     return MultiSelectFormField(
-      selectedOptions: selectedOption == null? [] : [selectedOption!],
+      selectedOptions: selectedOption == null ? [] : [selectedOption!],
       values: [
         ValueItem(label: 'Father'.tr(), value: 'Father'),
         ValueItem(label: 'Mother'.tr(), value: 'Mother'),
@@ -108,7 +103,6 @@ class RelationDropdown extends StatelessWidget {
         ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
         ValueItem(label: 'Son'.tr(), value: 'Son'),
         ValueItem(label: 'Wife'.tr(), value: 'Wife'),
-        ValueItem(label: 'Self'.tr(), value: 'Self'),
       ],
     );
   }
@@ -116,14 +110,11 @@ class RelationDropdown extends StatelessWidget {
 
 class DateDropdown extends FormField<DateTime> {
   DateDropdown({
-    Key? key,
     required TextEditingController controller,
-    FormFieldSetter<DateTime>? onSaved,
-    FormFieldValidator<DateTime>? validator,
+    super.key,
+    super.onSaved,
+    super.validator,
   }) : super(
-          key: key,
-          onSaved: onSaved,
-          validator: validator,
           initialValue: controller.text.isEmpty
               ? null
               : DateFormat('yyyy-MM-dd').parse(controller.text),

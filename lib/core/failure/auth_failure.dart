@@ -13,6 +13,8 @@ abstract class AuthFailure with _$AuthFailure {
   const factory AuthFailure.emailAlreadyInUse() = EmailAlreadyInUse;
   const factory AuthFailure.tokenExpired() = TokenExpired;
   const factory AuthFailure.networkError() = NetworkError;
+  const factory AuthFailure.internalServerError() = InternalServerError;
+  const factory AuthFailure.badGatewayError() = BadGatewayError;
   const factory AuthFailure.unknownError(String message) = UnknownError;
 }
 
