@@ -7,7 +7,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
-import 'package:silver_genie/feature/members/model/member_health_info_model.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 abstract class IMemberService {
@@ -25,15 +24,14 @@ abstract class IMemberService {
     Map<String, dynamic> updateData,
     String? imgId,
   );
-  Future<Either<MemberServiceFailure, Member>> memberDetails();
-  Future<Either<MemberServiceFailure, MemberHealthInfo>> getMemberHealthInfo();
-  Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
-    required String memberId,
-  });
   Future<Either<MemberServiceFailure, Member>> updateMemberDataWithProfileImg({
     required String id,
     required File fileImage,
     required Map<String, dynamic> memberInfo,
+  });
+  Future<Either<MemberServiceFailure, Member>> memberDetails();
+  Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
+    required String memberId,
   });
   Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
     required String memberPhrId,
@@ -62,6 +60,12 @@ class MemberServices implements IMemberService {
             )
             .toList();
         return Right(parsedMembers as List<Member>);
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
@@ -107,6 +111,10 @@ class MemberServices implements IMemberService {
         } else {
           return Left(MemberServiceFailure.validationError('$errorMessage'));
         }
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.addMemberError());
       }
@@ -145,6 +153,12 @@ class MemberServices implements IMemberService {
         } else {
           return const Left(MemberServiceFailure.badResponse());
         }
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.badResponse());
       }
@@ -175,6 +189,12 @@ class MemberServices implements IMemberService {
         final data = response.data['data'];
         final member = Member.fromJson(Map<String, dynamic>.from(data as Map));
         return Right(member);
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.memberDetailsEditError());
       }
@@ -219,6 +239,12 @@ class MemberServices implements IMemberService {
         } else {
           return const Left(MemberServiceFailure.badResponse());
         }
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.badResponse());
       }
@@ -238,26 +264,12 @@ class MemberServices implements IMemberService {
       if (response.statusCode == 200) {
         final jsonList = response.data;
         return Right(jsonList as Member);
-      } else {
-        return const Left(MemberServiceFailure.fetchMemberInfoError());
-      }
-    } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
-    } catch (e) {
-      return const Left(MemberServiceFailure.badResponse());
-    }
-  }
-
-  @override
-  Future<Either<MemberServiceFailure, MemberHealthInfo>>
-      getMemberHealthInfo() async {
-    try {
-      final response = await httpClient
-          .get('https://silvergenie.com/api/v1/members/healthInfo');
-
-      if (response.statusCode == 200) {
-        final jsonList = response.data;
-        return Right(jsonList as MemberHealthInfo);
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
@@ -284,6 +296,12 @@ class MemberServices implements IMemberService {
         return Right(
           EprDataModel.fromJson(jsonList['data'] as Map<String, dynamic>),
         );
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.fetchMemberInfoError());
       }
@@ -309,6 +327,12 @@ class MemberServices implements IMemberService {
           return Right(response.data['pdfPath'] as String);
         }
         return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse());
+      } else if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError());
+      } else if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.badResponse());
       }

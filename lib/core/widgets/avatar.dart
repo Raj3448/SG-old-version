@@ -106,7 +106,8 @@ class Avatar extends StatelessWidget {
                   imageUrl: imgPath,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
-                          value: downloadProgress.progress),
+                    value: downloadProgress.progress,
+                  ),
                   errorWidget: (context, url, error) => Image.asset(
                     'assets/icon/default _profile.png',
                     fit: BoxFit.cover,

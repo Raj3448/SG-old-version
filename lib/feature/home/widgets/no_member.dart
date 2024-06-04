@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: inference_failure_on_function_invocation
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
 class NoMember extends StatelessWidget {
-  const NoMember({super.key});
+  const NoMember({required this.ontap, super.key});
+
+  final VoidCallback ontap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +43,7 @@ class NoMember extends StatelessWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {
-                    GoRouter.of(context).pushNamed(
-                      RoutesConstants.addEditFamilyMemberRoute,
-                      pathParameters: {'edit': 'false'},
-                    );
-                  },
+                  onTap: ontap,
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.white,
@@ -97,12 +92,7 @@ class NoMember extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             CustomButton(
-              ontap: () {
-                GoRouter.of(context).pushNamed(
-                  RoutesConstants.addEditFamilyMemberRoute,
-                  pathParameters: {'edit': 'false'},
-                );
-              },
+              ontap: ontap,
               title: 'Add Member',
               showIcon: false,
               iconPath: AppIcons.add,

@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
-import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
@@ -203,9 +201,10 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final memberPhrId = state.pathParameters['memberPhrId'].toString();
         return MaterialPage(
-            child: PhrPdfViewPage(
-          memberPhrId: memberPhrId,
-        ));
+          child: PhrPdfViewPage(
+            memberPhrId: memberPhrId,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -226,13 +225,15 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/addEditFamilyMember/:edit',
+      path: '/addEditFamilyMember/:edit/:isSelf',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
-        final edit = state.pathParameters['edit']!.toLowerCase();
+        final edit = state.pathParameters['edit']?.toLowerCase();
+        final isSelf = state.pathParameters['isSelf']?.toLowerCase();
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
-            edit: bool.parse(edit),
+            edit: bool.tryParse(edit ?? 'false') ?? false,
+            isSelf: bool.tryParse(isSelf ?? 'false') ?? false,
           ),
         );
       },
@@ -285,7 +286,8 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
         final id = state.pathParameters['id'] ?? '';
-        final isUpgradbleString = state.pathParameters['isUpgradble'] ?? 'false';
+        final isUpgradbleString =
+            state.pathParameters['isUpgradble'] ?? 'false';
         final isUpgradble = isUpgradbleString.toLowerCase() == 'true';
 
         return MaterialPage(
@@ -317,13 +319,13 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         return MaterialPage(
           child: ServiceDetailsScreen(
-            imgPath: state.pathParameters['imgPath']!,
-            name: state.pathParameters['name']!,
-            yoe: state.pathParameters['yoe']!,
-            type: state.pathParameters['type']!,
-            docInfo: state.pathParameters['docInfo']!,
-            hospital: state.pathParameters['hospital']!,
-            charges: state.pathParameters['charges']!,
+            imgPath: state.pathParameters['imgPath'] ?? '',
+            name: state.pathParameters['name'] ?? '',
+            yoe: state.pathParameters['yoe'] ?? '',
+            type: state.pathParameters['type'] ?? '',
+            docInfo: state.pathParameters['docInfo'] ?? '',
+            hospital: state.pathParameters['hospital'] ?? '',
+            charges: state.pathParameters['charges'] ?? '',
           ),
         );
       },
@@ -342,7 +344,7 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final bookingServiceStatusString =
             state.pathParameters['bookingServiceStatus'];
-        var bookingServiceStatus = BookingServiceStatus.values
+        final bookingServiceStatus = BookingServiceStatus.values
             .firstWhere((e) => e.toString() == bookingServiceStatusString);
         return MaterialPage(
           child: BookingSeviceStatusPage(
