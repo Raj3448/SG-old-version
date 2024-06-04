@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -7,10 +8,16 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class CouplePlanPage extends StatelessWidget {
   final String pageTitle;
-  const CouplePlanPage({required this.pageTitle, Key? key}) : super(key: key);
+  final List<Price> planList;
+  const CouplePlanPage({
+    required this.pageTitle,
+    required this.planList,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,10 @@ class CouplePlanPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PlanPricingDetailsComponent(planName: pageTitle, pricingDetailsList: [],),
+              PlanPricingDetailsComponent(
+                planName: pageTitle,
+                pricingDetailsList: planList,
+              ),
               Text(
                 '1. Select family member',
                 style: AppTextStyle.bodyMediumMedium

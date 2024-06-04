@@ -65,4 +65,13 @@ class ProductLisitingServices extends IProductListingService {
       return const Left(Failure.someThingWentWrong());
     }
   }
+
+
+  List<Price> getPlansforNonCouple(List<Price> prices){
+    return prices.where((element) => element.benefitApplicableToMembersLimit != 2).toList();
+  }
+  
+  List<Price> getPlansforCouple(List<Price> prices){
+    return prices.where((element) => element.benefitApplicableToMembersLimit == 2).toList();
+  }
 }

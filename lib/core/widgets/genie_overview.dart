@@ -1,7 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -13,7 +14,6 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
-import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class GenieOverviewComponent extends StatelessWidget {
@@ -166,15 +166,13 @@ class PlanPricingDetailsComponent extends StatefulWidget {
 
 class _PlanPricingDetailsComponentState
     extends State<PlanPricingDetailsComponent> {
-  final store = GetIt.I<EmergencyServiceStore>();
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${widget.planName.split(' ').first} plans for single',
+          '${widget.planName.split(' ').first} plans for ${widget.pricingDetailsList.first.benefitApplicableToMembersLimit == 2 ? 'couple' : 'single'}',
           style: AppTextStyle.bodyMediumMedium.copyWith(
             fontFamily: FontFamily.plusJakarta,
             color: AppColors.grayscale900,
@@ -205,8 +203,6 @@ class _PlanPricingDetailsComponentState
                     },
                     child: PlanDisplayComponent(
                       planPriceDetails: widget.pricingDetailsList[index],
-                      isSelected:
-                          store.emergencyServiceModel.plans[index].isSelected,
                     ),
                   )),
         )
@@ -216,19 +212,22 @@ class _PlanPricingDetailsComponentState
 }
 
 class ExploreNowComponent extends StatelessWidget {
-  const ExploreNowComponent(
-      {required this.pageTitle,
-      required this.btnLabel,
-      required this.planHeading,
-      required this.imgPath,
-      required this.colorCode,
-      super.key});
+  const ExploreNowComponent({
+    required this.pageTitle,
+    required this.btnLabel,
+    required this.planHeading,
+    required this.imgPath,
+    required this.colorCode,
+    required this.plansList,
+    super.key,
+  });
 
   final String pageTitle;
   final String btnLabel;
   final String planHeading;
   final String imgPath;
   final String colorCode;
+  final List<Price> plansList;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -249,9 +248,12 @@ class ExploreNowComponent extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              final plansListJson =
+                  jsonEncode(plansList.map((plan) => plan.toJson()).toList());
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
                 pathParameters: {'pageTitle': pageTitle},
+                extra: {'plansList': plansListJson},
               );
             },
             child: Container(
