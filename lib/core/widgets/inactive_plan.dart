@@ -102,7 +102,7 @@ class InactivePlanComponent extends StatelessWidget {
               ProductListingCareComponent(
                 productBasicDetailsList: store.getSubscriptActiveProdList,
                 isUpgradable: false,
-              )
+              ),
           ],
         ),
       ),
@@ -116,43 +116,40 @@ class ProductListingCareComponent extends StatelessWidget {
   ProductListingCareComponent({
     required this.productBasicDetailsList,
     required this.isUpgradable,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   List<Widget> btnWidgetList = [];
   void initializeWidget(BuildContext context) {
     btnWidgetList = List.generate(
-        productBasicDetailsList.length,
-        (index) => Padding(
-              padding: const EdgeInsets.only(top: Dimension.d2),
-              child: SubscriptionPkg(
-                expanded: true,
-                type: SubscriptionsType.companion,
-                buttonlabel: productBasicDetailsList[index].attributes.name,
-                colorCode: productBasicDetailsList[index]
-                    .attributes
-                    .metadata
-                    .first
-                    .value,
-                iconUrl: productBasicDetailsList[index]
-                    .attributes
-                    .icon
-                    .data
-                    .attributes
-                    .url,
-                onTap: () {
-                  GoRouter.of(context).pushNamed(
-                    RoutesConstants.geniePage,
-                    pathParameters: {
-                      'pageTitle':
-                          productBasicDetailsList[index].attributes.name,
-                      'id': productBasicDetailsList[index].id.toString(),
-                      'isUpgradble' : isUpgradable.toString()
-                    },
-                  );
-                },
-              ),
-            ));
+      productBasicDetailsList.length,
+      (index) => Padding(
+        padding: const EdgeInsets.only(top: Dimension.d2),
+        child: SubscriptionPkg(
+          expanded: true,
+          type: SubscriptionsType.companion,
+          buttonlabel: productBasicDetailsList[index].attributes.name,
+          colorCode:
+              productBasicDetailsList[index].attributes.metadata.first.value,
+          iconUrl: productBasicDetailsList[index]
+              .attributes
+              .icon
+              .data
+              .attributes
+              .url,
+          onTap: () {
+            GoRouter.of(context).pushNamed(
+              RoutesConstants.geniePage,
+              pathParameters: {
+                'pageTitle': productBasicDetailsList[index].attributes.name,
+                'id': productBasicDetailsList[index].id.toString(),
+                'isUpgradble': isUpgradable.toString(),
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override

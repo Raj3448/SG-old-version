@@ -33,7 +33,6 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
-import 'package:silver_genie/feature/services/repo/service_listing_service.dart';
 import 'package:silver_genie/feature/services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
@@ -94,10 +93,6 @@ void main() async {
           homePageComponentDetailscache:
               GetIt.I<HomePageComponentDetailscache>(),
         ),
-      );
-      GetIt.instance.registerLazySingleton(
-        () =>
-            ServiceListingService(httpClient: GetIt.instance.get<HttpClient>()),
       );
       GetIt.instance.registerLazySingleton(
         () => MemberServices(
