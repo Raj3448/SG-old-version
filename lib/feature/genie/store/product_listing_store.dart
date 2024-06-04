@@ -43,7 +43,7 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   bool? hasGotProductSuccesfully;
 
-  @computed
+  @action
     List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
       return getSubscriptProdList
           .where((element) => element.id.toString() == id)
