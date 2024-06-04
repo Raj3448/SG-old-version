@@ -142,8 +142,14 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
-      GetIt.instance.registerLazySingleton(() => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
-      GetIt.instance.registerLazySingleton(() => ProductListingStore(productListingService: GetIt.I<ProductLisitingServices>())..initGetProductBasicDetails());
+      GetIt.instance.registerLazySingleton(
+        () => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => ProductListingStore(
+          productListingService: GetIt.I<ProductLisitingServices>(),
+        )..initGetProductBasicDetails(),
+      );
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
@@ -166,11 +172,13 @@ void main() async {
         Zone.current.handleUncaughtError(error.exception, error.stack!);
         return ErrorWidget(error.exception);
       };
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
-          
-          statusBarColor: AppColors.grayscale100));
+          statusBarColor: AppColors.grayscale100,
+        ),
+      );
       runApp(
         EasyLocalization(
           supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
