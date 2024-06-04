@@ -1,12 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
+import 'package:silver_genie/feature/services/repo/service_listing_service.dart';
 
 class ServicesScreen extends StatelessWidget {
   const ServicesScreen({super.key});
@@ -38,9 +42,21 @@ class ServicesScreen extends StatelessWidget {
                 textEditingController: TextEditingController(),
                 onChanged: (String) {},
               ),
-              const SizedBox(
-                height: Dimension.d3,
+              const SizedBox(height: Dimension.d3),
+              CustomButton(
+                ontap: () {
+                  final serviceListService = GetIt.I<ServiceListingService>();
+                  serviceListService.getAllServicesBasicDetails();
+                },
+                title: 'Get services',
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: ButtonType.primary,
+                expanded: false,
+                iconColor: AppColors.primary,
               ),
+              const SizedBox(height: Dimension.d3),
               Row(
                 children: [
                   Text(

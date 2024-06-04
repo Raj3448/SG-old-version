@@ -43,15 +43,14 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   bool? hasGotProductSuccesfully;
 
-  @computed
-    List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
-      return getSubscriptProdList
-          .where((element) => element.id.toString() == id)
-          .map((element) => element.attributes.upgradableProducts.data)
-          .expand((element) => element)
-          .toList();
-    }
-
+  @action
+  List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
+    return getSubscriptProdList
+        .where((element) => element.id.toString() == id)
+        .map((element) => element.attributes.upgradableProducts.data)
+        .expand((element) => element)
+        .toList();
+  }
 
   void initGetProductBasicDetails() {
     fetchProductLoading = true;
