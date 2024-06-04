@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -9,56 +10,116 @@ import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
-class CouplePlanPage extends StatelessWidget {
+class CouplePlanPage extends StatefulWidget {
   final String pageTitle;
   final List<Price> planList;
-  const CouplePlanPage({
+
+  CouplePlanPage({
     required this.pageTitle,
     required this.planList,
     Key? key,
   }) : super(key: key);
 
   @override
+  State<CouplePlanPage> createState() => _CouplePlanPageState();
+}
+
+class _CouplePlanPageState extends State<CouplePlanPage> {
+  Member? member1;
+  Member? member2;
+  Price? planDetails;
+  final store = GetIt.I<MembersStore>();
+
+  void _updateDrop1(Member member) {
+    setState(() {
+      member1 = member;
+    });
+  }
+
+  void _updatePlan(Price plan) {
+    planDetails = plan;
+  }
+
+  void _updateDrop2(Member member) {
+    setState(() {
+      member2 = member;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(title: pageTitle),
+      appBar: PageAppbar(title: widget.pageTitle),
       backgroundColor: AppColors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: Dimension.d4),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PlanPricingDetailsComponent(
-                planName: pageTitle,
-                pricingDetailsList: planList,
+                planName: widget.pageTitle,
+                pricingDetailsList: widget.planList,
+                onSelect: _updatePlan,
               ),
               Text(
                 '1. Select family member',
                 style: AppTextStyle.bodyMediumMedium
                     .copyWith(color: AppColors.grayscale700, height: 2),
               ),
-              const CustomDropDownBox(
-                memberList: ['', ''],
+              CustomDropDownBox(
+                selectedMembers: (member1 != null && member2 != null)
+                    ? [member1!, member2!]
+                    : (member1 != null)
+                        ? [member1!]
+                        : (member2 != null)
+                            ? [member2!]
+                            : [],
+                memberName: member1?.name,
+                memberList: store.members,
+                updateMember: _updateDrop1,
               ),
               Text(
                 '2. Select another family member',
                 style: AppTextStyle.bodyMediumMedium
                     .copyWith(color: AppColors.grayscale700, height: 2),
               ),
-              const CustomDropDownBox(
-                memberList: ['', ''],
+              CustomDropDownBox(
+                selectedMembers: (member1 != null && member2 != null)
+                    ? [member1!, member2!]
+                    : (member1 != null)
+                        ? [member1!]
+                        : (member2 != null)
+                            ? [member2!]
+                            : [],
+                memberName: member2?.name,
+                memberList: store.members,
+                updateMember: _updateDrop2,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
                 child: CustomButton(
-                  ontap: () {},
+                  ontap: (member1 == null ||
+                          member2 == null ||
+                          planDetails == null)
+                      ? null
+                      : () {
+                          print(member1);
+                          print(member2);
+                          print(planDetails);
+                        },
                   title: 'Book care',
                   showIcon: false,
                   iconPath: AppIcons.add,
                   size: ButtonSize.normal,
-                  type: ButtonType.disable,
+                  type: (member1 == null ||
+                          member2 == null ||
+                          planDetails == null)
+                      ? ButtonType.disable
+                      : ButtonType.primary,
                   expanded: true,
                   iconColor: AppColors.primary,
                 ),

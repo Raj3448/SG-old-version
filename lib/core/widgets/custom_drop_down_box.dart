@@ -1,17 +1,24 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class CustomDropDownBox extends StatefulWidget {
-  final List<String> memberList;
-  const CustomDropDownBox({
+  final List<Member> memberList;
+  final String? memberName;
+  List<Member> selectedMembers = [];
+  void Function(Member) updateMember;
+  CustomDropDownBox({
     required this.memberList,
+    required this.updateMember,
+    this.memberName,
+    required this.selectedMembers,
     Key? key,
   }) : super(key: key);
 
@@ -21,6 +28,7 @@ class CustomDropDownBox extends StatefulWidget {
 
 class _CustomDropDownBoxState extends State<CustomDropDownBox> {
   bool isExpanding = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,7 +51,7 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Select',
+                Text(widget.memberName ?? 'Select',
                     style: AppTextStyle.bodyLargeMedium.copyWith(height: 2.4)),
                 Icon(
                   isExpanding ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
@@ -56,6 +64,7 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
         ),
         Container(
           width: double.infinity,
+          height: isExpanding ? 210 : 0,
           constraints: const BoxConstraints(minHeight: 1),
           padding: const EdgeInsets.only(bottom: Dimension.d2),
           decoration: isExpanding
@@ -71,16 +80,30 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
                     ])
               : null,
           child: isExpanding
-              ? Column(
-                  children: [
-                    const _MemeberListTileComponent(
-                      name: 'Shalini nair',
-                    ),
-                    const _MemeberListTileComponent(
-                      name: 'Varun nair',
-                    ),
-                    _AddMemberButton()
-                  ],
+              ? SingleChildScrollView(
+                  child: Column(
+                      children: List.generate(
+                          widget.memberList.length,
+                          (index) => GestureDetector(
+                                onTap: widget.selectedMembers.any(
+                                        (selectedMember) =>
+                                            selectedMember.id ==
+                                            widget.memberList[index].id)
+                                    ? null
+                                    : () {
+                                        widget.updateMember(
+                                            widget.memberList[index]);
+                                      },
+                                child: _MemeberListTileComponent(
+                                    disable: widget.selectedMembers.any(
+                                        (selectedMember) =>
+                                            selectedMember.id ==
+                                            widget.memberList[index].id),
+                                    name: widget.memberList[index].name,
+                                    imgPath: widget.memberList[index].profileImg
+                                            ?.url ??
+                                        ''),
+                              ))),
                 )
               : null,
         )
@@ -90,9 +113,17 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
 }
 
 class _MemeberListTileComponent extends StatelessWidget {
-  const _MemeberListTileComponent({required this.name, super.key});
+  final String imgPath;
+
+  const _MemeberListTileComponent({
+    required this.name,
+    required this.imgPath,
+    required this.disable,
+    super.key,
+  });
 
   final String name;
+  final bool disable;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,12 +133,13 @@ class _MemeberListTileComponent extends StatelessWidget {
           left: Dimension.d2, right: Dimension.d2, top: Dimension.d2),
       padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
       decoration: BoxDecoration(
-          color: AppColors.grayscale200,
+          color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
           border: Border.all(width: 1, color: AppColors.grayscale300),
           borderRadius: BorderRadius.circular(Dimension.d2)),
       child: Row(
         children: [
-          Avatar.fromSize(imgPath: '', size: AvatarSize.size14),
+          Avatar.fromSize(
+              imgPath: '${Env.serverUrl}$imgPath', size: AvatarSize.size14),
           const SizedBox(
             width: Dimension.d2,
           ),
@@ -122,47 +154,6 @@ class _MemeberListTileComponent extends StatelessWidget {
             color: AppColors.primary,
           )
         ],
-      ),
-    );
-  }
-}
-
-class _AddMemberButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.pushNamed(
-          RoutesConstants.addEditFamilyMemberRoute,
-          pathParameters: {'edit': 'false'},
-        );
-      },
-      child: Container(
-        height: 42,
-        width: double.infinity,
-        margin: const EdgeInsets.only(
-            left: Dimension.d2, right: Dimension.d2, top: Dimension.d2),
-        padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
-        decoration: BoxDecoration(
-            color: AppColors.grayscale200,
-            border: Border.all(width: 1, color: AppColors.grayscale300),
-            borderRadius: BorderRadius.circular(Dimension.d2)),
-        child: const Row(
-          children: [
-            Icon(
-              AppIcons.add,
-              color: AppColors.grayscale900,
-              size: 20,
-            ),
-            SizedBox(
-              width: Dimension.d3,
-            ),
-            Text(
-              'Add new member',
-              style: AppTextStyle.bodyLargeMedium,
-            ),
-          ],
-        ),
       ),
     );
   }

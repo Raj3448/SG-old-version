@@ -153,11 +153,16 @@ class ServiceProvideComponent extends StatelessWidget {
 }
 
 class PlanPricingDetailsComponent extends StatefulWidget {
-  PlanPricingDetailsComponent(
-      {required this.planName, required this.pricingDetailsList, super.key});
+  const PlanPricingDetailsComponent({
+    required this.planName,
+    required this.pricingDetailsList,
+    required this.onSelect,
+    Key? key,
+  }) : super(key: key);
 
   final String planName;
   final List<Price> pricingDetailsList;
+  final void Function(Price) onSelect;
 
   @override
   State<PlanPricingDetailsComponent> createState() =>
@@ -166,6 +171,8 @@ class PlanPricingDetailsComponent extends StatefulWidget {
 
 class _PlanPricingDetailsComponentState
     extends State<PlanPricingDetailsComponent> {
+  int? selectedIndex;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -186,26 +193,26 @@ class _PlanPricingDetailsComponentState
         ),
         Column(
           children: List.generate(
-              widget.pricingDetailsList.length,
-              (index) => GestureDetector(
-                    onTap: () {
-                      // setState(() {
-                      //   final updatedPlans =
-                      //       List<Plan>.from(store.emergencyServiceModel.plans);
-                      //   for (int i = 0; i < updatedPlans.length; i++) {
-                      //     updatedPlans[i] =
-                      //         updatedPlans[i].copyWith(isSelected: i == index);
-                      //   }
-                      //   store.emergencyServiceModel = store
-                      //       .emergencyServiceModel
-                      //       .copyWith(plans: updatedPlans);
-                      // });
-                    },
-                    child: PlanDisplayComponent(
-                      planPriceDetails: widget.pricingDetailsList[index],
-                    ),
-                  )),
-        )
+            widget.pricingDetailsList.length,
+            (index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (selectedIndex == index) {
+                    selectedIndex = null;
+                  } else {
+                    selectedIndex = index;
+                    widget.onSelect(widget.pricingDetailsList[index]);
+                    print('Selected');
+                  }
+                });
+              },
+              child: PlanDisplayComponent(
+                isSelected: selectedIndex == index,
+                planPriceDetails: widget.pricingDetailsList[index],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

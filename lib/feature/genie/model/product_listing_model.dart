@@ -97,6 +97,7 @@ class Price with _$Price {
     required int? discountPercentage,
     required int? amountWithoutDiscount,
     required List<Rule> rules,
+    @Default(false) bool isSelected,
   }) = _Price;
 
   factory Price.fromJson(Map<String, dynamic> json) => _$PriceFromJson(json);

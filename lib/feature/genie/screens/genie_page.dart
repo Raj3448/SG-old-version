@@ -94,7 +94,7 @@ class GeniePage extends StatelessWidget {
                           planName: productListingModel!
                               .product.subscriptionContent!.mainHeading,
                           pricingDetailsList: services.getPlansforNonCouple(
-                              productListingModel!.product.prices),
+                              productListingModel!.product.prices), onSelect: (Price ) {  },
                         ),
                         CustomButton(
                           ontap: () {
