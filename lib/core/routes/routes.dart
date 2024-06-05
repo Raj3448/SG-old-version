@@ -28,12 +28,12 @@ import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/screens/splashscreen.dart';
+import 'package:silver_genie/feature/services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/services/screens/booking_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
-import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -209,16 +209,20 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/servicesCareScreen/:pageTitle/:isConvenience',
-      name: RoutesConstants.servicesCareScreen,
+      path: '/allServicesScreen/:isConvenience/:isHealthCare/:isHomeCare',
+      name: RoutesConstants.allServicesScreen,
       pageBuilder: (context, state) {
-        final pageTitle = state.pathParameters['pageTitle'] ?? 'Care';
         final isConvenience =
             state.pathParameters['isConvenience'].toString().toLowerCase();
+        final isHealthCare =
+            state.pathParameters['isHealthCare'].toString().toLowerCase();
+        final isHomeCare =
+            state.pathParameters['isHomeCare'].toString().toLowerCase();
         return MaterialPage(
-          child: ServicesCareScreen(
-            pagetitle: pageTitle,
-            isConvenience: bool.parse(isConvenience),
+          child: AllServicesScreen(
+            isConvenience: bool.tryParse(isConvenience) ?? false,
+            isHealthCare: bool.tryParse(isHealthCare) ?? false,
+            isHomeCare: bool.tryParse(isHomeCare) ?? false,
           ),
         );
       },
