@@ -127,7 +127,7 @@ class ProductListingCareComponent extends StatelessWidget {
               padding: const EdgeInsets.only(top: Dimension.d2),
               child: SubscriptionPkg(
                 expanded: true,
-                type: SubscriptionsType.companion,
+                type: productBasicDetailsList[index].attributes.name == 'Companion Genie' ? SubscriptionsType.companion: productBasicDetailsList[index].attributes.name == 'Wellness Genie'? SubscriptionsType.wellness : SubscriptionsType.emergency,
                 buttonlabel: productBasicDetailsList[index].attributes.name,
                 colorCode: productBasicDetailsList[index]
                     .attributes
@@ -147,7 +147,7 @@ class ProductListingCareComponent extends StatelessWidget {
                       'pageTitle':
                           productBasicDetailsList[index].attributes.name,
                       'id': productBasicDetailsList[index].id.toString(),
-                      'isUpgradble' : isUpgradable.toString()
+                      'isUpgradble': isUpgradable.toString()
                     },
                   );
                 },

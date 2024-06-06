@@ -337,6 +337,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.0"
+  dio_cache_interceptor_hive_store:
+    dependency: "direct main"
+    description:
+      name: dio_cache_interceptor_hive_store
+      sha256: "449b36541216cb20543228081125ad2995eb9712ec35bd030d85663ea1761895"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
+  dio_cache_interceptor_sembast_storage:
+    dependency: "direct main"
+    description:
+      name: dio_cache_interceptor_sembast_storage
+      sha256: "9ebd9b844d078607f79af041314ab370195a39f41205931657af8081bbd3400d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   dio_http2_adapter:
     dependency: "direct main"
     description:
@@ -537,6 +553,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  flat_buffers:
+    dependency: transitive
+    description:
+      name: flat_buffers
+      sha256: "23e2ced0d8e8ecdffbd9f267f49a668c74438393b9acaeac1c724123e3764263"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -781,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  idb_shim:
+    dependency: transitive
+    description:
+      name: idb_shim
+      sha256: cf1b3870ad63a6f5393edb351a9c9364e739731f2176c27f44d9645327c2cdd5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   image:
     dependency: transitive
     description:
@@ -1070,7 +1102,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       sha256: c9e7d3a4cd1410877472158bee69963a4579f78b68c65a2b7d40d1a7a88bb161
@@ -1213,6 +1245,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  sembast:
+    dependency: "direct main"
+    description:
+      name: sembast
+      sha256: dbe19600cff55d43f19405be79138c3fd2c08a87b0b152b18609b9427d113a64
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.1"
+  sembast_web:
+    dependency: transitive
+    description:
+      name: sembast_web
+      sha256: "1ba0402b9491b76312358ec3cb3a33b9fc22eb673d4f9a3e99b2425135add72c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   shared_preferences:
     dependency: "direct main"
     description:

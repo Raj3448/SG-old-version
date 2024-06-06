@@ -19,8 +19,6 @@ class PlanDisplayComponent extends StatefulWidget {
 }
 
 class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,9 +27,8 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
       decoration: BoxDecoration(
         border: Border.all(
             width: 1,
-            color: widget.isSelected
-                ? AppColors.primary
-                : AppColors.grayscale400),
+            color:
+                widget.isSelected ? AppColors.primary : AppColors.grayscale400),
         color: AppColors.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
@@ -98,7 +95,7 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    ' ${widget.planPriceDetails!.amountWithoutDiscount != null ? widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2) : widget.planPriceDetails!.unitAmount.toStringAsFixed(2)}} Rs',
+                    ' ${widget.planPriceDetails!.amountWithoutDiscount != null ? widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2) : widget.planPriceDetails!.unitAmount.toStringAsFixed(2)} Rs',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale700,
                       fontWeight: FontWeight.w400,
