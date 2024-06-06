@@ -33,12 +33,23 @@ class ProductLisitingServices extends IProductListingService {
       );
       final cacheOptions = CacheOptions(
         store: cacheStore,
-        policy: CachePolicy.request,
+        policy: CachePolicy.refresh,
         priority: CachePriority.high,
         maxStale: const Duration(days: 100),
         hitCacheOnErrorExcept: [401, 404],
       );
-
+      final cachedResponse = await httpClient.get(
+        '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
+        options: Options(
+          extra: {
+            'cacheOptions': cacheOptions.copyWith(policy: CachePolicy.request)
+          },
+        ),
+      );
+      if (cachedResponse.statusCode == 200 && cachedResponse.data != null) {
+        print('I have cache');
+        return _processResponseData(cachedResponse.data);
+      }
       final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
       httpClient.interceptors.add(dioCacheInterceptor);
       final response = await httpClient.get(
@@ -52,6 +63,8 @@ class ProductLisitingServices extends IProductListingService {
         case 200:
           print('Need to fetch');
           return _processResponseData(response.data);
+        case 304:
+          return await _fetchFromCache(cacheOptions);
         default:
           return const Left(Failure.badResponse());
       }
@@ -74,6 +87,19 @@ class ProductLisitingServices extends IProductListingService {
       return Right([...allProductList]);
     }
     return const Left(Failure.badResponse());
+  }
+
+  Future<Either<Failure, List<ProductBasicDetailsModel>>> _fetchFromCache(
+      CacheOptions cacheOptions) async {
+    final cachedResponse = await httpClient.get(
+      '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
+      options: Options(
+        extra: {
+          'cacheOptions': cacheOptions.copyWith(policy: CachePolicy.request)
+        },
+      ),
+    );
+    return _processResponseData(cachedResponse.data);
   }
 
   @override

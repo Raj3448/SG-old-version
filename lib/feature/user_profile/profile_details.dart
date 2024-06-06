@@ -253,9 +253,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           MultiSelectFormField(
                             controller: _genderController,
                             values: _genderItems,
-                            selectedOptions: [
-                              _genderItems[selectedGenderIndex!]
-                            ],
+                            selectedOptions: [_genderItems[selectedGenderIndex!]],
                             validator: (selectedItems) {
                               if (selectedItems == null) {
                                 return 'Please select a gender';
@@ -360,8 +358,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               }
                               return null;
                             },
-                            selectedOptions: _selectedCountryIndex == -1 ||
-                                    _selectedCountryIndex == null
+                            selectedOptions: _selectedCountryIndex == -1 || _selectedCountryIndex == null
                                 ? null
                                 : [_countryItems[_selectedCountryIndex!]],
                           ),
