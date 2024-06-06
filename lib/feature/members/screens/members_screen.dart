@@ -27,50 +27,55 @@ class MembersScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
         child: Observer(
           builder: (context) {
-            if (store.members.isEmpty) {
-              return NoMember(
-                ontap: () {
-                  final user = GetIt.I<UserDetailStore>().userDetails;
-                  final member = store.memberById(user!.id);
-                  if (member != null) {
-                    context.pushNamed(
-                      RoutesConstants.addEditFamilyMemberRoute,
-                      pathParameters: {
-                        'edit': 'false',
-                        'isSelf': 'false',
-                      },
-                    );
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return MemberCreation(
-                          selfOnTap: () {
-                            context.pushNamed(
-                              RoutesConstants.addEditFamilyMemberRoute,
-                              pathParameters: {
-                                'edit': 'false',
-                                'isSelf': 'true',
-                              },
-                            );
+            if (store.familyMembers.isEmpty) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  NoMember(
+                    ontap: () {
+                      final user = GetIt.I<UserDetailStore>().userDetails;
+                      final member = store.memberById(user!.id);
+                      if (member != null) {
+                        context.pushNamed(
+                          RoutesConstants.addEditFamilyMemberRoute,
+                          pathParameters: {
+                            'edit': 'false',
+                            'isSelf': 'false',
                           },
-                          memberOnTap: () {
-                            context.pushNamed(
-                              RoutesConstants.addEditFamilyMemberRoute,
-                              pathParameters: {
-                                'edit': 'false',
-                                'isSelf': 'false',
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return MemberCreation(
+                              selfOnTap: () {
+                                context.pushNamed(
+                                  RoutesConstants.addEditFamilyMemberRoute,
+                                  pathParameters: {
+                                    'edit': 'false',
+                                    'isSelf': 'true',
+                                  },
+                                );
+                              },
+                              memberOnTap: () {
+                                context.pushNamed(
+                                  RoutesConstants.addEditFamilyMemberRoute,
+                                  pathParameters: {
+                                    'edit': 'false',
+                                    'isSelf': 'false',
+                                  },
+                                );
                               },
                             );
                           },
                         );
-                      },
-                    );
-                  }
-                },
+                      }
+                    },
+                  ),
+                ],
               );
             } else {
               return SingleChildScrollView(
@@ -93,9 +98,9 @@ class MembersScreen extends StatelessWidget {
                           separatorBuilder: (context, index) {
                             return const SizedBox(height: Dimension.d3);
                           },
-                          itemCount: store.members.length,
+                          itemCount: store.familyMembers.length,
                           itemBuilder: (context, index) {
-                            final member = store.members[index];
+                            final member = store.familyMembers[index];
                             return MemberCard(
                               onTap: () {
                                 store.selectMember(member.id);
