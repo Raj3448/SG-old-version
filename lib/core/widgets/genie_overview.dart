@@ -270,7 +270,7 @@ class ExploreNowComponent extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
               decoration: BoxDecoration(
-                color: Color(int.parse(iconColorCode, radix: 16)),
+                color: Color(int.parse(backgroundColor, radix: 16)),
                 border: Border.all(
                     width: 1,
                     color: Color(int.parse(iconColorCode, radix: 16))),

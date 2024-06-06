@@ -34,7 +34,7 @@ class ProductLisitingServices extends IProductListingService {
         store: cacheStore,
         policy: CachePolicy.refresh,
         priority: CachePriority.high,
-        maxStale: const Duration(minutes: 50),
+        maxStale: const Duration(days: 100),
         hitCacheOnErrorExcept: [401, 404],
       );
       final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
@@ -90,41 +90,11 @@ class ProductLisitingServices extends IProductListingService {
   Future<Either<Failure, ProductListingModel>> getProductById(
       {required String id}) async {
     try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final cacheStore = HiveCacheStore(
-        appDocDir.path,
-        hiveBoxName: 'getProductById:$id',
-      );
-      final cacheOptions = CacheOptions(
-        store: cacheStore,
-        policy: CachePolicy.refresh,
-        priority: CachePriority.high,
-        maxStale: const Duration(minutes: 50),
-        hitCacheOnErrorExcept: [401, 404],
-      );
-      final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
-      httpClient.interceptors.add(dioCacheInterceptor);
+      
       final response = await httpClient.get(
           '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent');
-      httpClient.interceptors.remove(dioCacheInterceptor);
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
-          return Right(ProductListingModel.fromJson(
-              response.data['data'] as Map<String, dynamic>));
-        }
-        return const Left(Failure.badResponse());
-      }
-      else if (response.statusCode == 304) {
-        print("Im here#######################");
-        final cachedResponse = await httpClient.get(
-          '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent',
-          options: Options(
-            extra: {
-              'cacheOptions': cacheOptions.copyWith(policy: CachePolicy.noCache)
-            },
-          ),
-        );
-        if (cachedResponse.data['data'] != null) {
           return Right(ProductListingModel.fromJson(
               response.data['data'] as Map<String, dynamic>));
         }

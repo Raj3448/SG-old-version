@@ -27,20 +27,20 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
   void initState() {
     super.initState();
     reaction(
-      (_) => Tuple3(
+      (_) => Tuple2(
         homeStore.isHomepageDataLoaded,
-        productStore.isProductLoaded,
         authStore.isAuthenticated,
+        productStore.isProductLoaded
       ),
       (loaded) async {
         final isHomepageDataLoaded = loaded.item1;
-        final isProductLoading = loaded.item2;
-        final isAuthenticated = loaded.item3;
-        
+        final isAuthenticated = loaded.item2;
+        //final productLoaded = loaded.item3;
         if (isAuthenticated) {
           await GetIt.I<UserDetailStore>().fetchUserDetailsFromCache();
+          productStore.initGetProductBasicDetails();
         }
-        if (isHomepageDataLoaded && !isProductLoading) {
+        if (isHomepageDataLoaded) {
           context.goNamed('/');
         }
       },
