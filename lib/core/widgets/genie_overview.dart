@@ -308,13 +308,11 @@ class ExploreNowComponent extends StatelessWidget {
 
 class FAQComponent extends StatelessWidget {
   const FAQComponent({
-    required this.questionsAndContentList,
     required this.heading,
     required this.faqList,
     Key? key,
   }) : super(key: key);
 
-  final List<Map<String, dynamic>> questionsAndContentList;
   final String heading;
   final List<Faq> faqList;
   @override

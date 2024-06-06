@@ -140,7 +140,6 @@ class GeniePage extends StatelessWidget {
                                 productListingModel!.product.prices),
                           ),
                         FAQComponent(
-                          questionsAndContentList: questionAndAnswerList,
                           heading: productListingModel!
                               .product.subscriptionContent!.faqHeading,
                           faqList: productListingModel!

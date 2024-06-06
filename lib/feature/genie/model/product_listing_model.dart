@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 part 'product_listing_model.freezed.dart';
@@ -271,4 +272,52 @@ class UpgradableProducts with _$UpgradableProducts {
 
   factory UpgradableProducts.fromJson(Map<String, dynamic> json) =>
       _$UpgradableProductsFromJson(json);
+}
+
+@freezed
+class HeaderModel with _$HeaderModel {
+  const factory HeaderModel({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String heading,
+    required String description,
+    required String headingAlignment,
+    required BannerImage serviceImage,
+  }) = _HeaderModel;
+  factory HeaderModel.fromJson(Map<String, dynamic> json) =>
+      _$HeaderModelFromJson(json);
+}
+
+@freezed
+class ServiceOfferingModel with _$ServiceOfferingModel {
+  const factory ServiceOfferingModel({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String label,
+    required List<OfferingList> offerings,
+  }) = _ServiceOfferingModel;
+  factory ServiceOfferingModel.fromJson(Map<String, dynamic> json) =>
+      _$ServiceOfferingModelFromJson(json);
+}
+
+@freezed
+class OfferingList with _$OfferingList {
+  const factory OfferingList({
+    required int id,
+    required String value,
+  }) = _OfferingList;
+  factory OfferingList.fromJson(Map<String, dynamic> json) =>
+      _$OfferingListFromJson(json);
+}
+
+@freezed
+class FaqModelDetails with _$FaqModelDetails {
+  const factory FaqModelDetails({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String label,
+    required List<Faq> faq,
+  }) = _FaqModelDetails;
+  factory FaqModelDetails.fromJson(Map<String, dynamic> json) =>
+      _$FaqModelDetailsFromJson(json);
 }
