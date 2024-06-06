@@ -11,7 +11,6 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
@@ -121,21 +120,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               );
                             },
                             onServiceTap: onServiceTap,
-                          )
-                        else
-                          NoServiceFound(
-                            title: 'Home Care',
-                            ontap: () {
-                              context.pushNamed(
-                                RoutesConstants.allServicesScreen,
-                                pathParameters: {
-                                  'isConvenience': 'false',
-                                  'isHealthCare': 'false',
-                                  'isHomeCare': 'true',
-                                },
-                              );
-                            },
-                            showTitle: true,
                           ),
                         if (healthCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -152,21 +136,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               );
                             },
                             onServiceTap: onServiceTap,
-                          )
-                        else
-                          NoServiceFound(
-                            title: 'Health Care',
-                            ontap: () {
-                              context.pushNamed(
-                                RoutesConstants.allServicesScreen,
-                                pathParameters: {
-                                  'isConvenience': 'false',
-                                  'isHealthCare': 'false',
-                                  'isHomeCare': 'true',
-                                },
-                              );
-                            },
-                            showTitle: true,
                           ),
                         if (convenienceCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -183,21 +152,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               );
                             },
                             onServiceTap: onServiceTap,
-                          )
-                        else
-                          NoServiceFound(
-                            title: 'Convenience Care',
-                            ontap: () {
-                              context.pushNamed(
-                                RoutesConstants.allServicesScreen,
-                                pathParameters: {
-                                  'isConvenience': 'false',
-                                  'isHealthCare': 'false',
-                                  'isHomeCare': 'true',
-                                },
-                              );
-                            },
-                            showTitle: true,
                           ),
                       ],
                     )
@@ -210,13 +164,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       getSubtitle: (value) =>
                           value.attributes.metadata.first.value,
                       onServiceTap: onServiceTap,
-                    ),
-                  if (displayedServices.isEmpty &&
-                      textEditingController.text.isNotEmpty)
-                    NoServiceFound(
-                      title: '',
-                      ontap: () {},
-                      showTitle: false,
                     ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -391,45 +338,6 @@ class ServicesListTileComponent extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class NoServiceFound extends StatelessWidget {
-  const NoServiceFound({
-    required this.title,
-    required this.ontap,
-    required this.showTitle,
-    super.key,
-  });
-
-  final String title;
-  final VoidCallback ontap;
-  final bool showTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          if (showTitle)
-            _TitleViewAll(title: title, ontap: ontap)
-          else
-            const SizedBox(),
-          Image.asset('assets/icon/empty.png'),
-          const Text(
-            'Nothing found',
-            style: AppTextStyle.heading5Bold,
-          ),
-          const SizedBox(height: Dimension.d2),
-          Text(
-            'No services found!',
-            style: AppTextStyle.bodyLargeMedium
-                .copyWith(color: AppColors.grayscale800),
-          ),
-          const SizedBox(height: Dimension.d4),
-        ],
       ),
     );
   }

@@ -140,12 +140,6 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                   return const SizedBox(height: 16);
                 },
               ),
-              if (displayedServices.isEmpty)
-                NoServiceFound(
-                  title: '',
-                  ontap: () {},
-                  showTitle: false,
-                ),
               if (widget.isConvenience) ...[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
