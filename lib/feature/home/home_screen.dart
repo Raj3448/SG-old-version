@@ -840,7 +840,9 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
-                        if (activeMember != null && memberStore.isActive) {
+                        if (activeMember != null &&
+                            memberStore.isActive &&
+                            activeMember.relation != "Brother") {
                           return ActivePlanComponent(
                             name:
                                 '${activeMember.firstName} ${activeMember.lastName}',
@@ -859,7 +861,8 @@ class _MemberInfo extends StatelessWidget {
                                 ? activeMember.phrModel!.id
                                 : null,
                           );
-                        } else if (memberStore.isActive == false) {
+                        } else if (memberStore.isActive == false ||
+                            activeMember?.relation == "Brother") {
                           return InactivePlanComponent(
                             name: activeMember != null
                                 ? '${activeMember.firstName} ${activeMember.lastName}'
