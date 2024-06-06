@@ -129,10 +129,15 @@ class ProductListingCareComponent extends StatelessWidget {
                 expanded: true,
                 type: productBasicDetailsList[index].attributes.name == 'Companion Genie' ? SubscriptionsType.companion: productBasicDetailsList[index].attributes.name == 'Wellness Genie'? SubscriptionsType.wellness : SubscriptionsType.emergency,
                 buttonlabel: productBasicDetailsList[index].attributes.name,
-                colorCode: productBasicDetailsList[index]
+                iconColorCode: productBasicDetailsList[index]
                     .attributes
                     .metadata
                     .first
+                    .value,
+                backgroundColorCode: productBasicDetailsList[index]
+                    .attributes
+                    .metadata
+                    .last
                     .value,
                 iconUrl: productBasicDetailsList[index]
                     .attributes

@@ -94,7 +94,8 @@ class GeniePage extends StatelessWidget {
                           planName: productListingModel!
                               .product.subscriptionContent!.mainHeading,
                           pricingDetailsList: services.getPlansforNonCouple(
-                              productListingModel!.product.prices), onSelect: (Price ) {  },
+                              productListingModel!.product.prices),
+                          onSelect: (Price) {},
                         ),
                         CustomButton(
                           ontap: () {
@@ -131,8 +132,12 @@ class GeniePage extends StatelessWidget {
                                 .subscriptionContent!.exploreCouplePlansHeading,
                             imgPath: productListingModel!
                                 .product.icon.data.attributes.url,
-                            colorCode: productListingModel!
-                                .product.metadata.first.value, plansList: services.getPlansforCouple(productListingModel!.product.prices),
+                            backgroundColor: productListingModel!
+                                .product.metadata.last.value,
+                            iconColorCode: productListingModel!
+                                .product.metadata.first.value,
+                            plansList: services.getPlansforCouple(
+                                productListingModel!.product.prices),
                           ),
                         FAQComponent(
                           questionsAndContentList: questionAndAnswerList,

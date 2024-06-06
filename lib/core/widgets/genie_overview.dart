@@ -224,8 +224,9 @@ class ExploreNowComponent extends StatelessWidget {
     required this.btnLabel,
     required this.planHeading,
     required this.imgPath,
-    required this.colorCode,
+    required this.iconColorCode,
     required this.plansList,
+    required this.backgroundColor,
     super.key,
   });
 
@@ -233,7 +234,8 @@ class ExploreNowComponent extends StatelessWidget {
   final String btnLabel;
   final String planHeading;
   final String imgPath;
-  final String colorCode;
+  final String iconColorCode;
+  final String backgroundColor;
   final List<Price> plansList;
   @override
   Widget build(BuildContext context) {
@@ -268,9 +270,10 @@ class ExploreNowComponent extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
               decoration: BoxDecoration(
-                color: AppColors.secondary,
+                color: Color(int.parse(iconColorCode, radix: 16)),
                 border: Border.all(
-                    width: 1, color: Color(int.parse(colorCode, radix: 16))),
+                    width: 1,
+                    color: Color(int.parse(iconColorCode, radix: 16))),
                 borderRadius: BorderRadius.circular(Dimension.d2),
               ),
               child: Row(
@@ -294,7 +297,7 @@ class ExploreNowComponent extends StatelessWidget {
                   Icon(
                     AppIcons.arrow_forward,
                     size: 20,
-                    color: Color(int.parse(colorCode, radix: 16)),
+                    color: Color(int.parse(iconColorCode, radix: 16)),
                   ),
                 ],
               ),
