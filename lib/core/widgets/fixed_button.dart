@@ -21,7 +21,6 @@ class FixedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       decoration: BoxDecoration(
         color: AppColors.white,
         boxShadow: [

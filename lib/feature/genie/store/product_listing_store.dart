@@ -20,9 +20,11 @@ abstract class _ProductListingStoreBase with Store {
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
           ? productBasicDetailsModelList!
-              .where((element) =>
-                  element.attributes.isActive &&
-                  element.attributes.type == 'subscription')
+              .where(
+                (element) =>
+                    element.attributes.isActive &&
+                    element.attributes.type == 'subscription',
+              )
               .toList()
           : [];
 
@@ -31,6 +33,53 @@ abstract class _ProductListingStoreBase with Store {
       productBasicDetailsModelList != null
           ? productBasicDetailsModelList!
               .where((element) => element.attributes.type == 'subscription')
+              .toList()
+          : [];
+
+  @computed
+  List<ProductBasicDetailsModel> get getServicesList =>
+      productBasicDetailsModelList != null
+          ? productBasicDetailsModelList!
+              .where((element) => element.attributes.type == 'service')
+              .toList()
+          : [];
+
+  @computed
+  List<ProductBasicDetailsModel> get getConvenienceCareServicesList =>
+      productBasicDetailsModelList != null
+          ? productBasicDetailsModelList!
+              .where(
+                (element) =>
+                    element.attributes.category == 'convenienceCare' &&
+                    element.attributes.isActive == true &&
+                    element.attributes.type == 'service',
+              )
+              .toList()
+          : [];
+
+  @computed
+  List<ProductBasicDetailsModel> get getHomeCareServicesList =>
+      productBasicDetailsModelList != null
+          ? productBasicDetailsModelList!
+              .where(
+                (element) =>
+                    element.attributes.category == 'homeCare' &&
+                    element.attributes.isActive == true &&
+                    element.attributes.type == 'service',
+              )
+              .toList()
+          : [];
+
+  @computed
+  List<ProductBasicDetailsModel> get getHealthCareServicesList =>
+      productBasicDetailsModelList != null
+          ? productBasicDetailsModelList!
+              .where(
+                (element) =>
+                    element.attributes.category == 'healthCare' &&
+                    element.attributes.isActive == true &&
+                    element.attributes.type == 'service',
+              )
               .toList()
           : [];
 
@@ -44,25 +93,24 @@ abstract class _ProductListingStoreBase with Store {
   bool? hasGotProductSuccesfully;
 
   @action
-    List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
-      return getSubscriptProdList
-          .where((element) => element.id.toString() == id)
-          .map((element) => element.attributes.upgradableProducts.data)
-          .expand((element) => element)
-          .toList();
-    }
-
+  List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
+    return getSubscriptProdList
+        .where((element) => element.id.toString() == id)
+        .map((element) => element.attributes.upgradableProducts.data)
+        .expand((element) => element)
+        .toList();
+  }
 
   void initGetProductBasicDetails() {
     fetchProductLoading = true;
     productListingService.getAllProductBasicDetails().then((value) {
       value.fold((l) {
         l.maybeMap(
-            socketException: (value) => getProductFailure = 'No Internet',
-            orElse: () {
-              getProductFailure = 'Something went wrong';
-              print('I am failure to fetch product');
-            });
+          socketException: (value) => getProductFailure = 'No Internet',
+          orElse: () {
+            getProductFailure = 'Something went wrong';
+          },
+        );
       }, (r) {
         productBasicDetailsModelList = r;
         isProductLoaded = true;

@@ -3,9 +3,7 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +12,7 @@ import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
@@ -25,15 +24,17 @@ import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class AddEditFamilyMemberScreen extends StatefulWidget {
   const AddEditFamilyMemberScreen({
     required this.edit,
+    required this.isSelf,
     super.key,
   });
 
   final bool edit;
+  final bool isSelf;
 
   @override
   State<AddEditFamilyMemberScreen> createState() =>
@@ -49,7 +50,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   final phoneNumberContr = TextEditingController();
   final emailContr = TextEditingController();
   final memberAddressContr = TextEditingController();
-  final countryContr = TextEditingController();
+  final MultiSelectController countryContr = MultiSelectController();
   final stateContr = TextEditingController();
   final cityContr = TextEditingController();
   final postalCodeContr = TextEditingController();
@@ -62,19 +63,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     const ValueItem(label: 'Female', value: 'Female'),
     const ValueItem(label: 'Other', value: 'Other'),
   ];
-  final List<ValueItem<String>> _relationList = [
-    ValueItem(label: 'Father'.tr(), value: 'Father'),
-    ValueItem(label: 'Mother'.tr(), value: 'Mother'),
-    ValueItem(label: 'Sister'.tr(), value: 'Sister'),
-    ValueItem(label: 'Brother'.tr(), value: 'Brother'),
-    ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
-    ValueItem(label: 'Son'.tr(), value: 'Son'),
-    ValueItem(label: 'Wife'.tr(), value: 'Wife'),
-    ValueItem(label: 'Self'.tr(), value: 'Self'),
-  ];
+  List<ValueItem<String>> _relationList = [];
   late Member _member;
   late final int? selectedGenderIndex;
-  late final int? relationIndex;
+  int? relationIndex;
   String? profileImgUrl;
   File? storeImageFile;
   bool isImageUpdate = false;
@@ -86,12 +78,35 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     isImageUpdate = true;
   }
 
+  int? _selectedCountryIndex;
+
+  final List<ValueItem<String>> _countryItems = List.generate(
+    countries.length,
+    (index) => ValueItem(
+      label: countries[index].name,
+      value: countries[index].isoCode,
+    ),
+  );
+
   @override
   void initState() {
     super.initState();
 
+    _relationList = [
+      ValueItem(label: 'Father'.tr(), value: 'Father'),
+      ValueItem(label: 'Mother'.tr(), value: 'Mother'),
+      ValueItem(label: 'Sister'.tr(), value: 'Sister'),
+      ValueItem(label: 'Brother'.tr(), value: 'Brother'),
+      ValueItem(label: 'Daughter'.tr(), value: 'Daughter'),
+      ValueItem(label: 'Son'.tr(), value: 'Son'),
+      ValueItem(label: 'Wife'.tr(), value: 'Wife'),
+      if (widget.isSelf == true) ValueItem(label: 'Self'.tr(), value: 'self'),
+    ];
+
     if (widget.edit) {
       _initializeControllers();
+    } else if (widget.isSelf) {
+      _initializeSelfMemberControllers();
     }
 
     reaction((_) => memberStore.addOrEditMemberFailure, (_) {
@@ -126,6 +141,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
         },
       );
       GetIt.I<MembersStore>().refresh();
+      GetIt.I<UserDetailStore>().refresh();
       context
         ..pop()
         ..pop();
@@ -152,6 +168,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                 floatingActionButton: widget.edit
                     ? FixedButton(
                         ontap: () {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
                           final genderSelectedValue =
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
@@ -169,7 +188,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               'city': cityContr.text,
                               'streetAddress': memberAddressContr.text,
                               'postalCode': postalCodeContr.text,
-                              'country': countryContr.text,
+                              'country': countryContr
+                                  .selectedOptions.first.value
+                                  .toString(),
                             },
                             'profileImg':
                                 memberStore.activeMember!.profileImg?.id,
@@ -206,27 +227,29 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           final relationSelectedValue =
                               relationContr.selectedOptions.first;
                           memberStore.addNewFamilyMember(
-                            address: Address(
-                              id: -1,
-                              state: stateContr.text.trim(),
-                              city: cityContr.text.trim(),
-                              streetAddress: memberAddressContr.text.trim(),
-                              postalCode: postalCodeContr.text.trim(),
-                              country: countryContr.text.trim(),
-                            ),
-                            dob: dobContr.text,
-                            email: emailContr.text.trim(),
-                            firstName: firstNameContr.text.trim(),
-                            gender: genderSelectedValue.value.toString().trim(),
-                            lastName: lastNameContr.text.trim(),
-                            phoneNumber: '91 ${phoneNumberContr.text.trim()}',
-                            relation:
-                                relationSelectedValue.value.toString().trim(),
-                            self:
-                                relationSelectedValue.value.toString().trim() ==
-                                        'Self'
-                                    ? true
-                                    : false,
+                            memberData: {
+                              'self': widget.isSelf ? true : false,
+                              'relation':
+                                  relationSelectedValue.value.toString().trim(),
+                              'gender':
+                                  genderSelectedValue.value.toString().trim(),
+                              'firstName': firstNameContr.text,
+                              'lastName': lastNameContr.text,
+                              'dob': dobContr.text,
+                              'email': emailContr.text,
+                              'phoneNumber':
+                                  '91 ${phoneNumberContr.text.trim()}',
+                              'address': {
+                                'state': stateContr.text.trim(),
+                                'city': cityContr.text.trim(),
+                                'streetAddress': memberAddressContr.text.trim(),
+                                'postalCode': postalCodeContr.text.trim(),
+                                'country': countryContr
+                                    .selectedOptions.first.value
+                                    .toString(),
+                              },
+                            },
+                            fileImage: storeImageFile,
                           );
                         },
                         btnTitle: 'Add new member',
@@ -261,7 +284,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: firstNameContr,
                                 large: false,
-                                enabled: true,
+                                enabled: widget.isSelf ? false : true,
                                 onChanged: (value) =>
                                     firstNameContr.text = value,
                                 validationLogic: (value) {
@@ -279,7 +302,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: lastNameContr,
                                 large: false,
-                                enabled: true,
+                                enabled: widget.isSelf ? false : true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your last name';
@@ -319,13 +342,19 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const AsteriskLabel(label: 'Relation'),
                               const SizedBox(height: 8),
                               MultiSelectFormField(
-                                selectedOptions: widget.edit
-                                    ? [_relationList[relationIndex!]]
-                                    : null,
+                                selectedOptions: widget.isSelf
+                                    ? [_relationList[7]]
+                                    : widget.edit &&
+                                            relationIndex != null &&
+                                            relationIndex! >= 0 &&
+                                            relationIndex! <
+                                                _relationList.length
+                                        ? [_relationList[relationIndex!]]
+                                        : [],
                                 controller: relationContr,
                                 values: _relationList,
                                 validator: (value) {
-                                  if (value == null) {
+                                  if (value == null || value.isEmpty) {
                                     return 'Please select the relation';
                                   }
                                   return null;
@@ -336,7 +365,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               GestureDetector(
                                 onTap: () {
-                                  if (widget.edit) {
+                                  if (widget.edit || widget.isSelf) {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -359,7 +388,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   keyboardType: TextInputType.number,
                                   controller: phoneNumberContr,
                                   large: false,
-                                  enabled: widget.edit ? false : true,
+                                  enabled: widget.edit || widget.isSelf
+                                      ? false
+                                      : true,
                                   validationLogic: (value) {
                                     if (value!.isEmpty) {
                                       return 'Please enter your mobile number';
@@ -373,7 +404,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               GestureDetector(
                                 onTap: () {
-                                  if (widget.edit) {
+                                  if (widget.edit || widget.isSelf) {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -395,7 +426,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   keyboardType: TextInputType.emailAddress,
                                   controller: emailContr,
                                   large: false,
-                                  enabled: widget.edit ? false : true,
+                                  enabled: widget.edit || widget.isSelf
+                                      ? false
+                                      : true,
                                   validationLogic: (value) {
                                     const regex =
                                         r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
@@ -415,7 +448,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 hintText: 'Enter address',
                                 keyboardType: TextInputType.streetAddress,
                                 controller: memberAddressContr,
-                                // initialValue: _member.address,
                                 large: true,
                                 enabled: true,
                                 validationLogic: (value) {
@@ -428,18 +460,19 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'Country'),
                               const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Type here...',
-                                keyboardType: TextInputType.name,
+                              MultiSelectFormField(
                                 controller: countryContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your country';
+                                values: _countryItems,
+                                validator: (selectedItems) {
+                                  if (selectedItems == null) {
+                                    return 'Please select country';
                                   }
                                   return null;
                                 },
+                                selectedOptions: _selectedCountryIndex == -1 ||
+                                        _selectedCountryIndex == null
+                                    ? null
+                                    : [_countryItems[_selectedCountryIndex!]],
                               ),
                               const SizedBox(height: 16),
                               const AsteriskLabel(label: 'State'),
@@ -493,7 +526,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           ),
                         ),
                         const SizedBox(height: Dimension.d20),
-                        const SizedBox(height: Dimension.d5),
+                        const SizedBox(height: Dimension.d10),
                       ],
                     ),
                   ),
@@ -520,6 +553,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
     relationIndex = _relationList
         .indexWhere((element) => element.value == _member.relation);
+    if (relationIndex == -1) {
+      relationIndex = null;
+    }
+
     phoneNumberContr.text = _member.phoneNumber;
     emailContr.text = _member.email;
     if (_member.profileImg != null) {
@@ -530,8 +567,40 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       stateContr.text = _member.address!.state;
       cityContr.text = _member.address!.city;
       memberAddressContr.text = _member.address!.streetAddress;
-      countryContr.text = _member.address!.country;
+      _selectedCountryIndex = _countryItems.indexWhere(
+        (element) => element.value == _member.address!.country,
+      );
       postalCodeContr.text = _member.address!.postalCode;
+    }
+  }
+
+  void _initializeSelfMemberControllers() {
+    final user = GetIt.I<UserDetailStore>().userDetails;
+    selectedGenderIndex =
+        _genderItems.indexWhere((element) => element.value == user!.gender);
+    firstNameContr.text = user!.firstName;
+    lastNameContr.text = user.lastName;
+    dobContr.text = DateFormat('yyyy-MM-dd').format(user.dateOfBirth);
+    relationIndex =
+        _relationList.indexWhere((element) => element.value == user.relation);
+    if (relationIndex == -1) {
+      relationIndex = null;
+    }
+
+    phoneNumberContr.text = user.phoneNumber;
+    emailContr.text = user.email;
+    if (user.profileImg != null) {
+      isAlreadyhaveProfileImg = true;
+      profileImgUrl = user.profileImg!.url;
+    }
+    if (user.address != null) {
+      stateContr.text = user.address!.state;
+      cityContr.text = user.address!.city;
+      memberAddressContr.text = user.address!.streetAddress;
+      _selectedCountryIndex = _countryItems.indexWhere(
+        (element) => element.value == user.address!.country,
+      );
+      postalCodeContr.text = user.address!.postalCode;
     }
   }
 }

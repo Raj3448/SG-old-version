@@ -33,19 +33,19 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
   Price? planDetails;
   final store = GetIt.I<MembersStore>();
 
-  void _updateDrop1(Member member) {
+  void _updateMember(Member member, bool isFirstMember) {
     setState(() {
-      member1 = member;
+      if (isFirstMember) {
+        member1 = member;
+      } else {
+        member2 = member;
+      }
     });
   }
 
   void _updatePlan(Price plan) {
-    planDetails = plan;
-  }
-
-  void _updateDrop2(Member member) {
     setState(() {
-      member2 = member;
+      planDetails = plan;
     });
   }
 
@@ -65,59 +65,31 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                 pricingDetailsList: widget.planList,
                 onSelect: _updatePlan,
               ),
-              Text(
-                '1. Select family member',
-                style: AppTextStyle.bodyMediumMedium
-                    .copyWith(color: AppColors.grayscale700, height: 2),
-              ),
+              _buildMemberSelectionText('1. Select family member'),
               CustomDropDownBox(
-                selectedMembers: (member1 != null && member2 != null)
-                    ? [member1!, member2!]
-                    : (member1 != null)
-                        ? [member1!]
-                        : (member2 != null)
-                            ? [member2!]
-                            : [],
+                selectedMembers: _getSelectedMembers(),
                 memberName: member1?.name,
                 memberList: store.members,
-                updateMember: _updateDrop1,
+                updateMember: (member) => _updateMember(member, true),
               ),
-              Text(
-                '2. Select another family member',
-                style: AppTextStyle.bodyMediumMedium
-                    .copyWith(color: AppColors.grayscale700, height: 2),
-              ),
+              _buildMemberSelectionText('2. Select another family member'),
               CustomDropDownBox(
-                selectedMembers: (member1 != null && member2 != null)
-                    ? [member1!, member2!]
-                    : (member1 != null)
-                        ? [member1!]
-                        : (member2 != null)
-                            ? [member2!]
-                            : [],
+                selectedMembers: _getSelectedMembers(),
                 memberName: member2?.name,
                 memberList: store.members,
-                updateMember: _updateDrop2,
+                updateMember: (member) => _updateMember(member, false),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
                 child: CustomButton(
-                  ontap: (member1 == null ||
-                          member2 == null ||
-                          planDetails == null)
+                  ontap: (member1 == null || member2 == null || planDetails == null)
                       ? null
-                      : () {
-                          print(member1);
-                          print(member2);
-                          print(planDetails);
-                        },
+                      : _bookCare,
                   title: 'Book care',
                   showIcon: false,
                   iconPath: AppIcons.add,
                   size: ButtonSize.normal,
-                  type: (member1 == null ||
-                          member2 == null ||
-                          planDetails == null)
+                  type: (member1 == null || member2 == null || planDetails == null)
                       ? ButtonType.disable
                       : ButtonType.primary,
                   expanded: true,
@@ -127,6 +99,22 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  List<Member> _getSelectedMembers() {
+    return [if (member1 != null) member1!, if (member2 != null) member2!];
+  }
+
+  void _bookCare() {}
+
+  Widget _buildMemberSelectionText(String text) {
+    return Text(
+      text,
+      style: AppTextStyle.bodyMediumMedium.copyWith(
+        color: AppColors.grayscale700,
+        height: 2,
       ),
     );
   }

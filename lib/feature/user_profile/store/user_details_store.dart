@@ -122,6 +122,11 @@ abstract class _UserDetailStoreBase with Store {
     });
   }
 
+  @action
+  void refresh() {
+    getUserDetails();
+  }
+
   void clear() {
     isInitialised = false;
     updateSuccess = false;
@@ -138,4 +143,3 @@ extension UserExtension on User {
 
   String get name => [firstName, lastName].join(' ').trim();
 }
-

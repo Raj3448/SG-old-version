@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
-import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
@@ -30,12 +28,12 @@ import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/screens/splashscreen.dart';
+import 'package:silver_genie/feature/services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/services/screens/booking_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
-import 'package:silver_genie/feature/services/screens/services_subcare_page.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -203,36 +201,43 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final memberPhrId = state.pathParameters['memberPhrId'].toString();
         return MaterialPage(
-            child: PhrPdfViewPage(
-          memberPhrId: memberPhrId,
-        ));
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      path: '/servicesCareScreen/:pageTitle/:isConvenience',
-      name: RoutesConstants.servicesCareScreen,
-      pageBuilder: (context, state) {
-        final pageTitle = state.pathParameters['pageTitle'] ?? 'Care';
-        final isConvenience =
-            state.pathParameters['isConvenience'].toString().toLowerCase();
-        return MaterialPage(
-          child: ServicesCareScreen(
-            pagetitle: pageTitle,
-            isConvenience: bool.parse(isConvenience),
+          child: PhrPdfViewPage(
+            memberPhrId: memberPhrId,
           ),
         );
       },
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/addEditFamilyMember/:edit',
+      path: '/allServicesScreen/:isConvenience/:isHealthCare/:isHomeCare',
+      name: RoutesConstants.allServicesScreen,
+      pageBuilder: (context, state) {
+        final isConvenience =
+            state.pathParameters['isConvenience'].toString().toLowerCase();
+        final isHealthCare =
+            state.pathParameters['isHealthCare'].toString().toLowerCase();
+        final isHomeCare =
+            state.pathParameters['isHomeCare'].toString().toLowerCase();
+        return MaterialPage(
+          child: AllServicesScreen(
+            isConvenience: bool.tryParse(isConvenience) ?? false,
+            isHealthCare: bool.tryParse(isHealthCare) ?? false,
+            isHomeCare: bool.tryParse(isHomeCare) ?? false,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/addEditFamilyMember/:edit/:isSelf',
       name: RoutesConstants.addEditFamilyMemberRoute,
       pageBuilder: (context, state) {
-        final edit = state.pathParameters['edit']!.toLowerCase();
+        final edit = state.pathParameters['edit']?.toLowerCase();
+        final isSelf = state.pathParameters['isSelf']?.toLowerCase();
         return MaterialPage(
           child: AddEditFamilyMemberScreen(
-            edit: bool.parse(edit),
+            edit: bool.tryParse(edit ?? 'false') ?? false,
+            isSelf: bool.tryParse(isSelf ?? 'false') ?? false,
           ),
         );
       },
@@ -280,12 +285,13 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/geniePage/:pageTitle/:id/:isUpgradble',
+      path: '/geniePage/:pageTitle/:id/:isUpgradable',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
         final id = state.pathParameters['id'] ?? '';
-        final isUpgradbleString = state.pathParameters['isUpgradble'] ?? 'false';
+        final isUpgradbleString =
+            state.pathParameters['isUpgradable'] ?? 'false';
         final isUpgradble = isUpgradbleString.toLowerCase() == 'true';
 
         return MaterialPage(
@@ -317,13 +323,13 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         return MaterialPage(
           child: ServiceDetailsScreen(
-            imgPath: state.pathParameters['imgPath']!,
-            name: state.pathParameters['name']!,
-            yoe: state.pathParameters['yoe']!,
-            type: state.pathParameters['type']!,
-            docInfo: state.pathParameters['docInfo']!,
-            hospital: state.pathParameters['hospital']!,
-            charges: state.pathParameters['charges']!,
+            imgPath: state.pathParameters['imgPath'] ?? '',
+            name: state.pathParameters['name'] ?? '',
+            yoe: state.pathParameters['yoe'] ?? '',
+            type: state.pathParameters['type'] ?? '',
+            docInfo: state.pathParameters['docInfo'] ?? '',
+            hospital: state.pathParameters['hospital'] ?? '',
+            charges: state.pathParameters['charges'] ?? '',
           ),
         );
       },
@@ -342,7 +348,7 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final bookingServiceStatusString =
             state.pathParameters['bookingServiceStatus'];
-        var bookingServiceStatus = BookingServiceStatus.values
+        final bookingServiceStatus = BookingServiceStatus.values
             .firstWhere((e) => e.toString() == bookingServiceStatusString);
         return MaterialPage(
           child: BookingSeviceStatusPage(
@@ -367,10 +373,12 @@ final GoRouter routes = GoRouter(
       },
     ),
   ],
-  errorBuilder: (_, __) => const SafeArea(
-    child: Scaffold(
-      body: ErrorStateComponent(
-        errorType: ErrorType.pageNotFound,
+  errorPageBuilder: (_, __) => const MaterialPage(
+    child: SafeArea(
+      child: Scaffold(
+        body: ErrorStateComponent(
+          errorType: ErrorType.pageNotFound,
+        ),
       ),
     ),
   ),

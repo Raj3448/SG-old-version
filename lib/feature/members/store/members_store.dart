@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
-import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 part 'members_store.g.dart';
 
 class MembersStore = _MembersStoreBase with _$MembersStore;
@@ -197,44 +196,53 @@ abstract class _MembersStoreBase with Store {
 
   @action
   void addNewFamilyMember({
-    required bool self,
-    required String relation,
-    required String gender,
-    required String firstName,
-    required String lastName,
-    required String dob,
-    required String email,
-    required String phoneNumber,
-    required Address address,
+    required Map<String, dynamic> memberData,
+    File? fileImage,
   }) {
     isAddOrEditLoading = true;
-    memberService
-        .addMember(
-      self,
-      relation,
-      gender,
-      firstName,
-      lastName,
-      dob,
-      email,
-      phoneNumber,
-      address,
-    )
-        .then((value) {
-      value.fold((l) {
-        l.maybeMap(
-          socketExceptionError: (value) {
-            addOrEditMemberFailure = 'No internet connection';
-          },
-          orElse: () {
-            addOrEditMemberFailure = 'Something went wrong';
-          },
-        );
-      }, (r) {
-        addOrEditMemberSuccessful = 'New Family Member Added Successfully';
-      });
-      isAddOrEditLoading = false;
-    });
+    fileImage != null
+        ? memberService
+            .addMemberDataWithProfileImg(
+            fileImage: fileImage,
+            memberInfo: memberData,
+          )
+            .then((value) {
+            value.fold((l) {
+              l.maybeMap(
+                socketExceptionError: (value) {
+                  addOrEditMemberFailure = 'No internet connection';
+                },
+                orElse: () {
+                  addOrEditMemberFailure = 'Something went wrong';
+                },
+              );
+            }, (r) {
+              addOrEditMemberSuccessful =
+                  'New Family Member Added Successfully';
+            });
+            isAddOrEditLoading = false;
+          })
+        : memberService
+            .addMember(
+            memberData,
+            null,
+          )
+            .then((value) {
+            value.fold((l) {
+              l.maybeMap(
+                socketExceptionError: (value) {
+                  addOrEditMemberFailure = 'No internet connection';
+                },
+                orElse: () {
+                  addOrEditMemberFailure = 'Something went wrong';
+                },
+              );
+            }, (r) {
+              addOrEditMemberSuccessful =
+                  'New Family Member Added Successfully';
+            });
+            isAddOrEditLoading = false;
+          });
   }
 
   void clear() {

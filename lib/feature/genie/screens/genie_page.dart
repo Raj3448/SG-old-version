@@ -133,9 +133,19 @@ class GeniePage extends StatelessWidget {
                             imgPath: productListingModel!
                                 .product.icon.data.attributes.url,
                             backgroundColor: productListingModel!
-                                .product.metadata.last.value,
+                                  .product.metadata
+                              .firstWhere(
+                                (element) => element.key == 'background_color_code',
+                                orElse: () => const Metadatum(id: 1, key: 'background_color_code', value: 'FFFDFDFD'),
+                              )
+                              .value,
                             iconColorCode: productListingModel!
-                                .product.metadata.first.value,
+                                  .product.metadata
+                              .firstWhere(
+                                (element) => element.key == 'icon_color_code',
+                                orElse: () => const Metadatum(id: 1, key: 'icon_color_code', value: 'FFFDFDFD'),
+                              )
+                              .value,
                             plansList: services.getPlansforCouple(
                                 productListingModel!.product.prices),
                           ),

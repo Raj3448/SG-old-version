@@ -23,28 +23,38 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
   final authStore = GetIt.I<AuthStore>();
   final productStore = GetIt.I<ProductListingStore>();
 
+  late ReactionDisposer _reactionDisposer;
+
   @override
   void initState() {
     super.initState();
-    reaction(
-      (_) => Tuple2(
+    _reactionDisposer = reaction(
+      (_) => Tuple3(
         homeStore.isHomepageDataLoaded,
         authStore.isAuthenticated,
-        productStore.isProductLoaded
+        productStore.isProductLoaded,
       ),
-      (loaded) async {
+      (Tuple3<bool, bool, bool> loaded) async {
         final isHomepageDataLoaded = loaded.item1;
         final isAuthenticated = loaded.item2;
-        //final productLoaded = loaded.item3;
+        final isProductLoaded = loaded.item3;
+
         if (isAuthenticated) {
           await GetIt.I<UserDetailStore>().fetchUserDetailsFromCache();
           productStore.initGetProductBasicDetails();
         }
-        if (isHomepageDataLoaded) {
+
+        if (isHomepageDataLoaded && mounted) {
           context.goNamed('/');
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _reactionDisposer();
+    super.dispose();
   }
 
   @override

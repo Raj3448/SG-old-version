@@ -102,7 +102,7 @@ class InactivePlanComponent extends StatelessWidget {
               ProductListingCareComponent(
                 productBasicDetailsList: store.getSubscriptActiveProdList,
                 isUpgradable: false,
-              )
+              ),
           ],
         ),
       ),
@@ -113,59 +113,62 @@ class InactivePlanComponent extends StatelessWidget {
 class ProductListingCareComponent extends StatelessWidget {
   final List<ProductBasicDetailsModel> productBasicDetailsList;
   final bool isUpgradable;
+
   ProductListingCareComponent({
     required this.productBasicDetailsList,
     required this.isUpgradable,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
-  List<Widget> btnWidgetList = [];
-  void initializeWidget(BuildContext context) {
-    btnWidgetList = List.generate(
-        productBasicDetailsList.length,
-        (index) => Padding(
-              padding: const EdgeInsets.only(top: Dimension.d2),
-              child: SubscriptionPkg(
-                expanded: true,
-                type: productBasicDetailsList[index].attributes.name == 'Companion Genie' ? SubscriptionsType.companion: productBasicDetailsList[index].attributes.name == 'Wellness Genie'? SubscriptionsType.wellness : SubscriptionsType.emergency,
-                buttonlabel: productBasicDetailsList[index].attributes.name,
-                iconColorCode: productBasicDetailsList[index]
-                    .attributes
-                    .metadata
-                    .first
-                    .value,
-                backgroundColorCode: productBasicDetailsList[index]
-                    .attributes
-                    .metadata
-                    .last
-                    .value,
-                iconUrl: productBasicDetailsList[index]
-                    .attributes
-                    .icon
-                    .data
-                    .attributes
-                    .url,
-                onTap: () {
-                  GoRouter.of(context).pushNamed(
-                    RoutesConstants.geniePage,
-                    pathParameters: {
-                      'pageTitle':
-                          productBasicDetailsList[index].attributes.name,
-                      'id': productBasicDetailsList[index].id.toString(),
-                      'isUpgradble': isUpgradable.toString()
-                    },
-                  );
-                },
-              ),
-            ));
+  SubscriptionsType _getSubscriptionType(String name) {
+    switch (name) {
+      case 'Companion Genie':
+        return SubscriptionsType.companion;
+      case 'Wellness Genie':
+        return SubscriptionsType.wellness;
+      default:
+        return SubscriptionsType.emergency;
+    }
+  }
+
+  String _getMetadataValue(List<Metadatum> metadata, String key) {
+    return metadata.firstWhere(
+      (element) => element.key == key,
+      orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
+    ).value;
+  }
+
+  List<Widget> _buildBtnWidgetList(BuildContext context) {
+    return productBasicDetailsList.map((product) {
+      return Padding(
+        padding: const EdgeInsets.only(top: Dimension.d2),
+        child: SubscriptionPkg(
+          expanded: true,
+          type: _getSubscriptionType(product.attributes.name),
+          buttonlabel: product.attributes.name,
+          iconColorCode: _getMetadataValue(product.attributes.metadata, 'icon_color_code'),
+          backgroundColorCode: _getMetadataValue(product.attributes.metadata, 'background_color_code'),
+          iconUrl: product.attributes.icon.data.attributes.url,
+          onTap: () {
+            GoRouter.of(context).pushNamed(
+              RoutesConstants.geniePage,
+              pathParameters: {
+                'pageTitle': product.attributes.name,
+                'id': product.id.toString(),
+                'isUpgradable': isUpgradable.toString(),
+              },
+            );
+          },
+        ),
+      );
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    initializeWidget(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [...btnWidgetList],
+      children: _buildBtnWidgetList(context),
     );
   }
 }

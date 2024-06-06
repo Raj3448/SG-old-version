@@ -11,8 +11,9 @@ import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 abstract class IProductListingService {
   Future<Either<Failure, List<ProductBasicDetailsModel>>>
       getAllProductBasicDetails();
-  Future<Either<Failure, ProductListingModel>> getProductById(
-      {required String id});
+  Future<Either<Failure, ProductListingModel>> getProductById({
+    required String id,
+  });
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -37,6 +38,18 @@ class ProductLisitingServices extends IProductListingService {
         maxStale: const Duration(days: 100),
         hitCacheOnErrorExcept: [401, 404],
       );
+      final cachedResponse = await httpClient.get(
+        '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
+        options: Options(
+          extra: {
+            'cacheOptions': cacheOptions.copyWith(policy: CachePolicy.request)
+          },
+        ),
+      );
+      if (cachedResponse.statusCode == 200 && cachedResponse.data != null) {
+        print('I have cache');
+        return _processResponseData(cachedResponse.data);
+      }
       final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
       httpClient.interceptors.add(dioCacheInterceptor);
       final response = await httpClient.get(
@@ -46,38 +59,14 @@ class ProductLisitingServices extends IProductListingService {
         ),
       );
       httpClient.interceptors.remove(dioCacheInterceptor);
-      if (response.statusCode == 200) {
-        if (response.data['data'] != null) {
-          final receivedList = response.data['data'] as List;
-          var allProductList = <ProductBasicDetailsModel>[];
-          for (var data in receivedList) {
-            allProductList.add(ProductBasicDetailsModel.fromJson(
-                data as Map<String, dynamic>));
-          }
-          return Right([...allProductList]);
-        }
-        return const Left(Failure.badResponse());
-      } else if (response.statusCode == 304) {
-        final cachedResponse = await httpClient.get(
-          '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
-          options: Options(
-            extra: {
-              'cacheOptions': cacheOptions.copyWith(policy: CachePolicy.noCache)
-            },
-          ),
-        );
-        if (cachedResponse.data['data'] != null) {
-          final receivedList = cachedResponse.data['data'] as List;
-          var allProductList = <ProductBasicDetailsModel>[];
-          for (var data in receivedList) {
-            allProductList.add(ProductBasicDetailsModel.fromJson(
-                data as Map<String, dynamic>));
-          }
-          return Right([...allProductList]);
-        }
-        return const Left(Failure.badResponse());
-      } else {
-        return const Left(Failure.badResponse());
+      switch (response.statusCode) {
+        case 200:
+          print('Need to fetch');
+          return _processResponseData(response.data);
+        case 304:
+          return await _fetchFromCache(cacheOptions);
+        default:
+          return const Left(Failure.badResponse());
       }
     } on SocketException {
       return const Left(Failure.socketException());
@@ -86,21 +75,51 @@ class ProductLisitingServices extends IProductListingService {
     }
   }
 
+  Either<Failure, List<ProductBasicDetailsModel>> _processResponseData(
+      dynamic data) {
+    if (data['data'] != null) {
+      final receivedList = data['data'] as List;
+      var allProductList = <ProductBasicDetailsModel>[];
+      for (var item in receivedList) {
+        allProductList.add(
+            ProductBasicDetailsModel.fromJson(item as Map<String, dynamic>));
+      }
+      return Right([...allProductList]);
+    }
+    return const Left(Failure.badResponse());
+  }
+
+  Future<Either<Failure, List<ProductBasicDetailsModel>>> _fetchFromCache(
+      CacheOptions cacheOptions) async {
+    final cachedResponse = await httpClient.get(
+      '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
+      options: Options(
+        extra: {
+          'cacheOptions': cacheOptions.copyWith(policy: CachePolicy.request)
+        },
+      ),
+    );
+    return _processResponseData(cachedResponse.data);
+  }
+
   @override
-  Future<Either<Failure, ProductListingModel>> getProductById(
-      {required String id}) async {
+  Future<Either<Failure, ProductListingModel>> getProductById({
+    required String id,
+  }) async {
     try {
-      
       final response = await httpClient.get(
-          '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent');
+        '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent',
+      );
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
-          return Right(ProductListingModel.fromJson(
-              response.data['data'] as Map<String, dynamic>));
+          return Right(
+            ProductListingModel.fromJson(
+              response.data['data'] as Map<String, dynamic>,
+            ),
+          );
         }
         return const Left(Failure.badResponse());
-      }
-      else {
+      } else {
         return const Left(Failure.badResponse());
       }
     } on SocketException {

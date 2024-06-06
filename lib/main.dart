@@ -166,11 +166,13 @@ void main() async {
         Zone.current.handleUncaughtError(error.exception, error.stack!);
         return ErrorWidget(error.exception);
       };
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
-          
-          statusBarColor: AppColors.grayscale100));
+          statusBarColor: AppColors.grayscale100,
+        ),
+      );
       runApp(
         EasyLocalization(
           supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],

@@ -20,6 +20,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
   MemberDetailsScreen({
@@ -107,7 +108,9 @@ class MemberDetailsScreen extends StatelessWidget {
                     children: [
                       HealthCard(
                         isEpr: true,
-                        dateUpdated: '25/03/2024',
+                        dateUpdated: activeMember?.updatedAt == null
+                            ? 'n/a'
+                            : formatDateTime(activeMember!.updatedAt),
                         ontap: () {
                           GoRouter.of(context).pushNamed(
                             RoutesConstants.eprRoute,
@@ -118,20 +121,26 @@ class MemberDetailsScreen extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 16),
-                      HealthCard(
-                        isEpr: false,
-                        dateUpdated: '25/03/2024',
-                        ontap: activeMember!.phrModel == null
-                            ? null
-                            : () {
-                                GoRouter.of(context).pushNamed(
+                      if (activeMember!.phrModel != null)
+                        HealthCard(
+                          isEpr: false,
+                          dateUpdated: activeMember?.phrModel?.updatedAt == null
+                              ? 'n/a'
+                              : formatDateTime(
+                                  activeMember!.phrModel!.updatedAt,
+                                ),
+                          ontap: activeMember!.phrModel == null
+                              ? null
+                              : () {
+                                  GoRouter.of(context).pushNamed(
                                     RoutesConstants.phrPdfViewPage,
                                     pathParameters: {
                                       'memberPhrId':
-                                          activeMember!.phrModel!.id.toString()
-                                    });
-                              },
-                      ),
+                                          activeMember!.phrModel!.id.toString(),
+                                    },
+                                  );
+                                },
+                        ),
                       const SizedBox(height: Dimension.d17),
                     ],
                   )
@@ -180,20 +189,22 @@ class _BasicDetailsBox extends StatelessWidget {
     required this.age,
     required this.gender,
     required this.relation,
-    required this.mobileNo,
     required this.imgPath,
+    this.mobileNo,
     this.address,
   });
   final String name;
   final String age;
   final String gender;
   final String? relation;
-  final String mobileNo;
+  final String? mobileNo;
   final String? address;
   final String imgPath;
 
   @override
   Widget build(BuildContext context) {
+    final activeMember = GetIt.I<MembersStore>().activeMember;
+    final user = GetIt.I<UserDetailStore>().userDetails;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
@@ -246,44 +257,54 @@ class _BasicDetailsBox extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Dimension.d3),
-          Row(
-            children: [
-              const Icon(
-                AppIcons.phone,
-                color: AppColors.grayscale700,
-                size: 17,
-              ),
-              const SizedBox(width: Dimension.d3),
-              Text(
-                mobileNo,
-                style: AppTextStyle.bodyLargeMedium
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-            ],
-          ),
-          const SizedBox(height: Dimension.d3),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 5),
-                child: Icon(
-                  AppIcons.home,
+          if (mobileNo!.isEmpty)
+            const SizedBox()
+          else
+            Row(
+              children: [
+                const Icon(
+                  AppIcons.phone,
                   color: AppColors.grayscale700,
                   size: 17,
                 ),
-              ),
-              const SizedBox(width: Dimension.d3),
-              SizedBox(
-                width: 300,
-                child: Text(
-                  address!,
+                const SizedBox(width: Dimension.d3),
+                Text(
+                  mobileNo!,
                   style: AppTextStyle.bodyLargeMedium
                       .copyWith(color: AppColors.grayscale900),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          if (address!.isEmpty)
+            const SizedBox()
+          else
+            Column(
+              children: [
+                const SizedBox(height: Dimension.d3),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Icon(
+                        AppIcons.home,
+                        color: AppColors.grayscale700,
+                        size: 17,
+                      ),
+                    ),
+                    const SizedBox(width: Dimension.d3),
+                    SizedBox(
+                      width: 300,
+                      child: Text(
+                        address!,
+                        style: AppTextStyle.bodyLargeMedium
+                            .copyWith(color: AppColors.grayscale900),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           const SizedBox(height: Dimension.d3),
           CustomButton(
             ontap: () {
@@ -291,6 +312,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
+                  'isSelf': user!.id == activeMember!.id ? 'true' : 'false',
                 },
               );
             },
@@ -306,4 +328,8 @@ class _BasicDetailsBox extends StatelessWidget {
       ),
     );
   }
+}
+
+String formatDateTime(DateTime dateTime) {
+  return DateFormat('MM/dd/yyyy').format(dateTime);
 }

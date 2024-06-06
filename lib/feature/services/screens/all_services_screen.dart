@@ -1,4 +1,7 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -6,70 +9,52 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/services/screens/services_screen.dart';
 
-class ServicesCareScreen extends StatefulWidget {
-  ServicesCareScreen({
-    Key? key,
-    required this.pagetitle,
+class AllServicesScreen extends StatefulWidget {
+  const AllServicesScreen({
     required this.isConvenience,
-  }) : super(key: key);
+    required this.isHomeCare,
+    required this.isHealthCare,
+    super.key,
+  });
 
-  final String pagetitle;
   final bool isConvenience;
+  final bool isHomeCare;
+  final bool isHealthCare;
 
   @override
-  _ServicesCareScreenState createState() => _ServicesCareScreenState();
+  _AllServicesScreenState createState() => _AllServicesScreenState();
 }
 
-class _ServicesCareScreenState extends State<ServicesCareScreen> {
-  late List<ServicesData> allServices;
-  late List<ServicesData> displayedServices;
+class _AllServicesScreenState extends State<AllServicesScreen> {
+  late List<ProductBasicDetailsModel> allServices;
+  late List<ProductBasicDetailsModel> displayedServices;
+  final store = GetIt.I<ProductListingStore>();
 
   TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    allServices = [
-      ServicesData(
-        imagePath: 'assets/icon/doctor 1.png',
-        title: 'Critical nurse care',
-        subtitle: 'Description of service will be shown in 2 lines',
-      ),
-      ServicesData(
-                imagePath: 'assets/icon/doctor 1.png',
-                title: 'Critical nurse care',
-                subtitle: 'Discription of service will be shown in 2 line',
-              ),
-              ServicesData(
-                imagePath: 'assets/icon/doctor-consultation 1.png',
-                title: 'General duty attendant',
-                subtitle: 'Discription of service will be shown in 2 line',
-              ),
-              ServicesData(
-                imagePath: 'assets/icon/health-insurance 1.png',
-                title: 'Nurse',
-                subtitle: 'Discription of service will be shown in 2 line',
-              ),
-              ServicesData(
-                imagePath: 'assets/icon/doctor 1.png',
-                title: 'Doctor Consultation',
-                subtitle: 'Discription of service will be shown in 2 line',
-              ),
-              ServicesData(
-                imagePath: 'assets/icon/doctor-consultation 1.png',
-                title: 'General duty attendant',
-                subtitle: 'Discription of service will be shown in 2 line',
-              ),
-              ServicesData(
-                imagePath: 'assets/icon/health-insurance 1.png',
-                title: 'Nurse',
-                subtitle: 'Discription of service will be shown in 2 line',
-              ),
-      
-    ];
+    allServices = getAllServices();
     displayedServices = List.from(allServices);
+
+    textEditingController.addListener(() {
+      filterServices(textEditingController.text);
+    });
+  }
+
+  List<ProductBasicDetailsModel> getAllServices() {
+    if (widget.isConvenience) {
+      return store.getConvenienceCareServicesList;
+    } else if (widget.isHealthCare) {
+      return store.getHealthCareServicesList;
+    } else {
+      return store.getHomeCareServicesList;
+    }
   }
 
   void filterServices(String query) {
@@ -78,8 +63,11 @@ class _ServicesCareScreenState extends State<ServicesCareScreen> {
         displayedServices = List.from(allServices);
       } else {
         displayedServices = allServices
-            .where((service) =>
-                service.title.toLowerCase().contains(query.toLowerCase()))
+            .where(
+              (service) => service.attributes.name
+                  .toLowerCase()
+                  .contains(query.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -88,7 +76,13 @@ class _ServicesCareScreenState extends State<ServicesCareScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PageAppbar(title: widget.pagetitle),
+      appBar: PageAppbar(
+        title: widget.isConvenience
+            ? 'Convenience care services'
+            : widget.isHealthCare
+                ? 'Health care services'
+                : 'Home care services',
+      ),
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -101,22 +95,35 @@ class _ServicesCareScreenState extends State<ServicesCareScreen> {
                 onChanged: filterServices,
               ),
               const SizedBox(height: Dimension.d5),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+              ListView.separated(
                 itemCount: displayedServices.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return ServicesListTileComponent(
-                    imagePath: displayedServices[index].imagePath,
-                    title: displayedServices[index].title,
-                    subtitle: displayedServices[index].subtitle,
+                    imagePath: displayedServices[index]
+                        .attributes
+                        .icon
+                        .data
+                        .attributes
+                        .url,
+                    title: displayedServices[index].attributes.name,
+                    subtitle: displayedServices[index]
+                        .attributes
+                        .metadata
+                        .first
+                        .value,
                   );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 16);
                 },
               ),
               if (widget.isConvenience) ...[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: Dimension.d8),
                     Text(
                       'For other services & enquiries',
                       style: AppTextStyle.bodyLargeMedium.copyWith(
@@ -131,8 +138,8 @@ class _ServicesCareScreenState extends State<ServicesCareScreen> {
                         bottom: Dimension.d4,
                         top: Dimension.d2,
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Dimension.d2),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: Dimension.d2),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: AppColors.primary,
@@ -145,7 +152,9 @@ class _ServicesCareScreenState extends State<ServicesCareScreen> {
                           Text(
                             'Contact SilverGenie team',
                             style: AppTextStyle.bodyMediumMedium.copyWith(
-                                height: 2, color: AppColors.grayscale900),
+                              height: 2,
+                              color: AppColors.grayscale900,
+                            ),
                           ),
                           SizedBox(
                             width: 120,
@@ -176,13 +185,12 @@ class _ServicesCareScreenState extends State<ServicesCareScreen> {
 }
 
 class ServicesData {
-  final String imagePath;
-  final String title;
-  final String subtitle;
-
   ServicesData({
     required this.imagePath,
     required this.title,
     required this.subtitle,
   });
+  final String imagePath;
+  final String title;
+  final String subtitle;
 }
