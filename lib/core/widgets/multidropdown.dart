@@ -17,6 +17,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
     List<ValueItem<dynamic>>? selectedOptions,
     super.onSaved,
     super.validator,
+    bool enabled = true,
   }) : super(
           initialValue: selectedOptions,
           builder: (FormFieldState<List<ValueItem<dynamic>>> state) {
@@ -26,52 +27,63 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                 Container(
                   height: 52,
                   decoration: BoxDecoration(
+                    color: !enabled ? AppColors.grayscale200 : null,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.line),
+                    border: Border.all(
+                        color: state.hasError
+                            ? Color(0xFF9E2F27)
+                            : AppColors.line),
                   ),
                   padding: const EdgeInsets.only(right: 10),
-                  child: MultiSelectDropDown(
-                    controller: controller,
-                    onOptionSelected: (selectedOptions) {
-                      state.didChange(selectedOptions);
-                    },
-                    selectedOptions: state.value ?? [],
-                    options: values,
-                    selectionType: SelectionType.single,
-                    optionTextStyle: AppTextStyle.bodyLargeMedium,
-                    hintStyle: AppTextStyle.bodyLargeMedium
-                        .copyWith(color: AppColors.grayscale600),
-                    singleSelectItemStyle: AppTextStyle.bodyLargeMedium
-                        .copyWith(color: AppColors.grayscale900),
-                    dropdownHeight: 160,
-                    borderRadius: 8,
-                    dropdownBorderRadius: 8,
-                    selectedOptionTextColor: AppColors.primary,
-                    selectedOptionIcon: const Icon(
-                      AppIcons.check,
-                      color: AppColors.primary,
-                      size: 15,
+                  child: IgnorePointer(
+                    ignoring: !enabled,
+                    child: MultiSelectDropDown(
+                      controller: controller,
+                      onOptionSelected: (selectedOptions) {
+                        state.didChange(selectedOptions);
+                      },
+                      selectedOptions: state.value ?? [],
+                      options: values,
+                      selectionType: SelectionType.single,
+                      optionTextStyle: AppTextStyle.bodyLargeMedium,
+                      hintStyle: AppTextStyle.bodyLargeMedium
+                          .copyWith(color: AppColors.grayscale600),
+                      singleSelectItemStyle: AppTextStyle.bodyLargeMedium
+                          .copyWith(
+                              color: !enabled
+                                  ? AppColors.grayscale700
+                                  : AppColors.grayscale900),
+                      dropdownHeight: 160,
+                      borderRadius: 8,
+                      dropdownBorderRadius: 8,
+                      selectedOptionTextColor: AppColors.primary,
+                      selectedOptionIcon: const Icon(
+                        AppIcons.check,
+                        color: AppColors.primary,
+                        size: 15,
+                      ),
+                      clearIcon: const Icon(
+                        Icons.clear_outlined,
+                        color: AppColors.grayscale700,
+                        size: 20,
+                      ),
+                      suffixIcon: const Icon(
+                        AppIcons.arrow_down_ios,
+                        color: AppColors.grayscale700,
+                        size: 7,
+                      ),
+                      inputDecoration: const BoxDecoration(),
                     ),
-                    clearIcon: const Icon(
-                      Icons.clear_outlined,
-                      color: AppColors.grayscale700,
-                      size: 20,
-                    ),
-                    suffixIcon: const Icon(
-                      AppIcons.arrow_down_ios,
-                      color: AppColors.grayscale700,
-                      size: 7,
-                    ),
-                    inputDecoration: const BoxDecoration(),
                   ),
                 ),
                 if (state.hasError)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Dimension.d1),
+                    padding: const EdgeInsets.only(
+                        top: Dimension.d2, left: Dimension.d4),
                     child: Text(
                       state.errorText!,
                       style: const TextStyle(
-                        color: AppColors.error,
+                        color: Color(0xFF9E2F27),
                         fontSize: 12,
                       ),
                     ),
@@ -133,65 +145,74 @@ class DateDropdown extends FormField<DateTime> {
                   controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
                 }
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.grayscale300),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          color: state.hasError
+                              ? Color(0xFF9E2F27)
+                              : AppColors.grayscale300),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: controller,
-                            style: AppTextStyle.bodyLargeMedium
-                                .copyWith(color: AppColors.grayscale900),
-                            decoration: const InputDecoration(
-                              hintText: 'Select',
-                              border: InputBorder.none,
-                            ),
-                            readOnly: true,
-                            onTap: () async {
-                              final pickedDate = await showDatePicker(
-                                context: state.context,
-                                firstDate: DateTime(1950),
-                                lastDate: DateTime.now(),
-                                initialDate: state.value ?? DateTime.now(),
-                              );
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: controller,
+                                style: AppTextStyle.bodyLargeMedium
+                                    .copyWith(color: AppColors.grayscale900),
+                                decoration: const InputDecoration(
+                                  hintText: 'Select',
+                                  border: InputBorder.none,
+                                ),
+                                readOnly: true,
+                                onTap: () async {
+                                  final pickedDate = await showDatePicker(
+                                    context: state.context,
+                                    firstDate: DateTime(1950),
+                                    lastDate: DateTime.now(),
+                                    initialDate: state.value ?? DateTime.now(),
+                                  );
 
-                              if (pickedDate != null &&
-                                  pickedDate != state.value) {
-                                state.didChange(pickedDate);
-                                controller.text =
-                                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Icon(
-                          Icons.calendar_today,
-                          color: Colors.grey,
-                          size: 18,
+                                  if (pickedDate != null &&
+                                      pickedDate != state.value) {
+                                    state.didChange(pickedDate);
+                                    controller.text = DateFormat('yyyy-MM-dd')
+                                        .format(pickedDate);
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            const Icon(
+                              Icons.calendar_today,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    if (state.hasError)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Text(
-                          state.errorText!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
+                  ),
+                  if (state.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: Dimension.d2, left: Dimension.d4),
+                      child: Text(
+                        state.errorText!,
+                        style: const TextStyle(
+                          color: Color(0xFF9E2F27),
+                          fontSize: 12,
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             );
           },
