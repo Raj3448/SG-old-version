@@ -164,7 +164,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       : 'Add new family member'.tr(),
                 ),
                 floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat,
+                    FloatingActionButtonLocation.centerDocked,
                 floatingActionButton: widget.edit
                     ? FixedButton(
                         ontap: () {
