@@ -20,6 +20,7 @@ class MemberCreation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       surfaceTintColor: AppColors.white,
+      backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
@@ -33,6 +34,7 @@ class MemberCreation extends StatelessWidget {
             const Text(
               'Select for whom you want to create',
               style: AppTextStyle.bodyLargeMedium,
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: Dimension.d6),
             CustomButton(
