@@ -128,8 +128,10 @@ class GeniePage extends StatelessWidget {
                             pageTitle: pageTitle,
                             btnLabel: productListingModel!.product
                                 .subscriptionContent!.exploreNowCtaLabel,
-                            planHeading: productListingModel!.product
-                                .subscriptionContent!.exploreCouplePlansHeading,
+                            planHeading: productListingModel!
+                                .product
+                                .subscriptionContent!
+                                .exploreCouplePlansHeading!,
                             imgPath: productListingModel!
                                 .product.icon.data.attributes.url,
                             backgroundColor: productListingModel!

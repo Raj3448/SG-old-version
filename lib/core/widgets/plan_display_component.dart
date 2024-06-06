@@ -80,7 +80,7 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
                     ),
                   ),
                   Text(
-                    '${widget.planPriceDetails!.recurringIntervalCount} ${removeLastLy(widget.planPriceDetails!.recurringInterval)}',
+                    '${widget.planPriceDetails!.recurringIntervalCount} ${removeLastLy(widget.planPriceDetails!.recurringInterval!)}',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale900,
                       fontSize: 18,
