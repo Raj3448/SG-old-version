@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
@@ -73,6 +75,20 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
     });
   }
 
+  void onServiceTap(String id) {
+    store.fetchProductById(id).then((_) {
+      if (store.selectedProduct != null) {
+        GoRouter.of(context).pushNamed(
+          RoutesConstants.serviceDetailsScreen,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(store.getProductFailure ?? 'Error')),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +106,7 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchTextfieldComponet(
+              SearchTextfield(
                 textEditingController: textEditingController,
                 onChanged: filterServices,
               ),
@@ -100,19 +116,24 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return ServicesListTileComponent(
-                    imagePath: displayedServices[index]
-                        .attributes
-                        .icon
-                        .data
-                        .attributes
-                        .url,
-                    title: displayedServices[index].attributes.name,
-                    subtitle: displayedServices[index]
-                        .attributes
-                        .metadata
-                        .first
-                        .value,
+                  return GestureDetector(
+                    onTap: () {
+                      onServiceTap('${displayedServices[index].id}');
+                    },
+                    child: ServicesListTileComponent(
+                      imagePath: displayedServices[index]
+                          .attributes
+                          .icon
+                          .data
+                          .attributes
+                          .url,
+                      title: displayedServices[index].attributes.name,
+                      subtitle: displayedServices[index]
+                          .attributes
+                          .metadata
+                          .first
+                          .value,
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {

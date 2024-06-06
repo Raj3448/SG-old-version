@@ -19,8 +19,6 @@ class PlanDisplayComponent extends StatefulWidget {
 }
 
 class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,9 +27,8 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
       decoration: BoxDecoration(
         border: Border.all(
             width: 1,
-            color: widget.isSelected
-                ? AppColors.primary
-                : AppColors.grayscale400),
+            color:
+                widget.isSelected ? AppColors.primary : AppColors.grayscale400),
         color: AppColors.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
@@ -83,7 +80,7 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
                     ),
                   ),
                   Text(
-                    '${widget.planPriceDetails!.recurringIntervalCount} ${removeLastLy(widget.planPriceDetails!.recurringInterval)}',
+                    '${widget.planPriceDetails!.recurringIntervalCount} ${removeLastLy(widget.planPriceDetails!.recurringInterval!)}',
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColors.grayscale900,
                       fontSize: 18,

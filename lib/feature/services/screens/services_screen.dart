@@ -59,6 +59,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
     });
   }
 
+  void onServiceTap(String id) {
+    store.fetchProductById(id).then((_) {
+      if (store.selectedProduct != null) {
+        GoRouter.of(context).pushNamed(
+          RoutesConstants.serviceDetailsScreen,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(store.getProductFailure ?? 'Error')),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +96,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         .copyWith(color: AppColors.grayscale900),
                   ),
                   const SizedBox(height: Dimension.d3),
-                  SearchTextfieldComponet(
+                  SearchTextfield(
                     textEditingController: textEditingController,
                     onChanged: filterServices,
                   ),
@@ -105,6 +119,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
+                            onServiceTap: onServiceTap,
                           ),
                         if (healthCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -120,6 +135,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
+                            onServiceTap: onServiceTap,
                           ),
                         if (convenienceCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -135,6 +151,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
+                            onServiceTap: onServiceTap,
                           ),
                       ],
                     )
@@ -146,6 +163,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       getTitle: (value) => value.attributes.name,
                       getSubtitle: (value) =>
                           value.attributes.metadata.first.value,
+                      onServiceTap: onServiceTap,
                     ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -163,11 +181,13 @@ class _ServiceCategorySection extends StatelessWidget {
     required this.title,
     required this.services,
     required this.onTapViewAll,
+    required this.onServiceTap,
   });
 
   final String title;
   final List<ProductBasicDetailsModel> services;
   final VoidCallback onTapViewAll;
+  final void Function(String) onServiceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +202,7 @@ class _ServiceCategorySection extends StatelessWidget {
           getImagePath: (value) => value.attributes.icon.data.attributes.url,
           getTitle: (value) => value.attributes.name,
           getSubtitle: (value) => value.attributes.metadata.first.value,
+          onServiceTap: onServiceTap,
         ),
       ],
     );
@@ -223,12 +244,14 @@ class _ServiceListView extends StatelessWidget {
     required this.getImagePath,
     required this.getTitle,
     required this.getSubtitle,
+    required this.onServiceTap,
   });
 
   final List<ProductBasicDetailsModel> services;
   final String Function(ProductBasicDetailsModel) getImagePath;
   final String Function(ProductBasicDetailsModel) getTitle;
   final String Function(ProductBasicDetailsModel) getSubtitle;
+  final void Function(String) onServiceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -237,10 +260,15 @@ class _ServiceListView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return ServicesListTileComponent(
-          imagePath: getImagePath(services[index]),
-          title: getTitle(services[index]),
-          subtitle: getSubtitle(services[index]),
+        return GestureDetector(
+          onTap: () {
+            onServiceTap('${services[index].id}');
+          },
+          child: ServicesListTileComponent(
+            imagePath: getImagePath(services[index]),
+            title: getTitle(services[index]),
+            subtitle: getSubtitle(services[index]),
+          ),
         );
       },
       separatorBuilder: (context, index) {
@@ -263,55 +291,52 @@ class ServicesListTileComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: AppColors.secondary),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.secondary,
-                  border: Border.all(width: 2, color: AppColors.grayscale300),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(10),
-                height: 64,
-                width: 64,
-                child: CachedNetworkImage(
-                  imageUrl: '${Env.serverUrl}$imagePath',
-                  fit: BoxFit.cover,
-                ),
+    return Container(
+      alignment: Alignment.center,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: AppColors.secondary),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.secondary,
+                border: Border.all(width: 2, color: AppColors.grayscale300),
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(
-                width: Dimension.d2,
+              padding: const EdgeInsets.all(10),
+              height: 64,
+              width: 64,
+              child: CachedNetworkImage(
+                imageUrl: '${Env.serverUrl}$imagePath',
+                fit: BoxFit.cover,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyle.bodyLargeBold
-                          .copyWith(color: AppColors.grayscale900),
-                    ),
-                    Text(
-                      subtitle,
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.grayscale600),
-                    ),
-                  ],
-                ),
+            ),
+            const SizedBox(
+              width: Dimension.d2,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyle.bodyLargeBold
+                        .copyWith(color: AppColors.grayscale900),
+                  ),
+                  Text(
+                    subtitle,
+                    style: AppTextStyle.bodyMediumMedium
+                        .copyWith(color: AppColors.grayscale600),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

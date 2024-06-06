@@ -317,20 +317,21 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path:
-          '/serviceDetailsScreen/:imgPath/:name/:yoe/:type/:docInfo/:hospital/:charges',
+      // path:
+      //     '/serviceDetailsScreen/:imgPath/:name/:yoe/:type/:docInfo/:hospital/:charges',
+      path: '/serviceDetailsScreen',
       name: RoutesConstants.serviceDetailsScreen,
       pageBuilder: (context, state) {
         return MaterialPage(
           child: ServiceDetailsScreen(
-            imgPath: state.pathParameters['imgPath'] ?? '',
-            name: state.pathParameters['name'] ?? '',
-            yoe: state.pathParameters['yoe'] ?? '',
-            type: state.pathParameters['type'] ?? '',
-            docInfo: state.pathParameters['docInfo'] ?? '',
-            hospital: state.pathParameters['hospital'] ?? '',
-            charges: state.pathParameters['charges'] ?? '',
-          ),
+              // imgPath: state.pathParameters['imgPath'] ?? '',
+              // name: state.pathParameters['name'] ?? '',
+              // yoe: state.pathParameters['yoe'] ?? '',
+              // type: state.pathParameters['type'] ?? '',
+              // docInfo: state.pathParameters['docInfo'] ?? '',
+              // hospital: state.pathParameters['hospital'] ?? '',
+              // charges: state.pathParameters['charges'] ?? '',
+              ),
         );
       },
     ),

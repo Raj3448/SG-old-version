@@ -291,7 +291,7 @@ class ActivePlanComponent extends StatelessWidget {
               ],
             ),
             _UpgradeProdLisComponent(
-              productBasicDetailsList: store.getUpgardeProdListById('1'),
+              productBasicDetailsList: store.getUpgradeProdListById('1'),
             )
           ],
         ),

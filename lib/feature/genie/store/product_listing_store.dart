@@ -16,6 +16,18 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
+  @observable
+  String? getProductFailure;
+
+  @observable
+  bool isProductLoaded = false;
+
+  @observable
+  bool? hasGotProductSuccesfully;
+
+  @observable
+  ProductListingModel? selectedProduct;
+
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
@@ -83,17 +95,8 @@ abstract class _ProductListingStoreBase with Store {
               .toList()
           : [];
 
-  @observable
-  String? getProductFailure;
-
-  @observable
-  bool isProductLoaded = false;
-
-  @observable
-  bool? hasGotProductSuccesfully;
-
   @action
-  List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
+  List<ProductBasicDetailsModel> getUpgradeProdListById(String id) {
     return getSubscriptProdList
         .where((element) => element.id.toString() == id)
         .map((element) => element.attributes.upgradableProducts.data)
@@ -109,7 +112,6 @@ abstract class _ProductListingStoreBase with Store {
           socketException: (value) => getProductFailure = 'No Internet',
           orElse: () {
             getProductFailure = 'Something went wrong';
-            print('I am failure to fetch product');
           },
         );
       }, (r) {
@@ -118,5 +120,18 @@ abstract class _ProductListingStoreBase with Store {
       });
       fetchProductLoading = false;
     });
+  }
+
+  @action
+  Future<void> fetchProductById(String id) async {
+    fetchProductLoading = true;
+    final result = await productListingService.getProductById(id: id);
+    result.fold((l) {
+      getProductFailure = 'Failed to load service!';
+      selectedProduct = null;
+    }, (r) {
+      selectedProduct = r;
+    });
+    fetchProductLoading = false;
   }
 }
