@@ -24,11 +24,15 @@ abstract class _MembersStoreBase with Store {
   int selectedIndex = 0;
 
   @computed
-  int? get activeMemberId => selectedMemberId ?? members.firstOrNull?.id;
+  List<Member> get familyMembers =>
+      members.where((member) => member.isFamilyMember == true).toList();
+
+  @computed
+  int? get activeMemberId => selectedMemberId ?? familyMembers.firstOrNull?.id;
 
   @computed
   Member? get activeMember => activeMemberId != null
-      ? members.firstWhere((member) => member.id == activeMemberId)
+      ? familyMembers.firstWhere((member) => member.id == activeMemberId)
       : null;
 
   @observable
@@ -186,7 +190,7 @@ abstract class _MembersStoreBase with Store {
   Member? memberById(int? id) {
     if (id == null) return null;
 
-    for (final member in members) {
+    for (final member in familyMembers) {
       if (member.id == id) {
         return member;
       }
