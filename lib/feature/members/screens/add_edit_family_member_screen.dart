@@ -141,6 +141,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
         },
       );
       GetIt.I<MembersStore>().refresh();
+      GetIt.I<UserDetailStore>().refresh();
       context
         ..pop()
         ..pop();
