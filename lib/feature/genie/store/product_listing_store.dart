@@ -51,6 +51,7 @@ abstract class _ProductListingStoreBase with Store {
               .where(
                 (element) =>
                     element.attributes.category == 'convenienceCare' &&
+                    element.attributes.isActive == true &&
                     element.attributes.type == 'service',
               )
               .toList()
@@ -63,6 +64,7 @@ abstract class _ProductListingStoreBase with Store {
               .where(
                 (element) =>
                     element.attributes.category == 'homeCare' &&
+                    element.attributes.isActive == true &&
                     element.attributes.type == 'service',
               )
               .toList()
@@ -75,6 +77,7 @@ abstract class _ProductListingStoreBase with Store {
               .where(
                 (element) =>
                     element.attributes.category == 'healthCare' &&
+                    element.attributes.isActive == true &&
                     element.attributes.type == 'service',
               )
               .toList()

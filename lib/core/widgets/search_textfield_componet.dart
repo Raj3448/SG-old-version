@@ -7,7 +7,8 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 class SearchTextfieldComponet extends StatefulWidget {
   const SearchTextfieldComponet({
     required this.textEditingController,
-    required this.onChanged, Key? key,
+    required this.onChanged,
+    Key? key,
   }) : super(key: key);
   final TextEditingController textEditingController;
   final void Function(String)? onChanged;
@@ -27,8 +28,7 @@ class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
         focusNode: _searchFocusNode,
         controller: widget.textEditingController,
         onChanged: widget.onChanged,
-        style: const TextStyle(
-            color: AppColors.grayscale900, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: AppColors.grayscale900),
         decoration: InputDecoration(
           prefixIcon: Image.asset(
             'assets/icon/Icon - Search.png',

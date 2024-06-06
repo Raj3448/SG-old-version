@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         buttonName: 'Health Care',
                         onTap: () {
                           context.pushNamed(
-                            RoutesConstants.servicesCareScreen,
+                            RoutesConstants.allServicesScreen,
                             pathParameters: {
                               'pageTitle': 'Health Care Service',
                               'isConvenience': false.toString(),
@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         buttonName: 'Home Care',
                         onTap: () {
                           context.pushNamed(
-                            RoutesConstants.servicesCareScreen,
+                            RoutesConstants.allServicesScreen,
                             pathParameters: {
                               'pageTitle': 'Home Care Service',
                               'isConvenience': false.toString(),
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         buttonName: 'Wellness & Convenience',
                         onTap: () {
                           context.pushNamed(
-                            RoutesConstants.servicesCareScreen,
+                            RoutesConstants.allServicesScreen,
                             pathParameters: {
                               'pageTitle': 'Convenience care services',
                               'isConvenience': true.toString(),

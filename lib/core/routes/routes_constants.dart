@@ -20,7 +20,7 @@ class RoutesConstants {
   static const eprRoute = '/eprPhr';
   static const memberDetailsRoute = '/memberDetails';
   static const emergencyServiceScreen = '/emergencyServiceScreen';
-  static const servicesCareScreen = '/servicesCareScreen';
+  static const allServicesScreen = '/allServicesScreen';
   static const serviceDetailsScreen = '/serviceDetailsScreen';
   static const bookServiceScreen = '/bookServiceScreen';
   static const paymentScreen = '/paymentScreen';
