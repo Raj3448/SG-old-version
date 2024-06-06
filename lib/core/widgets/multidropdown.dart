@@ -33,7 +33,9 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                   child: MultiSelectDropDown(
                     controller: controller,
                     onOptionSelected: (selectedOptions) {
-                      state.didChange(selectedOptions);
+                      state
+                        ..didChange(selectedOptions)
+                        ..validate();
                     },
                     selectedOptions: state.value ?? [],
                     options: values,

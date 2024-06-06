@@ -142,28 +142,24 @@ abstract class AppTextStyle {
   static const bodyXLBold = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 18,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
   static const bodyLargeBold = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 16,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
   static const bodyMediumBold = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 14,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
   static const bodySmallBold = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 12,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
@@ -171,28 +167,24 @@ abstract class AppTextStyle {
   static const bodyXLSemiBold = TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 18,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
   static const bodyLargeSemiBold = TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 16,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
   static const bodyMediumSemiBold = TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 14,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
   static const bodySmallSemiBold = TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 12,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 
@@ -212,15 +204,12 @@ abstract class AppTextStyle {
   static const bodyMediumMedium = TextStyle(
     fontWeight: FontWeight.w400,
     fontSize: 14,
-    letterSpacing: 0.5,
-    height: 1.4,
     fontFamily: FontFamily.inter,
   );
 
   static const bodySmallMedium = TextStyle(
     fontWeight: FontWeight.w400,
     fontSize: 12,
-    letterSpacing: 0.5,
     fontFamily: FontFamily.inter,
   );
 

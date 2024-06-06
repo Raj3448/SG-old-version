@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimension.d3),
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      } else if (memberStore.members.isEmpty) {
+                      } else if (memberStore.familyMembers.isEmpty) {
                         return NoMember(
                           ontap: () {
                             final user = GetIt.I<UserDetailStore>().userDetails;
@@ -767,21 +767,24 @@ class _MemberInfo extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (var i = 0; i < memberStore.members.length; i++)
+                        for (var i = 0;
+                            i < memberStore.familyMembers.length;
+                            i++)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Row(
                               children: [
                                 SelectableAvatar(
-                                  imgPath: memberStore.members[i].profileImg !=
+                                  imgPath: memberStore
+                                              .familyMembers[i].profileImg !=
                                           null
-                                      ? '${Env.serverUrl}${memberStore.members[i].profileImg!.url}'
+                                      ? '${Env.serverUrl}${memberStore.familyMembers[i].profileImg!.url}'
                                       : '',
                                   maxRadius: 24,
-                                  isSelected: memberStore.members[i].id ==
+                                  isSelected: memberStore.familyMembers[i].id ==
                                       memberStore.activeMemberId,
-                                  ontap: () => memberStore
-                                      .selectMember(memberStore.members[i].id),
+                                  ontap: () => memberStore.selectMember(
+                                      memberStore.familyMembers[i].id),
                                 ),
                                 const SizedBox(width: Dimension.d4),
                               ],
@@ -840,7 +843,9 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
-                        if (activeMember != null && memberStore.isActive) {
+                        if (activeMember != null &&
+                            memberStore.isActive &&
+                            activeMember.relation != "Brother") {
                           return ActivePlanComponent(
                             name:
                                 '${activeMember.firstName} ${activeMember.lastName}',
@@ -859,7 +864,8 @@ class _MemberInfo extends StatelessWidget {
                                 ? activeMember.phrModel!.id
                                 : null,
                           );
-                        } else if (memberStore.isActive == false) {
+                        } else if (memberStore.isActive == false ||
+                            activeMember?.relation == "Brother") {
                           return InactivePlanComponent(
                             name: activeMember != null
                                 ? '${activeMember.firstName} ${activeMember.lastName}'

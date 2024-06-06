@@ -53,8 +53,9 @@ class Member with _$Member {
     required String lastName,
     required DateTime createdAt,
     required DateTime updatedAt,
+    @Default(false) bool? isFamilyMember,
     ProfileImg? profileImg,
-    @Default('Self')String relation,
+    @Default('Self') String relation,
     Address? address,
     @JsonKey(name: 'phr') PhrModel? phrModel,
   }) = _Member;
@@ -80,5 +81,6 @@ class PhrModel with _$PhrModel {
     required DateTime updatedAt,
   }) = _PhrModel;
 
-  factory PhrModel.fromJson(Map<String, dynamic> json) => _$PhrModelFromJson(json);
+  factory PhrModel.fromJson(Map<String, dynamic> json) =>
+      _$PhrModelFromJson(json);
 }

@@ -94,16 +94,17 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    ' ${widget.planPriceDetails!.amountWithoutDiscount != null ? widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2) : widget.planPriceDetails!.unitAmount.toStringAsFixed(2)}} Rs',
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale700,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      height: 1.46,
-                      decoration: TextDecoration.lineThrough,
+                  if (widget.planPriceDetails!.amountWithoutDiscount != null)
+                    Text(
+                      ' ${widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2)} Rs',
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale700,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        height: 1.46,
+                        decoration: TextDecoration.lineThrough,
+                      ),
                     ),
-                  ),
                   Text(
                     '${widget.planPriceDetails!.unitAmount.toStringAsFixed(2)}Rs',
                     style: AppTextStyle.bodyMediumMedium.copyWith(

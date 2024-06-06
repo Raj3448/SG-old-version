@@ -141,6 +141,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
         },
       );
       GetIt.I<MembersStore>().refresh();
+      GetIt.I<UserDetailStore>().refresh();
       context
         ..pop()
         ..pop();
@@ -163,7 +164,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       : 'Add new family member'.tr(),
                 ),
                 floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat,
+                    FloatingActionButtonLocation.centerDocked,
                 floatingActionButton: widget.edit
                     ? FixedButton(
                         ontap: () {
