@@ -295,6 +295,7 @@ class _ServiceListView extends StatelessWidget {
               RoutesConstants.serviceDetailsScreen,
               pathParameters: {
                 'id': '${services[index].id}',
+                'title': services[index].attributes.name,
               },
             );
           },
