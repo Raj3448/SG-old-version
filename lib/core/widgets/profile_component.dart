@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
@@ -19,8 +20,9 @@ class CustomTextIcon extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          iconpath,
+        Padding(
+          padding: const EdgeInsets.only(top: Dimension.d1),
+          child: Icon(iconpath, size: 17, color: AppColors.grayscale700),
         ),
         const SizedBox(
           width: Dimension.d3,

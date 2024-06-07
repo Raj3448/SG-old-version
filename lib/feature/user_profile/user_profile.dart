@@ -123,7 +123,7 @@ class UserProfile extends StatelessWidget {
                                       title: userDetailStore
                                           .userDetails!.phoneNumber),
                                   const SizedBox(
-                                    height: Dimension.d2,
+                                    height: Dimension.d4,
                                   ),
                                   CustomTextIcon(
                                       iconpath: AppIcons.home,
@@ -131,7 +131,8 @@ class UserProfile extends StatelessWidget {
                                                   .userDetails!.address ==
                                               null
                                           ? 'N/A'
-                                          : userDetailStore.userDetails!.address!.fullAddress),
+                                          : userDetailStore.userDetails!
+                                              .address!.fullAddress),
                                   const SizedBox(
                                     height: Dimension.d4,
                                   ),
