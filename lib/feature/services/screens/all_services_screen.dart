@@ -108,6 +108,7 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                         RoutesConstants.serviceDetailsScreen,
                         pathParameters: {
                           'id': '${displayedServices[index].id}',
+                          'title': displayedServices[index].attributes.name,
                         },
                       );
                     },
