@@ -11,8 +11,10 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
+import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
@@ -31,20 +33,22 @@ class ServiceDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Service Details'),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: FutureBuilder<Either<Failure, ProductListingModel>>(
         future: service.getProductById(id: id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingWidget(showShadow: false));
           }
           if (snapshot.hasError) {
-            return const Center(child: Text('An error occurred'));
+            return const Center(
+              child: ErrorStateComponent(errorType: ErrorType.pageNotFound),
+            );
           }
           if (snapshot.hasData) {
             final data = snapshot.data!;
             return data.fold(
-              (failure) => const Center(child: Text('Failed to load data')),
+              (failure) => const ErrorStateComponent(
+                  errorType: ErrorType.somethinWentWrong),
               (product) {
                 final serviceData = product.product;
                 final allServiceList = <dynamic>[];
