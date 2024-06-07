@@ -22,17 +22,19 @@ import 'package:silver_genie/feature/genie/services/product_listing_services.dar
 class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({
     required this.id,
+    required this.title,
     super.key,
   });
 
   final String id;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     final service = GetIt.I<ProductLisitingServices>();
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Service Details'),
+      appBar: PageAppbar(title: title),
       body: FutureBuilder<Either<Failure, ProductListingModel>>(
         future: service.getProductById(id: id),
         builder: (context, snapshot) {
