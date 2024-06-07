@@ -180,6 +180,14 @@ class ActivePlanComponent extends StatelessWidget {
     required this.age,
     required this.updatedAt,
     required this.memberPhrId,
+    // required this.bloodPressure,
+    // required this.bloodOxygen,
+    // required this.heartRate,
+    // required this.fastGlucose,
+    required this.bloodPressure,
+    required this.bloodOxygen,
+    required this.heartRate,
+    required this.fastGlucose,
     super.key,
   });
   final String name;
@@ -188,6 +196,10 @@ class ActivePlanComponent extends StatelessWidget {
   final String updatedAt;
   final VoidCallback onTap;
   final int? memberPhrId;
+  final String bloodPressure;
+  final String bloodOxygen;
+  final String heartRate;
+  final String fastGlucose;
   final store = GetIt.I<ProductListingStore>();
   @override
   Widget build(BuildContext context) {
@@ -231,15 +243,24 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d3,
             ),
-            const VitalInfoComponent(
+            VitalInfoComponent(
               customComponents: [
                 CustomComponentData(
                   text: 'Blood Pressure',
-                  value: '73/140mmHg',
+                  value: bloodPressure,
                 ),
-                CustomComponentData(text: 'Blood Oxygen', value: '98%'),
-                CustomComponentData(text: 'Heart Rate', value: '106bpm'),
-                CustomComponentData(text: 'Fast Glucose', value: '103 mg/dl'),
+                CustomComponentData(
+                  text: 'Blood Oxygen',
+                  value: bloodOxygen,
+                ),
+                CustomComponentData(
+                  text: 'Heart Rate',
+                  value: heartRate,
+                ),
+                CustomComponentData(
+                  text: 'Fast Glucose',
+                  value: fastGlucose,
+                ),
               ],
             ),
             const SizedBox(height: Dimension.d2),
