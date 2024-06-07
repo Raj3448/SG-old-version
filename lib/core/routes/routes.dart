@@ -317,19 +317,13 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path:
-          '/serviceDetailsScreen/:imgPath/:name/:yoe/:type/:docInfo/:hospital/:charges',
+      path: '/serviceDetailsScreen/:id',
       name: RoutesConstants.serviceDetailsScreen,
       pageBuilder: (context, state) {
+        final id = state.pathParameters['id'] ?? '';
         return MaterialPage(
           child: ServiceDetailsScreen(
-            imgPath: state.pathParameters['imgPath'] ?? '',
-            name: state.pathParameters['name'] ?? '',
-            yoe: state.pathParameters['yoe'] ?? '',
-            type: state.pathParameters['type'] ?? '',
-            docInfo: state.pathParameters['docInfo'] ?? '',
-            hospital: state.pathParameters['hospital'] ?? '',
-            charges: state.pathParameters['charges'] ?? '',
+            id: id,
           ),
         );
       },

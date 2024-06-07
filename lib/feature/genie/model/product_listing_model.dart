@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 part 'product_listing_model.freezed.dart';
@@ -33,41 +34,42 @@ class Product with _$Product {
     @Default([]) List<dynamic>? serviceContent,
   }) = _Product;
 
-  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
 }
-
-
 
 @freezed
 class Benefits with _$Benefits {
-    const factory Benefits({
-        required List<Datum> data,
-    }) = _Benefits;
+  const factory Benefits({
+    required List<Datum> data,
+  }) = _Benefits;
 
-    factory Benefits.fromJson(Map<String, dynamic> json) => _$BenefitsFromJson(json);
+  factory Benefits.fromJson(Map<String, dynamic> json) =>
+      _$BenefitsFromJson(json);
 }
 
 @freezed
 class Datum with _$Datum {
-    const factory Datum({
-        required int id,
-        required DatumAttributes attributes,
-    }) = _Datum;
+  const factory Datum({
+    required int id,
+    required DatumAttributes attributes,
+  }) = _Datum;
 
-    factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
 }
 
 @freezed
 class DatumAttributes with _$DatumAttributes {
-    const factory DatumAttributes({
-        required String label,
-        required String code,
-        required bool isActive,
-        required DateTime createdAt,
-        required DateTime updatedAt,
-    }) = _DatumAttributes;
+  const factory DatumAttributes({
+    required String label,
+    required String code,
+    required bool isActive,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _DatumAttributes;
 
-    factory DatumAttributes.fromJson(Map<String, dynamic> json) => _$DatumAttributesFromJson(json);
+  factory DatumAttributes.fromJson(Map<String, dynamic> json) =>
+      _$DatumAttributesFromJson(json);
 }
 
 @freezed
@@ -78,7 +80,8 @@ class Metadatum with _$Metadatum {
     required String value,
   }) = _Metadatum;
 
-  factory Metadatum.fromJson(Map<String, dynamic> json) => _$MetadatumFromJson(json);
+  factory Metadatum.fromJson(Map<String, dynamic> json) =>
+      _$MetadatumFromJson(json);
 }
 
 @freezed
@@ -87,10 +90,10 @@ class Price with _$Price {
     required int id,
     required int unitAmount,
     required String label,
-    required String billingScheme,
+    required String? billingScheme,
     required String pricingType,
-    required String recurringInterval,
-    required int recurringIntervalCount,
+    required String? recurringInterval,
+    required int? recurringIntervalCount,
     required String code,
     required dynamic recurringPlanId,
     required int benefitApplicableToMembersLimit,
@@ -105,12 +108,12 @@ class Price with _$Price {
 
 @freezed
 class Rule with _$Rule {
-    const factory Rule({
-        required int id,
-        required String ruleType,
-        required String value,
-        required String label,
-    }) = _Rule;
+  const factory Rule({
+    required int id,
+    required String ruleType,
+    required String value,
+    required String label,
+  }) = _Rule;
 
   factory Rule.fromJson(Map<String, dynamic> json) => _$RuleFromJson(json);
 }
@@ -125,7 +128,7 @@ class SubscriptionContent with _$SubscriptionContent {
     required String subHeading1Description,
     required bool showSinglesPlan,
     required bool showCouplePlans,
-    required String exploreCouplePlansHeading,
+    required String? exploreCouplePlansHeading,
     required String faqHeading,
     @JsonKey(name: 'exploreNowCTALabel') required String exploreNowCtaLabel,
     required String benefitsHeading,
@@ -139,125 +142,182 @@ class SubscriptionContent with _$SubscriptionContent {
 
 @freezed
 class Faq with _$Faq {
-    const factory Faq({
-        required int id,
-        required String question,
-        required String answer,
-    }) = _Faq;
-    factory Faq.fromJson(Map<String, dynamic> json) => _$FaqFromJson(json);
+  const factory Faq({
+    required int id,
+    required String question,
+    required String answer,
+  }) = _Faq;
+  factory Faq.fromJson(Map<String, dynamic> json) => _$FaqFromJson(json);
 }
 
 @freezed
 class ProductImage with _$ProductImage {
-    const factory ProductImage({
-        @JsonKey(name: 'data') required ImgDetail data,
-    }) = _ProductImage;
+  const factory ProductImage({
+    @JsonKey(name: 'data') required ImgDetail data,
+  }) = _ProductImage;
 
-    factory ProductImage.fromJson(Map<String, dynamic> json) => _$ProductImageFromJson(json);
+  factory ProductImage.fromJson(Map<String, dynamic> json) =>
+      _$ProductImageFromJson(json);
 }
+
 @freezed
 class ImgDetail with _$ImgDetail {
-    const factory ImgDetail({
-        required int id,
-        required DataAttributes attributes,
-    }) = _ImgDetail;
+  const factory ImgDetail({
+    required int id,
+    required DataAttributes attributes,
+  }) = _ImgDetail;
 
-    factory ImgDetail.fromJson(Map<String, dynamic> json) => _$ImgDetailFromJson(json);
+  factory ImgDetail.fromJson(Map<String, dynamic> json) =>
+      _$ImgDetailFromJson(json);
 }
 
 @freezed
 class DataAttributes with _$DataAttributes {
-    const factory DataAttributes({
-        required String name,
-        required int width,
-        required int height,
-        required Formats formats,
-        required String hash,
-        required String url,
-        required dynamic previewUrl,
-    }) = _DataAttributes;
+  const factory DataAttributes({
+    required String name,
+    required int width,
+    required int height,
+    required Formats formats,
+    required String hash,
+    required String url,
+    required dynamic previewUrl,
+  }) = _DataAttributes;
 
-    factory DataAttributes.fromJson(Map<String, dynamic> json) => _$DataAttributesFromJson(json);
+  factory DataAttributes.fromJson(Map<String, dynamic> json) =>
+      _$DataAttributesFromJson(json);
 }
 
 ///==============================================================================
 
 @freezed
 class ProductBasicDetailsModel with _$ProductBasicDetailsModel {
-    const factory ProductBasicDetailsModel({
-        required int id,
-        @JsonKey(name: 'attributes') required ProductMetaData attributes,
-    }) = _ProductBasicDetailsModel;
+  const factory ProductBasicDetailsModel({
+    required int id,
+    @JsonKey(name: 'attributes') required ProductMetaData attributes,
+  }) = _ProductBasicDetailsModel;
 
-    factory ProductBasicDetailsModel.fromJson(Map<String, dynamic> json) => _$ProductBasicDetailsModelFromJson(json);
+  factory ProductBasicDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$ProductBasicDetailsModelFromJson(json);
 }
 
 @freezed
 class ProductMetaData with _$ProductMetaData {
-    const factory ProductMetaData({
-        required String name,
-        required String type,
-        required String code,
-        required bool isActive,
-        required String category,
-        required DateTime createdAt,
-        required DateTime updatedAt,
-        required List<Metadatum> metadata,
-        @JsonKey(name: 'icon') required IconImage icon,
-        @JsonKey(name: 'upgradeable_products') @Default(UpgradableProducts(data: [])) UpgradableProducts upgradableProducts,
+  const factory ProductMetaData({
+    required String name,
+    required String type,
+    required String code,
+    required bool isActive,
+    required String category,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required List<Metadatum> metadata,
+    @JsonKey(name: 'icon') required IconImage icon,
+    @JsonKey(name: 'upgradeable_products')
+    @Default(UpgradableProducts(data: []))
+    UpgradableProducts upgradableProducts,
+  }) = _ProductMetaData;
 
-    }) = _ProductMetaData;
-
-    factory ProductMetaData.fromJson(Map<String, dynamic> json) => _$ProductMetaDataFromJson(json);
+  factory ProductMetaData.fromJson(Map<String, dynamic> json) =>
+      _$ProductMetaDataFromJson(json);
 }
 
 @freezed
 class IconImage with _$IconImage {
-    const factory IconImage({
-        required Data data,
-    }) = _IconImage;
-    factory IconImage.fromJson(Map<String, dynamic> json) => _$IconImageFromJson(json);
+  const factory IconImage({
+    required Data data,
+  }) = _IconImage;
+  factory IconImage.fromJson(Map<String, dynamic> json) =>
+      _$IconImageFromJson(json);
 }
 
 @freezed
 class Data with _$Data {
-    const factory Data({
-        required int id,
-        @JsonKey(name: 'attributes') required IconImgMetaData attributes,
-    }) = _Data;
-    factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  const factory Data({
+    required int id,
+    @JsonKey(name: 'attributes') required IconImgMetaData attributes,
+  }) = _Data;
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
 
 @freezed
 class IconImgMetaData with _$IconImgMetaData {
+  const factory IconImgMetaData({
+    required String name,
+    required dynamic alternativeText,
+    required dynamic caption,
+    required int width,
+    required int height,
+    required dynamic formats,
+    required String hash,
+    required String ext,
+    required String mime,
+    required double size,
+    required String url,
+    required dynamic previewUrl,
+    required String provider,
+    required dynamic providerMetadata,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _IconImgMetaData;
 
-    const factory IconImgMetaData({
-        required String name,
-        required dynamic alternativeText,
-        required dynamic caption,
-        required int width,
-        required int height,
-        required dynamic formats,
-        required String hash,
-        required String ext,
-        required String mime,
-        required double size,
-        required String url,
-        required dynamic previewUrl,
-        required String provider,
-        required dynamic providerMetadata,
-        required DateTime createdAt,
-        required DateTime updatedAt,
-    }) = _IconImgMetaData;
-
-    factory IconImgMetaData.fromJson(Map<String, dynamic> json) => _$IconImgMetaDataFromJson(json);
+  factory IconImgMetaData.fromJson(Map<String, dynamic> json) =>
+      _$IconImgMetaDataFromJson(json);
 }
 
 @freezed
 class UpgradableProducts with _$UpgradableProducts {
-    const factory UpgradableProducts({
-        required List<ProductBasicDetailsModel> data,
-    }) = _UpgradableProducts;
+  const factory UpgradableProducts({
+    required List<ProductBasicDetailsModel> data,
+  }) = _UpgradableProducts;
 
-    factory UpgradableProducts.fromJson(Map<String, dynamic> json) => _$UpgradableProductsFromJson(json);
+  factory UpgradableProducts.fromJson(Map<String, dynamic> json) =>
+      _$UpgradableProductsFromJson(json);
+}
+
+@freezed
+class HeaderModel with _$HeaderModel {
+  const factory HeaderModel({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String heading,
+    required String description,
+    required String headingAlignment,
+    required BannerImage serviceImage,
+  }) = _HeaderModel;
+  factory HeaderModel.fromJson(Map<String, dynamic> json) =>
+      _$HeaderModelFromJson(json);
+}
+
+@freezed
+class ServiceOfferingModel with _$ServiceOfferingModel {
+  const factory ServiceOfferingModel({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String label,
+    required List<OfferingList> offerings,
+  }) = _ServiceOfferingModel;
+  factory ServiceOfferingModel.fromJson(Map<String, dynamic> json) =>
+      _$ServiceOfferingModelFromJson(json);
+}
+
+@freezed
+class OfferingList with _$OfferingList {
+  const factory OfferingList({
+    required int id,
+    required String value,
+  }) = _OfferingList;
+  factory OfferingList.fromJson(Map<String, dynamic> json) =>
+      _$OfferingListFromJson(json);
+}
+
+@freezed
+class FaqModelDetails with _$FaqModelDetails {
+  const factory FaqModelDetails({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String label,
+    required List<Faq> faq,
+  }) = _FaqModelDetails;
+  factory FaqModelDetails.fromJson(Map<String, dynamic> json) =>
+      _$FaqModelDetailsFromJson(json);
 }

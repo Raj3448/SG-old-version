@@ -123,11 +123,9 @@ class MembersScreen extends StatelessWidget {
                         const SizedBox(height: Dimension.d6),
                         CustomButton(
                           ontap: () {
-                            final userStore =
-                                GetIt.I<UserDetailStore>().userDetails;
-                            final memberId = store.memberById(userStore!.id);
-
-                            if (memberId!.id == userStore.id) {
+                            final user = GetIt.I<UserDetailStore>().userDetails;
+                            final member = store.memberById(user!.id);
+                            if (member != null) {
                               context.pushNamed(
                                 RoutesConstants.addEditFamilyMemberRoute,
                                 pathParameters: {

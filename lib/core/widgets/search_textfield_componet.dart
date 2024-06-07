@@ -4,8 +4,8 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
-class SearchTextfieldComponet extends StatefulWidget {
-  const SearchTextfieldComponet({
+class SearchTextfield extends StatefulWidget {
+  const SearchTextfield({
     required this.textEditingController,
     required this.onChanged,
     Key? key,
@@ -14,11 +14,10 @@ class SearchTextfieldComponet extends StatefulWidget {
   final void Function(String)? onChanged;
 
   @override
-  State<SearchTextfieldComponet> createState() =>
-      _SearchTextfieldComponetState();
+  State<SearchTextfield> createState() => _SearchTextfieldState();
 }
 
-class _SearchTextfieldComponetState extends State<SearchTextfieldComponet> {
+class _SearchTextfieldState extends State<SearchTextfield> {
   final FocusNode _searchFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {

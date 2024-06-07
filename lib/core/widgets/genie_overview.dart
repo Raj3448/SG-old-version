@@ -313,8 +313,9 @@ class FAQComponent extends StatelessWidget {
   const FAQComponent({
     required this.heading,
     required this.faqList,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
+
   final String heading;
   final List<Faq> faqList;
   @override

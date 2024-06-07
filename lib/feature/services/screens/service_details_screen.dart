@@ -1,312 +1,277 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
+import 'package:silver_genie/core/widgets/genie_overview.dart';
+import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/services/repo/services_repo.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({
-    required this.imgPath,
-    required this.name,
-    required this.yoe,
-    required this.type,
-    required this.docInfo,
-    required this.hospital,
-    required this.charges,
+    required this.id,
     super.key,
   });
 
-  final String imgPath;
-  final String name;
-  final String yoe;
-  final String type;
-  final String docInfo;
-  final String hospital;
-  final String charges;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
+    final service = GetIt.I<ProductLisitingServices>();
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Doctor details'),
-      body: FutureBuilder(
-        future: fetchDocDetails(),
+      appBar: const PageAppbar(title: 'Service Details'),
+      body: FutureBuilder<Either<Failure, ProductListingModel>>(
+        future: service.getProductById(id: id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: LoadingWidget(showShadow: false));
+          }
+          if (snapshot.hasError) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primary,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            // TODO(Amanjot): update this with the new error screens.
-            return Text('Error: ${snapshot.error}');
-          } else {
-            final doctor = snapshot.data!;
-            return Scaffold(
-              backgroundColor: AppColors.white,
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FixedButton(
-                ontap: () {
-                  GoRouter.of(context).push(RoutesConstants.bookServiceScreen);
-                },
-                btnTitle: 'Book appointment',
-                showIcon: false,
-                iconPath: AppIcons.add,
-              ),
-              body: ListView.builder(
-                itemCount: doctor.length,
-                physics: const BouncingScrollPhysics(),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 13, horizontal: 16),
-                itemBuilder: (context, index) {
-                  final doctorInfo = doctor[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        doctorInfo.imgPath,
-                        scale: 0.8,
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      Center(
-                        child: Text(
-                          'Dr. ${doctorInfo.name}',
-                          style: AppTextStyle.bodyXLBold
-                              .copyWith(color: AppColors.grayscale900),
-                        ),
-                      ),
-                      const SizedBox(height: Dimension.d4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            AppIcons.medical_services,
-                            color: AppColors.grayscale700,
-                            size: 18,
-                          ),
-                          const SizedBox(width: Dimension.d2),
-                          Text(
-                            '${doctorInfo.yoe} Years',
-                            style: AppTextStyle.bodyMediumMedium
-                                .copyWith(color: AppColors.grayscale800),
-                          ),
-                          const SizedBox(width: Dimension.d4),
-                          const Icon(
-                            Icons.favorite_border,
-                            color: AppColors.grayscale700,
-                            size: 18,
-                          ),
-                          const SizedBox(width: Dimension.d2),
-                          Text(
-                            doctorInfo.type,
-                            style: AppTextStyle.bodyMediumMedium
-                                .copyWith(color: AppColors.grayscale800),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Text(
-                        'Doctor Information',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      Text(
-                        doctorInfo.info,
-                        style: AppTextStyle.bodyLargeMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Text(
-                        'Hospital',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      Row(
-                        children: [
-                          // TODO(Amanjot): Update the icons consts file once all icons are added and replace this icon.
-                          const Icon(
-                            Icons.share_location,
-                            color: AppColors.grayscale700,
-                          ),
-                          const SizedBox(width: Dimension.d3),
-                          Text(
-                            doctorInfo.hospital,
-                            style: AppTextStyle.bodyLargeMedium
-                                .copyWith(color: AppColors.grayscale700),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Text(
-                        'Consultation charges',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      Row(
-                        children: [
-                          // TODO(Amanjot): Update the icons consts file once all icons are added and replace this icon.
-                          const Icon(
-                            Icons.money_rounded,
-                            color: AppColors.grayscale700,
-                          ),
-                          const SizedBox(width: Dimension.d3),
-                          Text(
-                            '₹ ${doctorInfo.charges}/hr',
-                            style: AppTextStyle.bodyLargeMedium
-                                .copyWith(color: AppColors.grayscale700),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Text(
-                        'Expertise Skill',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      SizedBox(
-                        width: 300,
-                        child: Center(
-                          child: GridView.builder(
-                            itemCount: doctorInfo.expertise.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 180,
-                              mainAxisExtent: 30,
-                              mainAxisSpacing: 12,
-                            ),
-                            itemBuilder: (context, index) {
-                              return Align(
-                                alignment: Alignment.topLeft,
-                                child: _InfoTile(doctorInfo.expertise[index]),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Text(
-                        'Preferred language',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width,
-                        child: Center(
-                          child: GridView.builder(
-                            itemCount: doctorInfo.expertise.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 80,
-                              mainAxisExtent: 30,
-                            ),
-                            itemBuilder: (context, index) {
-                              return Center(
-                                child:
-                                    _InfoTile(doctorInfo.preferredLang[index]),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Text(
-                        'How will this service work?',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      const Text(
-                        'Step 1',
-                        style: AppTextStyle.bodyLargeMedium,
-                      ),
-                      const SizedBox(height: Dimension.d1),
-                      Text(
-                        'Select a doctor matching your requirement',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      const Text(
-                        'Step 2',
-                        style: AppTextStyle.bodyLargeMedium,
-                      ),
-                      const SizedBox(height: Dimension.d1),
-                      Text(
-                        'Check available time slots and select which one works for you',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      const Text(
-                        'Step 3',
-                        style: AppTextStyle.bodyLargeMedium,
-                      ),
-                      const SizedBox(height: Dimension.d1),
-                      Text(
-                        'Confirm your booking',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      const Text(
-                        'Step 4',
-                        style: AppTextStyle.bodyLargeMedium,
-                      ),
-                      const SizedBox(height: Dimension.d1),
-                      Text(
-                        'Doctor will be at your home for the service',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                      const SizedBox(height: Dimension.d20),
-                    ],
-                  );
-                },
-              ),
+              child: ErrorStateComponent(errorType: ErrorType.pageNotFound),
             );
           }
+          if (snapshot.hasData) {
+            final data = snapshot.data!;
+            return data.fold(
+              (failure) => const ErrorStateComponent(
+                  errorType: ErrorType.somethinWentWrong),
+              (product) {
+                final serviceData = product.product;
+                final allServiceList = <dynamic>[];
+
+                for (final component in serviceData.serviceContent!) {
+                  if (component['__component'] ==
+                      'service-components.service-description') {
+                    allServiceList.add(
+                      HeaderModel.fromJson(
+                        component as Map<String, dynamic>,
+                      ),
+                    );
+                  }
+                  if (component['__component'] ==
+                      'service-components.offerings') {
+                    allServiceList.add(
+                      ServiceOfferingModel.fromJson(
+                        component as Map<String, dynamic>,
+                      ),
+                    );
+                  }
+                  if (component['__component'] ==
+                      'service-components.service-faq') {
+                    allServiceList.add(
+                      FaqModelDetails.fromJson(
+                        component as Map<String, dynamic>,
+                      ),
+                    );
+                  }
+                }
+
+                final widgetList = <Widget>[];
+                for (final component in allServiceList) {
+                  if (component is HeaderModel) {
+                    widgetList.add(_HeaderPicTitle(headerModel: component));
+                    continue;
+                  }
+                  if (component is ServiceOfferingModel) {
+                    widgetList.add(_Offerings(serviceOfferingModel: component));
+                    continue;
+                  }
+                  if (component is FaqModelDetails) {
+                    widgetList.add(
+                      FAQComponent(
+                        heading: component.label,
+                        faqList: component.faq,
+                      ),
+                    );
+                    continue;
+                  }
+                }
+
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: widgetList,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (serviceData.category == 'homeCare')
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, -4),
+                              blurRadius: 4,
+                              color: AppColors.black.withOpacity(0.15),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomButton(
+                              ontap: () {},
+                              title: 'Request call back',
+                              showIcon: false,
+                              iconPath: AppIcons.add,
+                              size: ButtonSize.normal,
+                              type: ButtonType.secondary,
+                              expanded: false,
+                              iconColor: AppColors.primary,
+                            ),
+                            CustomButton(
+                              ontap: () {},
+                              title: 'Book now',
+                              showIcon: false,
+                              iconPath: AppIcons.add,
+                              size: ButtonSize.normal,
+                              type: ButtonType.primary,
+                              expanded: false,
+                              iconColor: AppColors.primary,
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      FixedButton(
+                        ontap: () {},
+                        btnTitle: 'Book appointment',
+                        showIcon: false,
+                        iconPath: AppIcons.add,
+                      ),
+                  ],
+                );
+              },
+            );
+          }
+          return const Center(child: Text('No data found'));
         },
       ),
     );
   }
 }
 
-class _InfoTile extends StatelessWidget {
-  const _InfoTile(this.title);
+class _HeaderPicTitle extends StatelessWidget {
+  const _HeaderPicTitle({
+    required this.headerModel,
+  });
+
+  final HeaderModel headerModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      '${Env.serverUrl}${headerModel.serviceImage.data.attributes.url}',
+                ),
+              ),
+              const SizedBox(height: Dimension.d4),
+              Text(headerModel.heading, style: AppTextStyle.bodyXLMedium),
+            ],
+          ),
+        ),
+        const SizedBox(height: Dimension.d3),
+        Text(
+          headerModel.description,
+          style: AppTextStyle.bodyLargeMedium
+              .copyWith(color: AppColors.grayscale700),
+        ),
+        const SizedBox(height: Dimension.d4),
+      ],
+    );
+  }
+}
+
+class _Offerings extends StatelessWidget {
+  const _Offerings({required this.serviceOfferingModel});
+
+  final ServiceOfferingModel serviceOfferingModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(serviceOfferingModel.label, style: AppTextStyle.bodyXLMedium),
+        const SizedBox(height: Dimension.d3),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: serviceOfferingModel.offerings.length,
+          itemBuilder: (context, index) {
+            return _OfferTile(serviceOfferingModel.offerings[index].value);
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: Dimension.d1);
+          },
+        ),
+        const SizedBox(height: Dimension.d4),
+      ],
+    );
+  }
+}
+
+class _OfferTile extends StatelessWidget {
+  const _OfferTile(this.title);
 
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      child: Text(
-        title,
-        style: AppTextStyle.bodySmallMedium
-            .copyWith(color: AppColors.grayscale900),
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Column(
+          children: [
+            SizedBox(height: 6),
+            Icon(
+              AppIcons.check,
+              color: AppColors.primary,
+              size: 12,
+            ),
+          ],
+        ),
+        const SizedBox(width: Dimension.d3),
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.85,
+          child: Text(
+            title,
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale700),
+          ),
+        ),
+      ],
     );
   }
 }

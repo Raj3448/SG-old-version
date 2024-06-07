@@ -82,14 +82,13 @@ class ProductLisitingServices extends IProductListingService {
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent',
+        '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent.offerings&populate[7]=serviceContent.serviceImage&populate[8]=serviceContent.faq',
       );
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
+          final data = response.data['data'];
           return Right(
-            ProductListingModel.fromJson(
-              response.data['data'] as Map<String, dynamic>,
-            ),
+            ProductListingModel.fromJson(data as Map<String, dynamic>),
           );
         }
         return const Left(Failure.badResponse());

@@ -16,6 +16,15 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
+  @observable
+  String? getProductFailure;
+
+  @observable
+  bool isProductLoaded = false;
+
+  @observable
+  bool? hasGotProductSuccesfully;
+
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
@@ -97,17 +106,8 @@ abstract class _ProductListingStoreBase with Store {
               .toList()
           : [];
 
-  @observable
-  String? getProductFailure;
-
-  @observable
-  bool isProductLoaded = false;
-
-  @observable
-  bool? hasGotProductSuccesfully;
-
   @action
-  List<ProductBasicDetailsModel> getUpgardeProdListById(String id) {
+  List<ProductBasicDetailsModel> getUpgradeProdListById(String id) {
     return getSubscriptProdList
         .where((element) => element.id.toString() == id)
         .map((element) => element.attributes.upgradableProducts.data)

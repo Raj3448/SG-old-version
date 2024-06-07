@@ -82,7 +82,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         .copyWith(color: AppColors.grayscale900),
                   ),
                   const SizedBox(height: Dimension.d3),
-                  SearchTextfieldComponet(
+                  SearchTextfield(
                     textEditingController: textEditingController,
                     onChanged: filterServices,
                   ),
@@ -289,10 +289,20 @@ class _ServiceListView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return ServicesListTileComponent(
-          imagePath: getImagePath(services[index]),
-          title: getTitle(services[index]),
-          subtitle: getSubtitle(services[index]),
+        return GestureDetector(
+          onTap: () {
+            context.pushNamed(
+              RoutesConstants.serviceDetailsScreen,
+              pathParameters: {
+                'id': '${services[index].id}',
+              },
+            );
+          },
+          child: ServicesListTileComponent(
+            imagePath: getImagePath(services[index]),
+            title: getTitle(services[index]),
+            subtitle: getSubtitle(services[index]),
+          ),
         );
       },
       separatorBuilder: (context, index) {
@@ -315,55 +325,52 @@ class ServicesListTileComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: AppColors.secondary),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.secondary,
-                  border: Border.all(width: 2, color: AppColors.grayscale300),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(10),
-                height: 64,
-                width: 64,
-                child: CachedNetworkImage(
-                  imageUrl: '${Env.serverUrl}$imagePath',
-                  fit: BoxFit.cover,
-                ),
+    return Container(
+      alignment: Alignment.center,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: AppColors.secondary),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.secondary,
+                border: Border.all(width: 2, color: AppColors.grayscale300),
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(
-                width: Dimension.d2,
+              padding: const EdgeInsets.all(10),
+              height: 64,
+              width: 64,
+              child: CachedNetworkImage(
+                imageUrl: '${Env.serverUrl}$imagePath',
+                fit: BoxFit.cover,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyle.bodyLargeBold
-                          .copyWith(color: AppColors.grayscale900),
-                    ),
-                    Text(
-                      subtitle,
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.grayscale600),
-                    ),
-                  ],
-                ),
+            ),
+            const SizedBox(
+              width: Dimension.d2,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyle.bodyLargeBold
+                        .copyWith(color: AppColors.grayscale900),
+                  ),
+                  Text(
+                    subtitle,
+                    style: AppTextStyle.bodyMediumMedium
+                        .copyWith(color: AppColors.grayscale600),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
