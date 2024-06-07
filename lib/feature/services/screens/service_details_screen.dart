@@ -188,21 +188,25 @@ class _HeaderPicTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      '${Env.serverUrl}${headerModel.serviceImage.data.attributes.url}',
-                  fit: BoxFit.cover,
-                ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: CachedNetworkImage(
+                imageUrl:
+                    '${Env.serverUrl}${headerModel.serviceImage.data.attributes.url}',
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: Dimension.d4),
-              Text(headerModel.heading, style: AppTextStyle.bodyXLMedium),
-            ],
-          ),
+            ),
+            const SizedBox(height: Dimension.d4),
+            Center(
+                child: Text(
+              headerModel.heading,
+              style: AppTextStyle.bodyXLMedium,
+              textAlign: TextAlign.center,
+            )),
+          ],
         ),
         const SizedBox(height: Dimension.d3),
         Text(
