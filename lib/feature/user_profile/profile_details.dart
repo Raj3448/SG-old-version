@@ -253,7 +253,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           MultiSelectFormField(
                             controller: _genderController,
                             values: _genderItems,
-                            enabled: false,
                             selectedOptions: [
                               _genderItems[selectedGenderIndex!]
                             ],
@@ -273,7 +272,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           ),
                           const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Mobile Field'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           GestureDetector(
                             onTap: () {
@@ -302,9 +300,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             ),
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Email ID'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           GestureDetector(
                             onTap: () {
@@ -333,9 +329,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             ),
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Address'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           CustomTextField(
                             hintText: 'Address',
@@ -351,9 +345,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             },
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Country'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
                             controller: _countryController,
@@ -370,9 +362,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                 : [_countryItems[_selectedCountryIndex!]],
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'State'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           CustomTextField(
                             hintText: 'State',
@@ -388,9 +378,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             },
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'City'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           CustomTextField(
                             hintText: 'City',
@@ -406,9 +394,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             },
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Postal Code'),
-                          const SizedBox(height: Dimension.d2),
                           const SizedBox(height: Dimension.d2),
                           CustomTextField(
                             hintText: 'Postal Code',
@@ -423,8 +409,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: Dimension.d20),
-                          const SizedBox(height: Dimension.d5),
                           const SizedBox(height: Dimension.d20),
                           const SizedBox(height: Dimension.d5),
                         ],

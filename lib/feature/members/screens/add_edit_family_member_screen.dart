@@ -318,6 +318,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                     ? [_genderItems[selectedGenderIndex!]]
                                     : null,
                                 controller: genderContr,
+                                enabled: widget.isSelf ? false : true,
                                 values: _genderItems,
                                 validator: (value) {
                                   if (value == null) {
@@ -331,6 +332,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               DateDropdown(
                                 controller: dobContr,
+                                disable: widget.isSelf ? true : false,
                                 validator: (value) {
                                   if (value == null) {
                                     return 'Please select the DOB';
@@ -342,6 +344,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const AsteriskLabel(label: 'Relation'),
                               const SizedBox(height: 8),
                               MultiSelectFormField(
+                                enabled: !widget.isSelf ? true : false,
                                 selectedOptions: widget.isSelf
                                     ? [_relationList[7]]
                                     : widget.edit &&
@@ -387,6 +390,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   hintText: 'Enter mobile number',
                                   keyboardType: TextInputType.number,
                                   controller: phoneNumberContr,
+                                  isTextColorDisable:
+                                      widget.edit || widget.isSelf
+                                          ? true
+                                          : false,
                                   large: false,
                                   enabled: widget.edit || widget.isSelf
                                       ? false
@@ -423,6 +430,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 },
                                 child: CustomTextField(
                                   hintText: 'Enter email address',
+                                  isTextColorDisable:
+                                      widget.edit || widget.isSelf
+                                          ? true
+                                          : false,
                                   keyboardType: TextInputType.emailAddress,
                                   controller: emailContr,
                                   large: false,
