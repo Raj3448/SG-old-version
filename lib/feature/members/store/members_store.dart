@@ -273,11 +273,13 @@ extension MemberExtension on Member {
     }
 
     return [
-      address.streetAddress,
-      address.city,
-      address.state,
-      address.country,
-      address.postalCode,
-    ].where((part) => part != null && part.isNotEmpty).join(', ');
+      [
+        address.streetAddress,
+        address.city,
+        address.state,
+        address.country,
+      ].where((part) => part != null && part.isNotEmpty).join(', '),
+      address.postalCode
+    ].where((part) => part != null && part.isNotEmpty).join(' - ');
   }
 }
