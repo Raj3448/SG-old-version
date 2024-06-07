@@ -866,12 +866,10 @@ class _MemberInfo extends StatelessWidget {
                                 ? activeMember.phrModel!.id
                                 : null,
                           );
-                        } else if (memberStore.isActive == false ||
-                            activeMember?.relation == "Brother") {
+                        } else if (memberStore.isActive == false || activeMember != null||
+                            activeMember?.relation == 'Brother') {
                           return InactivePlanComponent(
-                            name: activeMember != null
-                                ? '${activeMember.firstName} ${activeMember.lastName}'
-                                : 'No active member',
+                            member: activeMember!,
                           );
                         } else {
                           return const SizedBox();

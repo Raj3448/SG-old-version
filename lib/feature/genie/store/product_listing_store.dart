@@ -27,6 +27,20 @@ abstract class _ProductListingStoreBase with Store {
               )
               .toList()
           : [];
+      
+  List<ProductBasicDetailsModel> getProdListRankOrder (List<ProductBasicDetailsModel> prodList){
+    return prodList
+        .where((element) =>
+            element.attributes.metadata.any((metadata) => metadata.key == 'rank'))
+        .toList()
+        ..sort((a, b) {
+          final aRank = a.attributes.metadata
+              .firstWhere((metadata) => metadata.key == 'rank').value;
+          final bRank = b.attributes.metadata
+              .firstWhere((metadata) => metadata.key == 'rank').value;
+          return aRank.compareTo(bRank);
+        });
+  }
 
   @computed
   List<ProductBasicDetailsModel> get getSubscriptProdList =>

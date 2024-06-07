@@ -123,6 +123,7 @@ class RelationDropdown extends StatelessWidget {
 class DateDropdown extends FormField<DateTime> {
   DateDropdown({
     required TextEditingController controller,
+    bool disable = false,
     super.key,
     super.onSaved,
     super.validator,
@@ -132,24 +133,28 @@ class DateDropdown extends FormField<DateTime> {
               : DateFormat('yyyy-MM-dd').parse(controller.text),
           builder: (FormFieldState<DateTime> state) {
             return GestureDetector(
-              onTap: () async {
-                final pickedDate = await showDatePicker(
-                  context: state.context,
-                  firstDate: DateTime(1950),
-                  lastDate: DateTime.now(),
-                  initialDate: state.value ?? DateTime.now(),
-                );
+              onTap: disable
+                  ? null
+                  : () async {
+                      final pickedDate = await showDatePicker(
+                        context: state.context,
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime.now(),
+                        initialDate: state.value ?? DateTime.now(),
+                      );
 
-                if (pickedDate != null && pickedDate != state.value) {
-                  state.didChange(pickedDate);
-                  controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-                }
-              },
+                      if (pickedDate != null && pickedDate != state.value) {
+                        state.didChange(pickedDate);
+                        controller.text =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                      }
+                    },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     decoration: BoxDecoration(
+                      color: disable ? AppColors.grayscale200 : null,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                           color: state.hasError
@@ -165,28 +170,34 @@ class DateDropdown extends FormField<DateTime> {
                             Expanded(
                               child: TextFormField(
                                 controller: controller,
-                                style: AppTextStyle.bodyLargeMedium
-                                    .copyWith(color: AppColors.grayscale900),
+                                style: AppTextStyle.bodyLargeMedium.copyWith(
+                                    color: disable
+                                        ? AppColors.grayscale700
+                                        : AppColors.grayscale900),
                                 decoration: const InputDecoration(
                                   hintText: 'Select',
                                   border: InputBorder.none,
                                 ),
                                 readOnly: true,
-                                onTap: () async {
-                                  final pickedDate = await showDatePicker(
-                                    context: state.context,
-                                    firstDate: DateTime(1950),
-                                    lastDate: DateTime.now(),
-                                    initialDate: state.value ?? DateTime.now(),
-                                  );
+                                onTap: disable
+                                    ? null
+                                    : () async {
+                                        final pickedDate = await showDatePicker(
+                                          context: state.context,
+                                          firstDate: DateTime(1950),
+                                          lastDate: DateTime.now(),
+                                          initialDate:
+                                              state.value ?? DateTime.now(),
+                                        );
 
-                                  if (pickedDate != null &&
-                                      pickedDate != state.value) {
-                                    state.didChange(pickedDate);
-                                    controller.text = DateFormat('yyyy-MM-dd')
-                                        .format(pickedDate);
-                                  }
-                                },
+                                        if (pickedDate != null &&
+                                            pickedDate != state.value) {
+                                          state.didChange(pickedDate);
+                                          controller.text =
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(pickedDate);
+                                        }
+                                      },
                               ),
                             ),
                             const SizedBox(width: 10),

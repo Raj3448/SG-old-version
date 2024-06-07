@@ -301,11 +301,10 @@ class ActivePlanComponent extends StatelessWidget {
 }
 
 class _UpgradeProdLisComponent extends StatelessWidget {
-  const _UpgradeProdLisComponent(
-      {required this.productBasicDetailsList, super.key});
+  _UpgradeProdLisComponent({required this.productBasicDetailsList, super.key});
 
   final List<ProductBasicDetailsModel> productBasicDetailsList;
-
+  final store = GetIt.I<ProductListingStore>();
   @override
   Widget build(BuildContext context) {
     return productBasicDetailsList.isEmpty
@@ -324,7 +323,8 @@ class _UpgradeProdLisComponent extends StatelessWidget {
               ),
               ProductListingCareComponent(
                 isUpgradable: true,
-                productBasicDetailsList: productBasicDetailsList,
+                productBasicDetailsList:
+                    store.getProdListRankOrder(productBasicDetailsList),
               ),
             ],
           );
