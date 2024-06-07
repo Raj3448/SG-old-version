@@ -403,7 +403,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _postalController,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter the postalcode';
+                                return 'Please enter your postal code';
+                              } else if (value.length > 6 || value.length < 6) {
+                                return 'Please enter 6 digits postal code';
                               }
                               return null;
                             },
