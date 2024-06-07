@@ -69,8 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Observer(
                     builder: (_) {
-                      if (memberStore.isLoading ||
-                          !productLStore.isProductLoaded) {
+                      if (memberStore.isLoading) {
                         return const SizedBox(
                           height: Dimension.d20,
                           child: Center(
