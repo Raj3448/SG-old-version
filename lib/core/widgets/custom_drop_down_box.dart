@@ -37,7 +37,6 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
           onTap: () {
             setState(() {
               isExpanding = !isExpanding;
-              print(isExpanding);
             });
           },
           child: Container(
@@ -93,6 +92,9 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
                                     : () {
                                         widget.updateMember(
                                             widget.memberList[index]);
+                                        setState(() {
+                                          isExpanding = !isExpanding;
+                                        });
                                       },
                                 child: _MemeberListTileComponent(
                                     disable: widget.selectedMembers.any(

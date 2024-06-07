@@ -20,16 +20,18 @@ class SubscriptionPkg extends StatelessWidget {
     required this.expanded,
     required this.type,
     this.buttonlabel,
-    this.colorCode,
+    this.iconColorCode,
     this.onTap,
     this.iconUrl,
+    this.backgroundColorCode,
     Key? key,
   }) : super(key: key);
 
   final bool expanded;
   final SubscriptionsType type;
   final String? buttonlabel;
-  final String? colorCode;
+  final String? iconColorCode;
+  final String? backgroundColorCode;
   void Function()? onTap;
   final String? iconUrl;
 
@@ -142,10 +144,12 @@ class SubscriptionPkg extends StatelessWidget {
             },
         child: Container(
           decoration: BoxDecoration(
-            color: getContainerColor(),
+            color: backgroundColorCode != null
+                ? Color(int.parse(backgroundColorCode!, radix: 16))
+                : getContainerColor(),
             border: Border.all(
-                color: colorCode != null
-                    ? Color(int.parse(colorCode!, radix: 16))
+                color: iconColorCode != null
+                    ? Color(int.parse(iconColorCode!, radix: 16))
                     : getContainerBorderColor()),
             borderRadius: BorderRadius.circular(getContainerBorderRadius()),
           ),
@@ -177,8 +181,8 @@ class SubscriptionPkg extends StatelessWidget {
                 const Spacer(),
                 Icon(
                   AppIcons.arrow_forward,
-                  color: colorCode != null
-                      ? Color(int.parse(colorCode!, radix: 16))
+                  color: iconColorCode != null
+                      ? Color(int.parse(iconColorCode!, radix: 16))
                       : getContainerBorderColor(),
                   size: 14,
                 ),

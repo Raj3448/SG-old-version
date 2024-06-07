@@ -113,51 +113,62 @@ class InactivePlanComponent extends StatelessWidget {
 class ProductListingCareComponent extends StatelessWidget {
   final List<ProductBasicDetailsModel> productBasicDetailsList;
   final bool isUpgradable;
+
   ProductListingCareComponent({
     required this.productBasicDetailsList,
     required this.isUpgradable,
     super.key,
   });
 
-  List<Widget> btnWidgetList = [];
-  void initializeWidget(BuildContext context) {
-    btnWidgetList = List.generate(
-      productBasicDetailsList.length,
-      (index) => Padding(
+  SubscriptionsType _getSubscriptionType(String name) {
+    switch (name) {
+      case 'Companion Genie':
+        return SubscriptionsType.companion;
+      case 'Wellness Genie':
+        return SubscriptionsType.wellness;
+      default:
+        return SubscriptionsType.emergency;
+    }
+  }
+
+  String _getMetadataValue(List<Metadatum> metadata, String key) {
+    return metadata.firstWhere(
+      (element) => element.key == key,
+      orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
+    ).value;
+  }
+
+  List<Widget> _buildBtnWidgetList(BuildContext context) {
+    return productBasicDetailsList.map((product) {
+      return Padding(
         padding: const EdgeInsets.only(top: Dimension.d2),
         child: SubscriptionPkg(
           expanded: true,
-          type: SubscriptionsType.companion,
-          buttonlabel: productBasicDetailsList[index].attributes.name,
-          colorCode:
-              productBasicDetailsList[index].attributes.metadata.first.value,
-          iconUrl: productBasicDetailsList[index]
-              .attributes
-              .icon
-              .data
-              .attributes
-              .url,
+          type: _getSubscriptionType(product.attributes.name),
+          buttonlabel: product.attributes.name,
+          iconColorCode: _getMetadataValue(product.attributes.metadata, 'icon_color_code'),
+          backgroundColorCode: _getMetadataValue(product.attributes.metadata, 'background_color_code'),
+          iconUrl: product.attributes.icon.data.attributes.url,
           onTap: () {
             GoRouter.of(context).pushNamed(
               RoutesConstants.geniePage,
               pathParameters: {
-                'pageTitle': productBasicDetailsList[index].attributes.name,
-                'id': productBasicDetailsList[index].id.toString(),
-                'isUpgradble': isUpgradable.toString(),
+                'pageTitle': product.attributes.name,
+                'id': product.id.toString(),
+                'isUpgradable': isUpgradable.toString(),
               },
             );
           },
         ),
-      ),
-    );
+      );
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    initializeWidget(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [...btnWidgetList],
+      children: _buildBtnWidgetList(context),
     );
   }
 }

@@ -109,7 +109,6 @@ abstract class _ProductListingStoreBase with Store {
           socketException: (value) => getProductFailure = 'No Internet',
           orElse: () {
             getProductFailure = 'Something went wrong';
-            print('I am failure to fetch product');
           },
         );
       }, (r) {

@@ -142,14 +142,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
-      GetIt.instance.registerLazySingleton(
-        () => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()),
-      );
-      GetIt.instance.registerLazySingleton(
-        () => ProductListingStore(
-          productListingService: GetIt.I<ProductLisitingServices>(),
-        )..initGetProductBasicDetails(),
-      );
+      GetIt.instance.registerLazySingleton(() => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(() => ProductListingStore(productListingService: GetIt.I<ProductLisitingServices>()));
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 

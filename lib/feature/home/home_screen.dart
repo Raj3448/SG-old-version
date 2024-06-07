@@ -23,6 +23,7 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
@@ -40,6 +41,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final MembersStore memberStore;
+  late final productLStore = GetIt.I<ProductListingStore>();
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Observer(
                     builder: (_) {
-                      if (memberStore.isLoading) {
+                      if (memberStore.isLoading ||
+                          !productLStore.isProductLoaded) {
                         return const SizedBox(
                           height: Dimension.d20,
                           child: Center(
