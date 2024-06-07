@@ -364,18 +364,23 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
                         titleName:
                             '${index + 1}. ${widget.userInsurance![index].contactPerson}',
                         assignedElements: widget.userInsurance![index],
+                        isLast: index == widget.userInsurance!.length - 1,
                       )
                     : (widget.preferredServices != null)
                         ? _PreferredServiceComponent(
                             titleName:
                                 '${index + 1}. ${widget.preferredServices![index].name}',
                             assignedElements: widget.preferredServices![index],
+                            isLast:
+                                index == widget.preferredServices!.length - 1,
                           )
                         : _EmergencyContactComponent(
                             titleName:
                                 '${index + 1}. ${widget.emrgencyContactList![index].contactPersonName}',
                             assignedElements:
                                 widget.emrgencyContactList![index],
+                            isLast:
+                                index == widget.emrgencyContactList!.length - 1,
                           ),
               ),
             ),
@@ -392,11 +397,12 @@ class _UserInsuranceComponent extends StatelessWidget {
   const _UserInsuranceComponent({
     required this.titleName,
     required this.assignedElements,
+    required this.isLast,
     Key? key,
   }) : super(key: key);
 
   final UserInsurance assignedElements;
-
+  final bool isLast;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -424,9 +430,10 @@ class _UserInsuranceComponent extends StatelessWidget {
             name: 'Contact Of Address',
             initializeElement: assignedElements.insuranceProvider!,
           ),
-          const Divider(
-            color: AppColors.grayscale300,
-          ),
+          if (!isLast)
+            const Divider(
+              color: AppColors.grayscale300,
+            ),
         ],
       ),
     );
@@ -439,11 +446,12 @@ class _EmergencyContactComponent extends StatelessWidget {
   const _EmergencyContactComponent({
     required this.titleName,
     required this.assignedElements,
+    required this.isLast,
     Key? key,
   }) : super(key: key);
 
   final EmergencyContact assignedElements;
-
+  final bool isLast;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -472,9 +480,10 @@ class _EmergencyContactComponent extends StatelessWidget {
             name: 'Contact Of Address',
             initializeElement: assignedElements.country!,
           ),
-          const Divider(
-            color: AppColors.grayscale300,
-          ),
+          if (!isLast)
+            const Divider(
+              color: AppColors.grayscale300,
+            ),
         ],
       ),
     );
@@ -487,11 +496,12 @@ class _PreferredServiceComponent extends StatelessWidget {
   const _PreferredServiceComponent({
     required this.titleName,
     required this.assignedElements,
+    required this.isLast,
     Key? key,
   }) : super(key: key);
 
   final PreferredService assignedElements;
-
+  final bool isLast;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -518,9 +528,10 @@ class _PreferredServiceComponent extends StatelessWidget {
                 ? assignedElements.ambulanceContact as String
                 : 'N/A',
           ),
-          const Divider(
-            color: AppColors.grayscale300,
-          ),
+          if (!isLast)
+            const Divider(
+              color: AppColors.grayscale300,
+            ),
         ],
       ),
     );

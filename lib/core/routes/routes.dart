@@ -285,13 +285,13 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/geniePage/:pageTitle/:id/:isUpgradble',
+      path: '/geniePage/:pageTitle/:id/:isUpgradable',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
         final id = state.pathParameters['id'] ?? '';
         final isUpgradbleString =
-            state.pathParameters['isUpgradble'] ?? 'false';
+            state.pathParameters['isUpgradable'] ?? 'false';
         final isUpgradble = isUpgradbleString.toLowerCase() == 'true';
 
         return MaterialPage(

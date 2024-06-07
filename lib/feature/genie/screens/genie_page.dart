@@ -139,8 +139,26 @@ class GeniePage extends StatelessWidget {
                                 .exploreCouplePlansHeading!,
                             imgPath: productListingModel!
                                 .product.icon.data.attributes.url,
-                            colorCode: productListingModel!
-                                .product.metadata.first.value,
+                            backgroundColor: productListingModel!
+                                .product.metadata
+                                .firstWhere(
+                                  (element) =>
+                                      element.key == 'background_color_code',
+                                  orElse: () => const Metadatum(
+                                      id: 1,
+                                      key: 'background_color_code',
+                                      value: 'FFFDFDFD'),
+                                )
+                                .value,
+                            iconColorCode: productListingModel!.product.metadata
+                                .firstWhere(
+                                  (element) => element.key == 'icon_color_code',
+                                  orElse: () => const Metadatum(
+                                      id: 1,
+                                      key: 'icon_color_code',
+                                      value: 'FFFDFDFD'),
+                                )
+                                .value,
                             plansList: services.getPlansforCouple(
                               productListingModel!.product.prices,
                             ),

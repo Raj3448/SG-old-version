@@ -253,7 +253,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           MultiSelectFormField(
                             controller: _genderController,
                             values: _genderItems,
-                            selectedOptions: [_genderItems[selectedGenderIndex!]],
+                            enabled: false,
+                            selectedOptions: [
+                              _genderItems[selectedGenderIndex!]
+                            ],
                             validator: (selectedItems) {
                               if (selectedItems == null) {
                                 return 'Please select a gender';
@@ -264,7 +267,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Date of birth'),
                           const SizedBox(height: Dimension.d2),
-                          DateDropdown(controller: _dobController),
+                          DateDropdown(
+                            controller: _dobController,
+                            disable: true,
+                          ),
                           const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Mobile Field'),
                           const SizedBox(height: Dimension.d2),
@@ -358,7 +364,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               }
                               return null;
                             },
-                            selectedOptions: _selectedCountryIndex == -1 || _selectedCountryIndex == null
+                            selectedOptions: _selectedCountryIndex == -1 ||
+                                    _selectedCountryIndex == null
                                 ? null
                                 : [_countryItems[_selectedCountryIndex!]],
                           ),

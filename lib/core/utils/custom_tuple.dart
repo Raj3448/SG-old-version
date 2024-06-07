@@ -3,5 +3,5 @@ class Tuple3<A, B, C> {
   final B item2;
   final C item3;
 
-  Tuple3(this.item1, this.item2, this.item3);
+  const Tuple3(this.item1, this.item2,this.item3);
 }
