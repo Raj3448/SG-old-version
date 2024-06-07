@@ -268,7 +268,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d2),
                           DateDropdown(
                             controller: _dobController,
-                            disable: true,
                           ),
                           const SizedBox(height: Dimension.d4),
                           const AsteriskLabel(label: 'Mobile Field'),

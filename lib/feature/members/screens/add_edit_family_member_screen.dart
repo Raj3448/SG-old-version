@@ -284,6 +284,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: firstNameContr,
                                 large: false,
+                                isTextColorDisable:
+                                    widget.isSelf ? true : false,
                                 enabled: widget.isSelf ? false : true,
                                 onChanged: (value) =>
                                     firstNameContr.text = value,
@@ -302,6 +304,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: lastNameContr,
                                 large: false,
+                                isTextColorDisable:
+                                    widget.isSelf ? true : false,
                                 enabled: widget.isSelf ? false : true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
@@ -318,7 +322,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                     ? [_genderItems[selectedGenderIndex!]]
                                     : null,
                                 controller: genderContr,
-                                enabled: widget.isSelf ? false : true,
                                 values: _genderItems,
                                 validator: (value) {
                                   if (value == null) {
@@ -332,7 +335,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               DateDropdown(
                                 controller: dobContr,
-                                disable: widget.isSelf ? true : false,
                                 validator: (value) {
                                   if (value == null) {
                                     return 'Please select the DOB';
