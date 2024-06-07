@@ -196,6 +196,7 @@ class _HeaderPicTitle extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl:
                       '${Env.serverUrl}${headerModel.serviceImage.data.attributes.url}',
+                  fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(height: Dimension.d4),
