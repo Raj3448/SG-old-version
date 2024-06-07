@@ -400,15 +400,18 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   enabled: widget.edit || widget.isSelf
                                       ? false
                                       : true,
-                                  validationLogic: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your phone number';
-                                    } else if (value.length > 10 ||
-                                        value.length < 10) {
-                                      return 'Please enter 10 digits phone number';
-                                    }
-                                    return null;
-                                  },
+                                  validationLogic:
+                                      (widget.edit || widget.isSelf)
+                                          ? null
+                                          : (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Please enter your phone number';
+                                              } else if (value.length > 10 ||
+                                                  value.length < 10) {
+                                                return 'Please enter 10 digits phone number';
+                                              }
+                                              return null;
+                                            },
                                 ),
                               ),
                               const SizedBox(height: 16),
