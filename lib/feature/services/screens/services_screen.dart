@@ -105,6 +105,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
+                          )
+                        else
+                          NoServiceFound(
+                            title: 'Home Care',
+                            ontap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isConvenience': 'false',
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                },
+                              );
+                            },
+                            showTitle: true,
                           ),
                         if (healthCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -120,6 +135,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
+                          )
+                        else
+                          NoServiceFound(
+                            title: 'Health Care',
+                            ontap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isConvenience': 'false',
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                },
+                              );
+                            },
+                            showTitle: true,
                           ),
                         if (convenienceCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -135,6 +165,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
+                          )
+                        else
+                          NoServiceFound(
+                            title: 'Convenience Care',
+                            ontap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isConvenience': 'false',
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                },
+                              );
+                            },
+                            showTitle: true,
                           ),
                       ],
                     )
@@ -146,6 +191,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       getTitle: (value) => value.attributes.name,
                       getSubtitle: (value) =>
                           value.attributes.metadata.first.value,
+                    ),
+                  if (displayedServices.isEmpty &&
+                      textEditingController.text.isNotEmpty)
+                    NoServiceFound(
+                      title: '',
+                      ontap: () {},
+                      showTitle: false,
                     ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -320,6 +372,45 @@ class ServicesListTileComponent extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class NoServiceFound extends StatelessWidget {
+  const NoServiceFound({
+    required this.title,
+    required this.ontap,
+    required this.showTitle,
+    super.key,
+  });
+
+  final String title;
+  final VoidCallback ontap;
+  final bool showTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          if (showTitle)
+            _TitleViewAll(title: title, ontap: ontap)
+          else
+            const SizedBox(),
+          Image.asset('assets/icon/empty.png'),
+          const Text(
+            'Nothing found',
+            style: AppTextStyle.heading5Bold,
+          ),
+          const SizedBox(height: Dimension.d2),
+          Text(
+            'No services found!',
+            style: AppTextStyle.bodyLargeMedium
+                .copyWith(color: AppColors.grayscale800),
+          ),
+          const SizedBox(height: Dimension.d4),
+        ],
       ),
     );
   }
