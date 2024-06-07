@@ -25,9 +25,6 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   bool? hasGotProductSuccesfully;
 
-  @observable
-  ProductListingModel? selectedProduct;
-
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
@@ -120,18 +117,5 @@ abstract class _ProductListingStoreBase with Store {
       });
       fetchProductLoading = false;
     });
-  }
-
-  @action
-  Future<void> fetchProductById(String id) async {
-    fetchProductLoading = true;
-    final result = await productListingService.getProductById(id: id);
-    result.fold((l) {
-      getProductFailure = 'Failed to load service!';
-      selectedProduct = null;
-    }, (r) {
-      selectedProduct = r;
-    });
-    fetchProductLoading = false;
   }
 }

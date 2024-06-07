@@ -75,20 +75,6 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
     });
   }
 
-  void onServiceTap(String id) {
-    store.fetchProductById(id).then((_) {
-      if (store.selectedProduct != null) {
-        GoRouter.of(context).pushNamed(
-          RoutesConstants.serviceDetailsScreen,
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(store.getProductFailure ?? 'Error')),
-        );
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +104,12 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      onServiceTap('${displayedServices[index].id}');
+                      context.pushNamed(
+                        RoutesConstants.serviceDetailsScreen,
+                        pathParameters: {
+                          'id': '${displayedServices[index].id}',
+                        },
+                      );
                     },
                     child: ServicesListTileComponent(
                       imagePath: displayedServices[index]

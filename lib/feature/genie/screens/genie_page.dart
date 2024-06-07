@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +12,6 @@ import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/dummy_variables.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
@@ -45,12 +46,14 @@ class GeniePage extends StatelessWidget {
                 }
                 if (snapshot.hasError || !snapshot.hasData) {
                   return const ErrorStateComponent(
-                      errorType: ErrorType.somethinWentWrong);
+                    errorType: ErrorType.somethinWentWrong,
+                  );
                 }
                 ProductListingModel? productListingModel;
                 snapshot.data!.fold((l) {
                   return const ErrorStateComponent(
-                      errorType: ErrorType.somethinWentWrong);
+                    errorType: ErrorType.somethinWentWrong,
+                  );
                 }, (r) {
                   productListingModel = r;
                 });
@@ -58,7 +61,8 @@ class GeniePage extends StatelessWidget {
                 if (productListingModel == null ||
                     productListingModel!.product.subscriptionContent == null) {
                   return const ErrorStateComponent(
-                      errorType: ErrorType.somethinWentWrong);
+                    errorType: ErrorType.somethinWentWrong,
+                  );
                 }
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
@@ -94,7 +98,8 @@ class GeniePage extends StatelessWidget {
                           planName: productListingModel!
                               .product.subscriptionContent!.mainHeading,
                           pricingDetailsList: services.getPlansforNonCouple(
-                              productListingModel!.product.prices),
+                            productListingModel!.product.prices,
+                          ),
                           onSelect: (Price) {},
                         ),
                         CustomButton(
@@ -137,7 +142,8 @@ class GeniePage extends StatelessWidget {
                             colorCode: productListingModel!
                                 .product.metadata.first.value,
                             plansList: services.getPlansforCouple(
-                                productListingModel!.product.prices),
+                              productListingModel!.product.prices,
+                            ),
                           ),
                         FAQComponent(
                           heading: productListingModel!

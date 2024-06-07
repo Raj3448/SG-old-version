@@ -59,20 +59,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
     });
   }
 
-  void onServiceTap(String id) {
-    store.fetchProductById(id).then((_) {
-      if (store.selectedProduct != null) {
-        GoRouter.of(context).pushNamed(
-          RoutesConstants.serviceDetailsScreen,
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(store.getProductFailure ?? 'Error')),
-        );
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +105,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
-                            onServiceTap: onServiceTap,
                           ),
                         if (healthCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -135,7 +120,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
-                            onServiceTap: onServiceTap,
                           ),
                         if (convenienceCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -151,7 +135,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 },
                               );
                             },
-                            onServiceTap: onServiceTap,
                           ),
                       ],
                     )
@@ -163,7 +146,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       getTitle: (value) => value.attributes.name,
                       getSubtitle: (value) =>
                           value.attributes.metadata.first.value,
-                      onServiceTap: onServiceTap,
                     ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -181,13 +163,11 @@ class _ServiceCategorySection extends StatelessWidget {
     required this.title,
     required this.services,
     required this.onTapViewAll,
-    required this.onServiceTap,
   });
 
   final String title;
   final List<ProductBasicDetailsModel> services;
   final VoidCallback onTapViewAll;
-  final void Function(String) onServiceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +182,6 @@ class _ServiceCategorySection extends StatelessWidget {
           getImagePath: (value) => value.attributes.icon.data.attributes.url,
           getTitle: (value) => value.attributes.name,
           getSubtitle: (value) => value.attributes.metadata.first.value,
-          onServiceTap: onServiceTap,
         ),
       ],
     );
@@ -244,14 +223,12 @@ class _ServiceListView extends StatelessWidget {
     required this.getImagePath,
     required this.getTitle,
     required this.getSubtitle,
-    required this.onServiceTap,
   });
 
   final List<ProductBasicDetailsModel> services;
   final String Function(ProductBasicDetailsModel) getImagePath;
   final String Function(ProductBasicDetailsModel) getTitle;
   final String Function(ProductBasicDetailsModel) getSubtitle;
-  final void Function(String) onServiceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +239,12 @@ class _ServiceListView extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            onServiceTap('${services[index].id}');
+            context.pushNamed(
+              RoutesConstants.serviceDetailsScreen,
+              pathParameters: {
+                'id': '${services[index].id}',
+              },
+            );
           },
           child: ServicesListTileComponent(
             imagePath: getImagePath(services[index]),

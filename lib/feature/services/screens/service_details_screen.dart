@@ -2,92 +2,170 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
-import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
-class ServiceDetailsScreen extends StatefulWidget {
-  const ServiceDetailsScreen({super.key});
+class ServiceDetailsScreen extends StatelessWidget {
+  const ServiceDetailsScreen({
+    required this.id,
+    super.key,
+  });
 
-  @override
-  State<ServiceDetailsScreen> createState() => _ServiceDetailsScreenState();
-}
-
-class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
-  final store = GetIt.I<ProductListingStore>();
-  late final serviceData = store.selectedProduct!.product;
-  List<dynamic> allServiceList = [];
-
-  @override
-  void initState() {
-    for (final component in serviceData.serviceContent!) {
-      if (component['__component'] ==
-          'service-components.service-description') {
-        allServiceList.add(
-          HeaderModel.fromJson(component as Map<String, dynamic>),
-        );
-      }
-      if (component['__component'] == 'service-components.offerings') {
-        allServiceList.add(
-          ServiceOfferingModel.fromJson(
-            component as Map<String, dynamic>,
-          ),
-        );
-      }
-      if (component['__component'] == 'service-components.service-faq') {
-        allServiceList.add(
-          FaqModelDetails.fromJson(
-            component as Map<String, dynamic>,
-          ),
-        );
-      }
-    }
-    super.initState();
-  }
+  final String id;
 
   @override
   Widget build(BuildContext context) {
-    final widgetList = <Widget>[];
-    for (final component in allServiceList) {
-      if (component is HeaderModel) {
-        widgetList.add(
-          _HeaderPicTitle(headerModel: component),
-        );
-        continue;
-      }
-      if (component is ServiceOfferingModel) {
-        widgetList.add(
-          _Offerings(serviceOfferingModel: component),
-        );
-        continue;
-      }
-      if (component is FaqModelDetails) {
-        widgetList.add(
-          FAQComponent(heading: component.label, faqList: component.faq),
-        );
-        continue;
-      }
-    }
+    final service = GetIt.I<ProductLisitingServices>();
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: PageAppbar(title: serviceData.name),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...widgetList,
-            ],
-          ),
-        ),
+      appBar: const PageAppbar(title: 'Service Details'),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: FutureBuilder<Either<Failure, ProductListingModel>>(
+        future: service.getProductById(id: id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return const Center(child: Text('An error occurred'));
+          }
+          if (snapshot.hasData) {
+            final data = snapshot.data!;
+            return data.fold(
+              (failure) => const Center(child: Text('Failed to load data')),
+              (product) {
+                final serviceData = product.product;
+                final allServiceList = <dynamic>[];
+
+                for (final component in serviceData.serviceContent!) {
+                  if (component['__component'] ==
+                      'service-components.service-description') {
+                    allServiceList.add(
+                      HeaderModel.fromJson(
+                        component as Map<String, dynamic>,
+                      ),
+                    );
+                  }
+                  if (component['__component'] ==
+                      'service-components.offerings') {
+                    allServiceList.add(
+                      ServiceOfferingModel.fromJson(
+                        component as Map<String, dynamic>,
+                      ),
+                    );
+                  }
+                  if (component['__component'] ==
+                      'service-components.service-faq') {
+                    allServiceList.add(
+                      FaqModelDetails.fromJson(
+                        component as Map<String, dynamic>,
+                      ),
+                    );
+                  }
+                }
+
+                final widgetList = <Widget>[];
+                for (final component in allServiceList) {
+                  if (component is HeaderModel) {
+                    widgetList.add(_HeaderPicTitle(headerModel: component));
+                    continue;
+                  }
+                  if (component is ServiceOfferingModel) {
+                    widgetList.add(_Offerings(serviceOfferingModel: component));
+                    continue;
+                  }
+                  if (component is FaqModelDetails) {
+                    widgetList.add(
+                      FAQComponent(
+                        heading: component.label,
+                        faqList: component.faq,
+                      ),
+                    );
+                    continue;
+                  }
+                }
+
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: widgetList,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (serviceData.category == 'homeCare')
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, -4),
+                              blurRadius: 4,
+                              color: AppColors.black.withOpacity(0.15),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomButton(
+                              ontap: () {},
+                              title: 'Request call back',
+                              showIcon: false,
+                              iconPath: AppIcons.add,
+                              size: ButtonSize.normal,
+                              type: ButtonType.secondary,
+                              expanded: false,
+                              iconColor: AppColors.primary,
+                            ),
+                            CustomButton(
+                              ontap: () {},
+                              title: 'Book now',
+                              showIcon: false,
+                              iconPath: AppIcons.add,
+                              size: ButtonSize.normal,
+                              type: ButtonType.primary,
+                              expanded: false,
+                              iconColor: AppColors.primary,
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      FixedButton(
+                        ontap: () {},
+                        btnTitle: 'Book appointment',
+                        showIcon: false,
+                        iconPath: AppIcons.add,
+                      ),
+                  ],
+                );
+              },
+            );
+          }
+          return const Center(child: Text('No data found'));
+        },
       ),
     );
   }
@@ -170,10 +248,10 @@ class _OfferTile extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
+        const Column(
           children: [
-            const SizedBox(height: 6),
-            const Icon(
+            SizedBox(height: 6),
+            Icon(
               AppIcons.check,
               color: AppColors.primary,
               size: 12,
