@@ -9,10 +9,13 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class IconTextComponent extends StatelessWidget {
   const IconTextComponent({required this.text, super.key});
@@ -50,9 +53,9 @@ class IconTextComponent extends StatelessWidget {
 }
 
 class InactivePlanComponent extends StatelessWidget {
-  InactivePlanComponent({required this.name, super.key});
+  InactivePlanComponent({required this.member, super.key});
   final store = GetIt.I<ProductListingStore>();
-  final String name;
+  Member member;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,7 @@ class InactivePlanComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  name,
+                  member.name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
                 SubscriptionPkg(
@@ -82,13 +85,15 @@ class InactivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d1,
             ),
-            const Row(
+            Row(
               children: [
-                AnalogComponent(text1: 'Relation', text2: 'Mother'),
-                SizedBox(
+                AnalogComponent(text1: 'Relation', text2: member.relation),
+                const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(text1: 'Age', text2: '65'),
+                AnalogComponent(
+                    text1: 'Age',
+                    text2: calculateAge(member.dateOfBirth).toString()),
               ],
             ),
             const SizedBox(height: Dimension.d3),
@@ -100,7 +105,8 @@ class InactivePlanComponent extends StatelessWidget {
               ),
             if (store.getSubscriptActiveProdList.isNotEmpty)
               ProductListingCareComponent(
-                productBasicDetailsList: store.getSubscriptActiveProdList,
+                productBasicDetailsList: store
+                    .getProdListRankOrder(store.getSubscriptActiveProdList),
                 isUpgradable: false,
               ),
           ],
@@ -132,10 +138,12 @@ class ProductListingCareComponent extends StatelessWidget {
   }
 
   String _getMetadataValue(List<Metadatum> metadata, String key) {
-    return metadata.firstWhere(
-      (element) => element.key == key,
-      orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
-    ).value;
+    return metadata
+        .firstWhere(
+          (element) => element.key == key,
+          orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
+        )
+        .value;
   }
 
   List<Widget> _buildBtnWidgetList(BuildContext context) {
@@ -146,8 +154,10 @@ class ProductListingCareComponent extends StatelessWidget {
           expanded: true,
           type: _getSubscriptionType(product.attributes.name),
           buttonlabel: product.attributes.name,
-          iconColorCode: _getMetadataValue(product.attributes.metadata, 'icon_color_code'),
-          backgroundColorCode: _getMetadataValue(product.attributes.metadata, 'background_color_code'),
+          iconColorCode:
+              _getMetadataValue(product.attributes.metadata, 'icon_color_code'),
+          backgroundColorCode: _getMetadataValue(
+              product.attributes.metadata, 'background_color_code'),
           iconUrl: product.attributes.icon.data.attributes.url,
           onTap: () {
             GoRouter.of(context).pushNamed(

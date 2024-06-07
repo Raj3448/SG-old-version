@@ -41,7 +41,6 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
 
         if (isAuthenticated) {
           await GetIt.I<UserDetailStore>().fetchUserDetailsFromCache();
-          productStore.initGetProductBasicDetails();
         }
 
         if (isHomepageDataLoaded && mounted) {
