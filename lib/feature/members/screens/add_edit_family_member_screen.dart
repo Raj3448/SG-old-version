@@ -402,7 +402,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                       : true,
                                   validationLogic: (value) {
                                     if (value!.isEmpty) {
-                                      return 'Please enter your mobile number';
+                                      return 'Please enter your phone number';
+                                    } else if (value.length > 10 ||
+                                        value.length < 10) {
+                                      return 'Please enter 10 digits phone number';
                                     }
                                     return null;
                                   },
@@ -530,7 +533,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 enabled: true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Please enter postal code';
+                                    return 'Please enter your postal code';
+                                  } else if (value.length > 6 ||
+                                      value.length < 6) {
+                                    return 'Please enter 6 digits postal code';
                                   }
                                   return null;
                                 },
