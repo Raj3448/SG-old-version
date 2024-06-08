@@ -284,8 +284,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: firstNameContr,
                                 large: false,
-                                isTextColorDisable:
-                                    widget.isSelf ? true : false,
                                 enabled: widget.isSelf ? false : true,
                                 onChanged: (value) =>
                                     firstNameContr.text = value,
@@ -304,8 +302,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: lastNameContr,
                                 large: false,
-                                isTextColorDisable:
-                                    widget.isSelf ? true : false,
                                 enabled: widget.isSelf ? false : true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
@@ -392,10 +388,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   hintText: 'Enter mobile number',
                                   keyboardType: TextInputType.number,
                                   controller: phoneNumberContr,
-                                  isTextColorDisable:
-                                      widget.edit || widget.isSelf
-                                          ? true
-                                          : false,
                                   large: false,
                                   enabled: widget.edit || widget.isSelf
                                       ? false
@@ -438,10 +430,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 },
                                 child: CustomTextField(
                                   hintText: 'Enter email address',
-                                  isTextColorDisable:
-                                      widget.edit || widget.isSelf
-                                          ? true
-                                          : false,
                                   keyboardType: TextInputType.emailAddress,
                                   controller: emailContr,
                                   large: false,
