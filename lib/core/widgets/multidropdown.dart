@@ -14,10 +14,12 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
     required List<ValueItem> values,
     super.key,
     MultiSelectController? controller,
+    bool searchEnabled = false,
     List<ValueItem<dynamic>>? selectedOptions,
     super.onSaved,
     super.validator,
     bool enabled = true,
+    bool showClear = true,
   }) : super(
           initialValue: selectedOptions,
           builder: (FormFieldState<List<ValueItem<dynamic>>> state) {
@@ -30,7 +32,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     color: !enabled ? AppColors.grayscale200 : null,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: state.hasError
+                        color: state.hasError && !state.isValid
                             ? Color(0xFF9E2F27)
                             : AppColors.line),
                   ),
@@ -38,6 +40,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                   child: IgnorePointer(
                     ignoring: !enabled,
                     child: MultiSelectDropDown(
+                      searchEnabled: searchEnabled,
                       controller: controller,
                       onOptionSelected: (selectedOptions) {
                         state.didChange(selectedOptions);
@@ -62,11 +65,13 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                         color: AppColors.primary,
                         size: 15,
                       ),
-                      clearIcon: const Icon(
-                        Icons.clear_outlined,
-                        color: AppColors.grayscale700,
-                        size: 20,
-                      ),
+                      clearIcon: showClear
+                          ? const Icon(
+                              Icons.clear_outlined,
+                              color: AppColors.grayscale700,
+                              size: 20,
+                            )
+                          : null,
                       suffixIcon: const Icon(
                         AppIcons.arrow_down_ios,
                         color: AppColors.grayscale700,
@@ -76,7 +81,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     ),
                   ),
                 ),
-                if (state.hasError)
+                if (state.errorText != null && !state.isValid)
                   Padding(
                     padding: const EdgeInsets.only(
                         top: Dimension.d2, left: Dimension.d4),
@@ -157,7 +162,7 @@ class DateDropdown extends FormField<DateTime> {
                       color: disable ? AppColors.grayscale200 : null,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: state.hasError
+                          color: state.hasError && !state.isValid
                               ? Color(0xFF9E2F27)
                               : AppColors.grayscale300),
                     ),
@@ -211,7 +216,7 @@ class DateDropdown extends FormField<DateTime> {
                       ],
                     ),
                   ),
-                  if (state.hasError)
+                  if (state.errorText != null && !state.isValid)
                     Padding(
                       padding: const EdgeInsets.only(
                           top: Dimension.d2, left: Dimension.d4),

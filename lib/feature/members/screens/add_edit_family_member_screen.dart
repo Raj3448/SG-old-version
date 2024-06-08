@@ -314,6 +314,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const AsteriskLabel(label: 'Gender'),
                               const SizedBox(height: 8),
                               MultiSelectFormField(
+                                showClear: false,
                                 selectedOptions: widget.edit
                                     ? [_genderItems[selectedGenderIndex!]]
                                     : null,
@@ -343,6 +344,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 enabled: !widget.isSelf ? true : false,
+                                showClear: false,
                                 selectedOptions: widget.isSelf
                                     ? [_relationList[7]]
                                     : widget.edit &&
@@ -469,6 +471,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 controller: countryContr,
+                                searchEnabled: true,
+                                showClear: false,
                                 values: _countryItems,
                                 validator: (selectedItems) {
                                   if (selectedItems == null) {
