@@ -13,7 +13,7 @@ class CustomDropDownBox extends StatefulWidget {
   final List<Member> memberList;
   final String? memberName;
   List<Member> selectedMembers = [];
-  void Function(Member) updateMember;
+  void Function(Member?) updateMember;
   CustomDropDownBox({
     required this.memberList,
     required this.updateMember,
@@ -23,11 +23,17 @@ class CustomDropDownBox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CustomDropDownBox> createState() => _CustomDropDownBoxState();
+  State<CustomDropDownBox> createState() => CustomDropDownBoxState();
 }
 
-class _CustomDropDownBoxState extends State<CustomDropDownBox> {
+class CustomDropDownBoxState extends State<CustomDropDownBox> {
   bool isExpanding = false;
+
+  void disableDropDownList() {
+    setState(() {
+      isExpanding = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +69,11 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
         ),
         Container(
           width: double.infinity,
-          height: isExpanding ? 210 : 0,
+          height: isExpanding
+              ? ((widget.memberList.length > 4)
+                  ? 210
+                  : widget.memberList.length * 54)
+              : 0,
           constraints: const BoxConstraints(minHeight: 1),
           padding: const EdgeInsets.only(bottom: Dimension.d2),
           decoration: isExpanding
@@ -88,7 +98,12 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
                                         (selectedMember) =>
                                             selectedMember.id ==
                                             widget.memberList[index].id)
-                                    ? null
+                                    ? () {
+                                        widget.updateMember(null);
+                                        setState(() {
+                                          isExpanding = !isExpanding;
+                                        });
+                                      }
                                     : () {
                                         widget.updateMember(
                                             widget.memberList[index]);

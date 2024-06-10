@@ -32,8 +32,17 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
   Member? member2;
   Price? planDetails;
   final store = GetIt.I<MembersStore>();
+  late GlobalKey<CustomDropDownBoxState> customDropDownBox1Key;
+  late GlobalKey<CustomDropDownBoxState> customDropDownBox2Key;
 
-  void _updateMember(Member member, bool isFirstMember) {
+  @override
+  void initState() {
+    super.initState();
+    customDropDownBox1Key = GlobalKey<CustomDropDownBoxState>();
+    customDropDownBox2Key = GlobalKey<CustomDropDownBoxState>();
+  }
+
+  void _updateMember(Member? member, bool isFirstMember) {
     setState(() {
       if (isFirstMember) {
         member1 = member;
@@ -49,54 +58,72 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
     });
   }
 
+  void disableDropDownLists() {
+    customDropDownBox1Key.currentState?.disableDropDownList();
+    customDropDownBox2Key.currentState?.disableDropDownList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PageAppbar(title: widget.pageTitle),
       backgroundColor: AppColors.white,
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PlanPricingDetailsComponent(
-                planName: widget.pageTitle,
-                pricingDetailsList: widget.planList,
-                onSelect: _updatePlan,
-              ),
-              _buildMemberSelectionText('1. Select family member'),
-              CustomDropDownBox(
-                selectedMembers: _getSelectedMembers(),
-                memberName: member1?.name,
-                memberList: store.members,
-                updateMember: (member) => _updateMember(member, true),
-              ),
-              _buildMemberSelectionText('2. Select another family member'),
-              CustomDropDownBox(
-                selectedMembers: _getSelectedMembers(),
-                memberName: member2?.name,
-                memberList: store.members,
-                updateMember: (member) => _updateMember(member, false),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
-                child: CustomButton(
-                  ontap: (member1 == null || member2 == null || planDetails == null)
-                      ? null
-                      : _bookCare,
-                  title: 'Book care',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: (member1 == null || member2 == null || planDetails == null)
-                      ? ButtonType.disable
-                      : ButtonType.primary,
-                  expanded: true,
-                  iconColor: AppColors.primary,
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            disableDropDownLists();
+          });
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PlanPricingDetailsComponent(
+                  planName: widget.pageTitle,
+                  pricingDetailsList: widget.planList,
+                  onSelect: _updatePlan,
                 ),
-              ),
-            ],
+                _buildMemberSelectionText('1. Select family member'),
+                CustomDropDownBox(
+                  key: customDropDownBox1Key,
+                  selectedMembers: _getSelectedMembers(),
+                  memberName: member1?.name,
+                  memberList: store.members,
+                  updateMember: (member) => _updateMember(member, true),
+                ),
+                _buildMemberSelectionText('2. Select another family member'),
+                CustomDropDownBox(
+                  key: customDropDownBox2Key,
+                  selectedMembers: _getSelectedMembers(),
+                  memberName: member2?.name,
+                  memberList: store.members,
+                  updateMember: (member) => _updateMember(member, false),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
+                  child: CustomButton(
+                    ontap: (member1 == null ||
+                            member2 == null ||
+                            planDetails == null)
+                        ? null
+                        : _bookCare,
+                    title: 'Book care',
+                    showIcon: false,
+                    iconPath: AppIcons.add,
+                    size: ButtonSize.normal,
+                    type: (member1 == null ||
+                            member2 == null ||
+                            planDetails == null)
+                        ? ButtonType.disable
+                        : ButtonType.primary,
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
