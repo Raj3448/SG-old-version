@@ -15,8 +15,9 @@ abstract class IProductListingService {
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
   });
-  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
-      {required String id});
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
+    required String id,
+  });
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -66,13 +67,15 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   Either<Failure, List<ProductBasicDetailsModel>> _processResponseData(
-      dynamic data) {
+    dynamic data,
+  ) {
     if (data['data'] != null) {
       final receivedList = data['data'] as List;
       var allProductList = <ProductBasicDetailsModel>[];
       for (var item in receivedList) {
         allProductList.add(
-            ProductBasicDetailsModel.fromJson(item as Map<String, dynamic>));
+          ProductBasicDetailsModel.fromJson(item as Map<String, dynamic>),
+        );
       }
       return Right([...allProductList]);
     }
@@ -118,8 +121,9 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
-      {required String id}) async {
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
+    required String id,
+  }) async {
     try {
       final response = await httpClient.get(
         '/api/products/5?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
