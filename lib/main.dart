@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/payment/razorpay_payment.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
@@ -49,7 +50,7 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-
+      AppRazorpay();
       await Hive.initFlutter();
       await setupHiveBox();
 
@@ -142,8 +143,11 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
-      GetIt.instance.registerLazySingleton(() => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
-      GetIt.instance.registerLazySingleton(() => ProductListingStore(productListingService: GetIt.I<ProductLisitingServices>())..initGetProductBasicDetails());
+      GetIt.instance.registerLazySingleton(
+          () => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(() => ProductListingStore(
+          productListingService: GetIt.I<ProductLisitingServices>())
+        ..initGetProductBasicDetails());
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
