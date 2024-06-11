@@ -3,7 +3,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/services/widgets/booking_status.dart';
+import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 
 class BookingDetailsScreen extends StatelessWidget {
   const BookingDetailsScreen({super.key});

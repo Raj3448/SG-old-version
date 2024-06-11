@@ -44,6 +44,9 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                       controller: controller,
                       onOptionSelected: (selectedOptions) {
                         state.didChange(selectedOptions);
+                        if (onSaved != null) {
+                          onSaved(selectedOptions);
+                        }
                       },
                       selectedOptions: state.value ?? [],
                       options: values,
@@ -56,7 +59,8 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                               color: !enabled
                                   ? AppColors.grayscale700
                                   : AppColors.grayscale900),
-                      dropdownHeight: 160,
+                      dropdownHeight:
+                          values.length > 4 ? 160 : values.length * 50,
                       borderRadius: 8,
                       dropdownBorderRadius: 8,
                       selectedOptionTextColor: AppColors.primary,

@@ -28,12 +28,12 @@ import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/screens/splashscreen.dart';
-import 'package:silver_genie/feature/services/screens/all_services_screen.dart';
-import 'package:silver_genie/feature/services/screens/book_service_screen.dart';
-import 'package:silver_genie/feature/services/screens/booking_details_screen.dart';
-import 'package:silver_genie/feature/services/screens/payment_screen.dart';
-import 'package:silver_genie/feature/services/screens/service_details_screen.dart';
-import 'package:silver_genie/feature/services/screens/services_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/booking_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -331,9 +331,11 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.bookServiceScreen,
+      path: '/bookServiceScreen/:id',
+      name: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
-        return MaterialPage(child: BookServiceScreen());
+        final serviceId = state.pathParameters['id'].toString();
+        return MaterialPage(child: BookServiceScreen(id: serviceId,));
       },
     ),
     GoRoute(

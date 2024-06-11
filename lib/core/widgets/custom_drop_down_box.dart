@@ -11,14 +11,14 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class CustomDropDownBox extends StatefulWidget {
   final List<Member> memberList;
-  final String? memberName;
+  String? memberName;
   List<Member> selectedMembers = [];
   void Function(Member) updateMember;
   CustomDropDownBox({
     required this.memberList,
     required this.updateMember,
     this.memberName,
-    required this.selectedMembers,
+    this.selectedMembers = const [],
     Key? key,
   }) : super(key: key);
 
@@ -51,10 +51,14 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(widget.memberName ?? 'Select',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(height: 2.4)),
+                    style: AppTextStyle.bodyLargeMedium.copyWith(
+                        height: 2.4,
+                        color: widget.memberName == null
+                            ? AppColors.grayscale600
+                            : AppColors.grayscale900)),
                 Icon(
                   isExpanding ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
-                  size: 9,
+                  size: 7,
                   color: AppColors.grayscale700,
                 )
               ],
@@ -92,6 +96,8 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
                                     : () {
                                         widget.updateMember(
                                             widget.memberList[index]);
+                                        widget.memberName =
+                                            widget.memberList[index].name;
                                         setState(() {
                                           isExpanding = !isExpanding;
                                         });

@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/feature/services/store/services_store.dart';
+import 'package:silver_genie/feature/book_services/store/services_store.dart';
 
 class BookingStatus extends StatelessWidget {
   const BookingStatus({super.key});
