@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -11,27 +10,50 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class CustomDropDownBox extends StatefulWidget {
   final List<Member> memberList;
-  final String? memberName;
+  String? memberName;
   List<Member> selectedMembers = [];
-  void Function(Member) updateMember;
+  void Function(Member?) updateMember;
+  final bool isRequired;
   CustomDropDownBox({
     required this.memberList,
     required this.updateMember,
     this.memberName,
-    required this.selectedMembers,
+    this.selectedMembers = const [],
+    this.isRequired = false,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CustomDropDownBox> createState() => _CustomDropDownBoxState();
+  State<CustomDropDownBox> createState() => CustomDropDownBoxState();
 }
 
-class _CustomDropDownBoxState extends State<CustomDropDownBox> {
+class CustomDropDownBoxState extends State<CustomDropDownBox> {
   bool isExpanding = false;
+  bool showError = false;
+
+  void disableDropDownList() {
+    setState(() {
+      isExpanding = false;
+    });
+  }
+
+  bool validate() {
+    if (widget.isRequired && widget.memberName == null) {
+      setState(() {
+        showError = true;
+      });
+      return false;
+    }
+    setState(() {
+      showError = false;
+    });
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () {
@@ -43,27 +65,56 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
             height: 52,
             padding:
                 const EdgeInsets.only(left: Dimension.d3, right: Dimension.d6),
-            margin: const EdgeInsets.symmetric(vertical: Dimension.d2),
             decoration: BoxDecoration(
-                border: Border.all(width: 1, color: AppColors.grayscale300),
+                border: Border.all(
+                  width: 1,
+                  color: showError
+                      ? const Color(0xFF9E2F27)
+                      : AppColors.grayscale300,
+                ),
                 borderRadius: BorderRadius.circular(Dimension.d2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.memberName ?? 'Select',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(height: 2.4)),
+                Text(
+                  widget.memberName ?? 'Select',
+                  style: AppTextStyle.bodyLargeMedium.copyWith(
+                    height: 2.4,
+                    color: widget.memberName == null
+                        ? AppColors.grayscale600
+                        : AppColors.grayscale900,
+                  ),
+                ),
                 Icon(
                   isExpanding ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
-                  size: 9,
+                  size: 7,
                   color: AppColors.grayscale700,
                 )
               ],
             ),
           ),
         ),
+        Visibility(
+          visible: showError && widget.isRequired,
+          child: const Padding(
+            padding: EdgeInsets.only(top: Dimension.d2, left: Dimension.d4),
+            child: Text(
+              'Please select a member',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Color(0xFF9E2F27),
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ),
         Container(
           width: double.infinity,
-          height: isExpanding ? 210 : 0,
+          height: isExpanding
+              ? ((widget.memberList.length > 4)
+                  ? 210
+                  : widget.memberList.length * 54)
+              : 0,
           constraints: const BoxConstraints(minHeight: 1),
           padding: const EdgeInsets.only(bottom: Dimension.d2),
           decoration: isExpanding
@@ -88,12 +139,20 @@ class _CustomDropDownBoxState extends State<CustomDropDownBox> {
                                         (selectedMember) =>
                                             selectedMember.id ==
                                             widget.memberList[index].id)
-                                    ? null
+                                    ? () {
+                                        widget.updateMember(null);
+                                        setState(() {
+                                          isExpanding = !isExpanding;
+                                        });
+                                      }
                                     : () {
                                         widget.updateMember(
                                             widget.memberList[index]);
+                                        widget.memberName =
+                                            widget.memberList[index].name;
                                         setState(() {
                                           isExpanding = !isExpanding;
+                                          showError = false;
                                         });
                                       },
                                 child: _MemeberListTileComponent(

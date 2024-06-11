@@ -34,7 +34,7 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
-import 'package:silver_genie/feature/services/store/services_store.dart';
+import 'package:silver_genie/feature/book_services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';

@@ -10,7 +10,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/services/store/services_store.dart';
+import 'package:silver_genie/feature/book_services/store/services_store.dart';
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({super.key});
