@@ -13,7 +13,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
-import 'package:silver_genie/feature/services/screens/services_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 
 class AllServicesScreen extends StatefulWidget {
   const AllServicesScreen({

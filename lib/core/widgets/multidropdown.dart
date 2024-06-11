@@ -44,6 +44,9 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                       controller: controller,
                       onOptionSelected: (selectedOptions) {
                         state.didChange(selectedOptions);
+                        if (onSaved != null) {
+                          onSaved(selectedOptions);
+                        }
                       },
                       selectedOptions: state.value ?? [],
                       options: values,
@@ -56,7 +59,8 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                               color: !enabled
                                   ? AppColors.grayscale700
                                   : AppColors.grayscale900),
-                      dropdownHeight: 160,
+                      dropdownHeight:
+                          values.length > 4 ? 160 : values.length * 50,
                       borderRadius: 8,
                       dropdownBorderRadius: 8,
                       selectedOptionTextColor: AppColors.primary,
@@ -130,41 +134,45 @@ class DateDropdown extends FormField<DateTime> {
     required TextEditingController controller,
     bool disable = false,
     super.key,
-    super.onSaved,
+    String dateFormat = 'yyyy-MM-dd',
+    void Function(String?)? onSaved,
+    void Function(DateTime)? onChanged,
     super.validator,
   }) : super(
           initialValue: controller.text.isEmpty
               ? null
-              : DateFormat('yyyy-MM-dd').parse(controller.text),
+              : DateFormat(dateFormat).parse(controller.text),
           builder: (FormFieldState<DateTime> state) {
-            return GestureDetector(
-              onTap: disable
-                  ? null
-                  : () async {
-                      final pickedDate = await showDatePicker(
-                        context: state.context,
-                        firstDate: DateTime(1950),
-                        lastDate: DateTime.now(),
-                        initialDate: state.value ?? DateTime.now(),
-                      );
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: disable
+                      ? null
+                      : () async {
+                          final pickedDate = await showDatePicker(
+                            context: state.context,
+                            firstDate: DateTime(1950),
+                            lastDate: DateTime.now(),
+                            initialDate: state.value ?? DateTime.now(),
+                          );
 
-                      if (pickedDate != null && pickedDate != state.value) {
-                        state.didChange(pickedDate);
-                        controller.text =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
-                      }
-                    },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
+                          if (pickedDate != null && pickedDate != state.value) {
+                            state.didChange(pickedDate);
+                            controller.text =
+                                DateFormat(dateFormat).format(pickedDate);
+                            onChanged?.call(pickedDate);
+                          }
+                        },
+                  child: Container(
                     decoration: BoxDecoration(
                       color: disable ? AppColors.grayscale200 : null,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: state.hasError && !state.isValid
-                              ? Color(0xFF9E2F27)
-                              : AppColors.grayscale300),
+                        color: state.hasError && !state.isValid
+                            ? Color(0xFF9E2F27)
+                            : AppColors.grayscale300,
+                      ),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
@@ -176,33 +184,21 @@ class DateDropdown extends FormField<DateTime> {
                               child: TextFormField(
                                 controller: controller,
                                 style: AppTextStyle.bodyLargeMedium.copyWith(
-                                    color: disable
-                                        ? AppColors.grayscale700
-                                        : AppColors.grayscale900),
+                                  color: disable
+                                      ? AppColors.grayscale700
+                                      : AppColors.grayscale900,
+                                ),
                                 decoration: const InputDecoration(
                                   hintText: 'Select',
                                   border: InputBorder.none,
                                 ),
                                 readOnly: true,
-                                onTap: disable
-                                    ? null
-                                    : () async {
-                                        final pickedDate = await showDatePicker(
-                                          context: state.context,
-                                          firstDate: DateTime(1950),
-                                          lastDate: DateTime.now(),
-                                          initialDate:
-                                              state.value ?? DateTime.now(),
-                                        );
-
-                                        if (pickedDate != null &&
-                                            pickedDate != state.value) {
-                                          state.didChange(pickedDate);
-                                          controller.text =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(pickedDate);
-                                        }
-                                      },
+                                onSaved: onSaved,
+                                onChanged: (value) {
+                                  if(onChanged != null){
+                                  onChanged.call(state.value!);
+                                  }
+                                },
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -216,20 +212,22 @@ class DateDropdown extends FormField<DateTime> {
                       ],
                     ),
                   ),
-                  if (state.errorText != null && !state.isValid)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: Dimension.d2, left: Dimension.d4),
-                      child: Text(
-                        state.errorText!,
-                        style: const TextStyle(
-                          color: Color(0xFF9E2F27),
-                          fontSize: 12,
-                        ),
+                ),
+                if (state.errorText != null && !state.isValid)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: Dimension.d2,
+                      left: Dimension.d4,
+                    ),
+                    child: Text(
+                      state.errorText!,
+                      style: const TextStyle(
+                        color: Color(0xFF9E2F27),
+                        fontSize: 12,
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             );
           },
         );

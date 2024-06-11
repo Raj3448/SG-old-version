@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -92,6 +91,9 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                   memberName: member1?.name,
                   memberList: store.members,
                   updateMember: (member) => _updateMember(member, true),
+                ),
+                const SizedBox(
+                  height: Dimension.d2,
                 ),
                 _buildMemberSelectionText('2. Select another family member'),
                 CustomDropDownBox(
