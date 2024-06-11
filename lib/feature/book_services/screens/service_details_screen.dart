@@ -12,6 +12,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
@@ -148,7 +149,12 @@ class ServiceDetailsScreen extends StatelessWidget {
                               iconColor: AppColors.primary,
                             ),
                             CustomButton(
-                              ontap: () {},
+                              ontap: () {
+                                context.pushNamed(
+                                    RoutesConstants.bookServiceScreen,
+                                    pathParameters: {'id':id}
+                                    );
+                              },
                               title: 'Book now',
                               showIcon: false,
                               iconPath: AppIcons.add,

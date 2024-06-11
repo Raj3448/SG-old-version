@@ -72,6 +72,9 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                 memberList: store.members,
                 updateMember: (member) => _updateMember(member, true),
               ),
+              const SizedBox(
+                height: Dimension.d2,
+              ),
               _buildMemberSelectionText('2. Select another family member'),
               CustomDropDownBox(
                 selectedMembers: _getSelectedMembers(),
@@ -82,14 +85,18 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
                 child: CustomButton(
-                  ontap: (member1 == null || member2 == null || planDetails == null)
+                  ontap: (member1 == null ||
+                          member2 == null ||
+                          planDetails == null)
                       ? null
                       : _bookCare,
                   title: 'Book care',
                   showIcon: false,
                   iconPath: AppIcons.add,
                   size: ButtonSize.normal,
-                  type: (member1 == null || member2 == null || planDetails == null)
+                  type: (member1 == null ||
+                          member2 == null ||
+                          planDetails == null)
                       ? ButtonType.disable
                       : ButtonType.primary,
                   expanded: true,

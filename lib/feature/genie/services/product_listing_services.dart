@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 abstract class IProductListingService {
@@ -14,10 +15,8 @@ abstract class IProductListingService {
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
   });
-  Future<Either<Failure, int>> bookService({
-    required String id,
-    required String productId,
-  });
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
+      {required String id});
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -119,15 +118,20 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, int>> bookService({
-    required String id,
-    required String productId,
-  }) async {
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
+      {required String id}) async {
     try {
-      final response = await httpClient.get('/api/products/');
+      final response = await httpClient.get(
+        '/api/products/5?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
+      );
       if (response.statusCode == 200) {
-        //To be changed
-        return const Right(1);
+        if (response.data['data'] != null) {
+          final data = response.data['data'];
+          return Right(
+            FormDetailModel.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
       } else {
         return const Left(Failure.badResponse());
       }
