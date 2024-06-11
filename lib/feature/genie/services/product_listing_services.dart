@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
@@ -13,6 +13,10 @@ abstract class IProductListingService {
       getAllProductBasicDetails();
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
+  });
+  Future<Either<Failure, int>> bookService({
+    required String id,
+    required String productId,
   });
 }
 
@@ -112,5 +116,25 @@ class ProductLisitingServices extends IProductListingService {
     return prices
         .where((element) => element.benefitApplicableToMembersLimit == 2)
         .toList();
+  }
+
+  @override
+  Future<Either<Failure, int>> bookService({
+    required String id,
+    required String productId,
+  }) async {
+    try {
+      final response = await httpClient.get('/api/products/');
+      if (response.statusCode == 200) {
+        //To be changed
+        return const Right(1);
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on SocketException {
+      return const Left(Failure.socketException());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
   }
 }
