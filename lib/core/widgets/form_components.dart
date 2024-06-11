@@ -45,6 +45,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final String? initialValue;
   final void Function(String)? onChanged;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,7 @@ class CustomTextField extends StatelessWidget {
       enabled: enabled,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      
       style: AppTextStyle.bodyLargeMedium.copyWith(
         color: !enabled ? AppColors.grayscale700 : AppColors.grayscale900,
       ),
