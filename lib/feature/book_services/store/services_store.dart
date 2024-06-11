@@ -10,5 +10,8 @@ abstract class _ServicesStoreBase with Store {
   bool paymentEnabled = false;
 
   @observable
-  bool detailsEnabled = false;
+  bool detailsEnabled = true;
+
+  @observable
+  bool bookingDetailEnabled = false;
 }

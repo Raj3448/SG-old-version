@@ -11,6 +11,33 @@ class BookingStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<ServicesStore>();
+
+    Widget buildStatusCircle(int step, bool isEnabled) {
+      return Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isEnabled ? AppColors.secondary : AppColors.grayscale200,
+          border: isEnabled ? Border.all(color: AppColors.primary) : null,
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          '$step',
+          style: AppTextStyle.bodyLargeMedium.copyWith(
+            color: isEnabled ? AppColors.primary : AppColors.grayscale600,
+          ),
+        ),
+      );
+    }
+
+    Widget buildStatusText(String text, bool isEnabled) {
+      return Text(
+        text,
+        style: AppTextStyle.bodyMediumMedium.copyWith(
+          color: isEnabled ? AppColors.primary : AppColors.grayscale900,
+        ),
+      );
+    }
+
     return Observer(
       builder: (context) {
         return Column(
@@ -18,111 +45,29 @@ class BookingStatus extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: store.paymentEnabled == false &&
-                            store.detailsEnabled == false
-                        ? AppColors.secondary
-                        : AppColors.grayscale200,
-                    border: store.paymentEnabled == false &&
-                            store.detailsEnabled == false
-                        ? Border.all(color: AppColors.primary)
-                        : null,
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    '1',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(
-                      color: store.paymentEnabled == false &&
-                              store.detailsEnabled == false
-                          ? AppColors.primary
-                          : AppColors.grayscale600,
-                    ),
-                  ),
-                ),
+                buildStatusCircle(1, store.detailsEnabled),
                 const SizedBox(width: 7),
                 const SizedBox(
                   width: 68,
                   child: Divider(color: AppColors.primary),
                 ),
                 const SizedBox(width: 7),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: store.paymentEnabled
-                        ? AppColors.secondary
-                        : AppColors.grayscale200,
-                    border: store.paymentEnabled
-                        ? Border.all(color: AppColors.primary)
-                        : null,
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    '2',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(
-                      color: store.paymentEnabled
-                          ? AppColors.primary
-                          : AppColors.grayscale600,
-                    ),
-                  ),
-                ),
+                buildStatusCircle(2, store.paymentEnabled),
                 const SizedBox(width: 7),
                 const SizedBox(
                   width: 68,
                   child: Divider(color: AppColors.primary),
                 ),
                 const SizedBox(width: 7),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: store.detailsEnabled
-                        ? AppColors.secondary
-                        : AppColors.grayscale200,
-                    border: store.detailsEnabled
-                        ? Border.all(color: AppColors.primary)
-                        : null,
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    '3',
-                    style: AppTextStyle.bodyLargeMedium.copyWith(
-                      color: store.detailsEnabled
-                          ? AppColors.primary
-                          : AppColors.grayscale600,
-                    ),
-                  ),
-                ),
+                buildStatusCircle(3, store.bookingDetailEnabled),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  'Service details',
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: store.paymentEnabled == false &&
-                            store.detailsEnabled == false
-                        ? AppColors.grayscale900
-                        : AppColors.grayscale600,
-                  ),
-                ),
-                Text(
-                  'Payment',
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: store.paymentEnabled
-                        ? AppColors.grayscale900
-                        : AppColors.grayscale600,
-                  ),
-                ),
-                Text(
-                  'Booking details',
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: store.detailsEnabled
-                        ? AppColors.grayscale900
-                        : AppColors.grayscale600,
-                  ),
-                ),
+                buildStatusText('Service details', store.detailsEnabled),
+                buildStatusText('Payment', store.paymentEnabled),
+                buildStatusText('Booking details', store.bookingDetailEnabled),
               ],
             ),
           ],
