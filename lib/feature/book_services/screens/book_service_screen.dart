@@ -236,11 +236,10 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   String? applyValidations({String? value, required List<Validations> validations}) {
     
   for (var validation in validations) {
-    
-    if (validation.type == 'minValue' &&  value!.length < int.parse(validation.valueMsg.value)) {
+    if (validation.type == 'minValue' &&  value!.length < (int.tryParse(validation.valueMsg.value) ?? 1)) {
       return validation.valueMsg.message;
     }
-    if (validation.type == 'maxValue' &&  value!.length > int.parse(validation.valueMsg.value)) {
+    if (validation.type == 'maxValue' &&  value!.length > (int.tryParse(validation.valueMsg.value) ?? 10)) {
       return validation.valueMsg.message;
     }
   }
