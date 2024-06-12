@@ -15,9 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:silver_genie/core/app/app.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
+import 'package:silver_genie/feature/book_services/store/services_store.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
@@ -33,7 +35,6 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
-import 'package:silver_genie/feature/book_services/store/services_store.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
@@ -49,7 +50,7 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-
+      
       await Hive.initFlutter();
       await setupHiveBox();
 
@@ -126,6 +127,7 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
+      GetIt.instance.registerLazySingleton(() => PaymentService(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
@@ -142,8 +144,11 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(NotificationServices()),
       );
-      GetIt.instance.registerLazySingleton(() => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
-      GetIt.instance.registerLazySingleton(() => ProductListingStore(productListingService: GetIt.I<ProductLisitingServices>())..initGetProductBasicDetails());
+      GetIt.instance.registerLazySingleton(
+          () => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(() => ProductListingStore(
+          productListingService: GetIt.I<ProductLisitingServices>())
+        ..initGetProductBasicDetails());
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 

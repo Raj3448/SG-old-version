@@ -15,7 +15,8 @@ abstract class IProductListingService {
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
   });
-  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
+  Future<Either<Failure,  FormDetailModel>> getBookingServiceDetailsById(
+      {
     required String id,
   });
 }
@@ -121,12 +122,13 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
+      {
     required String id,
-  }) async {
+  }) async  {
     try {
       final response = await httpClient.get(
-        '/api/products/5?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
+        '/api/products/$id?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
       );
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
