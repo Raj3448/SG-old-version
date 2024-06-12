@@ -12,9 +12,8 @@ class CustomDropDownBox extends StatefulWidget {
   final List<Member> memberList;
   String? memberName;
   List<Member> selectedMembers = [];
-  void Function(Member) updateMember;
+  void Function(Member?) updateMember;
   final bool isRequired;
-
   CustomDropDownBox({
     required this.memberList,
     required this.updateMember,
@@ -31,6 +30,12 @@ class CustomDropDownBox extends StatefulWidget {
 class CustomDropDownBoxState extends State<CustomDropDownBox> {
   bool isExpanding = false;
   bool showError = false;
+
+  void disableDropDownList() {
+    setState(() {
+      isExpanding = false;
+    });
+  }
 
   bool validate() {
     if (widget.isRequired && widget.memberName == null) {
@@ -61,14 +66,13 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
             padding:
                 const EdgeInsets.only(left: Dimension.d3, right: Dimension.d6),
             decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: showError
-                    ? const Color(0xFF9E2F27)
-                    : AppColors.grayscale300,
-              ),
-              borderRadius: BorderRadius.circular(Dimension.d2),
-            ),
+                border: Border.all(
+                  width: 1,
+                  color: showError
+                      ? const Color(0xFF9E2F27)
+                      : AppColors.grayscale300,
+                ),
+                borderRadius: BorderRadius.circular(Dimension.d2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -106,7 +110,11 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
         ),
         Container(
           width: double.infinity,
-          height: isExpanding ? 210 : 0,
+          height: isExpanding
+              ? ((widget.memberList.length > 4)
+                  ? 210
+                  : widget.memberList.length * 54)
+              : 0,
           constraints: const BoxConstraints(minHeight: 1),
           padding: const EdgeInsets.only(bottom: Dimension.d2),
           decoration: isExpanding
@@ -114,53 +122,52 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                   color: AppColors.grayscale100,
                   borderRadius: BorderRadius.circular(Dimension.d2),
                   boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, 4),
-                      blurRadius: 12,
-                      spreadRadius: 0,
-                      color: AppColors.black.withOpacity(0.25),
-                    ),
-                  ],
-                )
+                      BoxShadow(
+                          offset: const Offset(0, 4),
+                          blurRadius: 12,
+                          spreadRadius: 0,
+                          color: AppColors.black.withOpacity(0.25))
+                    ])
               : null,
           child: isExpanding
               ? SingleChildScrollView(
                   child: Column(
-                    children: List.generate(
-                      widget.memberList.length,
-                      (index) => GestureDetector(
-                        onTap: widget.selectedMembers.any(
-                          (selectedMember) =>
-                              selectedMember.id == widget.memberList[index].id,
-                        )
-                            ? null
-                            : () {
-                                widget.updateMember(
-                                  widget.memberList[index],
-                                );
-                                widget.memberName =
-                                    widget.memberList[index].name;
-                                setState(() {
-                                  isExpanding = !isExpanding;
-                                  showError = false;
-                                });
-                              },
-                        child: _MemeberListTileComponent(
-                          disable: widget.selectedMembers.any(
-                            (selectedMember) =>
-                                selectedMember.id ==
-                                widget.memberList[index].id,
-                          ),
-                          name: widget.memberList[index].name,
-                          imgPath:
-                              widget.memberList[index].profileImg?.url ?? '',
-                        ),
-                      ),
-                    ),
-                  ),
+                      children: List.generate(
+                          widget.memberList.length,
+                          (index) => GestureDetector(
+                                onTap: widget.selectedMembers.any(
+                                        (selectedMember) =>
+                                            selectedMember.id ==
+                                            widget.memberList[index].id)
+                                    ? () {
+                                        widget.updateMember(null);
+                                        setState(() {
+                                          isExpanding = !isExpanding;
+                                        });
+                                      }
+                                    : () {
+                                        widget.updateMember(
+                                            widget.memberList[index]);
+                                        widget.memberName =
+                                            widget.memberList[index].name;
+                                        setState(() {
+                                          isExpanding = !isExpanding;
+                                          showError = false;
+                                        });
+                                      },
+                                child: _MemeberListTileComponent(
+                                    disable: widget.selectedMembers.any(
+                                        (selectedMember) =>
+                                            selectedMember.id ==
+                                            widget.memberList[index].id),
+                                    name: widget.memberList[index].name,
+                                    imgPath: widget.memberList[index].profileImg
+                                            ?.url ??
+                                        ''),
+                              ))),
                 )
               : null,
-        ),
+        )
       ],
     );
   }
@@ -173,34 +180,27 @@ class _MemeberListTileComponent extends StatelessWidget {
     required this.name,
     required this.imgPath,
     required this.disable,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String name;
   final bool disable;
-
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 42,
       width: double.infinity,
       margin: const EdgeInsets.only(
-        left: Dimension.d2,
-        right: Dimension.d2,
-        top: Dimension.d2,
-      ),
+          left: Dimension.d2, right: Dimension.d2, top: Dimension.d2),
       padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
       decoration: BoxDecoration(
-        color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
-        border: Border.all(width: 1, color: AppColors.grayscale300),
-        borderRadius: BorderRadius.circular(Dimension.d2),
-      ),
+          color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
+          border: Border.all(width: 1, color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2)),
       child: Row(
         children: [
           Avatar.fromSize(
-            imgPath: imgPath.isNotEmpty ? '${Env.serverUrl}$imgPath' : '',
-            size: AvatarSize.size14,
-          ),
+              imgPath: '${Env.serverUrl}$imgPath', size: AvatarSize.size14),
           const SizedBox(
             width: Dimension.d2,
           ),

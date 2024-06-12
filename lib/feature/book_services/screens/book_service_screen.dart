@@ -84,7 +84,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
             if (components[i].component ==
                     'form-field-type.reference-question' &&
                 components[i].controlType == 'familyDropDown') {
-              final List<Validations> validations = components[i].validations;
               widgetList.addAll([
                 const SizedBox(height: Dimension.d4),
                 if (components[i].formDetails.required)
@@ -99,12 +98,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                 const SizedBox(height: Dimension.d2),
                 CustomDropDownBox(
                   key: _customDropDownBoxKey,
+                  
                   memberName: selectedMember?.name,
                   memberList: GetIt.I<MembersStore>().members,
                   updateMember: (member) {
                     selectedMember = member;
                     formValues[components[i].formDetails.title] =
-                        member.id.toString();
+                        member?.id.toString() ?? '';
                   },
                   isRequired: components[i].formDetails.required,
                 )
