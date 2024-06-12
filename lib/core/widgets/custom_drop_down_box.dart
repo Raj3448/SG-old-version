@@ -8,7 +8,7 @@ import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
-class CustomDropDownBox extends StatefulWidget {
+class CustomDropDownBox extends StatefulWidget{
   final List<Member> memberList;
   String? memberName;
   List<Member> selectedMembers = [];
