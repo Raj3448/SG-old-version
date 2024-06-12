@@ -1,7 +1,8 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -167,8 +168,67 @@ class ServiceDetailsScreen extends StatelessWidget {
                       )
                     else
                       FixedButton(
-                        ontap: () {},
-                        btnTitle: 'Book appointment',
+                        ontap: () {
+                          showModalBottomSheet(
+                            backgroundColor: AppColors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: const EdgeInsets.all(18),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '$title service',
+                                        style: AppTextStyle.heading5SemiBold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: Dimension.d9),
+                                    const Text(
+                                      'Your request has been received',
+                                      style: AppTextStyle.bodyLargeBold,
+                                    ),
+                                    const SizedBox(height: Dimension.d3),
+                                    SvgPicture.asset(
+                                      'assets/icon/success.svg',
+                                      height: 88,
+                                    ),
+                                    const SizedBox(height: Dimension.d3),
+                                    Text(
+                                      'Thank you for your interest. The SG team will be in touch with you shortly',
+                                      textAlign: TextAlign.center,
+                                      style: AppTextStyle.bodyMediumMedium
+                                          .copyWith(
+                                        color: AppColors.grayscale700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: Dimension.d9),
+                                    CustomButton(
+                                      ontap: () {
+                                        context
+                                          ..pop()
+                                          ..pop();
+                                      },
+                                      title: 'Done',
+                                      showIcon: false,
+                                      iconPath: AppIcons.add,
+                                      size: ButtonSize.normal,
+                                      type: ButtonType.primary,
+                                      expanded: true,
+                                      iconColor: AppColors.white,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        btnTitle: 'Request service',
                         showIcon: false,
                         iconPath: AppIcons.add,
                       ),

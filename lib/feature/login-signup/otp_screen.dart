@@ -96,6 +96,7 @@ class _OTPScreenState extends State<OTPScreen> {
     final formKey = GlobalKey<FormState>();
     store.startTimer();
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: Observer(
         builder: (context) {
           return Stack(
