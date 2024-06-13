@@ -19,6 +19,9 @@ abstract class IProductListingService {
       {
     required String id,
   });
+  Future<Either<Failure, String>> buyProduct({
+    required FormAnswerModel formData,
+  });
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -146,5 +149,10 @@ class ProductLisitingServices extends IProductListingService {
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
+  }
+  
+  @override
+  Future<Either<Failure, String>> buyProduct({required FormAnswerModel formData}) {
+    throw UnimplementedError();
   }
 }

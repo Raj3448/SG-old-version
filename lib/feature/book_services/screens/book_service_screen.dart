@@ -34,9 +34,10 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<CustomDropDownBoxState> _customDropDownBoxKey =
       GlobalKey<CustomDropDownBoxState>();
-  Map<String, String> formValues = {};
+  List<FormAnswer> formAnswers = [];
   Member? selectedMember;
   BookingStep bookingStep = BookingStep.serviceDetails;
+  final store = GetIt.I<ProductLisitingServices>();
 
   @override
   void dispose() {
@@ -59,8 +60,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         iconPath: AppIcons.add,
       ),
       body: FutureBuilder(
-        future: GetIt.I<ProductLisitingServices>()
-            .getBookingServiceDetailsById(id: widget.id),
+        future: store.getBookingServiceDetailsById(id: widget.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingWidget(
@@ -103,8 +103,14 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       memberList: GetIt.I<MembersStore>().members,
                       updateMember: (member) {
                         selectedMember = member;
-                        formValues[component.formDetails.title] =
-                            member?.id.toString() ?? '';
+                        _updateFormValues1(
+                            id: component.formDetails.id,
+                            title: component.formDetails.title,
+                            type: component.type,
+                            value: member?.id.toString() ?? '',
+                            controlType: component.controlType,
+                            hint: component.formDetails.hint,
+                            valueReference: [member?.id.toString() ?? '']);
                       },
                       isRequired: component.formDetails.required,
                     )
@@ -113,7 +119,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                 break;
               case 'form-field-type.string-question':
                 if (component.type == 'string') {
-                  final List<Validations> validations = component.validations;
                   widgetList.addAll([
                     const SizedBox(height: Dimension.d4),
                     if (component.formDetails.required)
@@ -127,9 +132,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       ),
                     const SizedBox(height: Dimension.d2),
                     CustomTextField(
-                      controller: TextEditingController(
-                        text: formValues[component.formDetails.title],
-                      ),
+                      controller: TextEditingController(),
                       validationLogic: component.formDetails.required
                           ? (value) {
                               if (value == null) {
@@ -137,12 +140,19 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                               }
                               return applyValidations(
                                 value: value,
-                                validations: validations,
+                                validations: component.validations,
                               );
                             }
                           : null,
-                      onChanged: (value) {
-                        formValues[component.formDetails.title] = value.trim();
+                      onSaved: (value) {
+                        _updateFormValues1(
+                            id: component.formDetails.id,
+                            title: component.formDetails.title,
+                            type: component.type,
+                            value: value?.trim() ?? '',
+                            controlType: component.controlType,
+                            hint: component.formDetails.hint,
+                            valueReference: []);
                       },
                       hintText: 'Type here',
                       keyboardType: TextInputType.name,
@@ -154,7 +164,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                 break;
               case 'form-field-type.choice-question':
                 if (component.type == 'choice') {
-                  final List<Validations> validations = component.validations;
                   widgetList.addAll([
                     const SizedBox(height: Dimension.d4),
                     if (component.formDetails.required)
@@ -169,8 +178,15 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                     const SizedBox(height: Dimension.d2),
                     MultiSelectFormField(
                       onSaved: (newValue) {
-                        formValues[component.formDetails.title] =
-                            newValue?.first.value.toString().trim() ?? '';
+                        _updateFormValues1(
+                            id: component.formDetails.id,
+                            title: component.formDetails.title,
+                            type: component.type,
+                            value:
+                                newValue?.first.value.toString().trim() ?? '',
+                            controlType: component.controlType,
+                            hint: component.formDetails.hint,
+                            valueReference: []);
                       },
                       validator: component.formDetails.required
                           ? (value) {
@@ -179,7 +195,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                               }
                               return applyValidations(
                                 value: value.first.value.toString(),
-                                validations: validations,
+                                validations: component.validations,
                               );
                             }
                           : null,
@@ -195,39 +211,94 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                 }
                 break;
               case 'form-field-type.date-question':
-                final List<Validations> validations = component.validations;
-                widgetList.addAll([
-                  const SizedBox(height: Dimension.d4),
-                  if (component.formDetails.required)
-                    AsteriskLabel(
-                        label: '${i + 1}. ${component.formDetails.title}'),
-                  if (!component.formDetails.required)
-                    Text(
-                      '${i + 1}. ${component.formDetails.title}',
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.grayscale700),
-                    ),
-                  const SizedBox(height: Dimension.d2),
-                  DateDropdown(
-                    controller: dobContr,
-                    dateFormat: component.dateFormat,
-                    onChanged: (value) {
-                      formValues[component.formDetails.title] = dobContr.text;
-                    },
-                    validator: component.formDetails.required
-                        ? (value) {
-                            if (value == null) {
-                              return '${component.formDetails.title} must not be empty';
+                if (component.type == 'date') {
+                  widgetList.addAll([
+                    const SizedBox(height: Dimension.d4),
+                    if (component.formDetails.required)
+                      AsteriskLabel(
+                          label: '${i + 1}. ${component.formDetails.title}'),
+                    if (!component.formDetails.required)
+                      Text(
+                        '${i + 1}. ${component.formDetails.title}',
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.grayscale700),
+                      ),
+                    const SizedBox(height: Dimension.d2),
+                    DateDropdown(
+                      controller: dobContr,
+                      dateFormat: component.dateFormat,
+                      onSaved: (value) {
+                        _updateFormValues1(
+                            id: component.formDetails.id,
+                            title: component.formDetails.title,
+                            type: component.type,
+                            value: value.toString(),
+                            controlType: component.controlType,
+                            hint: component.formDetails.hint,
+                            valueReference: []);
+                      },
+                      validator: component.formDetails.required
+                          ? (value) {
+                              if (value == null) {
+                                return '${component.formDetails.title} must not be empty';
+                              }
+                              return applyValidations(
+                                value: dobContr.text,
+                                validations: component.validations,
+                              );
                             }
-                            return applyValidations(
-                              value: dobContr.text,
-                              validations: validations,
-                            );
-                          }
-                        : null,
-                  ),
-                ]);
+                          : null,
+                    ),
+                  ]);
+                }
                 break;
+              case 'form-field-type.decimal-question':
+                if (component.type == 'decimal') {
+                  widgetList.addAll([
+                    const SizedBox(height: Dimension.d4),
+                    if (component.formDetails.required)
+                      AsteriskLabel(
+                          label: '${i + 1}. ${component.formDetails.title}'),
+                    if (!component.formDetails.required)
+                      Text(
+                        '${i + 1}. ${component.formDetails.title}',
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.grayscale700),
+                      ),
+                    const SizedBox(height: Dimension.d2),
+                    CustomTextField(
+                      controller: TextEditingController(
+                        text: component.defaultValue.toString(),
+                      ),
+                      validationLogic: component.formDetails.required
+                          ? (value) {
+                              if (value == null) {
+                                return '${component.formDetails.title} must not be empty';
+                              }
+                              return applyValidations(
+                                  value: value,
+                                  validations: component.validations,
+                                  isNum: true);
+                            }
+                          : null,
+                      onSaved: (value) {
+                        debugPrint('In Decimal component');
+                        _updateFormValues1(
+                            id: component.formDetails.id,
+                            title: component.formDetails.title,
+                            type: component.type,
+                            value: value?.trim() ?? '',
+                            controlType: component.controlType,
+                            hint: component.formDetails.hint,
+                            valueReference: []);
+                      },
+                      hintText: 'Type here',
+                      keyboardType: TextInputType.number,
+                      large: false,
+                      enabled: true,
+                    ),
+                  ]);
+                }
             }
           }
           return SingleChildScrollView(
@@ -256,18 +327,56 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   }
 
   String? applyValidations(
-      {String? value, required List<Validations> validations}) {
+      {String? value,
+      required List<Validations> validations,
+      bool isNum = false}) {
     for (var validation in validations) {
       if (validation.type == 'minValue' &&
-          value!.length < (int.tryParse(validation.valueMsg.value) ?? 1)) {
+          (isNum ? int.tryParse(value!) ?? 1 : value!.length) <
+              (int.tryParse(validation.valueMsg.value) ?? 1)) {
         return validation.valueMsg.message;
       }
       if (validation.type == 'maxValue' &&
-          value!.length > (int.tryParse(validation.valueMsg.value) ?? 10)) {
+          (isNum ? int.tryParse(value!) ?? 10 : value!.length) >
+              (int.tryParse(validation.valueMsg.value) ?? 10)) {
         return validation.valueMsg.message;
       }
     }
     return null;
+  }
+
+  void _updateFormValues1({
+    required int id,
+    required String title,
+    required String type,
+    required String value,
+    required String controlType,
+    required String? hint,
+    required List<String> valueReference,
+  }) {
+    final existingIndex = formAnswers.indexWhere((element) => element.id == id);
+
+    if (existingIndex >= 0) {
+      formAnswers[existingIndex] = FormAnswer(
+        id: id,
+        questionTitle: title,
+        type: type,
+        valueChoice: value,
+        controlType: controlType,
+        hint: hint,
+        valueReference: valueReference,
+      );
+    } else {
+      formAnswers.add(FormAnswer(
+        id: id,
+        questionTitle: title,
+        type: type,
+        valueChoice: value,
+        controlType: controlType,
+        hint: hint,
+        valueReference: valueReference,
+      ));
+    }
   }
 
   void _submitAndNext(BuildContext context) {
@@ -275,8 +384,15 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         !_customDropDownBoxKey.currentState!.validate()) {
       return;
     }
-
-    print(formValues);
+    _formKey.currentState!.save();
+    debugPrint('Product Id : ${widget.id}');
+    debugPrint('=============================================');
+    debugPrint('FormAnswer Details : $formAnswers');
+    debugPrint('FormAnswer length : ${formAnswers.length}');
+    FormAnswerModel formAnswerModel = FormAnswerModel(
+        formAnswer: formAnswers, productId: int.parse(widget.id));
+    debugPrint('FormData : ${formAnswerModel.toJson()}');
+    //store.buyProduct(formData: formAnswerModel);
     context.pushNamed(RoutesConstants.paymentScreen);
   }
 }

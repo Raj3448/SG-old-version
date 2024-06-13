@@ -1,6 +1,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+
 part 'product_listing_store.g.dart';
 
 class ProductListingStore = _ProductListingStoreBase with _$ProductListingStore;
@@ -36,19 +37,22 @@ abstract class _ProductListingStoreBase with Store {
               )
               .toList()
           : [];
-      
-  List<ProductBasicDetailsModel> getProdListRankOrder (List<ProductBasicDetailsModel> prodList){
+
+  List<ProductBasicDetailsModel> getProdListRankOrder(
+      List<ProductBasicDetailsModel> prodList) {
     return prodList
-        .where((element) =>
-            element.attributes.metadata.any((metadata) => metadata.key == 'rank'))
+        .where((element) => element.attributes.metadata
+            .any((metadata) => metadata.key == 'rank'))
         .toList()
-        ..sort((a, b) {
-          final aRank = a.attributes.metadata
-              .firstWhere((metadata) => metadata.key == 'rank').value;
-          final bRank = b.attributes.metadata
-              .firstWhere((metadata) => metadata.key == 'rank').value;
-          return aRank.compareTo(bRank);
-        });
+      ..sort((a, b) {
+        final aRank = a.attributes.metadata
+            .firstWhere((metadata) => metadata.key == 'rank')
+            .value;
+        final bRank = b.attributes.metadata
+            .firstWhere((metadata) => metadata.key == 'rank')
+            .value;
+        return aRank.compareTo(bRank);
+      });
   }
 
   @computed

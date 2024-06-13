@@ -34,10 +34,11 @@ class FormModel with _$FormModel {
   const factory FormModel({
     required int id,
     @JsonKey(name: '__component') required String component,
-    @Default(null) String? controlType,
+    @Default('') String controlType,
     required String type,
     required FormDetails formDetails,
     required dynamic initialValue,
+    @Default(0) int defaultValue,
     @Default([]) List<Validations> validations,
     @Default([]) List<Option> options,
     required dynamic startDate,
@@ -100,4 +101,33 @@ class ValueMsg with _$ValueMsg {
     }) = _ValueMsg;
     factory ValueMsg.fromJson(Map<String, dynamic> json) =>
       _$ValueMsgFromJson(json);
+}
+
+@freezed
+class FormAnswerModel with _$FormAnswerModel {
+    @JsonSerializable(explicitToJson: true)
+    const factory FormAnswerModel({
+        required List<FormAnswer> formAnswer,
+        required int productId,
+    }) = _FormAnswerModel;
+
+    factory FormAnswerModel.fromJson(Map<String, dynamic> json) =>
+      _$FormAnswerModelFromJson(json);
+}
+
+@freezed
+class FormAnswer with _$FormAnswer {
+    @JsonSerializable(explicitToJson: true)
+    const factory FormAnswer({
+        required int id,
+        required String questionTitle,
+        required String type,
+        @Default('') String valueChoice,
+        required String? hint,
+        required String controlType,
+        @Default([]) List<String> valueReference,
+    }) = _FormAnswer;
+
+    factory FormAnswer.fromJson(Map<String, dynamic> json) =>
+      _$FormAnswerFromJson(json);
 }
