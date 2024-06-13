@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
@@ -15,7 +15,13 @@ abstract class IProductListingService {
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
   });
-  Future<Either<Failure,FormDetailModel>> getBookingServiceDetailsById({required String id});
+  Future<Either<Failure,  FormDetailModel>> getBookingServiceDetailsById(
+      {
+    required String id,
+  });
+  Future<Either<Failure, String>> buyProduct({
+    required FormAnswerModel formData,
+  });
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -65,13 +71,15 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   Either<Failure, List<ProductBasicDetailsModel>> _processResponseData(
-      dynamic data) {
+    dynamic data,
+  ) {
     if (data['data'] != null) {
       final receivedList = data['data'] as List;
       var allProductList = <ProductBasicDetailsModel>[];
       for (var item in receivedList) {
         allProductList.add(
-            ProductBasicDetailsModel.fromJson(item as Map<String, dynamic>));
+          ProductBasicDetailsModel.fromJson(item as Map<String, dynamic>),
+        );
       }
       return Right([...allProductList]);
     }
@@ -115,12 +123,15 @@ class ProductLisitingServices extends IProductListingService {
         .where((element) => element.benefitApplicableToMembersLimit == 2)
         .toList();
   }
-  
+
   @override
-  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({required String id}) async{
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
+      {
+    required String id,
+  }) async  {
     try {
       final response = await httpClient.get(
-        '/api/products/5?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
+        '/api/products/$id?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
       );
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
@@ -138,5 +149,10 @@ class ProductLisitingServices extends IProductListingService {
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
+  }
+  
+  @override
+  Future<Either<Failure, String>> buyProduct({required FormAnswerModel formData}) {
+    throw UnimplementedError();
   }
 }

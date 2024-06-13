@@ -28,6 +28,7 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.large,
     required this.enabled,
+    this.onSaved,
     this.controller,
     this.validationLogic,
     this.textInputAction,
@@ -45,6 +46,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final String? initialValue;
   final void Function(String)? onChanged;
+  final void Function(String?)? onSaved;
   
 
   @override
@@ -59,6 +61,7 @@ class CustomTextField extends StatelessWidget {
       style: AppTextStyle.bodyLargeMedium.copyWith(
         color: !enabled ? AppColors.grayscale700 : AppColors.grayscale900,
       ),
+      onSaved: onSaved,
       maxLines: 8,
       onChanged: onChanged,
       minLines: large ? 5 : 1,
