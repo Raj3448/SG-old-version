@@ -299,7 +299,7 @@ final GoRouter routes = GoRouter(
           child: GeniePage(
             pageTitle: pageTitle,
             id: id,
-            isUpgradble: isUpgradble,
+            isUpgradeable: isUpgradble,
           ),
         );
       },
