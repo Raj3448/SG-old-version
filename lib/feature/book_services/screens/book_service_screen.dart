@@ -168,6 +168,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       ),
                     const SizedBox(height: Dimension.d2),
                     MultiSelectFormField(
+                      showClear: !component.formDetails.required,
                       onSaved: (newValue) {
                         formValues[component.formDetails.title] =
                             newValue?.first.value.toString().trim() ?? '';
