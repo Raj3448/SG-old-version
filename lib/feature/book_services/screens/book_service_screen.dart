@@ -188,6 +188,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             hint: component.formDetails.hint,
                             valueReference: []);
                       },
+                      showClear: !component.formDetails.required,
                       validator: component.formDetails.required
                           ? (value) {
                               if (value == null) {
@@ -380,8 +381,9 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   }
 
   void _submitAndNext(BuildContext context) {
-    if (!_formKey.currentState!.validate() ||
-        !_customDropDownBoxKey.currentState!.validate()) {
+    final formValidate = !_formKey.currentState!.validate();
+    final isCustomValidate = !_customDropDownBoxKey.currentState!.validate();
+    if (formValidate || isCustomValidate) {
       return;
     }
     _formKey.currentState!.save();
