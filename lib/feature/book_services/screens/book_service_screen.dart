@@ -104,13 +104,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       updateMember: (member) {
                         selectedMember = member;
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value: member?.id.toString() ?? '',
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: [member?.id.toString() ?? '']);
+                            valueReference: [member?.id.toString() ?? ''],
+                            forDId: component.formDetails.id.toString());
                       },
                       isRequired: component.formDetails.required,
                     )
@@ -146,13 +146,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                           : null,
                       onSaved: (value) {
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
                             value: value?.trim() ?? '',
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       hintText: 'Type here',
                       keyboardType: TextInputType.name,
@@ -179,14 +179,14 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                     MultiSelectFormField(
                       onSaved: (newValue) {
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
                             value:
                                 newValue?.first.value.toString().trim() ?? '',
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       showClear: !component.formDetails.required,
                       validator: component.formDetails.required
@@ -230,13 +230,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       dateFormat: component.dateFormat,
                       onSaved: (value) {
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
                             value: value.toString(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       validator: component.formDetails.required
                           ? (value) {
@@ -285,13 +285,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       onSaved: (value) {
                         debugPrint('In Decimal component');
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
                             value: value?.trim() ?? '',
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       hintText: 'Type here',
                       keyboardType: TextInputType.number,
@@ -350,12 +350,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     required int id,
     required String title,
     required String type,
-    required String value,
+    String? value,
     required String controlType,
     required String? hint,
-    required List<String> valueReference,
+    List<String>? valueReference,
+    required String forDId,
   }) {
-    final existingIndex = formAnswers.indexWhere((element) => element.id == id);
+    final existingIndex = formAnswers.indexWhere((element) => element.forDId == forDId);
 
     if (existingIndex >= 0) {
       formAnswers[existingIndex] = FormAnswer(
@@ -365,7 +366,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         valueChoice: value,
         controlType: controlType,
         hint: hint,
-        valueReference: valueReference,
+        valueReference: valueReference, forDId: forDId,
       );
     } else {
       formAnswers.add(FormAnswer(
@@ -375,7 +376,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         valueChoice: value,
         controlType: controlType,
         hint: hint,
-        valueReference: valueReference,
+        valueReference: valueReference, forDId: forDId,
       ));
     }
   }
@@ -394,7 +395,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     FormAnswerModel formAnswerModel = FormAnswerModel(
         formAnswer: formAnswers, productId: int.parse(widget.id));
     debugPrint('FormData : ${formAnswerModel.toJson()}');
-    //store.buyProduct(formData: formAnswerModel);
+    // store.buyProduct(formData: formAnswerModel);
     context.pushNamed(RoutesConstants.paymentScreen);
   }
 }

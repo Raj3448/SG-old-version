@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +12,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/utils/calculate_age.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart' as util;
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -23,6 +22,8 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
+import 'package:silver_genie/dummy_variables.dart';
+import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
@@ -42,6 +43,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final MembersStore memberStore;
   late final productLStore = GetIt.I<ProductListingStore>();
+  final bookingServiceStore = GetIt.I<BookingServiceStore>();
+
   @override
   void initState() {
     super.initState();
@@ -62,141 +65,145 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Observer(
-                    builder: (_) {
-                      if (memberStore.isLoading) {
-                        return const SizedBox(
-                          height: Dimension.d20,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        );
-                      } else if (memberStore.familyMembers.isEmpty) {
-                        return NoMember(
-                          ontap: () {
-                            final user = GetIt.I<UserDetailStore>().userDetails;
-                            final member = memberStore.memberById(user!.id);
-                            if (member != null) {
-                              context.pushNamed(
-                                RoutesConstants.addEditFamilyMemberRoute,
-                                pathParameters: {
-                                  'edit': 'false',
-                                  'isSelf': 'false',
-                                },
-                              );
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return MemberCreation(
-                                    selfOnTap: () {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'true',
-                                        },
-                                      );
-                                    },
-                                    memberOnTap: () {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'false',
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        );
-                      } else {
-                        return const _MemberInfo();
-                      }
-                    },
-                  ),
-                  _EmergencyActivation(),
-                  _ActiveBookingComponent(),
-                  Text(
-                    'Book services',
-                    style: AppTextStyle.bodyXLSemiBold
-                        .copyWith(color: AppColors.grayscale900, height: 2.6),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Observer(
+              builder: (_) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/volunteer_activism.png',
-                        buttonName: 'Health Care',
-                        onTap: () {
-                          context.pushNamed(
-                            RoutesConstants.allServicesScreen,
-                            pathParameters: {
-                              'pageTitle': 'Health Care Service',
-                              'isConvenience': false.toString(),
+                      Container(
+                        child: memberStore.isLoading
+                            ? const SizedBox(
+                                height: Dimension.d20,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              )
+                            : memberStore.familyMembers.isEmpty
+                                ? NoMember(
+                                    ontap: () {
+                                      final user = GetIt.I<UserDetailStore>()
+                                          .userDetails;
+                                      final member =
+                                          memberStore.memberById(user!.id);
+                                      if (member != null) {
+                                        context.pushNamed(
+                                          RoutesConstants
+                                              .addEditFamilyMemberRoute,
+                                          pathParameters: {
+                                            'edit': 'false',
+                                            'isSelf': 'false',
+                                          },
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return MemberCreation(
+                                              selfOnTap: () {
+                                                context.pushNamed(
+                                                  RoutesConstants
+                                                      .addEditFamilyMemberRoute,
+                                                  pathParameters: {
+                                                    'edit': 'false',
+                                                    'isSelf': 'true',
+                                                  },
+                                                );
+                                              },
+                                              memberOnTap: () {
+                                                context.pushNamed(
+                                                  RoutesConstants
+                                                      .addEditFamilyMemberRoute,
+                                                  pathParameters: {
+                                                    'edit': 'false',
+                                                    'isSelf': 'false',
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  )
+                                : const _MemberInfo(),
+                      ),
+                      _EmergencyActivation(),
+                      if (bookingServiceStore.isAllServiceLoaded)
+                        _ActiveBookingComponent(store: bookingServiceStore),
+                      Text(
+                        'Book services',
+                        style: AppTextStyle.bodyXLSemiBold.copyWith(
+                            color: AppColors.grayscale900, height: 2.6),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/volunteer_activism.png',
+                            buttonName: 'Health Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'pageTitle': 'Health Care Service',
+                                  'isConvenience': false.toString(),
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/home_health.png',
-                        buttonName: 'Home Care',
-                        onTap: () {
-                          context.pushNamed(
-                            RoutesConstants.allServicesScreen,
-                            pathParameters: {
-                              'pageTitle': 'Home Care Service',
-                              'isConvenience': false.toString(),
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/home_health.png',
+                            buttonName: 'Home Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'pageTitle': 'Home Care Service',
+                                  'isConvenience': false.toString(),
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/prescriptions.png',
-                        buttonName: 'Wellness & Convenience',
-                        onTap: () {
-                          context.pushNamed(
-                            RoutesConstants.allServicesScreen,
-                            pathParameters: {
-                              'pageTitle': 'Convenience care services',
-                              'isConvenience': true.toString(),
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/prescriptions.png',
+                            buttonName: 'Wellness & Convenience',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'pageTitle': 'Convenience care services',
+                                  'isConvenience': true.toString(),
+                                },
+                              );
                             },
-                          );
-                        },
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/ambulance.png',
+                            buttonName: 'Emergency',
+                            onTap: () {
+                              // GoRouter.of(context).pushNamed(
+                              //   RoutesConstants.geniePage,
+                              //   pathParameters: {
+                              //     'pageTitle': 'Emergency Genie',
+                              //     'defination':
+                              //         "We understand the unpredictability of life, but that shouldn't hinder your well-being. With our comprehensive emergency support service, we'll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver",
+                              //     'headline':
+                              //         'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
+                              //   },
+                              // );
+                            },
+                          ),
+                        ],
                       ),
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/ambulance.png',
-                        buttonName: 'Emergency',
-                        onTap: () {
-                          // GoRouter.of(context).pushNamed(
-                          //   RoutesConstants.geniePage,
-                          //   pathParameters: {
-                          //     'pageTitle': 'Emergency Genie',
-                          //     'defination':
-                          //         "We understand the unpredictability of life, but that shouldn't hinder your well-being. With our comprehensive emergency support service, we'll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver",
-                          //     'headline':
-                          //         'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
-                          //   },
-                          // );
-                        },
-                      ),
+                      _HomeScreenComponents(),
                     ],
                   ),
-                  _HomeScreenComponents(),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -465,22 +472,25 @@ class _AboutUsOfferComponent extends StatelessWidget {
 }
 
 class _ActiveBookingComponent extends StatelessWidget {
+  const _ActiveBookingComponent({required this.store, super.key});
+
+  final BookingServiceStore store;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(
-        4,
-        (index) => index == 0
-            ? Text(
-                'Active bookings',
-                style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
-              )
-            : const BookingListTileComponent(
-                bookingServiceStatus: BookingServiceStatus.active,
-              ),
-      ),
-    );
+    return bookingServicesList.isEmpty
+        ? const SizedBox.shrink()
+        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'Active bookings',
+              style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
+            ),
+            ...List.generate(
+                bookingServicesList.length > 3 ? 3 : bookingServicesList.length,
+                (index) => BookingListTileComponent(
+                      bookingServiceModel: store.getAllActiveServiceList[index],
+                      bookingServiceStatus: BookingServiceStatus.active,
+                    )),
+          ]);
   }
 }
 
@@ -852,8 +862,10 @@ class _MemberInfo extends StatelessWidget {
                             name:
                                 '${activeMember.firstName} ${activeMember.lastName}',
                             relation: activeMember.relation,
-                            age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: formatDateTime(activeMember.updatedAt),
+                            age:
+                                '${util.calculateAge(activeMember.dateOfBirth)}',
+                            updatedAt:
+                                util.formatDateTime(activeMember.updatedAt),
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -866,7 +878,8 @@ class _MemberInfo extends StatelessWidget {
                                 ? activeMember.phrModel!.id
                                 : null,
                           );
-                        } else if (memberStore.isActive == false || activeMember != null||
+                        } else if (memberStore.isActive == false ||
+                            activeMember != null ||
                             activeMember?.relation == 'Brother') {
                           return InactivePlanComponent(
                             member: activeMember!,
@@ -1023,19 +1036,5 @@ class _HomeScreenOfferCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-String formatDateTime(DateTime dateTime) {
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-
-  String formattedTime = DateFormat('h:mma').format(dateTime);
-
-  if (date == today) {
-    return 'Today at $formattedTime';
-  } else {
-    return DateFormat('MMM d, y').format(dateTime) + ' at $formattedTime';
   }
 }

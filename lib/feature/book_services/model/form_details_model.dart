@@ -105,29 +105,43 @@ class ValueMsg with _$ValueMsg {
 
 @freezed
 class FormAnswerModel with _$FormAnswerModel {
-    @JsonSerializable(explicitToJson: true)
-    const factory FormAnswerModel({
-        required List<FormAnswer> formAnswer,
-        required int productId,
-    }) = _FormAnswerModel;
+  @JsonSerializable(explicitToJson: true)
+  const factory FormAnswerModel({
+    required List<FormAnswer> formAnswer,
+    required int productId,
+  }) = _FormAnswerModel;
 
-    factory FormAnswerModel.fromJson(Map<String, dynamic> json) =>
+  factory FormAnswerModel.fromJson(Map<String, dynamic> json) =>
       _$FormAnswerModelFromJson(json);
 }
 
 @freezed
 class FormAnswer with _$FormAnswer {
-    @JsonSerializable(explicitToJson: true)
-    const factory FormAnswer({
-        required int id,
-        required String questionTitle,
-        required String type,
-        @Default('') String valueChoice,
-        required String? hint,
-        required String controlType,
-        @Default([]) List<String> valueReference,
-    }) = _FormAnswer;
+  const factory FormAnswer({
+    required String forDId,
+    required int id,
+    required String questionTitle,
+    required String type,
+    String? valueChoice,
+    String? hint,
+    required String controlType,
+    List<String>? valueReference,
+  }) = _FormAnswer;
 
-    factory FormAnswer.fromJson(Map<String, dynamic> json) =>
+  factory FormAnswer.fromJson(Map<String, dynamic> json) =>
       _$FormAnswerFromJson(json);
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['questionTitle'] = questionTitle;
+    data['type'] = type;
+    if (valueChoice != null) data['valueChoice'] = valueChoice;
+    if (hint != null) data['hint'] = hint;
+    data['controlType'] = controlType;
+    if (valueReference != null && valueReference!.isNotEmpty) {
+      data['valueReference'] = valueReference;
+    }
+    return data;
+  }
 }

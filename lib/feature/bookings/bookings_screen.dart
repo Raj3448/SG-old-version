@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -6,6 +7,8 @@ import 'package:silver_genie/core/widgets/app_bar.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
 import 'package:silver_genie/core/widgets/empty_state_component.dart';
+import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
+import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -72,27 +75,21 @@ class _BookingsScreenState extends State<BookingsScreen>
 
 class BookingsStateComponent extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
-  const BookingsStateComponent({required this.bookingServiceStatus, super.key});
+  final store = GetIt.I<BookingServiceStore>();
+  BookingsStateComponent({required this.bookingServiceStatus, super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = bookingServiceStatus == BookingServiceStatus.completed ||
-            BookingServiceStatus.active == bookingServiceStatus
-        ? true
-        : false;
+    final bookingModelList  = bookingServiceStatus == BookingServiceStatus.completed ? store.getAllCompletedServiceList:
+            BookingServiceStatus.active == bookingServiceStatus ? store.getAllActiveServiceList : store.getAllRequestedServiceList ;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      child: !isLoading ||
-              !(bookingServiceStatus == BookingServiceStatus.completed ||
-                  BookingServiceStatus.active == bookingServiceStatus)
-          ? EmptyStateComponent(
-              bookingServiceStatus: bookingServiceStatus,
-            )
-          : Column(
+      child: bookingModelList.isEmpty ? EmptyStateComponent(bookingServiceStatus: bookingServiceStatus,) :Column(
               children: List.generate(
-                  6,
+                  bookingModelList.length,
                   (index) => BookingListTileComponent(
                         bookingServiceStatus: bookingServiceStatus,
+                        bookingServiceModel: bookingModelList[index],
                       )),
             ),
     );
