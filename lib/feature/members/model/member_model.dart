@@ -79,7 +79,7 @@ class PhrModel with _$PhrModel {
     required String additionalInformation,
     required DateTime createdAt,
     required DateTime updatedAt,
-    @Default([]) List<DiagnosedService>? diagnosedServices,
+    List<DiagnosedService>? diagnosedServices,
   }) = _PhrModel;
 
   factory PhrModel.fromJson(Map<String, dynamic> json) =>

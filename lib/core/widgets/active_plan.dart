@@ -11,6 +11,7 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class AnalogComponent extends StatelessWidget {
@@ -173,7 +174,7 @@ class CustomComponentData {
   final String value;
 }
 
-class ActivePlanComponent extends StatelessWidget {
+class ActivePlanComponent extends StatefulWidget {
   ActivePlanComponent({
     required this.name,
     required this.onTap,
@@ -199,7 +200,27 @@ class ActivePlanComponent extends StatelessWidget {
   // final String heartRate;
   // final String fastGlucose;
   final Member activeMember;
+
+  @override
+  State<ActivePlanComponent> createState() => _ActivePlanComponentState();
+}
+
+class _ActivePlanComponentState extends State<ActivePlanComponent> {
   final store = GetIt.I<ProductListingStore>();
+  late List<GlobalKey> _tooltipKeys;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize a list of GlobalKeys for the tooltips
+    _tooltipKeys = List.generate(4, (index) => GlobalKey());
+  }
+
+  void _showTooltip(int index) {
+    final dynamic tooltip = _tooltipKeys[index].currentState;
+    tooltip.ensureTooltipVisible();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -218,7 +239,7 @@ class ActivePlanComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  name,
+                  widget.name,
                   style: AppTextStyle.bodyLargeBold,
                 ),
                 SubscriptionPkg(
@@ -232,11 +253,11 @@ class ActivePlanComponent extends StatelessWidget {
             ),
             Row(
               children: [
-                AnalogComponent(text1: 'Relation', text2: relation),
+                AnalogComponent(text1: 'Relation', text2: widget.relation),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(text1: 'Age', text2: age),
+                AnalogComponent(text1: 'Age', text2: widget.age),
               ],
             ),
             const SizedBox(
@@ -249,31 +270,40 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d2,
             ),
-            // SizedBox(
-            //   // width: 200,
-            //   child: GridView.builder(
-            //     itemCount: activeMember.phrModel?.diagnosedServices!.length,
-            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //       crossAxisCount: 2,
-            //       crossAxisSpacing: 8,
-            //       mainAxisSpacing: 8,
-            //       childAspectRatio: 2.5,
-            //     ),
-            //     shrinkWrap: true,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     itemBuilder: (context, index) {
-            //       return GestureDetector(
-            //         onTap: () {},
-            //         child: _VitalInfoBox(
-            //           label:
-            //               '${activeMember.phrModel?.diagnosedServices![index].description}',
-            //           value:
-            //               '${activeMember.phrModel?.diagnosedServices![index].value}',
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
+            GridView.builder(
+              itemCount: 4,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 2.5,
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onLongPress: () => _showTooltip(index),
+                  child: Tooltip(
+                    key: _tooltipKeys[index],
+                    enableFeedback: true,
+                    message: formatDateTime(
+                      widget.activeMember.phrModel!.diagnosedServices![index]
+                          .diagnosedDate,
+                    ),
+                    child: _VitalInfoBox(
+                      label: widget.activeMember.phrModel == null
+                          ? '---'
+                          : widget.activeMember.phrModel
+                              ?.diagnosedServices![index].description,
+                      value: widget.activeMember.phrModel == null
+                          ? '---'
+                          : widget.activeMember.phrModel
+                              ?.diagnosedServices![index].value,
+                    ),
+                  ),
+                );
+              },
+            ),
             // VitalInfoComponent(
             //   customComponents: [
             //     CustomComponentData(
@@ -297,7 +327,7 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
               text1: 'Last Updated',
-              text2: updatedAt.toString(),
+              text2: widget.updatedAt.toString(),
             ),
             const SizedBox(height: Dimension.d2),
             Row(
@@ -305,13 +335,13 @@ class ActivePlanComponent extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: memberPhrId == null
+                    ontap: widget.memberPhrId == null
                         ? null
                         : () {
                             GoRouter.of(context).pushNamed(
                               RoutesConstants.phrPdfViewPage,
                               pathParameters: {
-                                'memberPhrId': memberPhrId.toString(),
+                                'memberPhrId': widget.memberPhrId.toString(),
                               },
                             );
                           },
@@ -319,7 +349,7 @@ class ActivePlanComponent extends StatelessWidget {
                     showIcon: false,
                     iconPath: Icons.not_interested,
                     size: ButtonSize.small,
-                    type: memberPhrId == null
+                    type: widget.memberPhrId == null
                         ? ButtonType.disable
                         : ButtonType.secondary,
                     expanded: true,
@@ -331,7 +361,7 @@ class ActivePlanComponent extends StatelessWidget {
                 ),
                 Expanded(
                   child: CustomButton(
-                    ontap: onTap,
+                    ontap: widget.onTap,
                     title: 'View EPR',
                     showIcon: false,
                     iconPath: Icons.not_interested,
