@@ -177,6 +177,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       ),
                     const SizedBox(height: Dimension.d2),
                     MultiSelectFormField(
+                      showClear: !component.formDetails.required,
                       onSaved: (newValue) {
                         _updateFormValues1(
                             id: component.id,
@@ -188,7 +189,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             hint: component.formDetails.hint,
                             forDId: component.formDetails.id.toString());
                       },
-                      showClear: !component.formDetails.required,
                       validator: component.formDetails.required
                           ? (value) {
                               if (value == null) {

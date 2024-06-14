@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
@@ -16,11 +18,11 @@ class CouplePlanPage extends StatefulWidget {
   final String pageTitle;
   final List<Price> planList;
 
-  CouplePlanPage({
+  const CouplePlanPage({
     required this.pageTitle,
     required this.planList,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<CouplePlanPage> createState() => _CouplePlanPageState();
@@ -110,7 +112,14 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                             member2 == null ||
                             planDetails == null)
                         ? null
-                        : _bookCare,
+                        : () {
+                            context.pushNamed(
+                              RoutesConstants.subscriptionDetailsScreen,
+                              pathParameters: {
+                                'price': '${planDetails!.unitAmount}',
+                              },
+                            );
+                          },
                     title: 'Book care',
                     showIcon: false,
                     iconPath: AppIcons.add,
@@ -135,8 +144,6 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
   List<Member> _getSelectedMembers() {
     return [if (member1 != null) member1!, if (member2 != null) member2!];
   }
-
-  void _bookCare() {}
 
   Widget _buildMemberSelectionText(String text) {
     return Text(

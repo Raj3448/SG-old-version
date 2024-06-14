@@ -1,15 +1,16 @@
-// ignore_for_file: inference_failure_on_function_invocation, lines_longer_than_80_chars
+// ignore_for_file: inference_failure_on_function_invocation, lines_longer_than_80_chars, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
-import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -19,14 +20,21 @@ class GeniePage extends StatelessWidget {
   GeniePage({
     required this.pageTitle,
     required this.id,
-    required this.isUpgradble,
+    required this.isUpgradeable,
     super.key,
   });
 
   final String pageTitle;
   final String id;
-  final bool isUpgradble;
+  final bool isUpgradeable;
+
   final services = GetIt.I<ProductLisitingServices>();
+
+  Price? planDetails;
+
+  void _updatePlan(Price plan) {
+    planDetails = plan;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,26 +108,19 @@ class GeniePage extends StatelessWidget {
                           pricingDetailsList: services.getPlansforNonCouple(
                             productListingModel!.product.prices,
                           ),
-                          onSelect: (Price) {},
+                          onSelect: _updatePlan,
                         ),
+                        const SizedBox(height: Dimension.d4),
                         CustomButton(
                           ontap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const InfoDialog(
-                                  showIcon: true,
-                                  title: 'Your request has been received',
-                                  desc:
-                                      'Thank you for your interest. The SG team will be in touch with you shortly.',
-                                  btnTitle: 'Back to Home',
-                                  showBtnIcon: false,
-                                  btnIconPath: AppIcons.arrow_back_ios,
-                                );
+                            context.pushNamed(
+                              RoutesConstants.subscriptionDetailsScreen,
+                              pathParameters: {
+                                'price': '${planDetails!.unitAmount}',
                               },
                             );
                           },
-                          title: isUpgradble ? 'Upgrade care' : 'Book Care',
+                          title: isUpgradeable ? 'Upgrade care' : 'Book Care',
                           showIcon: false,
                           iconPath: AppIcons.add,
                           size: ButtonSize.normal,
