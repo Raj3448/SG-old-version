@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -15,8 +17,11 @@ import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class ExpandedAnalogComponent extends StatelessWidget {
-  const ExpandedAnalogComponent(
-      {required this.label, required this.value, super.key});
+  const ExpandedAnalogComponent({
+    required this.label,
+    required this.value,
+    super.key,
+  });
 
   final String label;
   final String value;
@@ -132,91 +137,14 @@ class CustomComponent extends StatelessWidget {
   }
 }
 
-class VitalInfoComponent extends StatelessWidget {
-  const VitalInfoComponent({
-    required this.customComponents,
-    super.key,
-  });
-  final List<CustomComponentData> customComponents;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Vital Info',
-          style: AppTextStyle.bodyMediumSemiBold,
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        Column(
-          children: _buildRows(customComponents),
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _buildRows(List<CustomComponentData> customComponents) {
-    final rows = <Widget>[];
-    final rowCount = (customComponents.length / 2).ceil();
-    for (var i = 0; i < rowCount; i++) {
-      final rowData = customComponents.sublist(
-        i * 2,
-        (i + 1) * 2 > customComponents.length
-            ? customComponents.length
-            : (i + 1) * 2,
-      );
-      rows.add(
-        Row(
-          children: rowData.asMap().entries.map((entry) {
-            final index = entry.key;
-            final component = entry.value;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
-                child: CustomComponent(
-                  text: component.text,
-                  value: component.value,
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-      if (i < rowCount - 1) {
-        rows.add(const SizedBox(height: Dimension.d2));
-      }
-    }
-    return rows;
-  }
-}
-
-class CustomComponentData {
-  const CustomComponentData({
-    required this.text,
-    required this.value,
-  });
-  final String text;
-  final String value;
-}
-
 class ActivePlanComponent extends StatefulWidget {
-  ActivePlanComponent({
+  const ActivePlanComponent({
     required this.name,
     required this.onTap,
     required this.relation,
     required this.age,
     required this.updatedAt,
     required this.memberPhrId,
-    // required this.bloodPressure,
-    // required this.bloodOxygen,
-    // required this.heartRate,
-    // required this.fastGlucose,
     required this.activeMember,
     super.key,
   });
@@ -226,10 +154,6 @@ class ActivePlanComponent extends StatefulWidget {
   final String updatedAt;
   final VoidCallback onTap;
   final int? memberPhrId;
-  // final String bloodPressure;
-  // final String bloodOxygen;
-  // final String heartRate;
-  // final String fastGlucose;
   final Member activeMember;
 
   @override
@@ -243,7 +167,6 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
   @override
   void initState() {
     super.initState();
-    // Initialize a list of GlobalKeys for the tooltips
     _tooltipKeys = List.generate(4, (index) => GlobalKey());
   }
 
@@ -312,53 +235,40 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
+                final phrModel = widget.activeMember.phrModel;
+                final diagnosedServices = phrModel?.diagnosedServices;
+
+                if (diagnosedServices == null || diagnosedServices.isEmpty) {
+                  return const _VitalInfoBox(
+                    label: '---',
+                    value: '---',
+                  );
+                }
+
+                final diagnosedService = diagnosedServices[index];
+
                 return GestureDetector(
                   onLongPress: () => _showTooltip(index),
                   child: Tooltip(
                     key: _tooltipKeys[index],
                     enableFeedback: true,
-                    message: formatDateTime(
-                      widget.activeMember.phrModel!.diagnosedServices![index]
-                          .diagnosedDate,
-                    ),
+                    message: formatDateTime(diagnosedService.diagnosedDate),
                     child: _VitalInfoBox(
-                      label: widget.activeMember.phrModel == null
-                          ? '---'
-                          : widget.activeMember.phrModel
-                              ?.diagnosedServices![index].description,
-                      value: widget.activeMember.phrModel == null
-                          ? '---'
-                          : widget.activeMember.phrModel
-                              ?.diagnosedServices![index].value,
+                      label: diagnosedService.description.isNotEmpty
+                          ? diagnosedService.description
+                          : '---',
+                      value: diagnosedService.value.isNotEmpty
+                          ? diagnosedService.value
+                          : '---',
                     ),
                   ),
                 );
               },
             ),
-            // VitalInfoComponent(
-            //   customComponents: [
-            //     CustomComponentData(
-            //       text: 'Blood Pressure',
-            //       value: bloodPressure,
-            //     ),
-            //     CustomComponentData(
-            //       text: 'Blood Oxygen',
-            //       value: bloodOxygen,
-            //     ),
-            //     CustomComponentData(
-            //       text: 'Heart Rate',
-            //       value: heartRate,
-            //     ),
-            //     CustomComponentData(
-            //       text: 'Fast Glucose',
-            //       value: fastGlucose,
-            //     ),
-            //   ],
-            // ),
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
               label: 'Last Updated',
-              value: widget.updatedAt.toString(),
+              value: widget.updatedAt,
             ),
             const SizedBox(height: Dimension.d2),
             Row(
@@ -485,7 +395,7 @@ class _UpgradeProdLisComponent extends StatelessWidget {
                 height: Dimension.d2,
               ),
               ProductListingCareComponent(
-                isUpgradable: true,
+                isUpgradeable: true,
                 productBasicDetailsList:
                     store.getProdListRankOrder(productBasicDetailsList),
               ),
