@@ -87,14 +87,14 @@ class InactivePlanComponent extends StatelessWidget {
             ),
             Row(
               children: [
-                ExpandedAnalogComponent(
-                    label: 'Relation', value: member.relation),
+                AnalogComponent(label: 'Relation', value: member.relation),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
-                ExpandedAnalogComponent(
-                    label: 'Age',
-                    value: calculateAge(member.dateOfBirth).toString()),
+                AnalogComponent(
+                  label: 'Age',
+                  value: calculateAge(member.dateOfBirth).toString(),
+                ),
               ],
             ),
             const SizedBox(height: Dimension.d3),
@@ -158,7 +158,9 @@ class ProductListingCareComponent extends StatelessWidget {
           iconColorCode:
               _getMetadataValue(product.attributes.metadata, 'icon_color_code'),
           backgroundColorCode: _getMetadataValue(
-              product.attributes.metadata, 'background_color_code'),
+            product.attributes.metadata,
+            'background_color_code',
+          ),
           iconUrl: product.attributes.icon.data.attributes.url,
           onTap: () {
             GoRouter.of(context).pushNamed(
