@@ -20,9 +20,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
     return Observer(
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 15),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +34,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                             .pushNamed(RoutesConstants.userProfileRoute);
                       },
                       child: Avatar(
-                          imgPath: userStore.userDetails == null? '' : userStore.userDetails!.profileImgUrl ?? '',
+                          imgPath: userStore.userDetails == null
+                              ? ''
+                              : userStore.userDetails!.profileImgUrl ?? '',
                           maxRadius: 22),
                     ),
                     const SizedBox(width: 12),
@@ -51,7 +51,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                 color: AppColors.grayscale900,
                                 height: 1.4,
                                 overflow: TextOverflow.ellipsis),
-                          ).tr(args: [if (userStore.userDetails == null) '----' else userStore.userDetails?.name ?? '---']),
+                          ).tr(args: [
+                            if (userStore.userDetails == null)
+                              '----'
+                            else
+                              userStore.userDetails?.name ?? '---'
+                          ]),
                           Text(
                             'How do you feel today?'.tr(),
                             style: AppTextStyle.bodyMediumMedium.copyWith(

@@ -151,410 +151,399 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Observer(
-        builder: (context) {
-          return Stack(
-            children: [
-              Scaffold(
-                backgroundColor: AppColors.white,
-                appBar: PageAppbar(
-                  title: widget.edit
-                      ? 'Member details'.tr()
-                      : 'Add new family member'.tr(),
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: widget.edit
-                    ? FixedButton(
-                        ontap: () {
-                          if (!formKey.currentState!.validate()) {
-                            return;
+    return Observer(
+      builder: (context) {
+        return Stack(
+          children: [
+            Scaffold(
+              backgroundColor: AppColors.white,
+              appBar: PageAppbar(
+                title: widget.edit
+                    ? 'Member details'.tr()
+                    : 'Add new family member'.tr(),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: widget.edit
+                  ? FixedButton(
+                      ontap: () {
+                        if (!formKey.currentState!.validate()) {
+                          return;
+                        }
+                        final genderSelectedValue =
+                            genderContr.selectedOptions.first;
+                        final relationSelectedValue =
+                            relationContr.selectedOptions.first;
+                        Map<String, dynamic> updatedData = {
+                          'firstName': firstNameContr.text,
+                          'lastName': lastNameContr.text,
+                          'dob': dobContr.text,
+                          'relation':
+                              relationSelectedValue.value.toString().trim(),
+                          'gender': genderSelectedValue.value.toString().trim(),
+                          'address': {
+                            'state': stateContr.text,
+                            'city': cityContr.text,
+                            'streetAddress': memberAddressContr.text,
+                            'postalCode': postalCodeContr.text,
+                            'country': countryContr.selectedOptions.first.value
+                                .toString(),
+                          },
+                          'profileImg':
+                              memberStore.activeMember!.profileImg?.id,
+                        };
+                        if (storeImageFile != null) {
+                          memberStore.updateMemberDataWithProfileImg(
+                            id: _member.id.toString(),
+                            fileImage: storeImageFile!,
+                            memberInstance: updatedData,
+                          );
+                          return;
+                        }
+                        if (isAlreadyhaveProfileImg && isImageUpdate) {
+                          if (storeImageFile == null) {
+                            updatedData['profileImg'] = null;
                           }
-                          final genderSelectedValue =
-                              genderContr.selectedOptions.first;
-                          final relationSelectedValue =
-                              relationContr.selectedOptions.first;
-                          Map<String, dynamic> updatedData = {
-                            'firstName': firstNameContr.text,
-                            'lastName': lastNameContr.text,
-                            'dob': dobContr.text,
+                        }
+                        memberStore.updateMember(
+                          id: _member.id,
+                          updatedData: updatedData,
+                        );
+                      },
+                      btnTitle: 'Save details',
+                      showIcon: false,
+                      iconPath: AppIcons.check,
+                    )
+                  : FixedButton(
+                      ontap: () async {
+                        if (!formKey.currentState!.validate()) {
+                          return;
+                        }
+                        final genderSelectedValue =
+                            genderContr.selectedOptions.first;
+                        final relationSelectedValue =
+                            relationContr.selectedOptions.first;
+                        memberStore.addNewFamilyMember(
+                          memberData: {
+                            'self': widget.isSelf ? true : false,
                             'relation':
                                 relationSelectedValue.value.toString().trim(),
                             'gender':
                                 genderSelectedValue.value.toString().trim(),
+                            'firstName': firstNameContr.text,
+                            'lastName': lastNameContr.text,
+                            'dob': dobContr.text,
+                            'email': emailContr.text,
+                            'phoneNumber': '91 ${phoneNumberContr.text.trim()}',
                             'address': {
-                              'state': stateContr.text,
-                              'city': cityContr.text,
-                              'streetAddress': memberAddressContr.text,
-                              'postalCode': postalCodeContr.text,
+                              'state': stateContr.text.trim(),
+                              'city': cityContr.text.trim(),
+                              'streetAddress': memberAddressContr.text.trim(),
+                              'postalCode': postalCodeContr.text.trim(),
                               'country': countryContr
                                   .selectedOptions.first.value
                                   .toString(),
                             },
-                            'profileImg':
-                                memberStore.activeMember!.profileImg?.id,
-                          };
-                          if (storeImageFile != null) {
-                            memberStore.updateMemberDataWithProfileImg(
-                              id: _member.id.toString(),
-                              fileImage: storeImageFile!,
-                              memberInstance: updatedData,
-                            );
-                            return;
-                          }
-                          if (isAlreadyhaveProfileImg && isImageUpdate) {
-                            if (storeImageFile == null) {
-                              updatedData['profileImg'] = null;
-                            }
-                          }
-                          memberStore.updateMember(
-                            id: _member.id,
-                            updatedData: updatedData,
-                          );
-                        },
-                        btnTitle: 'Save details',
-                        showIcon: false,
-                        iconPath: AppIcons.check,
-                      )
-                    : FixedButton(
-                        ontap: () async {
-                          if (!formKey.currentState!.validate()) {
-                            return;
-                          }
-                          final genderSelectedValue =
-                              genderContr.selectedOptions.first;
-                          final relationSelectedValue =
-                              relationContr.selectedOptions.first;
-                          memberStore.addNewFamilyMember(
-                            memberData: {
-                              'self': widget.isSelf ? true : false,
-                              'relation':
-                                  relationSelectedValue.value.toString().trim(),
-                              'gender':
-                                  genderSelectedValue.value.toString().trim(),
-                              'firstName': firstNameContr.text,
-                              'lastName': lastNameContr.text,
-                              'dob': dobContr.text,
-                              'email': emailContr.text,
-                              'phoneNumber':
-                                  '91 ${phoneNumberContr.text.trim()}',
-                              'address': {
-                                'state': stateContr.text.trim(),
-                                'city': cityContr.text.trim(),
-                                'streetAddress': memberAddressContr.text.trim(),
-                                'postalCode': postalCodeContr.text.trim(),
-                                'country': countryContr
-                                    .selectedOptions.first.value
-                                    .toString(),
-                              },
-                            },
-                            fileImage: storeImageFile,
-                          );
-                        },
-                        btnTitle: 'Add new member',
-                        showIcon: false,
-                        iconPath: AppIcons.check,
-                      ),
-                body: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(
-                    decelerationRate: ScrollDecelerationRate.fast,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: EditPic(
-                            onImageSelected: _updateImageFile,
-                            imgUrl: profileImgUrl,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Form(
-                          key: formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const AsteriskLabel(label: 'First name'),
-                              const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Enter your first name',
-                                keyboardType: TextInputType.name,
-                                controller: firstNameContr,
-                                large: false,
-                                enabled: widget.isSelf ? false : true,
-                                onChanged: (value) =>
-                                    firstNameContr.text = value,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your first name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Last name'),
-                              const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Enter your last name',
-                                keyboardType: TextInputType.name,
-                                controller: lastNameContr,
-                                large: false,
-                                enabled: widget.isSelf ? false : true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your last name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Gender'),
-                              const SizedBox(height: 8),
-                              MultiSelectFormField(
-                                showClear: false,
-                                selectedOptions: widget.edit
-                                    ? [_genderItems[selectedGenderIndex!]]
-                                    : null,
-                                controller: genderContr,
-                                values: _genderItems,
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Please select the gender';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Date of birth'),
-                              const SizedBox(height: 8),
-                              DateDropdown(
-                                controller: dobContr,
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Please select the DOB';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Relation'),
-                              const SizedBox(height: 8),
-                              MultiSelectFormField(
-                                enabled: !widget.isSelf ? true : false,
-                                showClear: false,
-                                selectedOptions: widget.isSelf
-                                    ? [_relationList[7]]
-                                    : widget.edit &&
-                                            relationIndex != null &&
-                                            relationIndex! >= 0 &&
-                                            relationIndex! <
-                                                _relationList.length
-                                        ? [_relationList[relationIndex!]]
-                                        : [],
-                                controller: relationContr,
-                                values: _relationList,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select the relation';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Mobile number'),
-                              const SizedBox(height: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  if (widget.edit || widget.isSelf) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return const InfoDialog(
-                                          showIcon: true,
-                                          title:
-                                              'Want to Update mobile number?',
-                                          desc:
-                                              'Please contact the SilverGenie team for changing mobile number.',
-                                          btnTitle: 'Contact Genie',
-                                          showBtnIcon: true,
-                                          btnIconPath: AppIcons.phone,
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                child: CustomTextField(
-                                  hintText: 'Enter mobile number',
-                                  keyboardType: TextInputType.number,
-                                  controller: phoneNumberContr,
-                                  large: false,
-                                  enabled: widget.edit || widget.isSelf
-                                      ? false
-                                      : true,
-                                  validationLogic:
-                                      (widget.edit || widget.isSelf)
-                                          ? null
-                                          : (value) {
-                                              if (value!.isEmpty) {
-                                                return 'Please enter your phone number';
-                                              } else if (value.length > 10 ||
-                                                  value.length < 10) {
-                                                return 'Please enter 10 digits phone number';
-                                              }
-                                              return null;
-                                            },
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Email ID'),
-                              const SizedBox(height: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  if (widget.edit || widget.isSelf) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return const InfoDialog(
-                                          showIcon: true,
-                                          title: 'Want to Update Email ID?',
-                                          desc:
-                                              'Please contact the SilverGenie team for changing Email ID.',
-                                          btnTitle: 'Contact Genie',
-                                          showBtnIcon: true,
-                                          btnIconPath: AppIcons.phone,
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                child: CustomTextField(
-                                  hintText: 'Enter email address',
-                                  keyboardType: TextInputType.emailAddress,
-                                  controller: emailContr,
-                                  large: false,
-                                  enabled: widget.edit || widget.isSelf
-                                      ? false
-                                      : true,
-                                  validationLogic: (value) {
-                                    const regex =
-                                        r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your email address';
-                                    } else if (!RegExp(regex).hasMatch(value)) {
-                                      return 'Please enter a valid email address';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Member Address'),
-                              const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Enter address',
-                                keyboardType: TextInputType.streetAddress,
-                                controller: memberAddressContr,
-                                large: true,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter address';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Country'),
-                              const SizedBox(height: 8),
-                              MultiSelectFormField(
-                                controller: countryContr,
-                                searchEnabled: true,
-                                showClear: false,
-                                values: _countryItems,
-                                validator: (selectedItems) {
-                                  if (selectedItems == null) {
-                                    return 'Please select country';
-                                  }
-                                  return null;
-                                },
-                                selectedOptions: _selectedCountryIndex == -1 ||
-                                        _selectedCountryIndex == null
-                                    ? null
-                                    : [_countryItems[_selectedCountryIndex!]],
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'State'),
-                              const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Type here...',
-                                keyboardType: TextInputType.name,
-                                controller: stateContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter state';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'City'),
-                              const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Type here...',
-                                keyboardType: TextInputType.name,
-                                controller: cityContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter city';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              const AsteriskLabel(label: 'Postal code'),
-                              const SizedBox(height: 8),
-                              CustomTextField(
-                                hintText: 'Enter postal code',
-                                keyboardType: TextInputType.number,
-                                controller: postalCodeContr,
-                                large: false,
-                                enabled: true,
-                                validationLogic: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your postal code';
-                                  } else if (value.length > 6 ||
-                                      value.length < 6) {
-                                    return 'Please enter 6 digits postal code';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: Dimension.d20),
-                        const SizedBox(height: Dimension.d10),
-                      ],
+                          },
+                          fileImage: storeImageFile,
+                        );
+                      },
+                      btnTitle: 'Add new member',
+                      showIcon: false,
+                      iconPath: AppIcons.check,
                     ),
+              body: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(
+                  decelerationRate: ScrollDecelerationRate.fast,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: EditPic(
+                          onImageSelected: _updateImageFile,
+                          imgUrl: profileImgUrl,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const AsteriskLabel(label: 'First name'),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              hintText: 'Enter your first name',
+                              keyboardType: TextInputType.name,
+                              controller: firstNameContr,
+                              large: false,
+                              enabled: widget.isSelf ? false : true,
+                              onChanged: (value) => firstNameContr.text = value,
+                              validationLogic: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your first name';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Last name'),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              hintText: 'Enter your last name',
+                              keyboardType: TextInputType.name,
+                              controller: lastNameContr,
+                              large: false,
+                              enabled: widget.isSelf ? false : true,
+                              validationLogic: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your last name';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Gender'),
+                            const SizedBox(height: 8),
+                            MultiSelectFormField(
+                              showClear: false,
+                              selectedOptions: widget.edit
+                                  ? [_genderItems[selectedGenderIndex!]]
+                                  : null,
+                              controller: genderContr,
+                              values: _genderItems,
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please select the gender';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Date of birth'),
+                            const SizedBox(height: 8),
+                            DateDropdown(
+                              controller: dobContr,
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please select the DOB';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Relation'),
+                            const SizedBox(height: 8),
+                            MultiSelectFormField(
+                              enabled: !widget.isSelf ? true : false,
+                              showClear: false,
+                              selectedOptions: widget.isSelf
+                                  ? [_relationList[7]]
+                                  : widget.edit &&
+                                          relationIndex != null &&
+                                          relationIndex! >= 0 &&
+                                          relationIndex! < _relationList.length
+                                      ? [_relationList[relationIndex!]]
+                                      : [],
+                              controller: relationContr,
+                              values: _relationList,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select the relation';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Mobile number'),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                if (widget.edit || widget.isSelf) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const InfoDialog(
+                                        showIcon: true,
+                                        title: 'Want to Update mobile number?',
+                                        desc:
+                                            'Please contact the SilverGenie team for changing mobile number.',
+                                        btnTitle: 'Contact Genie',
+                                        showBtnIcon: true,
+                                        btnIconPath: AppIcons.phone,
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              child: CustomTextField(
+                                hintText: 'Enter mobile number',
+                                keyboardType: TextInputType.number,
+                                controller: phoneNumberContr,
+                                large: false,
+                                enabled:
+                                    widget.edit || widget.isSelf ? false : true,
+                                validationLogic: (widget.edit || widget.isSelf)
+                                    ? null
+                                    : (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your phone number';
+                                        } else if (value.length > 10 ||
+                                            value.length < 10) {
+                                          return 'Please enter 10 digits phone number';
+                                        }
+                                        return null;
+                                      },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Email ID'),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                if (widget.edit || widget.isSelf) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const InfoDialog(
+                                        showIcon: true,
+                                        title: 'Want to Update Email ID?',
+                                        desc:
+                                            'Please contact the SilverGenie team for changing Email ID.',
+                                        btnTitle: 'Contact Genie',
+                                        showBtnIcon: true,
+                                        btnIconPath: AppIcons.phone,
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              child: CustomTextField(
+                                hintText: 'Enter email address',
+                                keyboardType: TextInputType.emailAddress,
+                                controller: emailContr,
+                                large: false,
+                                enabled:
+                                    widget.edit || widget.isSelf ? false : true,
+                                validationLogic: (value) {
+                                  const regex =
+                                      r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your email address';
+                                  } else if (!RegExp(regex).hasMatch(value)) {
+                                    return 'Please enter a valid email address';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Member Address'),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              hintText: 'Enter address',
+                              keyboardType: TextInputType.streetAddress,
+                              controller: memberAddressContr,
+                              large: true,
+                              enabled: true,
+                              validationLogic: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter address';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Country'),
+                            const SizedBox(height: 8),
+                            MultiSelectFormField(
+                              controller: countryContr,
+                              searchEnabled: true,
+                              showClear: false,
+                              values: _countryItems,
+                              validator: (selectedItems) {
+                                if (selectedItems == null) {
+                                  return 'Please select country';
+                                }
+                                return null;
+                              },
+                              selectedOptions: _selectedCountryIndex == -1 ||
+                                      _selectedCountryIndex == null
+                                  ? null
+                                  : [_countryItems[_selectedCountryIndex!]],
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'State'),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              hintText: 'Type here...',
+                              keyboardType: TextInputType.name,
+                              controller: stateContr,
+                              large: false,
+                              enabled: true,
+                              validationLogic: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter state';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'City'),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              hintText: 'Type here...',
+                              keyboardType: TextInputType.name,
+                              controller: cityContr,
+                              large: false,
+                              enabled: true,
+                              validationLogic: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter city';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const AsteriskLabel(label: 'Postal code'),
+                            const SizedBox(height: 8),
+                            CustomTextField(
+                              hintText: 'Enter postal code',
+                              keyboardType: TextInputType.number,
+                              controller: postalCodeContr,
+                              large: false,
+                              enabled: true,
+                              validationLogic: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your postal code';
+                                } else if (value.length > 6 ||
+                                    value.length < 6) {
+                                  return 'Please enter 6 digits postal code';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: Dimension.d20),
+                      const SizedBox(height: Dimension.d10),
+                    ],
                   ),
                 ),
               ),
-              if (memberStore.isAddOrEditLoading)
-                const Material(
-                  color: Colors.transparent,
-                  child: LoadingWidget(),
-                ),
-            ],
-          );
-        },
-      ),
+            ),
+            if (memberStore.isAddOrEditLoading)
+              const Material(
+                color: Colors.transparent,
+                child: LoadingWidget(),
+              ),
+          ],
+        );
+      },
     );
   }
 

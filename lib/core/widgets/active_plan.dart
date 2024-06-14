@@ -262,16 +262,53 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d3,
             ),
-            const VitalInfoComponent(
-              customComponents: [
-                CustomComponentData(
-                  text: 'Blood Pressure',
-                  value: '73/140mmHg',
-                ),
-                CustomComponentData(text: 'Blood Oxygen', value: '98%'),
-                CustomComponentData(text: 'Heart Rate', value: '106bpm'),
-                CustomComponentData(text: 'Fast Glucose', value: '103 mg/dl'),
-              ],
+            const Text(
+              'Vital Info',
+              style: AppTextStyle.bodyMediumSemiBold,
+            ),
+            const SizedBox(
+              height: Dimension.d2,
+            ),
+            GridView.builder(
+              itemCount: 4,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 2.4,
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                final phrModel = widget.activeMember.phrModel;
+                final diagnosedServices = phrModel?.diagnosedServices;
+
+                if (diagnosedServices == null || diagnosedServices.isEmpty) {
+                  return const _VitalInfoBox(
+                    label: '---',
+                    value: '---',
+                  );
+                }
+
+                final diagnosedService = diagnosedServices[index];
+
+                return GestureDetector(
+                  onLongPress: () => _showTooltip(index),
+                  child: Tooltip(
+                    key: _tooltipKeys[index],
+                    enableFeedback: true,
+                    message: formatDateTime(diagnosedService.diagnosedDate),
+                    child: _VitalInfoBox(
+                      label: diagnosedService.description.isNotEmpty
+                          ? diagnosedService.description
+                          : '---',
+                      value: diagnosedService.value.isNotEmpty
+                          ? diagnosedService.value
+                          : '---',
+                    ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: Dimension.d2),
             AnalogComponent(

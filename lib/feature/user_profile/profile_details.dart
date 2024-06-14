@@ -138,294 +138,287 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Observer(
-        builder: (context) {
-          var user = store.userDetails;
+    return Observer(
+      builder: (context) {
+        var user = store.userDetails;
 
-          if (user == null) {
-            return const SafeArea(
-              child:
-                  ErrorStateComponent(errorType: ErrorType.somethinWentWrong),
-            );
-          }
-          return Stack(
-            children: [
-              Scaffold(
-                backgroundColor: AppColors.white,
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: FixedButton(
-                  ontap: () async {
-                    if (!globalkey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Please fill all the fields'),
-                        duration: Duration(seconds: 3),
-                      ));
-                      return;
+        if (user == null) {
+          return const SafeArea(
+            child: ErrorStateComponent(errorType: ErrorType.somethinWentWrong),
+          );
+        }
+        return Stack(
+          children: [
+            Scaffold(
+              backgroundColor: AppColors.white,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: FixedButton(
+                ontap: () async {
+                  if (!globalkey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please fill all the fields'),
+                      duration: Duration(seconds: 3),
+                    ));
+                    return;
+                  }
+                  user = user!.copyWith(
+                    firstName: _firstNameController.text,
+                    lastName: _lastNameController.text,
+                    email: _emailController.text,
+                    phoneNumber: _mobileController.text,
+                    dateOfBirth: DateTime.parse(_dobController.text),
+                    gender: _genderController.selectedOptions.first.value
+                        .toString(),
+                    address: Address(
+                        id: user!.address?.id ?? -1,
+                        state: _stateController.text,
+                        city: _cityController.text,
+                        streetAddress: _addressController.text,
+                        postalCode: _postalController.text,
+                        country: _countryController.selectedOptions.first.value
+                            .toString()),
+                  );
+                  if (storedImageFile != null) {
+                    store.updateUserDataWithProfileImg(
+                        fileImage: storedImageFile!, userInstance: user!);
+                    return;
+                  }
+                  if (isAlreadyhaveProfileImg && isImageUpdate) {
+                    if (storedImageFile == null) {
+                      user = user?.copyWith(profileImg: null);
                     }
-                    user = user!.copyWith(
-                      firstName: _firstNameController.text,
-                      lastName: _lastNameController.text,
-                      email: _emailController.text,
-                      phoneNumber: _mobileController.text,
-                      dateOfBirth: DateTime.parse(_dobController.text),
-                      gender: _genderController.selectedOptions.first.value
-                          .toString(),
-                      address: Address(
-                          id: user!.address?.id ?? -1,
-                          state: _stateController.text,
-                          city: _cityController.text,
-                          streetAddress: _addressController.text,
-                          postalCode: _postalController.text,
-                          country: _countryController
-                              .selectedOptions.first.value
-                              .toString()),
-                    );
-                    if (storedImageFile != null) {
-                      store.updateUserDataWithProfileImg(
-                          fileImage: storedImageFile!, userInstance: user!);
-                      return;
-                    }
-                    if (isAlreadyhaveProfileImg && isImageUpdate) {
-                      if (storedImageFile == null) {
-                        user = user?.copyWith(profileImg: null);
-                      }
-                    }
-                    store.updateUserDetails(user!);
-                  },
-                  btnTitle: 'Save details',
-                  showIcon: false,
-                  iconPath: AppIcons.add,
+                  }
+                  store.updateUserDetails(user!);
+                },
+                btnTitle: 'Save details',
+                showIcon: false,
+                iconPath: AppIcons.add,
+              ),
+              appBar: const PageAppbar(title: 'Personal Details'),
+              body: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(
+                  decelerationRate: ScrollDecelerationRate.fast,
                 ),
-                appBar: const PageAppbar(title: 'Personal Details'),
-                body: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(
-                    decelerationRate: ScrollDecelerationRate.fast,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Form(
-                      key: globalkey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                              child: EditPic(
-                            onImageSelected: _updateProfileImage,
-                            imgUrl: profileImgUrl,
-                          )),
-                          const SizedBox(height: Dimension.d5),
-                          const AsteriskLabel(label: 'First Name'),
-                          const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'Enter your first name',
-                            keyboardType: TextInputType.name,
-                            large: false,
-                            enabled: true,
-                            controller: _firstNameController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please your first name';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Last Name'),
-                          const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'Enter your last name',
-                            keyboardType: TextInputType.name,
-                            large: false,
-                            enabled: true,
-                            controller: _lastNameController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please your last name';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Gender'),
-                          const SizedBox(height: Dimension.d2),
-                          MultiSelectFormField(
-                            controller: _genderController,
-                            showClear: false,
-                            values: _genderItems,
-                            selectedOptions: [
-                              _genderItems[selectedGenderIndex!]
-                            ],
-                            validator: (selectedItems) {
-                              if (selectedItems == null) {
-                                return 'Please select a gender';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Date of birth'),
-                          const SizedBox(height: Dimension.d2),
-                          DateDropdown(
-                            controller: _dobController,
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Mobile Field'),
-                          const SizedBox(height: Dimension.d2),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return const InfoDialog(
-                                    showIcon: true,
-                                    title: 'Want to Update mobile number?',
-                                    desc:
-                                        'Please contact the SilverGenie team for changing mobile number.',
-                                    btnTitle: 'Contact Genie',
-                                    showBtnIcon: true,
-                                    btnIconPath: AppIcons.phone,
-                                  );
-                                },
-                              );
-                            },
-                            child: CustomTextField(
-                              hintText: 'Mobile Field',
-                              keyboardType: TextInputType.number,
-                              large: false,
-                              enabled: false,
-                              controller: _mobileController,
-                            ),
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Email ID'),
-                          const SizedBox(height: Dimension.d2),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return const InfoDialog(
-                                    showIcon: true,
-                                    title: 'Want to Update Email ID?',
-                                    desc:
-                                        'Please contact the SilverGenie team for changing Email ID.',
-                                    btnTitle: 'Contact Genie',
-                                    showBtnIcon: true,
-                                    btnIconPath: AppIcons.phone,
-                                  );
-                                },
-                              );
-                            },
-                            child: CustomTextField(
-                              hintText: 'email address',
-                              keyboardType: TextInputType.emailAddress,
-                              large: false,
-                              enabled: false,
-                              controller: _emailController,
-                            ),
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Address'),
-                          const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'Address',
-                            keyboardType: TextInputType.emailAddress,
-                            large: false,
-                            enabled: true,
-                            controller: _addressController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter the address';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Country'),
-                          const SizedBox(height: Dimension.d2),
-                          MultiSelectFormField(
-                            controller: _countryController,
-                            searchEnabled: true,
-                            showClear: false,
-                            values: _countryItems,
-                            validator: (selectedItems) {
-                              if (selectedItems == null) {
-                                return 'Please select country';
-                              }
-                              return null;
-                            },
-                            selectedOptions: _selectedCountryIndex == -1 ||
-                                    _selectedCountryIndex == null
-                                ? null
-                                : [_countryItems[_selectedCountryIndex!]],
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'State'),
-                          const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'State',
-                            keyboardType: TextInputType.emailAddress,
-                            large: false,
-                            enabled: true,
-                            controller: _stateController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter the state';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'City'),
-                          const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'City',
-                            keyboardType: TextInputType.emailAddress,
-                            large: false,
-                            enabled: true,
-                            controller: _cityController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter the city';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Postal Code'),
-                          const SizedBox(height: Dimension.d2),
-                          CustomTextField(
-                            hintText: 'Postal Code',
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Form(
+                    key: globalkey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                            child: EditPic(
+                          onImageSelected: _updateProfileImage,
+                          imgUrl: profileImgUrl,
+                        )),
+                        const SizedBox(height: Dimension.d5),
+                        const AsteriskLabel(label: 'First Name'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'Enter your first name',
+                          keyboardType: TextInputType.name,
+                          large: false,
+                          enabled: true,
+                          controller: _firstNameController,
+                          validationLogic: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please your first name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Last Name'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'Enter your last name',
+                          keyboardType: TextInputType.name,
+                          large: false,
+                          enabled: true,
+                          controller: _lastNameController,
+                          validationLogic: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please your last name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Gender'),
+                        const SizedBox(height: Dimension.d2),
+                        MultiSelectFormField(
+                          controller: _genderController,
+                          showClear: false,
+                          values: _genderItems,
+                          selectedOptions: [_genderItems[selectedGenderIndex!]],
+                          validator: (selectedItems) {
+                            if (selectedItems == null) {
+                              return 'Please select a gender';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Date of birth'),
+                        const SizedBox(height: Dimension.d2),
+                        DateDropdown(
+                          controller: _dobController,
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Mobile Field'),
+                        const SizedBox(height: Dimension.d2),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const InfoDialog(
+                                  showIcon: true,
+                                  title: 'Want to Update mobile number?',
+                                  desc:
+                                      'Please contact the SilverGenie team for changing mobile number.',
+                                  btnTitle: 'Contact Genie',
+                                  showBtnIcon: true,
+                                  btnIconPath: AppIcons.phone,
+                                );
+                              },
+                            );
+                          },
+                          child: CustomTextField(
+                            hintText: 'Mobile Field',
                             keyboardType: TextInputType.number,
                             large: false,
-                            enabled: true,
-                            controller: _postalController,
-                            validationLogic: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your postal code';
-                              } else if (value.length > 6 || value.length < 6) {
-                                return 'Please enter 6 digits postal code';
-                              }
-                              return null;
-                            },
+                            enabled: false,
+                            controller: _mobileController,
                           ),
-                          const SizedBox(height: Dimension.d20),
-                          const SizedBox(height: Dimension.d5),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Email ID'),
+                        const SizedBox(height: Dimension.d2),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const InfoDialog(
+                                  showIcon: true,
+                                  title: 'Want to Update Email ID?',
+                                  desc:
+                                      'Please contact the SilverGenie team for changing Email ID.',
+                                  btnTitle: 'Contact Genie',
+                                  showBtnIcon: true,
+                                  btnIconPath: AppIcons.phone,
+                                );
+                              },
+                            );
+                          },
+                          child: CustomTextField(
+                            hintText: 'email address',
+                            keyboardType: TextInputType.emailAddress,
+                            large: false,
+                            enabled: false,
+                            controller: _emailController,
+                          ),
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Address'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'Address',
+                          keyboardType: TextInputType.emailAddress,
+                          large: false,
+                          enabled: true,
+                          controller: _addressController,
+                          validationLogic: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter the address';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Country'),
+                        const SizedBox(height: Dimension.d2),
+                        MultiSelectFormField(
+                          controller: _countryController,
+                          searchEnabled: true,
+                          showClear: false,
+                          values: _countryItems,
+                          validator: (selectedItems) {
+                            if (selectedItems == null) {
+                              return 'Please select country';
+                            }
+                            return null;
+                          },
+                          selectedOptions: _selectedCountryIndex == -1 ||
+                                  _selectedCountryIndex == null
+                              ? null
+                              : [_countryItems[_selectedCountryIndex!]],
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'State'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'State',
+                          keyboardType: TextInputType.emailAddress,
+                          large: false,
+                          enabled: true,
+                          controller: _stateController,
+                          validationLogic: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter the state';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'City'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'City',
+                          keyboardType: TextInputType.emailAddress,
+                          large: false,
+                          enabled: true,
+                          controller: _cityController,
+                          validationLogic: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter the city';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d4),
+                        const AsteriskLabel(label: 'Postal Code'),
+                        const SizedBox(height: Dimension.d2),
+                        CustomTextField(
+                          hintText: 'Postal Code',
+                          keyboardType: TextInputType.number,
+                          large: false,
+                          enabled: true,
+                          controller: _postalController,
+                          validationLogic: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your postal code';
+                            } else if (value.length > 6 || value.length < 6) {
+                              return 'Please enter 6 digits postal code';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: Dimension.d20),
+                        const SizedBox(height: Dimension.d5),
+                      ],
                     ),
                   ),
                 ),
               ),
-              if (store.isUpdatingUserInfo)
-                const Material(
-                    color: Colors.transparent, child: LoadingWidget())
-            ],
-          );
-        },
-      ),
+            ),
+            if (store.isUpdatingUserInfo)
+              const Material(color: Colors.transparent, child: LoadingWidget())
+          ],
+        );
+      },
     );
   }
 }
