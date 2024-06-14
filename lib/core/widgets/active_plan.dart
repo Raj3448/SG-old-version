@@ -11,6 +11,7 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class AnalogComponent extends StatelessWidget {
   const AnalogComponent({required this.text1, required this.text2, super.key});
@@ -180,10 +181,11 @@ class ActivePlanComponent extends StatelessWidget {
     required this.age,
     required this.updatedAt,
     required this.memberPhrId,
-    required this.bloodPressure,
-    required this.bloodOxygen,
-    required this.heartRate,
-    required this.fastGlucose,
+    // required this.bloodPressure,
+    // required this.bloodOxygen,
+    // required this.heartRate,
+    // required this.fastGlucose,
+    required this.activeMember,
     super.key,
   });
   final String name;
@@ -192,10 +194,11 @@ class ActivePlanComponent extends StatelessWidget {
   final String updatedAt;
   final VoidCallback onTap;
   final int? memberPhrId;
-  final String bloodPressure;
-  final String bloodOxygen;
-  final String heartRate;
-  final String fastGlucose;
+  // final String bloodPressure;
+  // final String bloodOxygen;
+  // final String heartRate;
+  // final String fastGlucose;
+  final Member activeMember;
   final store = GetIt.I<ProductListingStore>();
   @override
   Widget build(BuildContext context) {
@@ -239,26 +242,58 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(
               height: Dimension.d3,
             ),
-            VitalInfoComponent(
-              customComponents: [
-                CustomComponentData(
-                  text: 'Blood Pressure',
-                  value: bloodPressure,
-                ),
-                CustomComponentData(
-                  text: 'Blood Oxygen',
-                  value: bloodOxygen,
-                ),
-                CustomComponentData(
-                  text: 'Heart Rate',
-                  value: heartRate,
-                ),
-                CustomComponentData(
-                  text: 'Fast Glucose',
-                  value: fastGlucose,
-                ),
-              ],
+            const Text(
+              'Vital Info',
+              style: AppTextStyle.bodyMediumSemiBold,
             ),
+            const SizedBox(
+              height: Dimension.d2,
+            ),
+            // SizedBox(
+            //   // width: 200,
+            //   child: GridView.builder(
+            //     itemCount: activeMember.phrModel?.diagnosedServices!.length,
+            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //       crossAxisCount: 2,
+            //       crossAxisSpacing: 8,
+            //       mainAxisSpacing: 8,
+            //       childAspectRatio: 2.5,
+            //     ),
+            //     shrinkWrap: true,
+            //     physics: const NeverScrollableScrollPhysics(),
+            //     itemBuilder: (context, index) {
+            //       return GestureDetector(
+            //         onTap: () {},
+            //         child: _VitalInfoBox(
+            //           label:
+            //               '${activeMember.phrModel?.diagnosedServices![index].description}',
+            //           value:
+            //               '${activeMember.phrModel?.diagnosedServices![index].value}',
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
+            // VitalInfoComponent(
+            //   customComponents: [
+            //     CustomComponentData(
+            //       text: 'Blood Pressure',
+            //       value: bloodPressure,
+            //     ),
+            //     CustomComponentData(
+            //       text: 'Blood Oxygen',
+            //       value: bloodOxygen,
+            //     ),
+            //     CustomComponentData(
+            //       text: 'Heart Rate',
+            //       value: heartRate,
+            //     ),
+            //     CustomComponentData(
+            //       text: 'Fast Glucose',
+            //       value: fastGlucose,
+            //     ),
+            //   ],
+            // ),
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
               text1: 'Last Updated',
@@ -274,10 +309,11 @@ class ActivePlanComponent extends StatelessWidget {
                         ? null
                         : () {
                             GoRouter.of(context).pushNamed(
-                                RoutesConstants.phrPdfViewPage,
-                                pathParameters: {
-                                  'memberPhrId': memberPhrId.toString()
-                                });
+                              RoutesConstants.phrPdfViewPage,
+                              pathParameters: {
+                                'memberPhrId': memberPhrId.toString(),
+                              },
+                            );
                           },
                     title: 'View PHR',
                     showIcon: false,
@@ -309,7 +345,7 @@ class ActivePlanComponent extends StatelessWidget {
             ),
             _UpgradeProdLisComponent(
               productBasicDetailsList: store.getUpgradeProdListById('2'),
-            )
+            ),
           ],
         ),
       ),
@@ -317,8 +353,57 @@ class ActivePlanComponent extends StatelessWidget {
   }
 }
 
+class _VitalInfoBox extends StatelessWidget {
+  const _VitalInfoBox({this.label, this.value});
+
+  final String? label;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 64,
+      width: 148,
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.line),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                label!,
+                style: AppTextStyle.bodySmallMedium.copyWith(
+                  color: AppColors.grayscale600,
+                ),
+              ),
+              const SizedBox(
+                width: Dimension.d1,
+              ),
+              const Icon(
+                AppIcons.ecg_heart,
+                color: AppColors.grayscale600,
+                size: Dimension.d3,
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.d1),
+          Text(
+            value!,
+            style: AppTextStyle.bodyMediumBold,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _UpgradeProdLisComponent extends StatelessWidget {
-  _UpgradeProdLisComponent({required this.productBasicDetailsList, super.key});
+  _UpgradeProdLisComponent({required this.productBasicDetailsList});
 
   final List<ProductBasicDetailsModel> productBasicDetailsList;
   final store = GetIt.I<ProductListingStore>();

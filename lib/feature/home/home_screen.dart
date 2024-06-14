@@ -864,14 +864,15 @@ class _MemberInfo extends StatelessWidget {
                               );
                             },
                             memberPhrId: activeMember.phrModel?.id ?? 0,
-                            bloodPressure:
-                                '${activeMember.phrModel?.diagnosedServices[0].value ?? '--/---'}mmHg',
-                            bloodOxygen:
-                                '${activeMember.phrModel?.diagnosedServices[1].value ?? '--'}%',
-                            heartRate:
-                                '${activeMember.phrModel?.diagnosedServices[2].value ?? '---'}bpm',
-                            fastGlucose:
-                                '${activeMember.phrModel?.diagnosedServices[3].value ?? '---'}mg/dl',
+                            activeMember: activeMember,
+                            // bloodPressure:
+                            //     '${activeMember.phrModel?.diagnosedServices[0].value ?? '--/---'}mmHg',
+                            // bloodOxygen:
+                            //     '${activeMember.phrModel?.diagnosedServices[1].value ?? '--'}%',
+                            // heartRate:
+                            //     '${activeMember.phrModel?.diagnosedServices[2].value ?? '---'}bpm',
+                            // fastGlucose:
+                            //     '${activeMember.phrModel?.diagnosedServices[3].value ?? '---'}mg/dl',
                           );
                         } else if (memberStore.isActive == false ||
                             activeMember != null ||
