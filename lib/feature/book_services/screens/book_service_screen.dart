@@ -189,7 +189,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             hint: component.formDetails.hint,
                             valueReference: []);
                       },
-                      showClear: !component.formDetails.required,
                       validator: component.formDetails.required
                           ? (value) {
                               if (value == null) {
