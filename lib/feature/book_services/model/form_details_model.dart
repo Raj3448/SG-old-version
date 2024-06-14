@@ -131,6 +131,7 @@ class FormAnswer with _$FormAnswer {
   factory FormAnswer.fromJson(Map<String, dynamic> json) =>
       _$FormAnswerFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
