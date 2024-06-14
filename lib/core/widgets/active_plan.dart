@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -6,15 +8,21 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/home/home_screen.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class ExpandedAnalogComponent extends StatelessWidget {
-  const ExpandedAnalogComponent(
-      {required this.label, required this.value, super.key});
+  const ExpandedAnalogComponent({
+    required this.label,
+    required this.value,
+    super.key,
+  });
 
   final String label;
   final String value;
@@ -130,96 +138,36 @@ class CustomComponent extends StatelessWidget {
   }
 }
 
-class VitalInfoComponent extends StatelessWidget {
-  const VitalInfoComponent({
-    required this.customComponents,
-    super.key,
-  });
-  final List<CustomComponentData> customComponents;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Vital Info',
-          style: AppTextStyle.bodyMediumSemiBold,
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        Column(
-          children: _buildRows(customComponents),
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _buildRows(List<CustomComponentData> customComponents) {
-    final rows = <Widget>[];
-    final rowCount = (customComponents.length / 2).ceil();
-    for (var i = 0; i < rowCount; i++) {
-      final rowData = customComponents.sublist(
-        i * 2,
-        (i + 1) * 2 > customComponents.length
-            ? customComponents.length
-            : (i + 1) * 2,
-      );
-      rows.add(
-        Row(
-          children: rowData.asMap().entries.map((entry) {
-            final index = entry.key;
-            final component = entry.value;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(right: index == 0 ? Dimension.d2 : 0),
-                child: CustomComponent(
-                  text: component.text,
-                  value: component.value,
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-      if (i < rowCount - 1) {
-        rows.add(const SizedBox(height: Dimension.d2));
-      }
-    }
-    return rows;
-  }
-}
-
-class CustomComponentData {
-  const CustomComponentData({
-    required this.text,
-    required this.value,
-  });
-  final String text;
-  final String value;
-}
-
-class ActivePlanComponent extends StatelessWidget {
-  ActivePlanComponent({
-    required this.name,
+class ActivePlanComponent extends StatefulWidget {
+  const ActivePlanComponent({
     required this.onTap,
-    required this.relation,
-    required this.age,
-    required this.updatedAt,
     required this.memberPhrId,
+    required this.activeMember,
     super.key,
   });
-  final String name;
-  final String relation;
-  final String age;
-  final String updatedAt;
   final VoidCallback onTap;
   final int? memberPhrId;
+  final Member activeMember;
+
+  @override
+  State<ActivePlanComponent> createState() => _ActivePlanComponentState();
+}
+
+class _ActivePlanComponentState extends State<ActivePlanComponent> {
   final store = GetIt.I<ProductListingStore>();
+  late List<GlobalKey> _tooltipKeys;
+
+  @override
+  void initState() {
+    super.initState();
+    _tooltipKeys = List.generate(4, (index) => GlobalKey());
+  }
+
+  void _showTooltip(int index) {
+    final dynamic tooltip = _tooltipKeys[index].currentState;
+    tooltip.ensureTooltipVisible();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -238,7 +186,7 @@ class ActivePlanComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  name,
+                  '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
                   style: AppTextStyle.bodyLargeBold,
                 ),
                 SubscriptionPkg(
@@ -252,11 +200,14 @@ class ActivePlanComponent extends StatelessWidget {
             ),
             Row(
               children: [
-                AnalogComponent(label: 'Relation', value: relation),
+                AnalogComponent(
+                    label: 'Relation', value: widget.activeMember.relation),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(label: 'Age', value: age),
+                AnalogComponent(
+                    label: 'Age',
+                    value: '${calculateAge(widget.activeMember.dateOfBirth)}'),
               ],
             ),
             const SizedBox(
@@ -275,7 +226,7 @@ class ActivePlanComponent extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2.4,
+                childAspectRatio: 2.5,
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -313,7 +264,7 @@ class ActivePlanComponent extends StatelessWidget {
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
               label: 'Last Updated',
-              value: updatedAt.toString(),
+              value: formatDateTime(widget.activeMember.updatedAt),
             ),
             const SizedBox(height: Dimension.d2),
             Row(
@@ -321,20 +272,21 @@ class ActivePlanComponent extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: memberPhrId == null
+                    ontap: widget.memberPhrId == null
                         ? null
                         : () {
                             GoRouter.of(context).pushNamed(
-                                RoutesConstants.phrPdfViewPage,
-                                pathParameters: {
-                                  'memberPhrId': memberPhrId.toString()
-                                });
+                              RoutesConstants.phrPdfViewPage,
+                              pathParameters: {
+                                'memberPhrId': '${widget.memberPhrId}',
+                              },
+                            );
                           },
                     title: 'View PHR',
                     showIcon: false,
                     iconPath: Icons.not_interested,
                     size: ButtonSize.small,
-                    type: memberPhrId == null
+                    type: widget.memberPhrId == null
                         ? ButtonType.disable
                         : ButtonType.secondary,
                     expanded: true,
@@ -346,7 +298,7 @@ class ActivePlanComponent extends StatelessWidget {
                 ),
                 Expanded(
                   child: CustomButton(
-                    ontap: onTap,
+                    ontap: widget.onTap,
                     title: 'View EPR',
                     showIcon: false,
                     iconPath: Icons.not_interested,
@@ -360,7 +312,7 @@ class ActivePlanComponent extends StatelessWidget {
             ),
             _UpgradeProdLisComponent(
               productBasicDetailsList: store.getUpgradeProdListById('2'),
-            )
+            ),
           ],
         ),
       ),
@@ -368,8 +320,57 @@ class ActivePlanComponent extends StatelessWidget {
   }
 }
 
+class _VitalInfoBox extends StatelessWidget {
+  const _VitalInfoBox({this.label, this.value});
+
+  final String? label;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 64,
+      width: 148,
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.line),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                label!,
+                style: AppTextStyle.bodySmallMedium.copyWith(
+                  color: AppColors.grayscale600,
+                ),
+              ),
+              const SizedBox(
+                width: Dimension.d1,
+              ),
+              const Icon(
+                AppIcons.ecg_heart,
+                color: AppColors.grayscale600,
+                size: Dimension.d3,
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.d1),
+          Text(
+            value!,
+            style: AppTextStyle.bodyMediumBold,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _UpgradeProdLisComponent extends StatelessWidget {
-  _UpgradeProdLisComponent({required this.productBasicDetailsList, super.key});
+  _UpgradeProdLisComponent({required this.productBasicDetailsList});
 
   final List<ProductBasicDetailsModel> productBasicDetailsList;
   final store = GetIt.I<ProductListingStore>();
@@ -390,7 +391,7 @@ class _UpgradeProdLisComponent extends StatelessWidget {
                 height: Dimension.d2,
               ),
               ProductListingCareComponent(
-                isUpgradable: true,
+                isUpgradeable: true,
                 productBasicDetailsList:
                     store.getProdListRankOrder(productBasicDetailsList),
               ),

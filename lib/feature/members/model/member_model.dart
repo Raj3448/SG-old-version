@@ -79,8 +79,23 @@ class PhrModel with _$PhrModel {
     required String additionalInformation,
     required DateTime createdAt,
     required DateTime updatedAt,
+    List<DiagnosedService>? diagnosedServices,
   }) = _PhrModel;
 
   factory PhrModel.fromJson(Map<String, dynamic> json) =>
       _$PhrModelFromJson(json);
+}
+
+@freezed
+class DiagnosedService with _$DiagnosedService {
+  const factory DiagnosedService({
+    required int id,
+    required DateTime diagnosedDate,
+    required String description,
+    required String value,
+    required bool publish,
+  }) = _DiagnosedService;
+
+  factory DiagnosedService.fromJson(Map<String, dynamic> json) =>
+      _$DiagnosedServiceFromJson(json);
 }

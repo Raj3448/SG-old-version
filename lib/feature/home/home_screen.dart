@@ -856,15 +856,11 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
+
                         if (activeMember != null &&
                             memberStore.isActive &&
-                            activeMember.relation != "Brother") {
+                            activeMember.relation != 'Brother') {
                           return ActivePlanComponent(
-                            name:
-                                '${activeMember.firstName} ${activeMember.lastName}',
-                            relation: activeMember.relation,
-                            age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: formatDateTime(activeMember.updatedAt),
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -873,9 +869,8 @@ class _MemberInfo extends StatelessWidget {
                                 },
                               );
                             },
-                            memberPhrId: activeMember.phrModel != null
-                                ? activeMember.phrModel!.id
-                                : null,
+                            memberPhrId: activeMember.phrModel?.id ?? 0,
+                            activeMember: activeMember,
                           );
                         } else if (memberStore.isActive == false ||
                             activeMember != null ||

@@ -108,7 +108,7 @@ class InactivePlanComponent extends StatelessWidget {
               ProductListingCareComponent(
                 productBasicDetailsList: store
                     .getProdListRankOrder(store.getSubscriptActiveProdList),
-                isUpgradable: false,
+                isUpgradeable: false,
               ),
           ],
         ),
@@ -119,11 +119,11 @@ class InactivePlanComponent extends StatelessWidget {
 
 class ProductListingCareComponent extends StatelessWidget {
   final List<ProductBasicDetailsModel> productBasicDetailsList;
-  final bool isUpgradable;
+  final bool isUpgradeable;
 
-  ProductListingCareComponent({
+  const ProductListingCareComponent({
     required this.productBasicDetailsList,
-    required this.isUpgradable,
+    required this.isUpgradeable,
     super.key,
   });
 
@@ -168,7 +168,7 @@ class ProductListingCareComponent extends StatelessWidget {
               pathParameters: {
                 'pageTitle': product.attributes.name,
                 'id': product.id.toString(),
-                'isUpgradable': isUpgradable.toString(),
+                'isUpgradeable': isUpgradeable.toString(),
               },
             );
           },
