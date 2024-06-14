@@ -859,13 +859,8 @@ class _MemberInfo extends StatelessWidget {
 
                         if (activeMember != null &&
                             memberStore.isActive &&
-                            activeMember.relation != "Brother") {
+                            activeMember.relation != 'Brother') {
                           return ActivePlanComponent(
-                            name:
-                                '${activeMember.firstName} ${activeMember.lastName}',
-                            relation: activeMember.relation,
-                            age: '${calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt: formatDateTime(activeMember.updatedAt),
                             onTap: () {
                               GoRouter.of(context).pushNamed(
                                 RoutesConstants.eprRoute,
@@ -876,14 +871,6 @@ class _MemberInfo extends StatelessWidget {
                             },
                             memberPhrId: activeMember.phrModel?.id ?? 0,
                             activeMember: activeMember,
-                            // bloodPressure:
-                            //     '${activeMember.phrModel?.diagnosedServices[0].value ?? '--/---'}mmHg',
-                            // bloodOxygen:
-                            //     '${activeMember.phrModel?.diagnosedServices[1].value ?? '--'}%',
-                            // heartRate:
-                            //     '${activeMember.phrModel?.diagnosedServices[2].value ?? '---'}bpm',
-                            // fastGlucose:
-                            //     '${activeMember.phrModel?.diagnosedServices[3].value ?? '---'}mg/dl',
                           );
                         } else if (memberStore.isActive == false ||
                             activeMember != null ||

@@ -8,6 +8,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
@@ -139,19 +140,11 @@ class CustomComponent extends StatelessWidget {
 
 class ActivePlanComponent extends StatefulWidget {
   const ActivePlanComponent({
-    required this.name,
     required this.onTap,
-    required this.relation,
-    required this.age,
-    required this.updatedAt,
     required this.memberPhrId,
     required this.activeMember,
     super.key,
   });
-  final String name;
-  final String relation;
-  final String age;
-  final String updatedAt;
   final VoidCallback onTap;
   final int? memberPhrId;
   final Member activeMember;
@@ -193,7 +186,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.name,
+                  '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
                   style: AppTextStyle.bodyLargeBold,
                 ),
                 SubscriptionPkg(
@@ -207,11 +200,14 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             ),
             Row(
               children: [
-                AnalogComponent(label: 'Relation', value: widget.relation),
+                AnalogComponent(
+                    label: 'Relation', value: widget.activeMember.relation),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(label: 'Age', value: widget.age),
+                AnalogComponent(
+                    label: 'Age',
+                    value: '${calculateAge(widget.activeMember.dateOfBirth)}'),
               ],
             ),
             const SizedBox(
@@ -268,7 +264,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
               label: 'Last Updated',
-              value: widget.updatedAt,
+              value: formatDateTime(widget.activeMember.updatedAt),
             ),
             const SizedBox(height: Dimension.d2),
             Row(
@@ -282,7 +278,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                             GoRouter.of(context).pushNamed(
                               RoutesConstants.phrPdfViewPage,
                               pathParameters: {
-                                'memberPhrId': widget.memberPhrId.toString(),
+                                'memberPhrId': '${widget.memberPhrId}',
                               },
                             );
                           },
