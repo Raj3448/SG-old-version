@@ -75,31 +75,29 @@ class Option with _$Option {
     required String value,
     required bool isDefault,
   }) = _Option;
-  factory Option.fromJson(Map<String, dynamic> json) =>
-      _$OptionFromJson(json);
+  factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
 }
-
 
 @freezed
 class Validations with _$Validations {
-    const factory Validations({
-        required int id,
-        required String type,
-        required ValueMsg valueMsg,
-    }) = _Validations;
-  
-    factory Validations.fromJson(Map<String, dynamic> json) =>
+  const factory Validations({
+    required int id,
+    required String type,
+    required ValueMsg valueMsg,
+  }) = _Validations;
+
+  factory Validations.fromJson(Map<String, dynamic> json) =>
       _$ValidationsFromJson(json);
 }
 
 @freezed
 class ValueMsg with _$ValueMsg {
-    const factory ValueMsg({
-        required int id,
-        required String value,
-        required String message,
-    }) = _ValueMsg;
-    factory ValueMsg.fromJson(Map<String, dynamic> json) =>
+  const factory ValueMsg({
+    required int id,
+    required String value,
+    required String message,
+  }) = _ValueMsg;
+  factory ValueMsg.fromJson(Map<String, dynamic> json) =>
       _$ValueMsgFromJson(json);
 }
 
@@ -133,6 +131,7 @@ class FormAnswer with _$FormAnswer {
 
   @override
   Map<String, dynamic> toJson() {
+    print('I am here');
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['questionTitle'] = questionTitle;

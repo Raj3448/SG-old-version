@@ -149,8 +149,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,
                                 pathParameters: {
-                                  'pageTitle': 'Health Care Service',
-                                  'isConvenience': false.toString(),
+                                  'isHealthCare': 'true',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'false'
                                 },
                               );
                             },
@@ -162,8 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,
                                 pathParameters: {
-                                  'pageTitle': 'Home Care Service',
-                                  'isConvenience': false.toString(),
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                  'isConvenience': 'false'
                                 },
                               );
                             },
@@ -175,8 +177,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,
                                 pathParameters: {
-                                  'pageTitle': 'Convenience care services',
-                                  'isConvenience': true.toString(),
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'true'
                                 },
                               );
                             },
@@ -184,18 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           BookServiceButton(
                             iconImagePath: 'assets/icon/ambulance.png',
                             buttonName: 'Emergency',
-                            onTap: () {
-                              // GoRouter.of(context).pushNamed(
-                              //   RoutesConstants.geniePage,
-                              //   pathParameters: {
-                              //     'pageTitle': 'Emergency Genie',
-                              //     'defination':
-                              //         "We understand the unpredictability of life, but that shouldn't hinder your well-being. With our comprehensive emergency support service, we'll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver",
-                              //     'headline':
-                              //         'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
-                              //   },
-                              // );
-                            },
+                            onTap: () {},
                           ),
                         ],
                       ),
