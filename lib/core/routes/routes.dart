@@ -13,6 +13,7 @@ import 'package:silver_genie/feature/emergency_services/emergency_services.dart'
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
+import 'package:silver_genie/feature/genie/screens/subscription_details_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
@@ -258,10 +259,10 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/SGSubcscriptionPage',
-      name: RoutesConstants.SGSubcscriptionPage,
+      path: '/sgSubscriptionPage',
+      name: RoutesConstants.sgSubscriptionPage,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: SGSubcscriptionPage());
+        return const MaterialPage(child: sgSubscriptionPage());
       },
     ),
     GoRoute(
@@ -298,7 +299,7 @@ final GoRouter routes = GoRouter(
           child: GeniePage(
             pageTitle: pageTitle,
             id: id,
-            isUpgradble: isUpgradble,
+            isUpgradeable: isUpgradble,
           ),
         );
       },
@@ -335,7 +336,11 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         final serviceId = state.pathParameters['id'].toString();
-        return MaterialPage(child: BookServiceScreen(id: serviceId,));
+        return MaterialPage(
+          child: BookServiceScreen(
+            id: serviceId,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -367,6 +372,18 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingDetailsScreen());
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/subscriDetailsScreen/:price',
+      name: RoutesConstants.subscriptionDetailsScreen,
+      pageBuilder: (context, state) {
+        return MaterialPage(
+          child: SubscriptionDetailsScreen(
+            price: state.pathParameters['price'] ?? '',
+          ),
+        );
       },
     ),
   ],

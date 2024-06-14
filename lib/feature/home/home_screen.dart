@@ -866,7 +866,8 @@ class _MemberInfo extends StatelessWidget {
                                 ? activeMember.phrModel!.id
                                 : null,
                           );
-                        } else if (memberStore.isActive == false || activeMember != null||
+                        } else if (memberStore.isActive == false ||
+                            activeMember != null ||
                             activeMember?.relation == 'Brother') {
                           return InactivePlanComponent(
                             member: activeMember!,

@@ -87,13 +87,14 @@ class InactivePlanComponent extends StatelessWidget {
             ),
             Row(
               children: [
-                AnalogComponent(text1: 'Relation', text2: member.relation),
+                ExpandedAnalogComponent(
+                    label: 'Relation', value: member.relation),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(
-                    text1: 'Age',
-                    text2: calculateAge(member.dateOfBirth).toString()),
+                ExpandedAnalogComponent(
+                    label: 'Age',
+                    value: calculateAge(member.dateOfBirth).toString()),
               ],
             ),
             const SizedBox(height: Dimension.d3),
