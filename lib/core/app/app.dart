@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 
 class MyApp extends StatefulWidget {
@@ -17,6 +19,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     router = routes;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    GetIt.I<PaymentService>().dispose();
   }
 
   @override

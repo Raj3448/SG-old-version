@@ -28,25 +28,26 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.large,
     required this.enabled,
+    this.onSaved,
     this.controller,
     this.validationLogic,
     this.textInputAction,
     this.initialValue,
     this.onChanged,
     super.key,
-    this.isTextColorDisable = false,
   });
 
   final String hintText;
   final TextInputType keyboardType;
   final bool large;
   final bool enabled;
-  final bool isTextColorDisable;
   final TextEditingController? controller;
   final String? Function(String?)? validationLogic;
   final TextInputAction? textInputAction;
   final String? initialValue;
   final void Function(String)? onChanged;
+  final void Function(String?)? onSaved;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +57,11 @@ class CustomTextField extends StatelessWidget {
       enabled: enabled,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      
       style: AppTextStyle.bodyLargeMedium.copyWith(
-        color: isTextColorDisable
-            ? AppColors.grayscale700
-            : AppColors.grayscale900,
+        color: !enabled ? AppColors.grayscale700 : AppColors.grayscale900,
       ),
+      onSaved: onSaved,
       maxLines: 8,
       onChanged: onChanged,
       minLines: large ? 5 : 1,
@@ -91,8 +92,8 @@ class CustomTextField extends StatelessWidget {
             color: AppColors.line,
           ),
         ),
-        filled: isTextColorDisable ? true : null,
-        fillColor: isTextColorDisable ? AppColors.grayscale200 : null,
+        filled: !enabled ? true : null,
+        fillColor: !enabled ? AppColors.grayscale200 : null,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimension.d2),
           borderSide: const BorderSide(

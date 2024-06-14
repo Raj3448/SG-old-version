@@ -252,6 +252,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
                             controller: _genderController,
+                            showClear: false,
                             values: _genderItems,
                             selectedOptions: [
                               _genderItems[selectedGenderIndex!]
@@ -294,7 +295,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               keyboardType: TextInputType.number,
                               large: false,
                               enabled: false,
-                              isTextColorDisable: true,
                               controller: _mobileController,
                             ),
                           ),
@@ -323,7 +323,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               keyboardType: TextInputType.emailAddress,
                               large: false,
                               enabled: false,
-                              isTextColorDisable: true,
                               controller: _emailController,
                             ),
                           ),
@@ -348,6 +347,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
                             controller: _countryController,
+                            searchEnabled: true,
+                            showClear: false,
                             values: _countryItems,
                             validator: (selectedItems) {
                               if (selectedItems == null) {
@@ -403,7 +404,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _postalController,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter the postalcode';
+                                return 'Please enter your postal code';
+                              } else if (value.length > 6 || value.length < 6) {
+                                return 'Please enter 6 digits postal code';
                               }
                               return null;
                             },

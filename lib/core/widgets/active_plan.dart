@@ -14,31 +14,62 @@ import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
-class AnalogComponent extends StatelessWidget {
-  const AnalogComponent({required this.text1, required this.text2, super.key});
+class ExpandedAnalogComponent extends StatelessWidget {
+  const ExpandedAnalogComponent(
+      {required this.label, required this.value, super.key});
 
-  final String text1;
-  final String text2;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: AppTextStyle.bodyMediumMedium,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(
+            ':  $value',
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale700),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class AnalogComponent extends StatelessWidget {
+  const AnalogComponent({required this.label, required this.value, super.key});
+
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
-          text1,
+          label,
           style: AppTextStyle.bodyMediumMedium
-              .copyWith(color: AppColors.grayscale700),
+              .copyWith(color: AppColors.grayscale900),
         ),
         Text(
           ':',
           style: AppTextStyle.bodyMediumMedium
-              .copyWith(color: AppColors.grayscale700),
+              .copyWith(color: AppColors.grayscale900),
         ),
         const SizedBox(
           width: Dimension.d1,
         ),
         Text(
-          text2,
+          value,
           style: AppTextStyle.bodyMediumMedium
               .copyWith(color: AppColors.grayscale700),
         ),
@@ -253,11 +284,11 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             ),
             Row(
               children: [
-                AnalogComponent(text1: 'Relation', text2: widget.relation),
+                AnalogComponent(label: 'Relation', value: widget.relation),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
-                AnalogComponent(text1: 'Age', text2: widget.age),
+                AnalogComponent(label: 'Age', value: widget.age),
               ],
             ),
             const SizedBox(
@@ -326,8 +357,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             // ),
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
-              text1: 'Last Updated',
-              text2: widget.updatedAt.toString(),
+              label: 'Last Updated',
+              value: widget.updatedAt.toString(),
             ),
             const SizedBox(height: Dimension.d2),
             Row(

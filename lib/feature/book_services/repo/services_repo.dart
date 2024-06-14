@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:silver_genie/feature/services/model/doctor_model.dart';
-import 'package:silver_genie/feature/services/model/time_slots_model.dart';
+import 'package:silver_genie/feature/book_services/model/doctor_model.dart';
+import 'package:silver_genie/feature/book_services/model/time_slots_model.dart';
 
 Future<List<DoctorModel>> fetchDocDetails() async {
   final response = await rootBundle.loadString('assets/json/doctor_info.json');

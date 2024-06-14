@@ -15,7 +15,8 @@ class UserDetails with _$UserDetails {
     required List<PreferredService> preferredServices,
   }) = _UserDetails;
 
-  factory UserDetails.fromJson(Map<String, dynamic> json) => _$UserDetailsFromJson(json);
+  factory UserDetails.fromJson(Map<String, dynamic> json) =>
+      _$UserDetailsFromJson(json);
 }
 
 @freezed
@@ -60,20 +61,21 @@ class Address with _$Address {
     @HiveField(5) required String country,
   }) = _Address;
 
-  factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
-
-
-  
+  factory Address.fromJson(Map<String, dynamic> json) =>
+      _$AddressFromJson(json);
 }
+
 extension AddressExtension on Address {
   String get fullAddress {
     return [
-      streetAddress,
-      city,
-      state,
-      country,
-      '$postalCode.',
-    ].where((part) => part.isNotEmpty).join(', ');
+      [
+        streetAddress,
+        city,
+        state,
+        country,
+      ].where((part) => part.isNotEmpty).join(', '),
+      postalCode,
+    ].where((part) => part.isNotEmpty).join(' - ');
   }
 }
 
@@ -93,7 +95,8 @@ class ProfileImg with _$ProfileImg {
     @HiveField(8) required DateTime updatedAt,
   }) = _ProfileImg;
 
-  factory ProfileImg.fromJson(Map<String, dynamic> json) => _$ProfileImgFromJson(json);
+  factory ProfileImg.fromJson(Map<String, dynamic> json) =>
+      _$ProfileImgFromJson(json);
 }
 
 @freezed
@@ -104,7 +107,8 @@ class Formats with _$Formats {
     @HiveField(0) required Thumbnail thumbnail,
   }) = _Formats;
 
-  factory Formats.fromJson(Map<String, dynamic> json) => _$FormatsFromJson(json);
+  factory Formats.fromJson(Map<String, dynamic> json) =>
+      _$FormatsFromJson(json);
 }
 
 @freezed
@@ -118,5 +122,6 @@ class Thumbnail with _$Thumbnail {
     @HiveField(3) required int height,
   }) = _Thumbnail;
 
-  factory Thumbnail.fromJson(Map<String, dynamic> json) => _$ThumbnailFromJson(json);
+  factory Thumbnail.fromJson(Map<String, dynamic> json) =>
+      _$ThumbnailFromJson(json);
 }

@@ -7,10 +7,12 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/services/store/services_store.dart';
+import 'package:silver_genie/feature/book_services/store/services_store.dart';
+import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({super.key});
@@ -27,11 +29,12 @@ class PaymentScreen extends StatelessWidget {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () {
-              GoRouter.of(context)
-                  .pushNamed(RoutesConstants.bookingDetailsScreen);
-              store
-                ..paymentEnabled = !store.paymentEnabled
-                ..detailsEnabled = !store.detailsEnabled;
+              GetIt.I<PaymentService>().openCheckout(amount: 10, receipt: '');
+              // GoRouter.of(context)
+              //     .pushNamed(RoutesConstants.bookingDetailsScreen);
+              // store
+              //   ..paymentEnabled = !store.paymentEnabled
+              //   ..detailsEnabled = !store.detailsEnabled;
             },
             btnTitle: 'Book now',
             showIcon: false,
@@ -41,15 +44,15 @@ class PaymentScreen extends StatelessWidget {
             padding: const EdgeInsets.all(Dimension.d3),
             child: Column(
               children: [
-                //BookingStatus(),
+                const BookingStatus(
+                  currentStep: BookingStep.payment,
+                ),
                 SvgPicture.asset('assets/icon/failure.svg'),
-
                 Text(
                   'Payment Failure',
                   style: AppTextStyle.bodyXLSemiBold
                       .copyWith(fontSize: 20, height: 2.8),
                 ),
-
                 Container(
                   width: double.infinity,
                   height: 115,

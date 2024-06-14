@@ -284,8 +284,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: firstNameContr,
                                 large: false,
-                                isTextColorDisable:
-                                    widget.isSelf ? true : false,
                                 enabled: widget.isSelf ? false : true,
                                 onChanged: (value) =>
                                     firstNameContr.text = value,
@@ -304,8 +302,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 keyboardType: TextInputType.name,
                                 controller: lastNameContr,
                                 large: false,
-                                isTextColorDisable:
-                                    widget.isSelf ? true : false,
                                 enabled: widget.isSelf ? false : true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
@@ -318,6 +314,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const AsteriskLabel(label: 'Gender'),
                               const SizedBox(height: 8),
                               MultiSelectFormField(
+                                showClear: false,
                                 selectedOptions: widget.edit
                                     ? [_genderItems[selectedGenderIndex!]]
                                     : null,
@@ -347,6 +344,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 enabled: !widget.isSelf ? true : false,
+                                showClear: false,
                                 selectedOptions: widget.isSelf
                                     ? [_relationList[7]]
                                     : widget.edit &&
@@ -392,20 +390,22 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   hintText: 'Enter mobile number',
                                   keyboardType: TextInputType.number,
                                   controller: phoneNumberContr,
-                                  isTextColorDisable:
-                                      widget.edit || widget.isSelf
-                                          ? true
-                                          : false,
                                   large: false,
                                   enabled: widget.edit || widget.isSelf
                                       ? false
                                       : true,
-                                  validationLogic: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your mobile number';
-                                    }
-                                    return null;
-                                  },
+                                  validationLogic:
+                                      (widget.edit || widget.isSelf)
+                                          ? null
+                                          : (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Please enter your phone number';
+                                              } else if (value.length > 10 ||
+                                                  value.length < 10) {
+                                                return 'Please enter 10 digits phone number';
+                                              }
+                                              return null;
+                                            },
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -432,10 +432,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 },
                                 child: CustomTextField(
                                   hintText: 'Enter email address',
-                                  isTextColorDisable:
-                                      widget.edit || widget.isSelf
-                                          ? true
-                                          : false,
                                   keyboardType: TextInputType.emailAddress,
                                   controller: emailContr,
                                   large: false,
@@ -475,6 +471,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 controller: countryContr,
+                                searchEnabled: true,
+                                showClear: false,
                                 values: _countryItems,
                                 validator: (selectedItems) {
                                   if (selectedItems == null) {
@@ -530,7 +528,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 enabled: true,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Please enter postal code';
+                                    return 'Please enter your postal code';
+                                  } else if (value.length > 6 ||
+                                      value.length < 6) {
+                                    return 'Please enter 6 digits postal code';
                                   }
                                   return null;
                                 },

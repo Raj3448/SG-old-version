@@ -24,8 +24,9 @@ abstract class _MembersStoreBase with Store {
   int selectedIndex = 0;
 
   @computed
-  List<Member> get familyMembers =>
-      members.where((member) => member.isFamilyMember == true).toList();
+  List<Member> get familyMembers => members
+      .where((member) => member.isFamilyMember ?? false == true)
+      .toList();
 
   @computed
   int? get activeMemberId => selectedMemberId ?? familyMembers.firstOrNull?.id;
@@ -273,11 +274,13 @@ extension MemberExtension on Member {
     }
 
     return [
-      address.streetAddress,
-      address.city,
-      address.state,
-      address.country,
-      address.postalCode,
-    ].where((part) => part != null && part.isNotEmpty).join(', ');
+      [
+        address.streetAddress,
+        address.city,
+        address.state,
+        address.country,
+      ].where((part) => part.isNotEmpty).join(', '),
+      address.postalCode
+    ].where((part) => part.isNotEmpty).join(' - ');
   }
 }
