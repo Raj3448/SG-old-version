@@ -140,13 +140,9 @@ class CustomComponent extends StatelessWidget {
 
 class ActivePlanComponent extends StatefulWidget {
   const ActivePlanComponent({
-    required this.onTap,
-    required this.memberPhrId,
     required this.activeMember,
     super.key,
   });
-  final VoidCallback onTap;
-  final int? memberPhrId;
   final Member activeMember;
 
   @override
@@ -168,8 +164,40 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
     tooltip.ensureTooltipVisible();
   }
 
+  final List<String> desiredServices = [
+    'Blood Pressure',
+    'Blood Oxygen',
+    'Heart Rate',
+    'Fast Glucose',
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final phrModel = widget.activeMember.phrModel;
+    final diagnosedServices = phrModel?.diagnosedServices ?? [];
+
+    final latestServices = <String, DiagnosedService>{};
+    for (final service in diagnosedServices) {
+      if (desiredServices.contains(service.description)) {
+        if (!latestServices.containsKey(service.description) ||
+            service.diagnosedDate
+                .isAfter(latestServices[service.description]!.diagnosedDate)) {
+          latestServices[service.description] = service;
+        }
+      }
+    }
+
+    final filteredDiagnosedServices = desiredServices.map((description) {
+      return latestServices[description] ??
+          DiagnosedService(
+            id: 0,
+            description: description,
+            value: '---',
+            diagnosedDate: DateTime.now(),
+            publish: false,
+          );
+    }).toList();
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -201,13 +229,16 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             Row(
               children: [
                 AnalogComponent(
-                    label: 'Relation', value: widget.activeMember.relation),
+                  label: 'Relation',
+                  value: widget.activeMember.relation,
+                ),
                 const SizedBox(
                   width: Dimension.d2,
                 ),
                 AnalogComponent(
-                    label: 'Age',
-                    value: '${calculateAge(widget.activeMember.dateOfBirth)}'),
+                  label: 'Age',
+                  value: '${calculateAge(widget.activeMember.dateOfBirth)}',
+                ),
               ],
             ),
             const SizedBox(
@@ -221,7 +252,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               height: Dimension.d2,
             ),
             GridView.builder(
-              itemCount: 4,
+              itemCount: filteredDiagnosedServices.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
@@ -231,17 +262,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                final phrModel = widget.activeMember.phrModel;
-                final diagnosedServices = phrModel?.diagnosedServices;
-
-                if (diagnosedServices == null || diagnosedServices.isEmpty) {
-                  return const _VitalInfoBox(
-                    label: '---',
-                    value: '---',
-                  );
-                }
-
-                final diagnosedService = diagnosedServices[index];
+                final diagnosedService = filteredDiagnosedServices[index];
 
                 return GestureDetector(
                   onLongPress: () => _showTooltip(index),
@@ -250,9 +271,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                     enableFeedback: true,
                     message: formatDateTime(diagnosedService.diagnosedDate),
                     child: _VitalInfoBox(
-                      label: diagnosedService.description.isNotEmpty
-                          ? diagnosedService.description
-                          : '---',
+                      label: diagnosedService.description,
                       value: diagnosedService.value.isNotEmpty
                           ? diagnosedService.value
                           : '---',
@@ -272,13 +291,14 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: widget.memberPhrId == null
+                    ontap: widget.activeMember.phrModel?.id == null
                         ? null
                         : () {
                             GoRouter.of(context).pushNamed(
                               RoutesConstants.phrPdfViewPage,
                               pathParameters: {
-                                'memberPhrId': '${widget.memberPhrId}',
+                                'memberPhrId':
+                                    '${widget.activeMember.phrModel?.id}',
                               },
                             );
                           },
@@ -286,7 +306,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                     showIcon: false,
                     iconPath: Icons.not_interested,
                     size: ButtonSize.small,
-                    type: widget.memberPhrId == null
+                    type: widget.activeMember.phrModel?.id == null
                         ? ButtonType.disable
                         : ButtonType.secondary,
                     expanded: true,
@@ -298,7 +318,14 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 ),
                 Expanded(
                   child: CustomButton(
-                    ontap: widget.onTap,
+                    ontap: () {
+                      GoRouter.of(context).pushNamed(
+                        RoutesConstants.eprRoute,
+                        pathParameters: {
+                          'memberId': '${widget.activeMember.id}',
+                        },
+                      );
+                    },
                     title: 'View EPR',
                     showIcon: false,
                     iconPath: Icons.not_interested,

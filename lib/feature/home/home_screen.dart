@@ -13,7 +13,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -861,15 +860,6 @@ class _MemberInfo extends StatelessWidget {
                             memberStore.isActive &&
                             activeMember.relation != 'Brother') {
                           return ActivePlanComponent(
-                            onTap: () {
-                              GoRouter.of(context).pushNamed(
-                                RoutesConstants.eprRoute,
-                                pathParameters: {
-                                  'memberId': '${activeMember.id}',
-                                },
-                              );
-                            },
-                            memberPhrId: activeMember.phrModel?.id ?? 0,
                             activeMember: activeMember,
                           );
                         } else if (memberStore.isActive == false ||
