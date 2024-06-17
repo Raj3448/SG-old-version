@@ -1,12 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
@@ -17,7 +22,9 @@ import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
+import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
@@ -36,8 +43,31 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
       GlobalKey<CustomDropDownBoxState>();
   List<FormAnswer> formAnswers = [];
   Member? selectedMember;
-  BookingStep bookingStep = BookingStep.serviceDetails;
-  final store = GetIt.I<ProductLisitingServices>();
+  final service = GetIt.I<ProductLisitingServices>();
+  final store = GetIt.I<ProductListingStore>();
+
+  @override
+  void initState() {
+    reaction((_) => store.buyServiceFailed, (buyServiceFailed) {
+      if (buyServiceFailed != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(buyServiceFailed),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+      store.buyServiceFailed = null;
+    });
+    reaction((_) => store.paymentStatus, (PaymentStatus? paymentStatus) {
+      if (paymentStatus != null) {
+        context.pushReplacementNamed(RoutesConstants.paymentScreen,
+            extra: {'paymentStatus': paymentStatus});
+      }
+      store..paymentStatus = null;
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -51,16 +81,26 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Book Service'),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FixedButton(
-        ontap: () {
-          _submitAndNext(context);
+      floatingActionButton: Observer(
+        builder: (_) {
+          return FixedButton(
+            ontap: () {
+              if (store.servicePaymentInfoGotSuccess == null) {
+                _submitAndNext(context);
+              } else {
+                _proceedToPay();
+              }
+            },
+            btnTitle: store.servicePaymentInfoGotSuccess == null
+                ? 'Submit & next'
+                : 'Proceed to pay',
+            showIcon: false,
+            iconPath: AppIcons.add,
+          );
         },
-        btnTitle: 'Submit & next',
-        showIcon: false,
-        iconPath: AppIcons.add,
       ),
       body: FutureBuilder(
-        future: store.getBookingServiceDetailsById(id: widget.id),
+        future: service.getBookingServiceDetailsById(id: widget.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingWidget(
@@ -104,13 +144,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       updateMember: (member) {
                         selectedMember = member;
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value: member?.id.toString() ?? '',
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: [member?.id.toString() ?? '']);
+                            valueReference: [member?.id.toString() ?? ''],
+                            forDId: component.formDetails.id.toString());
                       },
                       isRequired: component.formDetails.required,
                     )
@@ -146,13 +186,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                           : null,
                       onSaved: (value) {
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value: value?.trim() ?? '',
+                            value: value?.trim(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       hintText: 'Type here',
                       keyboardType: TextInputType.name,
@@ -180,14 +220,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       showClear: !component.formDetails.required,
                       onSaved: (newValue) {
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value:
-                                newValue?.first.value.toString().trim() ?? '',
+                            value: newValue?.first.value.toString().trim(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       validator: component.formDetails.required
                           ? (value) {
@@ -230,13 +269,13 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       dateFormat: component.dateFormat,
                       onSaved: (value) {
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
                             value: value.toString(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       validator: component.formDetails.required
                           ? (value) {
@@ -283,15 +322,14 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             }
                           : null,
                       onSaved: (value) {
-                        debugPrint('In Decimal component');
                         _updateFormValues1(
-                            id: component.formDetails.id,
+                            id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value: value?.trim() ?? '',
+                            value: value?.trim(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
-                            valueReference: []);
+                            forDId: component.formDetails.id.toString());
                       },
                       hintText: 'Type here',
                       keyboardType: TextInputType.number,
@@ -304,22 +342,34 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
           }
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BookingStatus(
-                      currentStep: bookingStep,
+            child: Observer(
+              builder: (_) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BookingStatus(
+                          currentStep:
+                              store.servicePaymentInfoGotSuccess != null
+                                  ? BookingStep.payment
+                                  : BookingStep.serviceDetails,
+                        ),
+                        if (store.servicePaymentInfoGotSuccess == null)
+                          ...widgetList,
+                        if (store.servicePaymentInfoGotSuccess != null)
+                          _BookingPaymentDetailComp(
+                            paymentDetails: store.servicePaymentInfoGotSuccess!,
+                          ),
+                        const SizedBox(height: Dimension.d20),
+                        const SizedBox(height: Dimension.d4),
+                      ],
                     ),
-                    ...widgetList,
-                    const SizedBox(height: Dimension.d20),
-                    const SizedBox(height: Dimension.d4),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           );
         },
@@ -350,12 +400,14 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     required int id,
     required String title,
     required String type,
-    required String value,
-    required String controlType,
+    String? value,
+    String? controlType,
     required String? hint,
-    required List<String> valueReference,
+    List<String>? valueReference,
+    required String forDId,
   }) {
-    final existingIndex = formAnswers.indexWhere((element) => element.id == id);
+    final existingIndex =
+        formAnswers.indexWhere((element) => element.forDId == forDId);
 
     if (existingIndex >= 0) {
       formAnswers[existingIndex] = FormAnswer(
@@ -366,6 +418,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         controlType: controlType,
         hint: hint,
         valueReference: valueReference,
+        forDId: forDId,
       );
     } else {
       formAnswers.add(FormAnswer(
@@ -376,6 +429,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         controlType: controlType,
         hint: hint,
         valueReference: valueReference,
+        forDId: forDId,
       ));
     }
   }
@@ -387,14 +441,78 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
       return;
     }
     _formKey.currentState!.save();
-    debugPrint('Product Id : ${widget.id}');
-    debugPrint('=============================================');
-    debugPrint('FormAnswer Details : $formAnswers');
-    debugPrint('FormAnswer length : ${formAnswers.length}');
-    FormAnswerModel formAnswerModel = FormAnswerModel(
+    final formAnswerModel = FormAnswerModel(
         formAnswer: formAnswers, productId: int.parse(widget.id));
     debugPrint('FormData : ${formAnswerModel.toJson()}');
-    //store.buyProduct(formData: formAnswerModel);
-    context.pushNamed(RoutesConstants.paymentScreen);
+    store.buyService(formData: formAnswerModel);
+  }
+
+  void _proceedToPay() {
+    GetIt.I<PaymentService>().openCheckout(amount: 10, receipt: '');
+  }
+}
+
+class _BookingPaymentDetailComp extends StatelessWidget {
+  final String paymentDetails;
+  const _BookingPaymentDetailComp({
+    required this.paymentDetails,
+    Key? key,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Order Summery',
+            style: AppTextStyle.bodyLargeSemiBold.copyWith(
+                fontSize: 18, color: AppColors.grayscale900, height: 2.6)),
+        const AssigningComponent(
+          name: 'Service opted for',
+          initializeElement: 'Vinita nair',
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+        const AssigningComponent(
+          name: 'Duty hours',
+          initializeElement: '8 hours per day',
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+        const AssigningComponent(
+          name: 'Expected duration of service',
+          initializeElement: '60 Days',
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+        const AssigningComponent(
+          name: 'Expected date to start service',
+          initializeElement: '24/5/2024',
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+        const Divider(
+          color: AppColors.line,
+        ),
+        Text('Payment breakdown',
+            style: AppTextStyle.bodyLargeSemiBold.copyWith(
+                fontSize: 18, color: AppColors.grayscale900, height: 2.6)),
+        ElementSpaceBetween(title: 'Base rate', description: '₹ 1,200'),
+        ElementSpaceBetween(
+            title: '60 days × 12 hours rate', description: '₹ 72,000'),
+        ElementSpaceBetween(title: 'Other', description: '₹ 2,000'),
+        const Divider(
+          color: AppColors.line,
+        ),
+        ElementSpaceBetween(
+          title: 'Total to pay',
+          description: '₹ 75,400',
+          isTitleBold: true,
+        ),
+      ],
+    );
   }
 }

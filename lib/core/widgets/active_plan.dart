@@ -14,7 +14,6 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
-import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class ExpandedAnalogComponent extends StatelessWidget {
@@ -257,7 +256,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2.5,
+                childAspectRatio: 2.3,
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

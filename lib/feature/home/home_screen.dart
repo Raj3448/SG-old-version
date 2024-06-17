@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -22,6 +21,8 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
+import 'package:silver_genie/dummy_variables.dart';
+import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
@@ -41,6 +42,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final MembersStore memberStore;
   late final productLStore = GetIt.I<ProductListingStore>();
+  final bookingServiceStore = GetIt.I<BookingServiceStore>();
+
   @override
   void initState() {
     super.initState();
@@ -61,154 +64,137 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Observer(
-                    builder: (_) {
-                      if (memberStore.isLoading) {
-                        return const SizedBox(
-                          height: Dimension.d20,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        );
-                      } else if (memberStore.familyMembers.isEmpty) {
-                        return NoMember(
-                          ontap: () {
-                            final user = GetIt.I<UserDetailStore>().userDetails;
-                            final member = memberStore.memberById(user!.id);
-                            if (member != null) {
-                              context.pushNamed(
-                                RoutesConstants.addEditFamilyMemberRoute,
-                                pathParameters: {
-                                  'edit': 'false',
-                                  'isSelf': 'false',
-                                },
-                              );
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return MemberCreation(
-                                    selfOnTap: () {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'true',
-                                        },
-                                      );
-                                    },
-                                    memberOnTap: () {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'false',
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        );
-                      } else {
-                        return const _MemberInfo();
-                      }
-                    },
-                  ),
-                  _EmergencyActivation(),
-                  _ActiveBookingComponent(),
-                  const SizedBox(height: Dimension.d4),
-                  Text(
-                    'Book services',
-                    style: AppTextStyle.bodyXLMedium
-                        .copyWith(color: AppColors.grayscale900),
-                  ),
-                  const SizedBox(height: Dimension.d4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Observer(
+              builder: (_) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/volunteer_activism.png',
-                        buttonName: 'Health Care',
-                        onTap: () {
-                          context.pushNamed(
-                            RoutesConstants.allServicesScreen,
-                            pathParameters: {
-                              'isConvenience': 'false',
-                              'isHealthCare': 'true',
-                              'isHomeCare': 'false',
+                      Container(
+                        child: memberStore.isLoading
+                            ? const SizedBox(
+                                height: Dimension.d20,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              )
+                            : memberStore.familyMembers.isEmpty
+                                ? NoMember(
+                                    ontap: () {
+                                      final user = GetIt.I<UserDetailStore>()
+                                          .userDetails;
+                                      final member =
+                                          memberStore.memberById(user!.id);
+                                      if (member != null) {
+                                        context.pushNamed(
+                                          RoutesConstants
+                                              .addEditFamilyMemberRoute,
+                                          pathParameters: {
+                                            'edit': 'false',
+                                            'isSelf': 'false',
+                                          },
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return MemberCreation(
+                                              selfOnTap: () {
+                                                context.pushNamed(
+                                                  RoutesConstants
+                                                      .addEditFamilyMemberRoute,
+                                                  pathParameters: {
+                                                    'edit': 'false',
+                                                    'isSelf': 'true',
+                                                  },
+                                                );
+                                              },
+                                              memberOnTap: () {
+                                                context.pushNamed(
+                                                  RoutesConstants
+                                                      .addEditFamilyMemberRoute,
+                                                  pathParameters: {
+                                                    'edit': 'false',
+                                                    'isSelf': 'false',
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  )
+                                : const _MemberInfo(),
+                      ),
+                      _EmergencyActivation(),
+                      if (bookingServiceStore.isAllServiceLoaded)
+                        _ActiveBookingComponent(store: bookingServiceStore),
+                      Text(
+                        'Book services',
+                        style: AppTextStyle.bodyXLSemiBold.copyWith(
+                            color: AppColors.grayscale900, height: 2.6),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/volunteer_activism.png',
+                            buttonName: 'Health Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'true',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'false'
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/home_health.png',
-                        buttonName: 'Home Care',
-                        onTap: () {
-                          context.pushNamed(
-                            RoutesConstants.allServicesScreen,
-                            pathParameters: {
-                              'isConvenience': 'false',
-                              'isHealthCare': 'false',
-                              'isHomeCare': 'true',
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/home_health.png',
+                            buttonName: 'Home Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                  'isConvenience': 'false'
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/prescriptions.png',
-                        buttonName: 'Wellness & Convenience',
-                        onTap: () {
-                          context.pushNamed(
-                            RoutesConstants.allServicesScreen,
-                            pathParameters: {
-                              'isConvenience': 'true',
-                              'isHealthCare': 'false',
-                              'isHomeCare': 'false',
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/prescriptions.png',
+                            buttonName: 'Wellness & Convenience',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'true'
+                                },
+                              );
                             },
-                          );
-                        },
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/ambulance.png',
+                            buttonName: 'Emergency',
+                            onTap: () {},
+                          ),
+                        ],
                       ),
-                      BookServiceButton(
-                        iconImagePath: 'assets/icon/ambulance.png',
-                        buttonName: 'Emergency',
-                        onTap: () {
-                          // GoRouter.of(context).pushNamed(
-                          //   RoutesConstants.geniePage,
-                          //   pathParameters: {
-                          //     'pageTitle': 'Emergency Genie',
-                          //     'defination':
-                          //         "We understand the unpredictability of life, but that shouldn't hinder your well-being. With our comprehensive emergency support service, we'll ensure holistic care for you. From sickness to health, here are the promises we intend to deliver",
-                          //     'headline':
-                          //         'A dedicated plan in place, focused on remote health monitoring for you and your loved ones.',
-                          //   },
-                          // );
-                          // context.pushNamed(
-                          //   RoutesConstants.geniePage,
-                          //   pathParameters: {
-                          //     'pageTitle': 'Emergency Genie',
-                          //     'id': '3',
-                          //     'isUpgradeable': 'false',
-                          //   },
-                          // );
-                        },
-                      ),
+                      _HomeScreenComponents(),
                     ],
                   ),
-                  _HomeScreenComponents(),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -238,14 +224,8 @@ class _HomeScreenComponents extends StatelessWidget {
       }
       if (component is BannerImageModel) {
         widgetList.add(
-          Column(
-            children: [
-              const SizedBox(height: Dimension.d4),
-              BannerImageComponent(
-                imageUrl: component.bannerImage.data.attributes.url,
-              ),
-              const SizedBox(height: Dimension.d4),
-            ],
+          BannerImageComponent(
+            imageUrl: component.bannerImage.data.attributes.url,
           ),
         );
         continue;
@@ -310,13 +290,15 @@ class _TestmonialsComponent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: Dimension.d3),
         Text(
           testimonialsModel.title,
-          style:
-              AppTextStyle.bodyXLMedium.copyWith(color: AppColors.grayscale900),
+          style: AppTextStyle.bodyXLSemiBold.copyWith(
+            color: AppColors.grayscale900,
+            height: 2.6,
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          ),
         ),
-        const SizedBox(height: Dimension.d4),
         Container(
           color: AppColors.secondary,
           padding: const EdgeInsets.symmetric(horizontal: Dimension.d1),
@@ -396,24 +378,30 @@ class _AboutUsOfferComponent extends StatelessWidget {
       children: [
         Text(
           aboutUsOfferModel.header,
-          style:
-              AppTextStyle.bodyXLMedium.copyWith(color: AppColors.grayscale900),
+          style: AppTextStyle.bodyXLSemiBold
+              .copyWith(color: AppColors.grayscale900, height: 2.6),
         ),
-        const SizedBox(height: Dimension.d3),
         Text(
           aboutUsOfferModel.description,
           style: AppTextStyle.bodyLargeMedium.copyWith(
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
+            height: 1.5,
             color: AppColors.grayscale700,
           ),
         ),
-        const SizedBox(height: Dimension.d3),
         Text(
           aboutUsOfferModel.offering.header,
-          style: AppTextStyle.bodyLargeMedium.copyWith(
+          style: AppTextStyle.bodyXLSemiBold.copyWith(
             color: AppColors.grayscale900,
+            height: 2.4,
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
           ),
         ),
-        const SizedBox(height: Dimension.d3),
+        const SizedBox(
+          height: Dimension.d1,
+        ),
         SizedBox(
           height: 240,
           child: ListView(
@@ -434,7 +422,9 @@ class _AboutUsOfferComponent extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: Dimension.d3),
+        const SizedBox(
+          height: Dimension.d4,
+        ),
         Center(
           child: SmoothPageIndicator(
             controller: _offerPageController,
@@ -473,22 +463,25 @@ class _AboutUsOfferComponent extends StatelessWidget {
 }
 
 class _ActiveBookingComponent extends StatelessWidget {
+  const _ActiveBookingComponent({required this.store, super.key});
+
+  final BookingServiceStore store;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(
-        4,
-        (index) => index == 0
-            ? Text(
-                'Active bookings',
-                style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
-              )
-            : const BookingListTileComponent(
-                bookingServiceStatus: BookingServiceStatus.active,
-              ),
-      ),
-    );
+    return bookingServicesList.isEmpty
+        ? const SizedBox.shrink()
+        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'Active bookings',
+              style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
+            ),
+            ...List.generate(
+                bookingServicesList.length <= 3 ? bookingServicesList.length : 3,
+                (index) => BookingListTileComponent(
+                      bookingServiceModel: store.getAllActiveServiceList[index],
+                      bookingServiceStatus: BookingServiceStatus.active,
+                    )),
+          ]);
   }
 }
 
@@ -759,11 +752,9 @@ class _MemberInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: Dimension.d4),
-          Text(
+          const Text(
             'Family Members health info',
-            style: AppTextStyle.bodyXLMedium
-                .copyWith(color: AppColors.grayscale900),
+            style: AppTextStyle.bodyXLSemiBold,
           ),
           const SizedBox(height: Dimension.d4),
           Observer(
@@ -924,7 +915,7 @@ class BookServiceButton extends StatelessWidget {
             width: 64,
             decoration: BoxDecoration(
               color: AppColors.secondary,
-              border: Border.all(color: AppColors.line),
+              border: Border.all(width: 2, color: AppColors.grayscale300),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Image.asset(iconImagePath),
@@ -965,22 +956,25 @@ class _HomeScreenOfferCard extends StatelessWidget {
     return Container(
       height: 236,
       width: 235,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: AppColors.secondary,
-        border: Border.all(color: AppColors.line),
-        borderRadius: BorderRadius.circular(8),
+        border: Border.all(width: 2, color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             offerTitle,
-            style: AppTextStyle.bodyLargeMedium
-                .copyWith(color: AppColors.grayscale900),
+            style: AppTextStyle.bodyXLSemiBold.copyWith(
+              color: AppColors.grayscale900,
+              height: 2.4,
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+            ),
           ),
-          const SizedBox(height: Dimension.d3),
           Column(
             children: List.generate(
               content.length,
@@ -997,12 +991,16 @@ class _HomeScreenOfferCard extends StatelessWidget {
                         color: AppColors.primary,
                       ),
                     ),
-                    const SizedBox(width: Dimension.d3),
+                    const SizedBox(
+                      width: Dimension.d3,
+                    ),
                     Expanded(
                       child: Text(
                         content[index],
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
+                        style: AppTextStyle.bodyMediumMedium.copyWith(
+                          color: AppColors.grayscale700,
+                          height: 1.7,
+                        ),
                       ),
                     ),
                   ],
@@ -1013,19 +1011,5 @@ class _HomeScreenOfferCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-String formatDateTime(DateTime dateTime) {
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-
-  String formattedTime = DateFormat('h:mma').format(dateTime);
-
-  if (date == today) {
-    return 'Today at $formattedTime';
-  } else {
-    return DateFormat('MMM d, y').format(dateTime) + ' at $formattedTime';
   }
 }

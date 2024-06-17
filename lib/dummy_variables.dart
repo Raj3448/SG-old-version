@@ -1,23 +1,48 @@
-final List<Map<String, dynamic>> servicesList = [
-  {'servicename': 'Emergency Support 24/7', 'isProvide': true},
-  {'servicename': 'Coordination with Ambulance', 'isProvide': true},
-  {'servicename': 'Personal Health Record(PHR)', 'isProvide': true},
-  {'servicename': 'Care Coach during Emergency', 'isProvide': true},
-  {'servicename': 'Care Coach Followup- Phone', 'isProvide': true},
-  {'servicename': 'Medicine Delivery', 'isProvide': true},
-  {'servicename': 'Other Delivery Services', 'isProvide': true},
-  {'servicename': 'Personal Care Coach', 'isProvide': false},
-  {'servicename': 'Care Coach Home Visit', 'isProvide': false},
-  {'servicename': 'Online Yoga Session (Everyday)', 'isProvide': false},
-  {'servicename': 'Doctor Tele-Consultation', 'isProvide': false},
-  {'servicename': 'Accompanimanet Service', 'isProvide': false}
-];
-final test = 'Home care is care that allows a person with special needs to stay in their home. It might be for people who are getting older (aging in place). It could also be for people who are chronically ill, recovering from surgery, or have a disability.';
-final List<Map<String, dynamic>> questionAndAnswerList = [
-  {'question': 'How many days after booking I can expect the nurse ?','answer':test},
-  {'question': 'Once we have set up the emergency','answer':test},
-  {'question': 'How many days after booking I can expect the nurse ?','answer':test},
-  {'question': 'How many days after booking I can expect the nurse ?','answer':test},
-  {'question': 'How many days after booking I can expect the nurse ?','answer':test},
+import 'dart:math';
 
+import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
+
+final List<String> memberNames = [
+  "John Smith",
+  "Emily Johnson",
+  "Michael Williams",
+  "Sophia Brown",
+  "William Jones",
+  "Emma Davis",
+  "Alexander Miller",
+  "Olivia Wilson",
+  "James Moore",
 ];
+    final statuses = ["requested", "active", "completed"];
+    final serviceNames = [
+      "Critical nurse care",
+      "Diagnostics",
+      "Doctor consultation",
+      "General duty attendant",
+      "Home care unit setup",
+      "Home radiology",
+      "ICU setup",
+      "Insurance",
+      "Legal Support",
+      "Neurodegenerative nurse",
+      "Nurse",
+      "Post operative care",
+      "Tax"
+    ];
+
+    final List<BookingServiceModel> bookingServicesList = List.generate(20, (index) {
+    final status = statuses[Random().nextInt(statuses.length)];
+    final serviceName = serviceNames[Random().nextInt(serviceNames.length)];
+    final memberName = memberNames[Random().nextInt(memberNames.length)];
+    final requestedDate = DateTime.now().subtract(Duration(days: Random().nextInt(100)));
+    final completedDate = status == "completed" ? DateTime.now().subtract(Duration(days: Random().nextInt(30))) : null;
+
+    return BookingServiceModel(
+      id: index + 1,
+      status: status,
+      serviceName: serviceName,
+      memberName: memberName,
+      requestedDate: requestedDate,
+      completedDate: completedDate,
+    );
+  });

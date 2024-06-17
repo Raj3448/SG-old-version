@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 part 'form_details_model.freezed.dart';
 part 'form_details_model.g.dart';
 
@@ -34,7 +35,7 @@ class FormModel with _$FormModel {
   const factory FormModel({
     required int id,
     @JsonKey(name: '__component') required String component,
-    @Default('') String controlType,
+    @Default(null) String? controlType,
     required String type,
     required FormDetails formDetails,
     required dynamic initialValue,
@@ -75,59 +76,58 @@ class Option with _$Option {
     required String value,
     required bool isDefault,
   }) = _Option;
-  factory Option.fromJson(Map<String, dynamic> json) =>
-      _$OptionFromJson(json);
+  factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
 }
-
 
 @freezed
 class Validations with _$Validations {
-    const factory Validations({
-        required int id,
-        required String type,
-        required ValueMsg valueMsg,
-    }) = _Validations;
-  
-    factory Validations.fromJson(Map<String, dynamic> json) =>
+  const factory Validations({
+    required int id,
+    required String type,
+    required ValueMsg valueMsg,
+  }) = _Validations;
+
+  factory Validations.fromJson(Map<String, dynamic> json) =>
       _$ValidationsFromJson(json);
 }
 
 @freezed
 class ValueMsg with _$ValueMsg {
-    const factory ValueMsg({
-        required int id,
-        required String value,
-        required String message,
-    }) = _ValueMsg;
-    factory ValueMsg.fromJson(Map<String, dynamic> json) =>
+  const factory ValueMsg({
+    required int id,
+    required String value,
+    required String message,
+  }) = _ValueMsg;
+  factory ValueMsg.fromJson(Map<String, dynamic> json) =>
       _$ValueMsgFromJson(json);
 }
 
 @freezed
 class FormAnswerModel with _$FormAnswerModel {
-    @JsonSerializable(explicitToJson: true)
-    const factory FormAnswerModel({
-        required List<FormAnswer> formAnswer,
-        required int productId,
-    }) = _FormAnswerModel;
+  @JsonSerializable(includeIfNull: false,explicitToJson: true,)
+  const factory FormAnswerModel({
+    required List<FormAnswer> formAnswer,
+    required int productId,
+  }) = _FormAnswerModel;
 
-    factory FormAnswerModel.fromJson(Map<String, dynamic> json) =>
+  factory FormAnswerModel.fromJson(Map<String, dynamic> json) =>
       _$FormAnswerModelFromJson(json);
 }
 
 @freezed
 class FormAnswer with _$FormAnswer {
-    @JsonSerializable(explicitToJson: true)
-    const factory FormAnswer({
-        required int id,
-        required String questionTitle,
-        required String type,
-        @Default('') String valueChoice,
-        required String? hint,
-        required String controlType,
-        @Default([]) List<String> valueReference,
-    }) = _FormAnswer;
+  @JsonSerializable(includeIfNull: false,explicitToJson: true)
+  const factory FormAnswer({
+    @JsonKey(includeToJson: false) required String forDId,
+    required int id,
+    required String questionTitle,
+    required String type,
+    String? valueChoice,
+    String? hint,
+    String? controlType,
+    List<String>? valueReference,
+  }) = _FormAnswer;
 
-    factory FormAnswer.fromJson(Map<String, dynamic> json) =>
+  factory FormAnswer.fromJson(Map<String, dynamic> json) =>
       _$FormAnswerFromJson(json);
 }
