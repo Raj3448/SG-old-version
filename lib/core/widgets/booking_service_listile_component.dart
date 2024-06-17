@@ -33,18 +33,21 @@ class BookingListTileComponent extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
         height: BookingServiceStatus.active == bookingServiceStatus ? 100 : 110,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(width: 2, color: AppColors.grayscale300)),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.line),
+        ),
         child: Row(
           children: [
             Container(
               width: 8,
               height: double.infinity,
               decoration: const BoxDecoration(
-                  color: AppColors.secondary,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomLeft: Radius.circular(8))),
+                color: AppColors.secondary,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+              ),
             ),
             Expanded(
               child: Padding(
@@ -70,6 +73,8 @@ class BookingListTileComponent extends StatelessWidget {
                         const Spacer(),
                         if (!(bookingServiceStatus ==
                             BookingServiceStatus.requested))
+                        if (!(bookingServiceStatus ==
+                            BookingServiceStatus.requested))
                           Container(
                             height: 24,
                             width: 105,
@@ -77,8 +82,9 @@ class BookingListTileComponent extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: Dimension.d1),
                             decoration: BoxDecoration(
-                                color: AppColors.lightBlue,
-                                borderRadius: BorderRadius.circular(5)),
+                              color: AppColors.lightBlue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                             child: Text(
                               bookingServiceStatus ==
                                       BookingServiceStatus.completed
@@ -101,8 +107,8 @@ class BookingListTileComponent extends StatelessWidget {
                     Text(
                       bookingServiceModel.serviceName,
                       style: AppTextStyle.bodyLargeMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grayscale900),
+                        color: AppColors.grayscale900,
+                      ),
                     ),
                     if (!(bookingServiceStatus == BookingServiceStatus.active))
                       Text.rich(TextSpan(children: [

@@ -36,11 +36,13 @@ class _BookingsScreenState extends State<BookingsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: Dimension.d3),
               Text(
                 'Bookings',
-                style: AppTextStyle.bodyXLSemiBold
-                    .copyWith(color: AppColors.grayscale900, height: 2.6),
+                style: AppTextStyle.bodyXLBold
+                    .copyWith(color: AppColors.grayscale900),
               ),
+              const SizedBox(height: Dimension.d3),
               CustomizeTabviewComponent(
                 controller: controller,
                 tabCount: 3,

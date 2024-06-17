@@ -87,6 +87,7 @@ class MembersScreen extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: Dimension.d4),
                         Text(
                           'Your Family Members'.tr(),
                           style: AppTextStyle.bodyLargeBold,
