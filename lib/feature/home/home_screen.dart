@@ -12,7 +12,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/utils/calculate_age.dart' as util;
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -847,28 +846,12 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
+
                         if (activeMember != null &&
                             memberStore.isActive &&
-                            activeMember.relation != "Brother") {
+                            activeMember.relation != 'Brother') {
                           return ActivePlanComponent(
-                            name:
-                                '${activeMember.firstName} ${activeMember.lastName}',
-                            relation: activeMember.relation,
-                            age:
-                                '${util.calculateAge(activeMember.dateOfBirth)}',
-                            updatedAt:
-                                util.formatDateTime(activeMember.updatedAt),
-                            onTap: () {
-                              GoRouter.of(context).pushNamed(
-                                RoutesConstants.eprRoute,
-                                pathParameters: {
-                                  'memberId': '${activeMember.id}',
-                                },
-                              );
-                            },
-                            memberPhrId: activeMember.phrModel != null
-                                ? activeMember.phrModel!.id
-                                : null,
+                            activeMember: activeMember,
                           );
                         } else if (memberStore.isActive == false ||
                             activeMember != null ||

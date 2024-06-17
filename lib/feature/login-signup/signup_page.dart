@@ -179,6 +179,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             const SizedBox(height: Dimension.d2),
                             DateDropdown(
                               controller: dobContr,
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please select the DOB';
+                                }
+                                return null;
+                              },
                             ),
                             const SizedBox(height: Dimension.d4),
                             CustomButton(
@@ -186,13 +192,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               type: ButtonType.primary,
                               expanded: true,
                               ontap: () {
-                                print(firstNameContr.text);
-                                print(lastNameContr.text);
-                                print(dobContr.text);
-                                print(emailContr.text);
-                                print(
-                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                        .replaceFirst('+', ''));
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
                                   store
