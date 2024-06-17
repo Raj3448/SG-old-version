@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 int calculateAge(DateTime dob) {
   final now = DateTime.now();
   int age = now.year - dob.year;
@@ -5,4 +7,19 @@ int calculateAge(DateTime dob) {
     age--;
   }
   return age;
+}
+
+
+String formatDateTime(DateTime dateTime) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  String formattedTime = DateFormat('h:mma').format(dateTime);
+
+  if (date == today) {
+    return 'Today at $formattedTime';
+  } else {
+    return '${DateFormat('MMM d, y').format(dateTime)} at $formattedTime';
+  }
 }

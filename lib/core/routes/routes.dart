@@ -3,10 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
+import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/booking_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
@@ -29,12 +36,6 @@ import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/screens/splashscreen.dart';
-import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_details_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
@@ -45,7 +46,7 @@ final store = GetIt.I<OnboardingStore>();
 final authStore = GetIt.I<AuthStore>();
 final homeStore = GetIt.I<HomeStore>();
 
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> rootNavigatorKey = GetIt.I<GlobalKey<NavigatorState>>(instanceName: 'rootNavigatorKey');
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter routes = GoRouter(
@@ -365,7 +366,9 @@ final GoRouter routes = GoRouter(
       path: '/paymentScreen',
       name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: PaymentScreen());
+        final extraData = state.extra as Map<String, dynamic>?;
+        final PaymentStatus paymentStatus = extraData?['paymentStatus'] as PaymentStatus;
+        return MaterialPage(child: PaymentScreen(paymentStatus: paymentStatus,));
       },
     ),
     GoRoute(

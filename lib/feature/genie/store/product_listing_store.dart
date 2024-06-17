@@ -1,4 +1,6 @@
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/core/payment/payment_services.dart';
+import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
@@ -25,6 +27,18 @@ abstract class _ProductListingStoreBase with Store {
 
   @observable
   bool? hasGotProductSuccesfully;
+
+  @observable
+  bool isBuyServiceLoading = false;
+
+  @observable
+  String? buyServiceFailed;
+
+  @observable
+  String? servicePaymentInfoGotSuccess;
+
+  @observable
+  PaymentStatus? paymentStatus;
 
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
@@ -134,6 +148,22 @@ abstract class _ProductListingStoreBase with Store {
         isProductLoaded = true;
       });
       fetchProductLoading = false;
+    });
+  }
+
+  void buyService({required FormAnswerModel formData}) {
+    isBuyServiceLoading = true;
+    productListingService.buyService(formData: formData).then((value) {
+      value.fold((l) {
+        l.maybeMap(
+          socketException: (value) =>
+              buyServiceFailed = 'No Internet Connection',
+          orElse: () => buyServiceFailed = 'Something went wrong',
+        );
+      }, (r) {
+        servicePaymentInfoGotSuccess = r;
+      });
+      isBuyServiceLoading = false;
     });
   }
 }
