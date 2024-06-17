@@ -19,7 +19,6 @@ import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
-import 'package:silver_genie/feature/book_services/store/services_store.dart';
 import 'package:silver_genie/feature/bookings/services/booking_service.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
@@ -102,6 +101,10 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
+      GetIt.instance.registerLazySingleton<GlobalKey<NavigatorState>>(
+        () => GlobalKey<NavigatorState>(),
+        instanceName: 'rootNavigatorKey',
+      );
       GetIt.instance.registerLazySingleton(
         () => MembersStore(
           GetIt.instance.get<MemberServices>(),
@@ -129,10 +132,7 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(
-          () => PaymentService(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
-      GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(
         () =>
@@ -157,6 +157,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(() =>
           BookingServiceStore(bookingService: GetIt.I<BookingService>())
             ..initGetAllServices());
+      GetIt.instance.registerLazySingleton(
+          () => PaymentService(httpClient: GetIt.I<HttpClient>(), productListingStore: GetIt.I<ProductListingStore>(),));
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 

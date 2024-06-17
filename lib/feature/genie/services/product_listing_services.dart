@@ -15,11 +15,10 @@ abstract class IProductListingService {
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
   });
-  Future<Either<Failure,  FormDetailModel>> getBookingServiceDetailsById(
-      {
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
     required String id,
   });
-  Future<Either<Failure, String>> buyProduct({
+  Future<Either<Failure, String>> buyService({
     required FormAnswerModel formData,
   });
 }
@@ -125,10 +124,9 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById(
-      {
+  Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
     required String id,
-  }) async  {
+  }) async {
     try {
       final response = await httpClient.get(
         '/api/products/$id?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
@@ -150,9 +148,16 @@ class ProductLisitingServices extends IProductListingService {
       return const Left(Failure.someThingWentWrong());
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> buyProduct({required FormAnswerModel formData}) {
-    throw UnimplementedError();
+  Future<Either<Failure, String>> buyService(
+      {required FormAnswerModel formData}) async {
+    try {
+      return const Right('Response received successfully');
+    }on SocketException {
+      return const Left(Failure.socketException());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
   }
 }
