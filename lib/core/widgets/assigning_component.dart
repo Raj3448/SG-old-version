@@ -20,7 +20,7 @@ class AssigningComponent extends StatelessWidget {
           child: Text(
             name,
             style: AppTextStyle.bodyMediumMedium
-                .copyWith(height: 2, color: AppColors.grayscale900),
+                .copyWith(height: 1.5, color: AppColors.grayscale900),
           ),
         ),
         Expanded(

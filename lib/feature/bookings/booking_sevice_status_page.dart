@@ -6,9 +6,9 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
-import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 
 class BookingSeviceStatusPage extends StatelessWidget {
@@ -146,20 +146,20 @@ class BookingSeviceStatusPage extends StatelessWidget {
                 style: AppTextStyle.bodyXLMedium
                     .copyWith(fontWeight: FontWeight.w500, height: 2.4),
               ),
-              _ElementSpaceBetween(
+              ElementSpaceBetween(
                 title: 'Critical Nurse care',
                 description: '₹ 930',
               ),
-              _ElementSpaceBetween(title: 'Discount(10%)', description: '-55'),
+              ElementSpaceBetween(title: 'Discount(10%)', description: '-55'),
               const Divider(
                 color: AppColors.grayscale300,
               ),
-              _ElementSpaceBetween(title: 'Total', description: '+855'),
-              _ElementSpaceBetween(title: 'GST-18%', description: '+160'),
+              ElementSpaceBetween(title: 'Total', description: '+855'),
+              ElementSpaceBetween(title: 'GST-18%', description: '+160'),
               const Divider(
                 color: AppColors.grayscale300,
               ),
-              _ElementSpaceBetween(
+              ElementSpaceBetween(
                 title: 'Total to pay',
                 description: '₹ 975',
                 isTitleBold: true,
@@ -207,8 +207,8 @@ class BookingSeviceStatusPage extends StatelessWidget {
   }
 }
 
-class _ElementSpaceBetween extends StatelessWidget {
-  _ElementSpaceBetween({
+class ElementSpaceBetween extends StatelessWidget {
+  ElementSpaceBetween({
     required this.title,
     required this.description,
     this.isTitleBold = false,
@@ -226,7 +226,8 @@ class _ElementSpaceBetween extends StatelessWidget {
         Text(
           title,
           style: isTitleBold
-              ? AppTextStyle.bodyXLMedium.copyWith(fontWeight: FontWeight.w500)
+              ? AppTextStyle.bodyXLMedium
+                  .copyWith(fontWeight: FontWeight.w500, fontSize: 18)
               : style,
         ),
         Text(
