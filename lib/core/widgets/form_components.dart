@@ -28,6 +28,7 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.large,
     required this.enabled,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.onSaved,
     this.controller,
     this.validationLogic,
@@ -45,7 +46,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validationLogic;
   final TextInputAction? textInputAction;
 
-  // final AutovalidateMode autovalidateMode;
+  final AutovalidateMode autovalidateMode;
   final String? initialValue;
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
@@ -54,7 +55,7 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autovalidateMode,
       enabled: enabled,
       keyboardType: keyboardType,
       textInputAction: textInputAction,

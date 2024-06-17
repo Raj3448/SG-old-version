@@ -195,8 +195,8 @@ class DateDropdown extends FormField<DateTime> {
                                 readOnly: true,
                                 onSaved: onSaved,
                                 onChanged: (value) {
-                                  if(onChanged != null){
-                                  onChanged.call(state.value!);
+                                  if (onChanged != null) {
+                                    onChanged.call(state.value!);
                                   }
                                 },
                               ),

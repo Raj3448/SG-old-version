@@ -31,6 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final phoneNumbContr = TextEditingController();
   final dobContr = TextEditingController();
   final store = GetIt.I<SignupStore>();
+  bool autoValidate = false;
 
   @override
   void initState() {
@@ -118,6 +119,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             const SizedBox(height: Dimension.d2),
                             CustomTextField(
                               hintText: 'Enter first name'.tr(),
+                              autovalidateMode: autoValidate
+                                  ? AutovalidateMode.onUserInteraction
+                                  : AutovalidateMode.disabled,
                               keyboardType: TextInputType.name,
                               large: false,
                               enabled: true,
@@ -135,6 +139,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             CustomTextField(
                               hintText: 'Enter last name'.tr(),
                               keyboardType: TextInputType.name,
+                              autovalidateMode: autoValidate
+                                  ? AutovalidateMode.onUserInteraction
+                                  : AutovalidateMode.disabled,
                               large: false,
                               enabled: true,
                               controller: lastNameContr,
@@ -156,6 +163,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               enabled: true,
                               controller: emailContr,
                               textInputAction: TextInputAction.next,
+                              autovalidateMode: autoValidate
+                                  ? AutovalidateMode.onUserInteraction
+                                  : AutovalidateMode.disabled,
                               validationLogic: (value) {
                                 const regex =
                                     r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
@@ -192,6 +202,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               type: ButtonType.primary,
                               expanded: true,
                               ontap: () {
+                                setState(() {
+                                  autoValidate = true;
+                                });
                                 if (formKey.currentState!.validate() &&
                                     firstNameContr.text.isNotEmpty) {
                                   store
