@@ -476,7 +476,7 @@ class _ActiveBookingComponent extends StatelessWidget {
               style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
             ),
             ...List.generate(
-                bookingServicesList.length > 3 ? 3 : bookingServicesList.length,
+                bookingServicesList.length <= 3 ? bookingServicesList.length : 3,
                 (index) => BookingListTileComponent(
                       bookingServiceModel: store.getAllActiveServiceList[index],
                       bookingServiceStatus: BookingServiceStatus.active,
