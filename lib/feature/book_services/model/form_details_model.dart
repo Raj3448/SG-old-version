@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 part 'form_details_model.freezed.dart';
 part 'form_details_model.g.dart';
 
@@ -34,7 +35,7 @@ class FormModel with _$FormModel {
   const factory FormModel({
     required int id,
     @JsonKey(name: '__component') required String component,
-    @Default('') String controlType,
+    @Default(null) String? controlType,
     required String type,
     required FormDetails formDetails,
     required dynamic initialValue,
@@ -103,7 +104,7 @@ class ValueMsg with _$ValueMsg {
 
 @freezed
 class FormAnswerModel with _$FormAnswerModel {
-  @JsonSerializable(explicitToJson: true)
+  @JsonSerializable(includeIfNull: false,explicitToJson: true,)
   const factory FormAnswerModel({
     required List<FormAnswer> formAnswer,
     required int productId,
@@ -115,33 +116,18 @@ class FormAnswerModel with _$FormAnswerModel {
 
 @freezed
 class FormAnswer with _$FormAnswer {
+  @JsonSerializable(includeIfNull: false,explicitToJson: true)
   const factory FormAnswer({
-    required String forDId,
+    @JsonKey(includeToJson: false) required String forDId,
     required int id,
     required String questionTitle,
     required String type,
     String? valueChoice,
     String? hint,
-    required String controlType,
+    String? controlType,
     List<String>? valueReference,
   }) = _FormAnswer;
 
   factory FormAnswer.fromJson(Map<String, dynamic> json) =>
       _$FormAnswerFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() {
-    print('I am here');
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['questionTitle'] = questionTitle;
-    data['type'] = type;
-    if (valueChoice != null) data['valueChoice'] = valueChoice;
-    if (hint != null) data['hint'] = hint;
-    data['controlType'] = controlType;
-    if (valueReference != null && valueReference!.isNotEmpty) {
-      data['valueReference'] = valueReference;
-    }
-    return data;
-  }
 }

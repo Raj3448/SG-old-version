@@ -52,7 +52,7 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      
+
       await Hive.initFlutter();
       await setupHiveBox();
 
@@ -129,7 +129,8 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => PaymentService(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(
+          () => PaymentService(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => ServicesStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
@@ -153,8 +154,9 @@ void main() async {
         ..initGetProductBasicDetails());
       GetIt.instance.registerLazySingleton(
           () => BookingService(httpClient: GetIt.I<HttpClient>()));
-      GetIt.instance.registerLazySingleton(
-          () => BookingServiceStore(bookingService: GetIt.I<BookingService>())..initGetAllServices());
+      GetIt.instance.registerLazySingleton(() =>
+          BookingServiceStore(bookingService: GetIt.I<BookingService>())
+            ..initGetAllServices());
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
@@ -179,10 +181,11 @@ void main() async {
       };
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-          statusBarColor: AppColors.grayscale100,
-        ),
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+            statusBarColor: AppColors.grayscale100,
+            systemNavigationBarContrastEnforced: true,
+            systemStatusBarContrastEnforced: true),
       );
       runApp(
         EasyLocalization(

@@ -149,7 +149,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value: value?.trim() ?? '',
+                            value: value?.trim(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
                             forDId: component.formDetails.id.toString());
@@ -184,7 +184,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             title: component.formDetails.title,
                             type: component.type,
                             value:
-                                newValue?.first.value.toString().trim() ?? '',
+                                newValue?.first.value.toString().trim(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
                             forDId: component.formDetails.id.toString());
@@ -288,7 +288,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                             id: component.id,
                             title: component.formDetails.title,
                             type: component.type,
-                            value: value?.trim() ?? '',
+                            value: value?.trim(),
                             controlType: component.controlType,
                             hint: component.formDetails.hint,
                             forDId: component.formDetails.id.toString());
@@ -351,7 +351,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     required String title,
     required String type,
     String? value,
-    required String controlType,
+    String? controlType,
     required String? hint,
     List<String>? valueReference,
     required String forDId,
