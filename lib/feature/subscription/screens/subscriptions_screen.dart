@@ -35,52 +35,54 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const PageAppbar(title: 'Subscriptions'),
-      backgroundColor: AppColors.white,
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(Dimension.d4),
-              child: Column(
-                children: [
-                  CustomizeTabviewComponent(
-                    controller: controller,
-                    tabCount: 2,
-                    widgetList: const [
-                      Tab(icon: Text('Current')),
-                      Tab(icon: Text('Previous')),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: Dimension.d2,
-                  ),
-                  Expanded(
-                    child: TabBarView(
+    return SafeArea(
+      child: Scaffold(
+        appBar: const PageAppbar(title: 'Subscriptions'),
+        backgroundColor: AppColors.white,
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(Dimension.d4),
+                child: Column(
+                  children: [
+                    CustomizeTabviewComponent(
                       controller: controller,
-                      children: List.generate(
-                        2,
-                        (index) => _SubscriptionUserComponent(
-                          isPrevious: index == 1 ? true : false,
+                      tabCount: 2,
+                      widgetList: const [
+                        Tab(icon: Text('Current')),
+                        Tab(icon: Text('Previous')),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: Dimension.d2,
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: controller,
+                        children: List.generate(
+                          2,
+                          (index) => _SubscriptionUserComponent(
+                            isPrevious: index == 1 ? true : false,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FixedButton(
-        ontap: () {
-          //context.pushNamed(RoutesConstants.SGSubcscriptionPage);
-        },
-        btnTitle: 'Buy new subscription',
-        showIcon: false,
-        iconPath: AppIcons.add,
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FixedButton(
+          ontap: () {
+            //context.pushNamed(RoutesConstants.SGSubcscriptionPage);
+          },
+          btnTitle: 'Buy new subscription',
+          showIcon: false,
+          iconPath: AppIcons.add,
+        ),
       ),
     );
   }

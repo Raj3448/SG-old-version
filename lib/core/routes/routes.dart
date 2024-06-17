@@ -37,6 +37,7 @@ import 'package:silver_genie/feature/book_services/screens/service_details_scree
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
+import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:silver_genie/feature/user_profile/user_profile.dart';
 
@@ -372,6 +373,13 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: BookingDetailsScreen());
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: RoutesConstants.profileDetails,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: ProfileDetails());
       },
     ),
     GoRoute(

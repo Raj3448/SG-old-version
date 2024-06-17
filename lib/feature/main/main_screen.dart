@@ -30,61 +30,63 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const Appbar(),
-      backgroundColor: AppColors.white,
-      body: widget.child,
-      bottomNavigationBar: SizedBox(
-        height: 70,
-        child: DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(4),
-              topRight: Radius.circular(4),
+    return SafeArea(
+      child: Scaffold(
+        appBar: const Appbar(),
+        backgroundColor: AppColors.white,
+        body: widget.child,
+        bottomNavigationBar: SizedBox(
+          height: 70,
+          child: DecoratedBox(
+            position: DecorationPosition.foreground,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(4),
+                topRight: Radius.circular(4),
+              ),
+              border: Border.all(color: AppColors.line),
             ),
-            border: Border.all(color: AppColors.line),
-          ),
-          child: BottomNavigationBar(
-            backgroundColor: AppColors.white,
-            type: BottomNavigationBarType.fixed,
-            showUnselectedLabels: true,
-            selectedLabelStyle: AppTextStyle.bodyMediumSemiBold,
-            currentIndex: _calculateSelectedIndex(context),
-            unselectedLabelStyle: AppTextStyle.bodyMediumMedium,
-            selectedItemColor: AppColors.primary,
-            selectedIconTheme: const IconThemeData(color: AppColors.primary),
-            onTap: onTap,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                label: 'Home'.tr(),
-                icon: const Padding(
-                  padding: EdgeInsets.only(top: 4, left: 20, right: 20),
-                  child: Icon(AppIcons.home, size: 16),
+            child: BottomNavigationBar(
+              backgroundColor: AppColors.white,
+              type: BottomNavigationBarType.fixed,
+              showUnselectedLabels: true,
+              selectedLabelStyle: AppTextStyle.bodyMediumSemiBold,
+              currentIndex: _calculateSelectedIndex(context),
+              unselectedLabelStyle: AppTextStyle.bodyMediumMedium,
+              selectedItemColor: AppColors.primary,
+              selectedIconTheme: const IconThemeData(color: AppColors.primary),
+              onTap: onTap,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  label: 'Home'.tr(),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                    child: Icon(AppIcons.home, size: 16),
+                  ),
                 ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Services'.tr(),
-                icon: const Padding(
-                  padding: EdgeInsets.only(top: 4, left: 20, right: 20),
-                  child: Icon(AppIcons.medical_services, size: 16),
+                BottomNavigationBarItem(
+                  label: 'Services'.tr(),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                    child: Icon(AppIcons.medical_services, size: 16),
+                  ),
                 ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Booking'.tr(),
-                icon: const Padding(
-                  padding: EdgeInsets.only(top: 4, left: 20, right: 20),
-                  child: Icon(AppIcons.calendar, size: 16),
+                BottomNavigationBarItem(
+                  label: 'Booking'.tr(),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                    child: Icon(AppIcons.calendar, size: 16),
+                  ),
                 ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Members'.tr(),
-                icon: const Padding(
-                  padding: EdgeInsets.only(top: 4, left: 20, right: 20),
-                  child: Icon(AppIcons.family, size: 16),
+                BottomNavigationBarItem(
+                  label: 'Members'.tr(),
+                  icon: const Padding(
+                    padding: EdgeInsets.only(top: 4, left: 20, right: 20),
+                    child: Icon(AppIcons.family, size: 16),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

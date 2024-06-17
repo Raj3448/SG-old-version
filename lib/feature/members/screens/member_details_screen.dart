@@ -40,139 +40,141 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Member details'),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FixedButton(
-        ontap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return const InfoDialog(
-                showIcon: false,
-                title: 'Hi there!!',
-                desc:
-                    'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                btnTitle: 'Contact Genie',
-                showBtnIcon: true,
-                btnIconPath: AppIcons.phone,
-              );
-            },
-          );
-        },
-        btnTitle: 'Update Health record',
-        showIcon: false,
-        iconPath: AppIcons.clinical_notes,
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-          decelerationRate: ScrollDecelerationRate.fast,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: const PageAppbar(title: 'Member details'),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FixedButton(
+          ontap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const InfoDialog(
+                  showIcon: false,
+                  title: 'Hi there!!',
+                  desc:
+                      'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                  btnTitle: 'Contact Genie',
+                  showBtnIcon: true,
+                  btnIconPath: AppIcons.phone,
+                );
+              },
+            );
+          },
+          btnTitle: 'Update Health record',
+          showIcon: false,
+          iconPath: AppIcons.clinical_notes,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Basic details'.tr(),
-                style: AppTextStyle.bodyXLMedium
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-              const SizedBox(height: 16),
-              _BasicDetailsBox(
-                name: [
-                  activeMember?.firstName ?? '',
-                  activeMember?.lastName ?? '',
-                ].join(' ').trim(),
-                age: '${calculateAge(activeMember!.dateOfBirth)}',
-                gender: activeMember!.gender,
-                relation: activeMember!.relation,
-                mobileNo: activeMember!.phoneNumber,
-                address: activeMember?.fullAddress ?? 'n/a',
-                imgPath: activeMember!.profileImg != null
-                    ? '${Env.serverUrl}${activeMember!.profileImg!.url}'
-                    : '',
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Health Records',
-                style: AppTextStyle.bodyXLMedium
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-              const SizedBox(height: 16),
-              if (hasCareSub)
-                Column(
-                  children: [
-                    HealthCard(
-                      isEpr: true,
-                      dateUpdated: activeMember?.updatedAt == null
-                          ? 'n/a'
-                          : formatDateTime(activeMember!.updatedAt),
-                      ontap: () {
-                        GoRouter.of(context).pushNamed(
-                          RoutesConstants.eprRoute,
-                          pathParameters: {
-                            'memberId': '$memberId',
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    if (activeMember!.phrModel != null)
-                      HealthCard(
-                        isEpr: false,
-                        dateUpdated: activeMember?.phrModel?.updatedAt == null
-                            ? 'n/a'
-                            : formatDateTime(
-                                activeMember!.phrModel!.updatedAt,
-                              ),
-                        ontap: activeMember!.phrModel == null
-                            ? null
-                            : () {
-                                GoRouter.of(context).pushNamed(
-                                  RoutesConstants.phrPdfViewPage,
-                                  pathParameters: {
-                                    'memberPhrId':
-                                        activeMember!.phrModel!.id.toString(),
-                                  },
-                                );
-                              },
-                      ),
-                    const SizedBox(height: Dimension.d17),
-                  ],
-                )
-              else
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SubscribeCard(),
-                    const SizedBox(height: Dimension.d8),
-                    Text(
-                      'Signup for care packages',
-                      style: AppTextStyle.bodyXLBold
-                          .copyWith(color: AppColors.grayscale900),
-                    ),
-                    const SizedBox(height: Dimension.d6),
-                    SubscriptionPkg(
-                      expanded: true,
-                      type: SubscriptionsType.companion,
-                    ),
-                    const SizedBox(height: Dimension.d3),
-                    SubscriptionPkg(
-                      expanded: true,
-                      type: SubscriptionsType.wellness,
-                    ),
-                    const SizedBox(height: Dimension.d3),
-                    SubscriptionPkg(
-                      expanded: true,
-                      type: SubscriptionsType.emergency,
-                    ),
-                    const SizedBox(height: Dimension.d3),
-                    const SizedBox(height: 16),
-                  ],
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+            decelerationRate: ScrollDecelerationRate.fast,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Basic details'.tr(),
+                  style: AppTextStyle.bodyXLMedium
+                      .copyWith(color: AppColors.grayscale900),
                 ),
-            ],
+                const SizedBox(height: 16),
+                _BasicDetailsBox(
+                  name: [
+                    activeMember?.firstName ?? '',
+                    activeMember?.lastName ?? '',
+                  ].join(' ').trim(),
+                  age: '${calculateAge(activeMember!.dateOfBirth)}',
+                  gender: activeMember!.gender,
+                  relation: activeMember!.relation,
+                  mobileNo: activeMember!.phoneNumber,
+                  address: activeMember?.fullAddress ?? 'n/a',
+                  imgPath: activeMember!.profileImg != null
+                      ? '${Env.serverUrl}${activeMember!.profileImg!.url}'
+                      : '',
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Health Records',
+                  style: AppTextStyle.bodyXLMedium
+                      .copyWith(color: AppColors.grayscale900),
+                ),
+                const SizedBox(height: 16),
+                if (hasCareSub)
+                  Column(
+                    children: [
+                      HealthCard(
+                        isEpr: true,
+                        dateUpdated: activeMember?.updatedAt == null
+                            ? 'n/a'
+                            : formatDateTime(activeMember!.updatedAt),
+                        ontap: () {
+                          GoRouter.of(context).pushNamed(
+                            RoutesConstants.eprRoute,
+                            pathParameters: {
+                              'memberId': '$memberId',
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      if (activeMember!.phrModel != null)
+                        HealthCard(
+                          isEpr: false,
+                          dateUpdated: activeMember?.phrModel?.updatedAt == null
+                              ? 'n/a'
+                              : formatDateTime(
+                                  activeMember!.phrModel!.updatedAt,
+                                ),
+                          ontap: activeMember!.phrModel == null
+                              ? null
+                              : () {
+                                  GoRouter.of(context).pushNamed(
+                                    RoutesConstants.phrPdfViewPage,
+                                    pathParameters: {
+                                      'memberPhrId':
+                                          activeMember!.phrModel!.id.toString(),
+                                    },
+                                  );
+                                },
+                        ),
+                      const SizedBox(height: Dimension.d17),
+                    ],
+                  )
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SubscribeCard(),
+                      const SizedBox(height: Dimension.d8),
+                      Text(
+                        'Signup for care packages',
+                        style: AppTextStyle.bodyXLBold
+                            .copyWith(color: AppColors.grayscale900),
+                      ),
+                      const SizedBox(height: Dimension.d6),
+                      SubscriptionPkg(
+                        expanded: true,
+                        type: SubscriptionsType.companion,
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      SubscriptionPkg(
+                        expanded: true,
+                        type: SubscriptionsType.wellness,
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      SubscriptionPkg(
+                        expanded: true,
+                        type: SubscriptionsType.emergency,
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),

@@ -20,7 +20,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
     return Observer(
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

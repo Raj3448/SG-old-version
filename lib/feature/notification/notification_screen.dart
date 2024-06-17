@@ -15,75 +15,77 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final store = GetIt.I<NotificationStore>();
     store.fetchNotifications();
-    return Observer(
-      builder: (context) {
-        return Scaffold(
-          appBar: const PageAppbar(title: 'Notification'),
-          backgroundColor: AppColors.white,
-          body: store.isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(Dimension.d3),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Today',
-                          style: AppTextStyle.bodyMediumMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary,
+    return SafeArea(
+      child: Observer(
+        builder: (context) {
+          return Scaffold(
+            appBar: const PageAppbar(title: 'Notification'),
+            backgroundColor: AppColors.white,
+            body: store.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(Dimension.d3),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Today',
+                            style: AppTextStyle.bodyMediumMedium.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                            ),
                           ),
-                        ),
-                        Column(
-                          children: List.generate(
-                              store.notifications!.fold(
-                                  (l) => null!, (r) => r.length), (index) {
-                            if (index == 3) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Earlier',
-                                    style: AppTextStyle.bodyMediumMedium
-                                        .copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.primary),
-                                  ),
-                                  NotificationComponent(
-                                      notificationModel: store.notifications!
-                                          .fold(
-                                              (l) => NotificationModel(
-                                                  title: '',
-                                                  description: '',
-                                                  datetime: DateTime.now()),
-                                              (r) {
-                                    return r[index];
-                                  }))
-                                ],
-                              );
-                            }
-                            return NotificationComponent(
-                                notificationModel: store.notifications!.fold(
-                                    (l) => NotificationModel(
-                                        title: '',
-                                        description: '',
-                                        datetime: DateTime.now()), (r) {
-                              return r[index];
-                            }));
-                          }),
-                        ),
-                        const SizedBox(
-                          height: Dimension.d3,
-                        )
-                      ],
+                          Column(
+                            children: List.generate(
+                                store.notifications!.fold(
+                                    (l) => null!, (r) => r.length), (index) {
+                              if (index == 3) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Earlier',
+                                      style: AppTextStyle.bodyMediumMedium
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary),
+                                    ),
+                                    NotificationComponent(
+                                        notificationModel: store.notifications!
+                                            .fold(
+                                                (l) => NotificationModel(
+                                                    title: '',
+                                                    description: '',
+                                                    datetime: DateTime.now()),
+                                                (r) {
+                                      return r[index];
+                                    }))
+                                  ],
+                                );
+                              }
+                              return NotificationComponent(
+                                  notificationModel: store.notifications!.fold(
+                                      (l) => NotificationModel(
+                                          title: '',
+                                          description: '',
+                                          datetime: DateTime.now()), (r) {
+                                return r[index];
+                              }));
+                            }),
+                          ),
+                          const SizedBox(
+                            height: Dimension.d3,
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
