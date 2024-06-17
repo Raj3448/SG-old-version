@@ -283,7 +283,8 @@ class _TestmonialsComponent extends StatelessWidget {
     required this.testimonialsModel,
   });
 
-  final PageController _testimonialsCardController = PageController();
+  final PageController _testimonialsCardController =
+      PageController(viewportFraction: 0.60);
   final TestimonialsModel testimonialsModel;
   @override
   Widget build(BuildContext context) {
@@ -308,7 +309,6 @@ class _TestmonialsComponent extends StatelessWidget {
                 height: 132,
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.only(right: 130),
                   controller: _testimonialsCardController,
                   scrollDirection: Axis.horizontal,
                   children: List.generate(
@@ -370,7 +370,8 @@ class _AboutUsOfferComponent extends StatelessWidget {
   });
 
   final AboutUsOfferModel aboutUsOfferModel;
-  final PageController _offerPageController = PageController();
+  final PageController _offerPageController =
+      PageController(viewportFraction: 0.58);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -406,7 +407,6 @@ class _AboutUsOfferComponent extends StatelessWidget {
           height: 240,
           child: ListView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(right: 200),
             controller: _offerPageController,
             scrollDirection: Axis.horizontal,
             children: List.generate(
@@ -476,7 +476,9 @@ class _ActiveBookingComponent extends StatelessWidget {
               style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
             ),
             ...List.generate(
-                bookingServicesList.length <= 3 ? bookingServicesList.length : 3,
+                bookingServicesList.length <= 3
+                    ? bookingServicesList.length
+                    : 3,
                 (index) => BookingListTileComponent(
                       bookingServiceModel: store.getAllActiveServiceList[index],
                       bookingServiceStatus: BookingServiceStatus.active,
@@ -497,6 +499,7 @@ class _TestmonialsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 132,
+      width: MediaQuery.sizeOf(context).width * 0.60,
       margin: const EdgeInsets.only(left: Dimension.d2),
       padding: const EdgeInsets.all(Dimension.d2),
       decoration: BoxDecoration(
@@ -507,33 +510,27 @@ class _TestmonialsCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 220,
-            child: Text(
-              content,
-            ),
+          Text(
+            content,
           ),
-          SizedBox(
-            width: 220,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Avatar.fromSize(
-                  imgPath: '',
-                  size: AvatarSize.size12,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Avatar.fromSize(
+                imgPath: '',
+                size: AvatarSize.size12,
+              ),
+              const SizedBox(
+                width: Dimension.d2,
+              ),
+              Text(
+                testifierName,
+                style: AppTextStyle.bodyMediumMedium.copyWith(
+                  color: AppColors.grayscale800,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
-                Text(
-                  testifierName,
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: AppColors.grayscale800,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -955,8 +952,8 @@ class _HomeScreenOfferCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 236,
-      width: 235,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      width: MediaQuery.sizeOf(context).width * 0.60,
+      padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: AppColors.secondary,
