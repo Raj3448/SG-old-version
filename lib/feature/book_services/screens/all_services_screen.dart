@@ -77,125 +77,127 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PageAppbar(
-        title: widget.isConvenience
-            ? 'Convenience care services'
-            : widget.isHealthCare
-                ? 'Health care services'
-                : 'Home care services',
-      ),
-      backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(Dimension.d4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SearchTextfield(
-                textEditingController: textEditingController,
-                onChanged: filterServices,
-              ),
-              const SizedBox(height: Dimension.d5),
-              ListView.separated(
-                itemCount: displayedServices.length,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      context.pushNamed(
-                        RoutesConstants.serviceDetailsScreen,
-                        pathParameters: {
-                          'id': '${displayedServices[index].id}',
-                          'title': displayedServices[index].attributes.name,
-                        },
-                      );
-                    },
-                    child: ServicesListTileComponent(
-                      imagePath: displayedServices[index]
-                          .attributes
-                          .icon
-                          .data
-                          .attributes
-                          .url,
-                      title: displayedServices[index].attributes.name,
-                      subtitle: displayedServices[index]
-                          .attributes
-                          .metadata
-                          .first
-                          .value,
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 16);
-                },
-              ),
-              if (displayedServices.isEmpty)
-                NoServiceFound(
-                  title: '',
-                  ontap: () {},
-                  showTitle: false,
+    return SafeArea(
+      child: Scaffold(
+        appBar: PageAppbar(
+          title: widget.isConvenience
+              ? 'Convenience care services'
+              : widget.isHealthCare
+                  ? 'Health care services'
+                  : 'Home care services',
+        ),
+        backgroundColor: AppColors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(Dimension.d4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SearchTextfield(
+                  textEditingController: textEditingController,
+                  onChanged: filterServices,
                 ),
-              if (widget.isConvenience) ...[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: Dimension.d8),
-                    Text(
-                      'For other services & enquiries',
-                      style: AppTextStyle.bodyLargeMedium.copyWith(
-                        fontWeight: FontWeight.w500,
-                        height: 2.4,
-                        color: AppColors.grayscale900,
+                const SizedBox(height: Dimension.d5),
+                ListView.separated(
+                  itemCount: displayedServices.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        context.pushNamed(
+                          RoutesConstants.serviceDetailsScreen,
+                          pathParameters: {
+                            'id': '${displayedServices[index].id}',
+                            'title': displayedServices[index].attributes.name,
+                          },
+                        );
+                      },
+                      child: ServicesListTileComponent(
+                        imagePath: displayedServices[index]
+                            .attributes
+                            .icon
+                            .data
+                            .attributes
+                            .url,
+                        title: displayedServices[index].attributes.name,
+                        subtitle: displayedServices[index]
+                            .attributes
+                            .metadata
+                            .first
+                            .value,
                       ),
-                    ),
-                    Container(
-                      height: 56,
-                      margin: const EdgeInsets.only(
-                        bottom: Dimension.d4,
-                        top: Dimension.d2,
-                      ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: Dimension.d2),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.primary,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 16);
+                  },
+                ),
+                if (displayedServices.isEmpty)
+                  NoServiceFound(
+                    title: '',
+                    ontap: () {},
+                    showTitle: false,
+                  ),
+                if (widget.isConvenience) ...[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: Dimension.d8),
+                      Text(
+                        'For other services & enquiries',
+                        style: AppTextStyle.bodyLargeMedium.copyWith(
+                          fontWeight: FontWeight.w500,
+                          height: 2.4,
+                          color: AppColors.grayscale900,
                         ),
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Contact SilverGenie team',
-                            style: AppTextStyle.bodyMediumMedium.copyWith(
-                              height: 2,
-                              color: AppColors.grayscale900,
-                            ),
+                      Container(
+                        height: 56,
+                        margin: const EdgeInsets.only(
+                          bottom: Dimension.d4,
+                          top: Dimension.d2,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimension.d2),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.primary,
                           ),
-                          SizedBox(
-                            width: 120,
-                            height: 40,
-                            child: CustomButton(
-                              ontap: () {},
-                              title: 'Call now',
-                              showIcon: false,
-                              iconPath: AppIcons.add,
-                              size: ButtonSize.values[0],
-                              type: ButtonType.primary,
-                              expanded: true,
-                              iconColor: AppColors.white,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Contact SilverGenie team',
+                              style: AppTextStyle.bodyMediumMedium.copyWith(
+                                height: 2,
+                                color: AppColors.grayscale900,
+                              ),
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              width: 120,
+                              height: 40,
+                              child: CustomButton(
+                                ontap: () {},
+                                title: 'Call now',
+                                showIcon: false,
+                                iconPath: AppIcons.add,
+                                size: ButtonSize.values[0],
+                                type: ButtonType.primary,
+                                expanded: true,
+                                iconColor: AppColors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

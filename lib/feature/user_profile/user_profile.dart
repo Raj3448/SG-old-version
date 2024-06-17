@@ -61,18 +61,19 @@ class UserProfile extends StatelessWidget {
                                   Row(
                                     children: [
                                       Avatar(
-                                          imgPath: userDetailStore.userDetails!
-                                                      .profileImg ==
-                                                  null
-                                              ? ''
-                                              : '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
-                                          maxRadius: 44,
-                                          isNetworkImage: userDetailStore
-                                                      .userDetails!
-                                                      .profileImgUrl ==
-                                                  null
-                                              ? false
-                                              : true),
+                                        imgPath: userDetailStore
+                                                    .userDetails!.profileImg ==
+                                                null
+                                            ? ''
+                                            : '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
+                                        maxRadius: 44,
+                                        isNetworkImage: userDetailStore
+                                                    .userDetails!
+                                                    .profileImgUrl ==
+                                                null
+                                            ? false
+                                            : true,
+                                      ),
                                       const SizedBox(
                                         width: Dimension.d2,
                                       ),
@@ -87,29 +88,35 @@ class UserProfile extends StatelessWidget {
                                                   '',
                                               style: AppTextStyle.bodyXLSemiBold
                                                   .copyWith(
-                                                      overflow: TextOverflow
-                                                          .ellipsis),
-                                            ),
-                                            Text.rich(TextSpan(children: [
-                                              TextSpan(
-                                                text:
-                                                    'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
-                                                style: AppTextStyle
-                                                    .bodyMediumMedium
-                                                    .copyWith(
-                                                        color: AppColors
-                                                            .grayscale600),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
+                                            ),
+                                            Text.rich(
                                               TextSpan(
-                                                text:
-                                                    ' Relationship: ${userDetailStore.userDetails!.relation}',
-                                                style: AppTextStyle
-                                                    .bodyMediumMedium
-                                                    .copyWith(
-                                                        color: AppColors
-                                                            .grayscale600),
-                                              )
-                                            ]))
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                        'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
+                                                    style: AppTextStyle
+                                                        .bodyMediumMedium
+                                                        .copyWith(
+                                                      color: AppColors
+                                                          .grayscale600,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        ' Relationship: ${userDetailStore.userDetails!.relation}',
+                                                    style: AppTextStyle
+                                                        .bodyMediumMedium
+                                                        .copyWith(
+                                                      color: AppColors
+                                                          .grayscale600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -119,32 +126,29 @@ class UserProfile extends StatelessWidget {
                                     height: Dimension.d4,
                                   ),
                                   CustomTextIcon(
-                                      iconpath: AppIcons.phone,
-                                      title: userDetailStore
-                                          .userDetails!.phoneNumber),
+                                    iconpath: AppIcons.phone,
+                                    title: userDetailStore
+                                        .userDetails!.phoneNumber,
+                                  ),
                                   const SizedBox(
                                     height: Dimension.d4,
                                   ),
                                   CustomTextIcon(
-                                      iconpath: AppIcons.home,
-                                      title: userDetailStore
-                                                  .userDetails!.address ==
-                                              null
-                                          ? 'N/A'
-                                          : userDetailStore.userDetails!
-                                              .address!.fullAddress),
+                                    iconpath: AppIcons.home,
+                                    title:
+                                        userDetailStore.userDetails!.address ==
+                                                null
+                                            ? 'N/A'
+                                            : userDetailStore.userDetails!
+                                                .address!.fullAddress,
+                                  ),
                                   const SizedBox(
                                     height: Dimension.d4,
                                   ),
                                   CustomButton(
                                     ontap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ProfileDetails(),
-                                        ),
-                                      );
+                                      context
+                                          .push(RoutesConstants.profileDetails);
                                     },
                                     title: 'Edit',
                                     showIcon: false,
@@ -174,7 +178,8 @@ class UserProfile extends StatelessWidget {
                             onTap: () async {
                               await launchUrl(
                                 Uri.parse(
-                                    'https://www.yoursilvergenie.com/about-us/'),
+                                  'https://www.yoursilvergenie.com/about-us/',
+                                ),
                               );
                             },
                           ),

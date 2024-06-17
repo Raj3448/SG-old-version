@@ -35,210 +35,212 @@ class ServiceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final service = GetIt.I<ProductLisitingServices>();
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: PageAppbar(title: title),
-      body: FutureBuilder<Either<Failure, ProductListingModel>>(
-        future: service.getProductById(id: id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: LoadingWidget(showShadow: false));
-          }
-          if (snapshot.hasError) {
-            return const Center(
-              child: ErrorStateComponent(errorType: ErrorType.pageNotFound),
-            );
-          }
-          if (snapshot.hasData) {
-            final data = snapshot.data!;
-            return data.fold(
-              (failure) => const ErrorStateComponent(
-                  errorType: ErrorType.somethinWentWrong),
-              (product) {
-                final serviceData = product.product;
-                final allServiceList = <dynamic>[];
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: PageAppbar(title: title),
+        body: FutureBuilder<Either<Failure, ProductListingModel>>(
+          future: service.getProductById(id: id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: LoadingWidget(showShadow: false));
+            }
+            if (snapshot.hasError) {
+              return const Center(
+                child: ErrorStateComponent(errorType: ErrorType.pageNotFound),
+              );
+            }
+            if (snapshot.hasData) {
+              final data = snapshot.data!;
+              return data.fold(
+                (failure) => const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong),
+                (product) {
+                  final serviceData = product.product;
+                  final allServiceList = <dynamic>[];
 
-                for (final component in serviceData.serviceContent!) {
-                  if (component['__component'] ==
-                      'service-components.service-description') {
-                    allServiceList.add(
-                      HeaderModel.fromJson(
-                        component as Map<String, dynamic>,
-                      ),
-                    );
+                  for (final component in serviceData.serviceContent!) {
+                    if (component['__component'] ==
+                        'service-components.service-description') {
+                      allServiceList.add(
+                        HeaderModel.fromJson(
+                          component as Map<String, dynamic>,
+                        ),
+                      );
+                    }
+                    if (component['__component'] ==
+                        'service-components.offerings') {
+                      allServiceList.add(
+                        ServiceOfferingModel.fromJson(
+                          component as Map<String, dynamic>,
+                        ),
+                      );
+                    }
+                    if (component['__component'] ==
+                        'service-components.service-faq') {
+                      allServiceList.add(
+                        FaqModelDetails.fromJson(
+                          component as Map<String, dynamic>,
+                        ),
+                      );
+                    }
                   }
-                  if (component['__component'] ==
-                      'service-components.offerings') {
-                    allServiceList.add(
-                      ServiceOfferingModel.fromJson(
-                        component as Map<String, dynamic>,
-                      ),
-                    );
-                  }
-                  if (component['__component'] ==
-                      'service-components.service-faq') {
-                    allServiceList.add(
-                      FaqModelDetails.fromJson(
-                        component as Map<String, dynamic>,
-                      ),
-                    );
-                  }
-                }
 
-                final widgetList = <Widget>[];
-                for (final component in allServiceList) {
-                  if (component is HeaderModel) {
-                    widgetList.add(_HeaderPicTitle(headerModel: component));
-                    continue;
+                  final widgetList = <Widget>[];
+                  for (final component in allServiceList) {
+                    if (component is HeaderModel) {
+                      widgetList.add(_HeaderPicTitle(headerModel: component));
+                      continue;
+                    }
+                    if (component is ServiceOfferingModel) {
+                      widgetList
+                          .add(_Offerings(serviceOfferingModel: component));
+                      continue;
+                    }
+                    if (component is FaqModelDetails) {
+                      widgetList.add(
+                        FAQComponent(
+                          heading: component.label,
+                          faqList: component.faq,
+                        ),
+                      );
+                      continue;
+                    }
                   }
-                  if (component is ServiceOfferingModel) {
-                    widgetList.add(_Offerings(serviceOfferingModel: component));
-                    continue;
-                  }
-                  if (component is FaqModelDetails) {
-                    widgetList.add(
-                      FAQComponent(
-                        heading: component.label,
-                        faqList: component.faq,
-                      ),
-                    );
-                    continue;
-                  }
-                }
 
-                return Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: widgetList,
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widgetList,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    if (serviceData.category == 'homeCare')
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0, -4),
-                              blurRadius: 4,
-                              color: AppColors.black.withOpacity(0.15),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomButton(
-                              ontap: () {},
-                              title: 'Request call back',
-                              showIcon: false,
-                              iconPath: AppIcons.add,
-                              size: ButtonSize.normal,
-                              type: ButtonType.secondary,
-                              expanded: false,
-                              iconColor: AppColors.primary,
-                            ),
-                            CustomButton(
-                              ontap: () {
-                                context.pushNamed(
-                                    RoutesConstants.bookServiceScreen,
-                                    pathParameters: {'id':id}
-                                    );
+                      if (serviceData.category == 'homeCare')
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(0, -4),
+                                blurRadius: 4,
+                                color: AppColors.black.withOpacity(0.15),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomButton(
+                                ontap: () {},
+                                title: 'Request call back',
+                                showIcon: false,
+                                iconPath: AppIcons.add,
+                                size: ButtonSize.normal,
+                                type: ButtonType.secondary,
+                                expanded: false,
+                                iconColor: AppColors.primary,
+                              ),
+                              CustomButton(
+                                ontap: () {
+                                  context.pushNamed(
+                                      RoutesConstants.bookServiceScreen,
+                                      pathParameters: {'id': id});
+                                },
+                                title: 'Book now',
+                                showIcon: false,
+                                iconPath: AppIcons.add,
+                                size: ButtonSize.normal,
+                                type: ButtonType.primary,
+                                expanded: false,
+                                iconColor: AppColors.primary,
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        FixedButton(
+                          ontap: () {
+                            showModalBottomSheet(
+                              backgroundColor: AppColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              context: context,
+                              builder: (context) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(18),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          '$title service',
+                                          style: AppTextStyle.heading5SemiBold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: Dimension.d9),
+                                      const Text(
+                                        'Your request has been received',
+                                        style: AppTextStyle.bodyLargeBold,
+                                      ),
+                                      const SizedBox(height: Dimension.d3),
+                                      SvgPicture.asset(
+                                        'assets/icon/success.svg',
+                                        height: 88,
+                                      ),
+                                      const SizedBox(height: Dimension.d3),
+                                      Text(
+                                        'Thank you for your interest. The SG team will be in touch with you shortly',
+                                        textAlign: TextAlign.center,
+                                        style: AppTextStyle.bodyMediumMedium
+                                            .copyWith(
+                                          color: AppColors.grayscale700,
+                                        ),
+                                      ),
+                                      const SizedBox(height: Dimension.d9),
+                                      CustomButton(
+                                        ontap: () {
+                                          context
+                                            ..pop()
+                                            ..pop();
+                                        },
+                                        title: 'Done',
+                                        showIcon: false,
+                                        iconPath: AppIcons.add,
+                                        size: ButtonSize.normal,
+                                        type: ButtonType.primary,
+                                        expanded: true,
+                                        iconColor: AppColors.white,
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
-                              title: 'Book now',
-                              showIcon: false,
-                              iconPath: AppIcons.add,
-                              size: ButtonSize.normal,
-                              type: ButtonType.primary,
-                              expanded: false,
-                              iconColor: AppColors.primary,
-                            ),
-                          ],
+                            );
+                          },
+                          btnTitle: 'Request service',
+                          showIcon: false,
+                          iconPath: AppIcons.add,
                         ),
-                      )
-                    else
-                      FixedButton(
-                        ontap: () {
-                          showModalBottomSheet(
-                            backgroundColor: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: const EdgeInsets.all(18),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        '$title service',
-                                        style: AppTextStyle.heading5SemiBold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: Dimension.d9),
-                                    const Text(
-                                      'Your request has been received',
-                                      style: AppTextStyle.bodyLargeBold,
-                                    ),
-                                    const SizedBox(height: Dimension.d3),
-                                    SvgPicture.asset(
-                                      'assets/icon/success.svg',
-                                      height: 88,
-                                    ),
-                                    const SizedBox(height: Dimension.d3),
-                                    Text(
-                                      'Thank you for your interest. The SG team will be in touch with you shortly',
-                                      textAlign: TextAlign.center,
-                                      style: AppTextStyle.bodyMediumMedium
-                                          .copyWith(
-                                        color: AppColors.grayscale700,
-                                      ),
-                                    ),
-                                    const SizedBox(height: Dimension.d9),
-                                    CustomButton(
-                                      ontap: () {
-                                        context
-                                          ..pop()
-                                          ..pop();
-                                      },
-                                      title: 'Done',
-                                      showIcon: false,
-                                      iconPath: AppIcons.add,
-                                      size: ButtonSize.normal,
-                                      type: ButtonType.primary,
-                                      expanded: true,
-                                      iconColor: AppColors.white,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        btnTitle: 'Request service',
-                        showIcon: false,
-                        iconPath: AppIcons.add,
-                      ),
-                  ],
-                );
-              },
-            );
-          }
-          return const Center(child: Text('No data found'));
-        },
+                    ],
+                  );
+                },
+              );
+            }
+            return const Center(child: Text('No data found'));
+          },
+        ),
       ),
     );
   }

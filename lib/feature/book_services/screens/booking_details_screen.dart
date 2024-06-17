@@ -10,20 +10,22 @@ class BookingDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Book Service'),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FixedButton(
-        ontap: () {},
-        btnTitle: 'Done',
-        showIcon: false,
-        iconPath: AppIcons.add,
-      ),
-      body: const Column(
-        children: [
-          BookingStatus(),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: const PageAppbar(title: 'Book Service'),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FixedButton(
+          ontap: () {},
+          btnTitle: 'Done',
+          showIcon: false,
+          iconPath: AppIcons.add,
+        ),
+        body: const Column(
+          children: [
+            BookingStatus(),
+          ],
+        ),
       ),
     );
   }

@@ -38,137 +38,145 @@ class EPRViewScreen extends StatelessWidget {
         ),
       );
     }
-    return Observer(
-      builder: (context) {
-        return Scaffold(
-          appBar: const PageAppbar(title: 'EPR'),
-          backgroundColor: AppColors.white,
-          body: FutureBuilder(
-            future: GetIt.I<MemberServices>().getEPRData(memberId: memberId),
-            builder: (context, snapshot) {
-              if (store.isLoadingUserInfo ||
-                  snapshot.connectionState == ConnectionState.waiting) {
-                return const LoadingWidget(
-                  showShadow: false,
-                );
-              }
-
-              if (!snapshot.hasData || snapshot.hasError) {
-                return const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong);
-              }
-
-              final data = snapshot.data!;
-              final userDetails =
-                  GetIt.I<MembersStore>().memberById(int.tryParse(memberId));
-
-              if (userDetails == null) {
-                return const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong);
-              }
-
-              final userInfo = userDetails;
-
-              if (data.isLeft()) {
-                final failure = data
-                    .getLeft()
-                    .getOrElse(() => throw 'error, in calling data.getLeft()');
-
-                final NoEprRecordCase =
-                    failure.whenOrNull(memberDontHaveEPRInfo: () => true);
-
-                if (NoEprRecordCase ?? false) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: Dimension.d3),
-                    child: _PersonalDetailsComponent(
-                      name: userInfo.name,
-                      email: userInfo.email,
-                      phoneNumber: userInfo.phoneNumber,
-                      relation: userInfo.relation,
-                      dateOfBirth: userInfo.dateOfBirth,
-                    ),
+    return SafeArea(
+      child: Observer(
+        builder: (context) {
+          return Scaffold(
+            appBar: const PageAppbar(title: 'EPR'),
+            backgroundColor: AppColors.white,
+            body: FutureBuilder(
+              future: GetIt.I<MemberServices>().getEPRData(memberId: memberId),
+              builder: (context, snapshot) {
+                if (store.isLoadingUserInfo ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return const LoadingWidget(
+                    showShadow: false,
                   );
                 }
 
-                return const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong);
-              }
+                if (!snapshot.hasData || snapshot.hasError) {
+                  return const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong,
+                  );
+                }
 
-              final EprDataModel eprData = data.getOrElse((l) => throw 'Error');
+                final data = snapshot.data!;
+                final userDetails =
+                    GetIt.I<MembersStore>().memberById(int.tryParse(memberId));
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: Padding(
+                if (userDetails == null) {
+                  return const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong,
+                  );
+                }
+
+                final userInfo = userDetails;
+
+                if (data.isLeft()) {
+                  final failure = data.getLeft().getOrElse(
+                        () => throw 'error, in calling data.getLeft()',
+                      );
+
+                  final NoEprRecordCase =
+                      failure.whenOrNull(memberDontHaveEPRInfo: () => true);
+
+                  if (NoEprRecordCase ?? false) {
+                    return Padding(
                       padding:
                           const EdgeInsets.symmetric(horizontal: Dimension.d3),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _PersonalDetailsComponent(
-                              name: userInfo.name,
-                              email: userInfo.email,
-                              phoneNumber: userInfo.phoneNumber,
-                              relation: userInfo.relation,
-                              dateOfBirth: userInfo.dateOfBirth,
-                            ),
-                            const SizedBox(
-                              height: Dimension.d3,
-                            ),
-                            _ExpandedButton(
-                              title: 'Insurance details',
-                              userInsurance: eprData.userInsurance,
-                            ),
-                            _ExpandedButton(
+                      child: _PersonalDetailsComponent(
+                        name: userInfo.name,
+                        email: userInfo.email,
+                        phoneNumber: userInfo.phoneNumber,
+                        relation: userInfo.relation,
+                        dateOfBirth: userInfo.dateOfBirth,
+                      ),
+                    );
+                  }
+
+                  return const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong,
+                  );
+                }
+
+                final EprDataModel eprData =
+                    data.getOrElse((l) => throw 'Error');
+
+                return Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Dimension.d3,
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _PersonalDetailsComponent(
+                                name: userInfo.name,
+                                email: userInfo.email,
+                                phoneNumber: userInfo.phoneNumber,
+                                relation: userInfo.relation,
+                                dateOfBirth: userInfo.dateOfBirth,
+                              ),
+                              const SizedBox(
+                                height: Dimension.d3,
+                              ),
+                              _ExpandedButton(
+                                title: 'Insurance details',
+                                userInsurance: eprData.userInsurance,
+                              ),
+                              _ExpandedButton(
                                 title: 'Preferred Hospitals',
-                                preferredServices:
-                                    eprData.getPreferredHospital),
-                            _ExpandedButton(
+                                preferredServices: eprData.getPreferredHospital,
+                              ),
+                              _ExpandedButton(
                                 title: 'Emergency Contact',
-                                emrgencyContactList: eprData.emergencyContacts),
-                            _ExpandedButton(
+                                emrgencyContactList: eprData.emergencyContacts,
+                              ),
+                              _ExpandedButton(
                                 title: 'Preferred Ambulance',
-                                preferredServices:
-                                    eprData.getPreferredAmbulace),
-                            const SizedBox(
-                              height: Dimension.d19,
-                            )
-                          ],
+                                preferredServices: eprData.getPreferredAmbulace,
+                              ),
+                              const SizedBox(
+                                height: Dimension.d19,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FixedButton(
-            ontap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const InfoDialog(
-                    showIcon: false,
-                    title: 'Hi there!!',
-                    desc:
-                        'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                    btnTitle: 'Contact Genie',
-                    showBtnIcon: true,
-                    btnIconPath: AppIcons.phone,
-                  );
-                },
-              );
-            },
-            btnTitle: 'Update EPR',
-            showIcon: false,
-            iconPath: AppIcons.add,
-          ),
-        );
-      },
+                  ],
+                );
+              },
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: FixedButton(
+              ontap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const InfoDialog(
+                      showIcon: false,
+                      title: 'Hi there!!',
+                      desc:
+                          'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                      btnTitle: 'Contact Genie',
+                      showBtnIcon: true,
+                      btnIconPath: AppIcons.phone,
+                    );
+                  },
+                );
+              },
+              btnTitle: 'Update EPR',
+              showIcon: false,
+              iconPath: AppIcons.add,
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -278,7 +286,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
                     title: 'Address',
                     details: streetAddress ?? '---',
                   ),
-                ]
+                ],
               ],
             ),
           ),
@@ -416,8 +424,9 @@ class _UserInsuranceComponent extends StatelessWidget {
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
           AssigningComponent(
-              name: 'Policy No',
-              initializeElement: assignedElements.policyNumber!),
+            name: 'Policy No',
+            initializeElement: assignedElements.policyNumber!,
+          ),
           AssigningComponent(
             name: 'Contact Person',
             initializeElement: assignedElements.contactPerson!,

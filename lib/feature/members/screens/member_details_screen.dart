@@ -40,7 +40,6 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
-    print('PHR Data of memeber = ${activeMember!.phrModel}');
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
