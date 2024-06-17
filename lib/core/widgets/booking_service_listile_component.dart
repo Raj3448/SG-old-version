@@ -17,25 +17,33 @@ class BookingListTileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage, pathParameters: {'bookingServiceStatus': bookingServiceStatus.toString()});
+        context.pushNamed(
+          RoutesConstants.bookingServiceStatusDetailsPage,
+          pathParameters: {
+            'bookingServiceStatus': bookingServiceStatus.toString(),
+          },
+        );
       },
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
         height: BookingServiceStatus.active == bookingServiceStatus ? 100 : 110,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(width: 2, color: AppColors.grayscale300)),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.line),
+        ),
         child: Row(
           children: [
             Container(
               width: 8,
               height: double.infinity,
               decoration: const BoxDecoration(
-                  color: AppColors.secondary,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomLeft: Radius.circular(8))),
+                color: AppColors.secondary,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+              ),
             ),
             Expanded(
               child: Padding(
@@ -59,16 +67,20 @@ class BookingListTileComponent extends StatelessWidget {
                               .copyWith(color: AppColors.grayscale700),
                         ),
                         const Spacer(),
-                        if (!(bookingServiceStatus == BookingServiceStatus.requested))
+                        if (!(bookingServiceStatus ==
+                            BookingServiceStatus.requested))
                           Container(
-                            height: 24,
-                            width: 105,
-                            alignment: const Alignment(0, 0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                                color: AppColors.lightBlue,
-                                borderRadius: BorderRadius.circular(5)),
+                              color: AppColors.lightBlue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                             child: Text(
-                              bookingServiceStatus == BookingServiceStatus.completed
+                              bookingServiceStatus ==
+                                      BookingServiceStatus.completed
                                   ? '12 Apr, 1PM'
                                   : 'Today at 1PM',
                               style: AppTextStyle.bodyMediumMedium
@@ -83,22 +95,26 @@ class BookingListTileComponent extends StatelessWidget {
                     Text(
                       'Nutrition -Tele-consultation',
                       style: AppTextStyle.bodyLargeMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grayscale900),
+                        color: AppColors.grayscale900,
+                      ),
                     ),
                     if (!(bookingServiceStatus == BookingServiceStatus.active))
-                      Text.rich(TextSpan(children: [
+                      Text.rich(
                         TextSpan(
-                          text: 'Requested on:',
-                          style: AppTextStyle.bodyMediumMedium
-                              .copyWith(color: AppColors.grayscale700),
+                          children: [
+                            TextSpan(
+                              text: 'Requested on:',
+                              style: AppTextStyle.bodyMediumMedium
+                                  .copyWith(color: AppColors.grayscale700),
+                            ),
+                            TextSpan(
+                              text: ' Apr 10, at 10:30 AM.',
+                              style: AppTextStyle.bodyMediumMedium
+                                  .copyWith(color: AppColors.grayscale900),
+                            ),
+                          ],
                         ),
-                        TextSpan(
-                          text: ' Apr 10, at 10:30 AM.',
-                          style: AppTextStyle.bodyMediumMedium
-                              .copyWith(color: AppColors.grayscale900),
-                        )
-                      ])),
+                      ),
                   ],
                 ),
               ),

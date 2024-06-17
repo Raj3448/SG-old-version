@@ -129,11 +129,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   _EmergencyActivation(),
                   _ActiveBookingComponent(),
+                  const SizedBox(height: Dimension.d4),
                   Text(
                     'Book services',
-                    style: AppTextStyle.bodyXLSemiBold
-                        .copyWith(color: AppColors.grayscale900, height: 2.6),
+                    style: AppTextStyle.bodyXLMedium
+                        .copyWith(color: AppColors.grayscale900),
                   ),
+                  const SizedBox(height: Dimension.d4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -237,8 +239,14 @@ class _HomeScreenComponents extends StatelessWidget {
       }
       if (component is BannerImageModel) {
         widgetList.add(
-          BannerImageComponent(
-            imageUrl: component.bannerImage.data.attributes.url,
+          Column(
+            children: [
+              const SizedBox(height: Dimension.d4),
+              BannerImageComponent(
+                imageUrl: component.bannerImage.data.attributes.url,
+              ),
+              const SizedBox(height: Dimension.d4),
+            ],
           ),
         );
         continue;
@@ -303,15 +311,13 @@ class _TestmonialsComponent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: Dimension.d3),
         Text(
           testimonialsModel.title,
-          style: AppTextStyle.bodyXLSemiBold.copyWith(
-            color: AppColors.grayscale900,
-            height: 2.6,
-            fontWeight: FontWeight.w500,
-            fontSize: 18,
-          ),
+          style:
+              AppTextStyle.bodyXLMedium.copyWith(color: AppColors.grayscale900),
         ),
+        const SizedBox(height: Dimension.d4),
         Container(
           color: AppColors.secondary,
           padding: const EdgeInsets.symmetric(horizontal: Dimension.d1),
@@ -391,30 +397,24 @@ class _AboutUsOfferComponent extends StatelessWidget {
       children: [
         Text(
           aboutUsOfferModel.header,
-          style: AppTextStyle.bodyXLSemiBold
-              .copyWith(color: AppColors.grayscale900, height: 2.6),
+          style:
+              AppTextStyle.bodyXLMedium.copyWith(color: AppColors.grayscale900),
         ),
+        const SizedBox(height: Dimension.d3),
         Text(
           aboutUsOfferModel.description,
           style: AppTextStyle.bodyLargeMedium.copyWith(
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
             color: AppColors.grayscale700,
           ),
         ),
+        const SizedBox(height: Dimension.d3),
         Text(
           aboutUsOfferModel.offering.header,
-          style: AppTextStyle.bodyXLSemiBold.copyWith(
+          style: AppTextStyle.bodyLargeMedium.copyWith(
             color: AppColors.grayscale900,
-            height: 2.4,
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
           ),
         ),
-        const SizedBox(
-          height: Dimension.d1,
-        ),
+        const SizedBox(height: Dimension.d3),
         SizedBox(
           height: 240,
           child: ListView(
@@ -435,9 +435,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
-          height: Dimension.d4,
-        ),
+        const SizedBox(height: Dimension.d3),
         Center(
           child: SmoothPageIndicator(
             controller: _offerPageController,
@@ -762,9 +760,11 @@ class _MemberInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          const SizedBox(height: Dimension.d4),
+          Text(
             'Family Members health info',
-            style: AppTextStyle.bodyXLSemiBold,
+            style: AppTextStyle.bodyXLMedium
+                .copyWith(color: AppColors.grayscale900),
           ),
           const SizedBox(height: Dimension.d4),
           Observer(
@@ -939,7 +939,7 @@ class BookServiceButton extends StatelessWidget {
             width: 64,
             decoration: BoxDecoration(
               color: AppColors.secondary,
-              border: Border.all(width: 2, color: AppColors.grayscale300),
+              border: Border.all(color: AppColors.line),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Image.asset(iconImagePath),
@@ -980,25 +980,22 @@ class _HomeScreenOfferCard extends StatelessWidget {
     return Container(
       height: 236,
       width: 235,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: AppColors.secondary,
-        border: Border.all(width: 2, color: AppColors.grayscale300),
-        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.line),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             offerTitle,
-            style: AppTextStyle.bodyXLSemiBold.copyWith(
-              color: AppColors.grayscale900,
-              height: 2.4,
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
-            ),
+            style: AppTextStyle.bodyLargeMedium
+                .copyWith(color: AppColors.grayscale900),
           ),
+          const SizedBox(height: Dimension.d3),
           Column(
             children: List.generate(
               content.length,
@@ -1015,16 +1012,12 @@ class _HomeScreenOfferCard extends StatelessWidget {
                         color: AppColors.primary,
                       ),
                     ),
-                    const SizedBox(
-                      width: Dimension.d3,
-                    ),
+                    const SizedBox(width: Dimension.d3),
                     Expanded(
                       child: Text(
                         content[index],
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                          color: AppColors.grayscale700,
-                          height: 1.7,
-                        ),
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.grayscale700),
                       ),
                     ),
                   ],
