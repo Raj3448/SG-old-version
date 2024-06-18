@@ -26,7 +26,7 @@ class HomeService implements IHomeServices {
           List<dynamic> componetList = [];
           for (var component in response.data['data']['attributes']['content']
               as List<dynamic>) {
-            if (component['__component'] == 'mobile-ui.banner') {
+            if (component['__component'] == 'mobile-ui.banner' && component['isActive'] as bool) {
               componetList.add(
                   BannerImageModel.fromJson(component as Map<String, dynamic>));
             }
