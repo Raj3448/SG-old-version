@@ -216,7 +216,8 @@ class _HomeScreenComponents extends StatelessWidget {
     final componentDetailsList = homestore.isHomepageData;
     final widgetList = <Widget>[];
     for (final component in componentDetailsList) {
-      if (component is AboutUsOfferModel) {
+      
+      if (component is AboutUsOfferModel ) {
         widgetList.add(
           _AboutUsOfferComponent(
             aboutUsOfferModel: component,
