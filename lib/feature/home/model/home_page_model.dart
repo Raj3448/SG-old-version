@@ -29,7 +29,7 @@ class BannerImageModel with _$BannerImageModel {
     const factory BannerImageModel({
         @JsonKey(name: '__component') @HiveField(4) required String component,
         @HiveField(5) required String label,
-        @HiveField(6) required Cta cta,
+        @HiveField(6) Cta? cta,
         @HiveField(7) required BannerImage bannerImage,
     }) = _BannerImageModel;
 
@@ -82,6 +82,7 @@ class Attributes with _$Attributes {
     @HiveField(16) required DateTime createdAt,
     @HiveField(17) required DateTime updatedAt,
     @HiveField(18) required DateTime publishedAt,
+    @HiveField(36) BannerImage? testifierImage,
   }) = _Attributes;
 
   factory Attributes.fromJson(Map<String, dynamic> json) => _$AttributesFromJson(json);

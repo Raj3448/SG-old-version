@@ -224,8 +224,17 @@ class _HomeScreenComponents extends StatelessWidget {
       }
       if (component is BannerImageModel) {
         widgetList.add(
-          BannerImageComponent(
-            imageUrl: component.bannerImage.data.attributes.url,
+          GestureDetector(
+            onTap: () async {
+              final url = component.cta?.href;
+              print(url);
+              if (url != null && await canLaunch(url)) {
+                await launch(url);
+              }
+            },
+            child: BannerImageComponent(
+              imageUrl: component.bannerImage.data.attributes.url,
+            ),
           ),
         );
         continue;
@@ -318,6 +327,8 @@ class _TestmonialsComponent extends StatelessWidget {
                           .testimonials.data[index].attributes.testifierName,
                       content: testimonialsModel
                           .testimonials.data[index].attributes.content,
+                      imgUrl: testimonialsModel.testimonials.data[index]
+                          .attributes.testifierImage?.data.attributes.url,
                     ),
                   ),
                 ),
@@ -337,19 +348,6 @@ class _TestmonialsComponent extends StatelessWidget {
                   ),
                 ),
               ),
-              // SizedBox(
-              //   width: double.infinity,
-              //   child: Text(
-              //     'Newsletter',
-              //     textAlign: TextAlign.left,
-              //     style: AppTextStyle.bodyXLSemiBold.copyWith(
-              //       color: AppColors.grayscale900,
-              //       height: 1.8,
-              //       fontWeight: FontWeight.w500,
-              //       fontSize: 18,
-              //     ),
-              //   ),
-              // ),
               const SizedBox(
                 height: Dimension.d3,
               ),
@@ -491,10 +489,13 @@ class _TestmonialsCard extends StatelessWidget {
   const _TestmonialsCard({
     required this.testifierName,
     required this.content,
-  });
+    this.imgUrl,
+    Key? key,
+  }) : super(key: key);
 
   final String testifierName;
   final String content;
+  final String? imgUrl;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -517,7 +518,7 @@ class _TestmonialsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Avatar.fromSize(
-                imgPath: '',
+                imgPath: imgUrl == null ? '': '${Env.serverUrl}${imgUrl!}',
                 size: AvatarSize.size12,
               ),
               const SizedBox(
