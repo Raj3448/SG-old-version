@@ -232,8 +232,11 @@ class _HomeScreenComponents extends StatelessWidget {
                 await launch(url);
               }
             },
-            child: BannerImageComponent(
-              imageUrl: component.bannerImage.data.attributes.url,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+              child: BannerImageComponent(
+                imageUrl: component.bannerImage.data.attributes.url,
+              ),
             ),
           ),
         );
@@ -518,7 +521,7 @@ class _TestmonialsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Avatar.fromSize(
-                imgPath: imgUrl == null ? '': '${Env.serverUrl}${imgUrl!}',
+                imgPath: imgUrl == null ? '' : '${Env.serverUrl}${imgUrl!}',
                 size: AvatarSize.size12,
               ),
               const SizedBox(
