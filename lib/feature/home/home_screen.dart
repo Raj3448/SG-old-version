@@ -136,7 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         'Book services',
                         style: AppTextStyle.bodyXLSemiBold.copyWith(
-                            color: AppColors.grayscale900, height: 2.6),
+                          color: AppColors.grayscale900,
+                          height: 2.6,
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 pathParameters: {
                                   'isHealthCare': 'true',
                                   'isHomeCare': 'false',
-                                  'isConvenience': 'false'
+                                  'isConvenience': 'false',
                                 },
                               );
                             },
@@ -164,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 pathParameters: {
                                   'isHealthCare': 'false',
                                   'isHomeCare': 'true',
-                                  'isConvenience': 'false'
+                                  'isConvenience': 'false',
                                 },
                               );
                             },
@@ -178,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 pathParameters: {
                                   'isHealthCare': 'false',
                                   'isHomeCare': 'false',
-                                  'isConvenience': 'true'
+                                  'isConvenience': 'true',
                                 },
                               );
                             },
@@ -470,20 +472,24 @@ class _ActiveBookingComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return bookingServicesList.isEmpty
         ? const SizedBox.shrink()
-        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Active bookings',
-              style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
-            ),
-            ...List.generate(
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Active bookings',
+                style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
+              ),
+              ...List.generate(
                 bookingServicesList.length <= 3
                     ? bookingServicesList.length
                     : 3,
                 (index) => BookingListTileComponent(
-                      bookingServiceModel: store.getAllActiveServiceList[index],
-                      bookingServiceStatus: BookingServiceStatus.active,
-                    )),
-          ]);
+                  bookingServiceModel: store.getAllActiveServiceList[index],
+                  bookingServiceStatus: BookingServiceStatus.active,
+                ),
+              ),
+            ],
+          );
   }
 }
 
@@ -512,6 +518,8 @@ class _TestmonialsCard extends StatelessWidget {
         children: [
           Text(
             content,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 4,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -784,7 +792,8 @@ class _MemberInfo extends StatelessWidget {
                                   isSelected: memberStore.familyMembers[i].id ==
                                       memberStore.activeMemberId,
                                   ontap: () => memberStore.selectMember(
-                                      memberStore.familyMembers[i].id),
+                                    memberStore.familyMembers[i].id,
+                                  ),
                                 ),
                                 const SizedBox(width: Dimension.d4),
                               ],
@@ -960,52 +969,54 @@ class _HomeScreenOfferCard extends StatelessWidget {
         border: Border.all(width: 2, color: AppColors.grayscale300),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            offerTitle,
-            style: AppTextStyle.bodyXLSemiBold.copyWith(
-              color: AppColors.grayscale900,
-              height: 2.4,
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              offerTitle,
+              style: AppTextStyle.bodyXLSemiBold.copyWith(
+                color: AppColors.grayscale900,
+                height: 2.4,
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+              ),
             ),
-          ),
-          Column(
-            children: List.generate(
-              content.length,
-              (index) => Padding(
-                padding: const EdgeInsets.only(bottom: Dimension.d2),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 7),
-                      child: Icon(
-                        AppIcons.check,
-                        size: 12,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: Dimension.d3,
-                    ),
-                    Expanded(
-                      child: Text(
-                        content[index],
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                          color: AppColors.grayscale700,
-                          height: 1.7,
+            Column(
+              children: List.generate(
+                content.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: Dimension.d2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 7),
+                        child: Icon(
+                          AppIcons.check,
+                          size: 12,
+                          color: AppColors.primary,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        width: Dimension.d3,
+                      ),
+                      Expanded(
+                        child: Text(
+                          content[index],
+                          style: AppTextStyle.bodyMediumMedium.copyWith(
+                            color: AppColors.grayscale700,
+                            height: 1.7,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
