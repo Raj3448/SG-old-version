@@ -124,8 +124,9 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                         subtitle: displayedServices[index]
                             .attributes
                             .metadata
-                            .first
-                            .value,
+                            .where((m) => m.key == 'subtitle')
+                            .firstOrNull
+                            ?.value,
                       ),
                     );
                   },
