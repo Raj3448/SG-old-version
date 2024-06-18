@@ -189,8 +189,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       getImagePath: (value) =>
                           value.attributes.icon.data.attributes.url,
                       getTitle: (value) => value.attributes.name,
-                      getSubtitle: (value) =>
-                          value.attributes.metadata.first.value,
+                      getSubtitle: (value) => value.attributes.metadata
+                          .where((m) => m.key == 'subtitle')
+                          .firstOrNull
+                          ?.value,
                     ),
                   if (displayedServices.isEmpty &&
                       textEditingController.text.isNotEmpty)
@@ -233,7 +235,10 @@ class _ServiceCategorySection extends StatelessWidget {
           services: services,
           getImagePath: (value) => value.attributes.icon.data.attributes.url,
           getTitle: (value) => value.attributes.name,
-          getSubtitle: (value) => value.attributes.metadata.first.value,
+          getSubtitle: (value) => value.attributes.metadata
+              .where((m) => m.key == 'subtitle')
+              .firstOrNull
+              ?.value,
         ),
       ],
     );
@@ -280,7 +285,7 @@ class _ServiceListView extends StatelessWidget {
   final List<ProductBasicDetailsModel> services;
   final String Function(ProductBasicDetailsModel) getImagePath;
   final String Function(ProductBasicDetailsModel) getTitle;
-  final String Function(ProductBasicDetailsModel) getSubtitle;
+  final String? Function(ProductBasicDetailsModel) getSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +327,7 @@ class ServicesListTileComponent extends StatelessWidget {
   });
   final String imagePath;
   final String title;
-  final String subtitle;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +369,7 @@ class ServicesListTileComponent extends StatelessWidget {
                         .copyWith(color: AppColors.grayscale900),
                   ),
                   Text(
-                    subtitle,
+                    subtitle ?? '',
                     style: AppTextStyle.bodyMediumMedium
                         .copyWith(color: AppColors.grayscale600),
                   ),
