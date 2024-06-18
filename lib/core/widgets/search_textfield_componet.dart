@@ -40,6 +40,18 @@ class _SearchTextfieldState extends State<SearchTextfield> {
           filled: true,
           border: InputBorder.none,
           hintText: 'Search...',
+          suffixIcon: widget.textEditingController.text.isNotEmpty
+              ? IconButton(
+                  onPressed: () {
+                    widget.textEditingController.clear();
+                  },
+                  icon: const Icon(
+                    Icons.cancel_outlined,
+                    size: 20,
+                    color: AppColors.black,
+                  ),
+                )
+              : null,
           hintStyle: AppTextStyle.bodyMediumMedium.copyWith(
             color: AppColors.grayscale600,
             fontSize: 16,
