@@ -105,6 +105,7 @@ void main() async {
       GetIt.instance.registerLazySingleton<GlobalKey<NavigatorState>>(
         () => GlobalKey<NavigatorState>(),
         instanceName: 'rootNavigatorKey',
+        
       );
       GetIt.instance.registerLazySingleton(
         () => MembersStore(
