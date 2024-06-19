@@ -63,9 +63,8 @@ class _OTPScreenState extends State<OTPScreen> {
           },
           (r) => {
             GetIt.I<AuthStore>().refresh(),
-            GoRouter.of(context).goNamed(
-              RoutesConstants.homeRoute,
-            ),
+            GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
+                queryParameters: {'skipRootRedirectCheck': "true"}),
           },
         );
 

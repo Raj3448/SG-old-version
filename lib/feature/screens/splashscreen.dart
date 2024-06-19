@@ -46,11 +46,10 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
         }
 
         if (isHomepageDataLoaded && mounted) {
-          context.goNamed('/',
-              extra: (widget.redirectRouteName != null &&
-                      widget.redirectRouteName!.isNotEmpty)
-                  ? {'redirectRouteName': widget.redirectRouteName}
-                  : null);
+          context.goNamed(
+            '/',
+            queryParameters: {'redirectRouteName': widget.redirectRouteName},
+          );
         }
       },
     );

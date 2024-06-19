@@ -52,14 +52,48 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/',
+  redirect: (context, state) {
+    if (state.matchedLocation.startsWith('/login')) {
+      return null;
+    }
+    if (state.matchedLocation.startsWith('/otp')) {
+      return null;
+    }
+    if (state.matchedLocation.startsWith('/signup')) {
+      return null;
+    }
+    if (state.matchedLocation.startsWith('/onboarding')) {
+      return null;
+    }
+    if (state.name == '/' || state.path == '/') {
+      return null;
+    }
+    final skipRedirect = bool.tryParse(
+            state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false') ??
+        false;
+
+    if (skipRedirect) {
+      return null;
+    }
+
+    if (!homeStore.isHomepageDataLoaded ||
+        store.showOnboarding ||
+        !authStore.isAuthenticated ||
+        !authStore.initialised) {
+      final route = '/?redirectRouteName=${state.fullPath}';
+      return route;
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       path: RoutesConstants.initialRoute,
       name: RoutesConstants.initialRoute,
       redirect: (context, state) {
-        final extraData = state.extra as Map<String, dynamic>?;
-        final redirectRouteName = extraData?['redirectRouteName'] as String?;
+        final redirectRouteName =
+            state.uri.queryParameters['redirectRouteName'];
 
         if (!homeStore.isHomepageDataLoaded) {
           return null;
@@ -81,8 +115,8 @@ final GoRouter routes = GoRouter(
         return RoutesConstants.homeRoute;
       },
       builder: (context, state) {
-        final extraData = state.extra as Map<String, dynamic>?;
-        final redirectRouteName = extraData?['redirectRouteName'] as String?;
+        final redirectRouteName =
+            state.uri.queryParameters['redirectRouteName'];
 
         /// Add splash screen here
         return SplashscreenWidget(redirectRouteName: redirectRouteName);

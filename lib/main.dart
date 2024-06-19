@@ -18,7 +18,6 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
-import 'package:silver_genie/core/utils/unilink_services.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/services/booking_service.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
@@ -188,7 +187,6 @@ void main() async {
             systemNavigationBarContrastEnforced: true,
             systemStatusBarContrastEnforced: true),
       );
-      await UniService.initUniLinks();
       runApp(
         EasyLocalization(
           supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
