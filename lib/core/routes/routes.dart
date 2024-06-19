@@ -46,7 +46,7 @@ final store = GetIt.I<OnboardingStore>();
 final authStore = GetIt.I<AuthStore>();
 final homeStore = GetIt.I<HomeStore>();
 
-final GlobalKey<NavigatorState> rootNavigatorKey = GetIt.I<GlobalKey<NavigatorState>>(instanceName: 'rootNavigatorKey');
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter routes = GoRouter(
@@ -58,6 +58,9 @@ final GoRouter routes = GoRouter(
       path: RoutesConstants.initialRoute,
       name: RoutesConstants.initialRoute,
       redirect: (context, state) {
+        final extraData = state.extra as Map<String, dynamic>?;
+        final redirectRouteName = extraData?['redirectRouteName'] as String?;
+
         if (!homeStore.isHomepageDataLoaded) {
           return null;
         }
@@ -65,16 +68,24 @@ final GoRouter routes = GoRouter(
         if (store.showOnboarding) {
           return RoutesConstants.onboardingRoute;
         }
-        if (authStore.isAuthenticated) {
-          return RoutesConstants.homeRoute;
+
+        if (!authStore.isAuthenticated) {
+          return RoutesConstants.loginRoute;
         }
+
         if (!authStore.initialised) return null;
 
-        return RoutesConstants.loginRoute;
+        if (redirectRouteName != null && redirectRouteName.isNotEmpty) {
+          return redirectRouteName;
+        }
+        return RoutesConstants.homeRoute;
       },
       builder: (context, state) {
+        final extraData = state.extra as Map<String, dynamic>?;
+        final redirectRouteName = extraData?['redirectRouteName'] as String?;
+
         /// Add splash screen here
-        return const SplashscreenWidget();
+        return SplashscreenWidget(redirectRouteName: redirectRouteName);
       },
     ),
     ShellRoute(
@@ -367,8 +378,12 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         final extraData = state.extra as Map<String, dynamic>?;
-        final PaymentStatus paymentStatus = extraData?['paymentStatus'] as PaymentStatus;
-        return MaterialPage(child: PaymentScreen(paymentStatus: paymentStatus,));
+        final PaymentStatus paymentStatus =
+            extraData?['paymentStatus'] as PaymentStatus;
+        return MaterialPage(
+            child: PaymentScreen(
+          paymentStatus: paymentStatus,
+        ));
       },
     ),
     GoRoute(
