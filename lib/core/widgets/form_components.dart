@@ -93,6 +93,12 @@ class CustomTextField extends StatelessWidget {
             color: AppColors.line,
           ),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.error,
+          ),
+        ),
         filled: !enabled ? true : null,
         fillColor: !enabled ? AppColors.grayscale200 : null,
         focusedBorder: OutlineInputBorder(
@@ -144,6 +150,12 @@ class CustomPhoneField extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimension.d2),
           borderSide: const BorderSide(
             color: AppColors.primary,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.error,
           ),
         ),
         prefixIcon: SizedBox(

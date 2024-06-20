@@ -33,7 +33,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                         color: state.hasError && !state.isValid
-                            ? Color(0xFF9E2F27)
+                            ? AppColors.error
                             : AppColors.line),
                   ),
                   padding: const EdgeInsets.only(right: 10),
@@ -92,7 +92,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     child: Text(
                       state.errorText!,
                       style: const TextStyle(
-                        color: Color(0xFF9E2F27),
+                        color: AppColors.error,
                         fontSize: 12,
                       ),
                     ),
@@ -146,71 +146,71 @@ class DateDropdown extends FormField<DateTime> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: disable
-                      ? null
-                      : () async {
-                          final pickedDate = await showDatePicker(
-                            context: state.context,
-                            firstDate: DateTime(1950),
-                            lastDate: DateTime.now(),
-                            initialDate: state.value ?? DateTime.now(),
-                          );
-
-                          if (pickedDate != null && pickedDate != state.value) {
-                            state.didChange(pickedDate);
-                            controller.text =
-                                DateFormat(dateFormat).format(pickedDate);
-                            onChanged?.call(pickedDate);
-                          }
-                        },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: disable ? AppColors.grayscale200 : null,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: state.hasError && !state.isValid
-                            ? Color(0xFF9E2F27)
-                            : AppColors.grayscale300,
-                      ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: disable ? AppColors.grayscale200 : null,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: state.hasError && !state.isValid
+                          ? AppColors.error
+                          : AppColors.grayscale300,
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: controller,
-                                style: AppTextStyle.bodyLargeMedium.copyWith(
-                                  color: disable
-                                      ? AppColors.grayscale700
-                                      : AppColors.grayscale900,
-                                ),
-                                decoration: const InputDecoration(
-                                  hintText: 'Select',
-                                  border: InputBorder.none,
-                                ),
-                                readOnly: true,
-                                onSaved: onSaved,
-                                onChanged: (value) {
-                                  if (onChanged != null) {
-                                    onChanged.call(state.value!);
-                                  }
-                                },
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: controller,
+                              style: AppTextStyle.bodyLargeMedium.copyWith(
+                                color: disable
+                                    ? AppColors.grayscale700
+                                    : AppColors.grayscale900,
                               ),
+                              decoration: const InputDecoration(
+                                hintText: 'Select',
+                                border: InputBorder.none,
+                              ),
+                              readOnly: true,
+                              onSaved: onSaved,
+                              onTap: disable
+                                  ? null
+                                  : () async {
+                                      final pickedDate = await showDatePicker(
+                                        context: state.context,
+                                        firstDate: DateTime(1950),
+                                        lastDate: DateTime.now(),
+                                        initialDate:
+                                            state.value ?? DateTime.now(),
+                                      );
+
+                                      if (pickedDate != null &&
+                                          pickedDate != state.value) {
+                                        state.didChange(pickedDate);
+                                        controller.text = DateFormat(dateFormat)
+                                            .format(pickedDate);
+                                        onChanged?.call(pickedDate);
+                                      }
+                                    },
+                              onChanged: (value) {
+                                if (onChanged != null) {
+                                  onChanged.call(state.value!);
+                                }
+                              },
                             ),
-                            const SizedBox(width: 10),
-                            const Icon(
-                              Icons.calendar_today,
-                              color: Colors.grey,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          const SizedBox(width: 10),
+                          const Icon(
+                            Icons.calendar_today,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 if (state.errorText != null && !state.isValid)
@@ -222,7 +222,7 @@ class DateDropdown extends FormField<DateTime> {
                     child: Text(
                       state.errorText!,
                       style: const TextStyle(
-                        color: Color(0xFF9E2F27),
+                        color: AppColors.error,
                         fontSize: 12,
                       ),
                     ),
