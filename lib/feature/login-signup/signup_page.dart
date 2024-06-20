@@ -85,6 +85,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: Observer(
         builder: (context) {
           return Stack(
@@ -183,6 +184,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             CustomPhoneField(
                               controller: phoneNumbContr,
                               title: 'Enter Mobile Number'.tr(),
+                              autovalidate: autoValidate
+                                  ? AutovalidateMode.onUserInteraction
+                                  : AutovalidateMode.disabled,
                             ),
                             const SizedBox(height: Dimension.d4),
                             TextLabel(title: 'Date of birth'.tr()),

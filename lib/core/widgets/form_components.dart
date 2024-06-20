@@ -117,12 +117,14 @@ class CustomTextField extends StatelessWidget {
 class CustomPhoneField extends StatelessWidget {
   const CustomPhoneField({
     required this.title,
+    required this.autovalidate,
     this.controller,
     super.key,
   });
 
   final String title;
   final TextEditingController? controller;
+  final AutovalidateMode autovalidate;
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +132,7 @@ class CustomPhoneField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autovalidate,
       decoration: InputDecoration(
         hintText: 'Enter mobile number',
         hintStyle: AppTextStyle.bodyLargeMedium.copyWith(height: 1.5),

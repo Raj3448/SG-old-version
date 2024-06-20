@@ -70,6 +70,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     isImageUpdate = true;
   }
 
+  bool autoValidate = false;
+
   int? selectedGenderIndex;
   int? _selectedCountryIndex;
 
@@ -82,10 +84,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
     reaction((_) => store.updateFailureMessage, (_) {
       if (store.updateFailureMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(store.updateFailureMessage!),
-          duration: const Duration(seconds: 3),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(store.updateFailureMessage!),
+            duration: const Duration(seconds: 3),
+          ),
+        );
 
         store.updateFailureMessage = null;
       }
@@ -126,7 +130,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     // Set address fields if available
     if (userDetails.address != null) {
       _selectedCountryIndex = _countryItems.indexWhere(
-          (element) => element.value == userDetails.address!.country);
+        (element) => element.value == userDetails.address!.country,
+      );
       _cityController.text = userDetails.address!.city;
       _stateController.text = userDetails.address!.state;
       _addressController.text = userDetails.address!.streetAddress;
@@ -157,11 +162,16 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     FloatingActionButtonLocation.centerDocked,
                 floatingActionButton: FixedButton(
                   ontap: () async {
+                    setState(() {
+                      autoValidate = true;
+                    });
                     if (!globalkey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Please fill all the fields'),
-                        duration: Duration(seconds: 3),
-                      ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please fill all the fields'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
                       return;
                     }
                     user = user!.copyWith(
@@ -173,18 +183,20 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       gender: _genderController.selectedOptions.first.value
                           .toString(),
                       address: Address(
-                          id: user!.address?.id ?? -1,
-                          state: _stateController.text,
-                          city: _cityController.text,
-                          streetAddress: _addressController.text,
-                          postalCode: _postalController.text,
-                          country: _countryController
-                              .selectedOptions.first.value
-                              .toString()),
+                        id: user!.address?.id ?? -1,
+                        state: _stateController.text,
+                        city: _cityController.text,
+                        streetAddress: _addressController.text,
+                        postalCode: _postalController.text,
+                        country: _countryController.selectedOptions.first.value
+                            .toString(),
+                      ),
                     );
                     if (storedImageFile != null) {
                       store.updateUserDataWithProfileImg(
-                          fileImage: storedImageFile!, userInstance: user!);
+                        fileImage: storedImageFile!,
+                        userInstance: user!,
+                      );
                       return;
                     }
                     if (isAlreadyhaveProfileImg && isImageUpdate) {
@@ -211,12 +223,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(
-                              child: EditPic(
-                            onImageSelected: _updateProfileImage,
-                            imgUrl: profileImgUrl,
-                          )),
+                            child: EditPic(
+                              onImageSelected: _updateProfileImage,
+                              imgUrl: profileImgUrl,
+                            ),
+                          ),
                           const SizedBox(height: Dimension.d5),
-                          const AsteriskLabel(label: 'First Name'),
+                          const AsteriskLabel(label: 'First name'),
                           const SizedBox(height: Dimension.d2),
                           CustomTextField(
                             hintText: 'Enter your first name',
@@ -224,6 +237,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: true,
                             controller: _firstNameController,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
                                 return 'Please your first name';
@@ -232,7 +248,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             },
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Last Name'),
+                          const AsteriskLabel(label: 'Last name'),
                           const SizedBox(height: Dimension.d2),
                           CustomTextField(
                             hintText: 'Enter your last name',
@@ -240,6 +256,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: true,
                             controller: _lastNameController,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
                                 return 'Please your last name';
@@ -255,7 +274,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             showClear: false,
                             values: _genderItems,
                             selectedOptions: [
-                              _genderItems[selectedGenderIndex!]
+                              _genderItems[selectedGenderIndex!],
                             ],
                             validator: (selectedItems) {
                               if (selectedItems == null) {
@@ -271,7 +290,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _dobController,
                           ),
                           const SizedBox(height: Dimension.d4),
-                          const AsteriskLabel(label: 'Mobile Field'),
+                          const AsteriskLabel(label: 'Mobile number'),
                           const SizedBox(height: Dimension.d2),
                           GestureDetector(
                             onTap: () {
@@ -335,6 +354,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: true,
                             controller: _addressController,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter the address';
@@ -370,6 +392,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: true,
                             controller: _stateController,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter the state';
@@ -386,6 +411,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: true,
                             controller: _cityController,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter the city';
@@ -402,6 +430,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             large: false,
                             enabled: true,
                             controller: _postalController,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter your postal code';
@@ -421,7 +452,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               ),
               if (store.isUpdatingUserInfo)
                 const Material(
-                    color: Colors.transparent, child: LoadingWidget())
+                  color: Colors.transparent,
+                  child: LoadingWidget(),
+                ),
             ],
           );
         },
