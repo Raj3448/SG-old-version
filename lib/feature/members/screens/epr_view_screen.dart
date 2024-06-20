@@ -302,8 +302,7 @@ class _ExpandedButton extends StatefulWidget {
     this.emrgencyContactList,
     this.userInsurance,
     this.preferredServices,
-    Key? key,
-  }) : super(key: key);
+  });
   final List<EmergencyContact>? emrgencyContactList;
   final List<UserInsurance>? userInsurance;
   final List<PreferredService>? preferredServices;
@@ -325,8 +324,8 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
               _isExpand = !_isExpand;
             });
           },
-          child: SizedBox(
-            height: 40,
+          child: ColoredBox(
+            color: Colors.transparent,
             child: Row(
               children: [
                 Text(
@@ -393,7 +392,7 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
               ),
             ),
           ),
-        if (!_isExpand) const Divider(),
+        if (!_isExpand) const Divider(color: AppColors.line),
       ],
     );
   }
@@ -406,8 +405,8 @@ class _UserInsuranceComponent extends StatelessWidget {
     required this.titleName,
     required this.assignedElements,
     required this.isLast,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final UserInsurance assignedElements;
   final bool isLast;
@@ -456,8 +455,8 @@ class _EmergencyContactComponent extends StatelessWidget {
     required this.titleName,
     required this.assignedElements,
     required this.isLast,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final EmergencyContact assignedElements;
   final bool isLast;
@@ -506,8 +505,8 @@ class _PreferredServiceComponent extends StatelessWidget {
     required this.titleName,
     required this.assignedElements,
     required this.isLast,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final PreferredService assignedElements;
   final bool isLast;
