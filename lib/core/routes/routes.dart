@@ -71,10 +71,10 @@ final GoRouter routes = GoRouter(
       resetAllCache();
       return null;
     }
-    if (state.name == '/' || state.path == '/') {
+
+    if (state.uri.path == '/') {
       return null;
     }
-    //print();
     final skipRedirect = bool.tryParse(
             state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false') ??
         false;
@@ -125,7 +125,6 @@ final GoRouter routes = GoRouter(
         final redirectRouteName =
             state.uri.queryParameters['redirectRouteName'];
 
-        /// Add splash screen here
         return SplashscreenWidget(redirectRouteName: redirectRouteName);
       },
     ),
