@@ -24,21 +24,15 @@ class IconTitleDetailsComponent extends StatelessWidget {
         Icon(
           icon,
           size: 22,
-          color: AppColors.grayscale600,
+          color: AppColors.grayscale700,
         ),
-        const SizedBox(
-          width: Dimension.d2,
-        ),
+        const SizedBox(width: Dimension.d2),
         Text(
           title,
-          style: AppTextStyle.bodyLargeMedium.copyWith(
-            fontWeight: FontWeight.w400,
-            color: AppColors.grayscale600,
-          ),
+          style: AppTextStyle.bodyLargeMedium
+              .copyWith(color: AppColors.grayscale600),
         ),
-        const SizedBox(
-          width: Dimension.d5,
-        ),
+        const SizedBox(width: Dimension.d5),
         Expanded(
           child: Text(
             details,

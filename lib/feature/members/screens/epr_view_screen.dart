@@ -107,7 +107,7 @@ class EPRViewScreen extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: Dimension.d3,
+                          horizontal: Dimension.d4,
                         ),
                         child: SingleChildScrollView(
                           child: Column(
@@ -119,9 +119,6 @@ class EPRViewScreen extends StatelessWidget {
                                 phoneNumber: userInfo.phoneNumber,
                                 relation: userInfo.relation,
                                 dateOfBirth: userInfo.dateOfBirth,
-                              ),
-                              const SizedBox(
-                                height: Dimension.d3,
                               ),
                               _ExpandedButton(
                                 title: 'Insurance details',
@@ -139,9 +136,7 @@ class EPRViewScreen extends StatelessWidget {
                                 title: 'Preferred Ambulance',
                                 preferredServices: eprData.getPreferredAmbulace,
                               ),
-                              const SizedBox(
-                                height: Dimension.d19,
-                              ),
+                              const SizedBox(height: Dimension.d19),
                             ],
                           ),
                         ),
@@ -183,13 +178,13 @@ class EPRViewScreen extends StatelessWidget {
 
 class _PersonalDetailsComponent extends StatelessWidget {
   const _PersonalDetailsComponent({
-    super.key,
     required this.email,
     required this.phoneNumber,
-    this.streetAddress,
     required this.name,
-    this.relation,
     required this.dateOfBirth,
+    this.relation,
+    this.streetAddress,
+    super.key,
   });
   final String email;
   final String phoneNumber;
@@ -204,17 +199,14 @@ class _PersonalDetailsComponent extends StatelessWidget {
       children: [
         Text(
           'Personal Details',
-          style: AppTextStyle.bodyLargeMedium.copyWith(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            height: 2,
+          style: AppTextStyle.bodyXLMedium.copyWith(
             color: AppColors.grayscale900,
           ),
         ),
         Container(
           width: double.infinity,
           margin: const EdgeInsets.symmetric(
-            vertical: 5,
+            vertical: 16,
             horizontal: 3,
           ),
           decoration: BoxDecoration(
@@ -225,8 +217,8 @@ class _PersonalDetailsComponent extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 10,
+              horizontal: 12,
+              vertical: 12,
             ),
             child: Column(
               children: [
@@ -236,9 +228,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
                       imgPath: '',
                       size: AvatarSize.size24,
                     ),
-                    const SizedBox(
-                      width: Dimension.d2,
-                    ),
+                    const SizedBox(width: Dimension.d3),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -261,26 +251,20 @@ class _PersonalDetailsComponent extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: Dimension.d4,
-                ),
+                const SizedBox(height: Dimension.d5),
                 IconTitleDetailsComponent(
                   icon: Icons.email_outlined,
                   title: 'Email',
                   details: email,
                 ),
-                const SizedBox(
-                  height: Dimension.d1,
-                ),
+                const SizedBox(height: Dimension.d5),
                 IconTitleDetailsComponent(
                   icon: Icons.phone_outlined,
                   title: 'Contact',
                   details: phoneNumber,
                 ),
                 if (streetAddress != null) ...[
-                  const SizedBox(
-                    height: Dimension.d4,
-                  ),
+                  const SizedBox(height: Dimension.d5),
                   IconTitleDetailsComponent(
                     icon: AppIcons.home,
                     title: 'Address',
