@@ -70,6 +70,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   String? profileImgUrl;
   File? storeImageFile;
   bool isImageUpdate = false;
+  bool autoValidate = false;
 
   bool isAlreadyhaveProfileImg = false;
 
@@ -168,6 +169,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                 floatingActionButton: widget.edit
                     ? FixedButton(
                         ontap: () {
+                          setState(() {
+                            autoValidate = true;
+                          });
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
@@ -219,6 +223,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                       )
                     : FixedButton(
                         ontap: () async {
+                          setState(() {
+                            autoValidate = true;
+                          });
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
@@ -287,6 +294,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 enabled: widget.isSelf ? false : true,
                                 onChanged: (value) =>
                                     firstNameContr.text = value,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your first name';
@@ -303,6 +313,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 controller: lastNameContr,
                                 large: false,
                                 enabled: widget.isSelf ? false : true,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your last name';
@@ -394,6 +407,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   enabled: widget.edit || widget.isSelf
                                       ? false
                                       : true,
+                                  autovalidateMode: autoValidate
+                                      ? AutovalidateMode.onUserInteraction
+                                      : AutovalidateMode.disabled,
                                   validationLogic:
                                       (widget.edit || widget.isSelf)
                                           ? null
@@ -438,6 +454,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   enabled: widget.edit || widget.isSelf
                                       ? false
                                       : true,
+                                  autovalidateMode: autoValidate
+                                      ? AutovalidateMode.onUserInteraction
+                                      : AutovalidateMode.disabled,
                                   validationLogic: (value) {
                                     const regex =
                                         r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
@@ -459,6 +478,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 controller: memberAddressContr,
                                 large: true,
                                 enabled: true,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter address';
@@ -494,6 +516,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 controller: stateContr,
                                 large: false,
                                 enabled: true,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter state';
@@ -510,6 +535,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 controller: cityContr,
                                 large: false,
                                 enabled: true,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter city';
@@ -526,6 +554,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 controller: postalCodeContr,
                                 large: false,
                                 enabled: true,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
                                 validationLogic: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your postal code';
