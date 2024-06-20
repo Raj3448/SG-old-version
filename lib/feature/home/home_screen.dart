@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
@@ -19,6 +20,7 @@ import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/dummy_variables.dart';
@@ -43,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late final MembersStore memberStore;
   late final productLStore = GetIt.I<ProductListingStore>();
   final bookingServiceStore = GetIt.I<BookingServiceStore>();
+  final homestore = GetIt.I<HomeStore>();
 
   @override
   void initState() {
@@ -66,6 +69,25 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Observer(
               builder: (_) {
+                if (!homestore.isHomepageDataLoaded) {
+                  if (homestore.homePageComponentDetailsList!.isLeft()) {
+                    final failure = homestore.homePageComponentDetailsList!
+                        .getLeft()
+                        .getOrElse(
+                          () => throw 'error'
+                        );
+                    final noInternet = failure.whenOrNull(
+                      socketError: () => true,
+                    );
+                    if (noInternet ?? false) {
+                      return const ErrorStateComponent(
+                          errorType: ErrorType.noInternetConnection);
+                    } else {
+                      return const ErrorStateComponent(
+                          errorType: ErrorType.somethinWentWrong);
+                    }
+                  }
+                }
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
                   child: Column(
@@ -188,11 +210,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           BookServiceButton(
                             iconImagePath: 'assets/icon/ambulance.png',
                             buttonName: 'Emergency',
-                            onTap: () {},
+                            onTap: () {
+                              print(GetIt.I<HomeStore>().isHomepageDataLoaded);
+                            },
                           ),
                         ],
                       ),
-                      _HomeScreenComponents(),
+                      _HomeScreenComponents(
+                        homestore: homestore,
+                      ),
                     ],
                   ),
                 );
@@ -206,7 +232,9 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _HomeScreenComponents extends StatelessWidget {
-  final homestore = GetIt.I<HomeStore>();
+  const _HomeScreenComponents({required this.homestore, super.key});
+
+  final HomeStore homestore;
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +244,7 @@ class _HomeScreenComponents extends StatelessWidget {
     final componentDetailsList = homestore.isHomepageData;
     final widgetList = <Widget>[];
     for (final component in componentDetailsList) {
-      
-      if (component is AboutUsOfferModel ) {
+      if (component is AboutUsOfferModel) {
         widgetList.add(
           _AboutUsOfferComponent(
             aboutUsOfferModel: component,

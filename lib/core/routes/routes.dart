@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
@@ -26,6 +27,7 @@ import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
+import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
 import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
@@ -54,20 +56,25 @@ final GoRouter routes = GoRouter(
   initialLocation: '/',
   redirect: (context, state) {
     if (state.matchedLocation.startsWith('/login')) {
+      resetAllCache();
       return null;
     }
     if (state.matchedLocation.startsWith('/otp')) {
+      resetAllCache();
       return null;
     }
     if (state.matchedLocation.startsWith('/signup')) {
+      resetAllCache();
       return null;
     }
     if (state.matchedLocation.startsWith('/onboarding')) {
+      resetAllCache();
       return null;
     }
     if (state.name == '/' || state.path == '/') {
       return null;
     }
+    //print();
     final skipRedirect = bool.tryParse(
             state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false') ??
         false;
@@ -457,3 +464,10 @@ final GoRouter routes = GoRouter(
     ),
   ),
 );
+
+void resetAllCache() {
+  if (GetIt.I<TokenManager>().hasToken()) {
+    GetIt.I<AuthStore>().logout();
+    GetIt.I<VerityOtpStore>().resetTimer();
+  }
+}

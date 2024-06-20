@@ -39,6 +39,7 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
+
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
@@ -47,5 +48,17 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+
+		<key>CFBundleURLTypes</key>
+		<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>silvergenie</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>yoursilvergenie.app</string>
+		</dict>
+		</array>
 	</dict>
 </plist>
