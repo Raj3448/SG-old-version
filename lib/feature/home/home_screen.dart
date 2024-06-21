@@ -69,25 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Observer(
               builder: (_) {
-                if (!homestore.isHomepageDataLoaded) {
-                  if (homestore.homePageComponentDetailsList!.isLeft()) {
-                    final failure = homestore.homePageComponentDetailsList!
-                        .getLeft()
-                        .getOrElse(
-                          () => throw 'error'
-                        );
-                    final noInternet = failure.whenOrNull(
-                      socketError: () => true,
-                    );
-                    if (noInternet ?? false) {
-                      return const ErrorStateComponent(
-                          errorType: ErrorType.noInternetConnection);
-                    } else {
-                      return const ErrorStateComponent(
-                          errorType: ErrorType.somethinWentWrong);
-                    }
-                  }
-                }
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
                   child: Column(

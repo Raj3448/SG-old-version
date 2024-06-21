@@ -59,7 +59,6 @@ class ProductLisitingServices extends IProductListingService {
       httpClient.interceptors.remove(dioCacheInterceptor);
       switch (response.statusCode) {
         case 200:
-          print('Need to fetch');
           return _processResponseData(response.data);
         default:
           return const Left(Failure.badResponse());
