@@ -80,6 +80,7 @@ final GoRouter routes = GoRouter(
         false;
 
     if (skipRedirect) {
+      print('Im in the skipRedirect block');
       return null;
     }
 
@@ -88,6 +89,8 @@ final GoRouter routes = GoRouter(
         !authStore.isAuthenticated ||
         !authStore.initialised) {
       final route = '/?redirectRouteName=${state.fullPath}';
+      print('Im in the redirectRouteName block: ${state.fullPath}');
+      // calculateSelectedBotNavIndex(context,state.fullPath);
       return route;
     }
 
@@ -124,7 +127,6 @@ final GoRouter routes = GoRouter(
       builder: (context, state) {
         final redirectRouteName =
             state.uri.queryParameters['redirectRouteName'];
-
         return SplashscreenWidget(redirectRouteName: redirectRouteName);
       },
     ),
@@ -132,7 +134,8 @@ final GoRouter routes = GoRouter(
       navigatorKey: shellNavigatorKey,
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
-        return MaterialPage(child: MainScreen(child: child));
+        return MaterialPage(child: MainScreen(path: state.fullPath ?? '',
+        child: child));
       },
       routes: <RouteBase>[
         GoRoute(

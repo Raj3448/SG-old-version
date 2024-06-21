@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:fpdart/fpdart.dart' as fp;
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
@@ -20,7 +19,6 @@ import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
-import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/dummy_variables.dart';
@@ -239,8 +237,8 @@ class _HomeScreenComponents extends StatelessWidget {
             onTap: () async {
               final url = component.cta?.href;
               print(url);
-              if (url != null && await canLaunch(url)) {
-                await launch(url);
+              if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               }
             },
             child: Padding(
@@ -456,9 +454,9 @@ class _AboutUsOfferComponent extends StatelessWidget {
               String url;
               url = aboutUsOfferModel.cta.href ??
                   aboutUsOfferModel.cta.link!.href;
-              await launchUrl(
-                Uri.parse(url),
-              );
+              if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
             },
             title: aboutUsOfferModel.cta.label,
             showIcon: false,
