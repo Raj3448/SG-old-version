@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
@@ -26,6 +27,7 @@ import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
 import 'package:silver_genie/feature/login-signup/otp_screen.dart';
 import 'package:silver_genie/feature/login-signup/signup_page.dart';
+import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
 import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
@@ -46,18 +48,63 @@ final store = GetIt.I<OnboardingStore>();
 final authStore = GetIt.I<AuthStore>();
 final homeStore = GetIt.I<HomeStore>();
 
-final GlobalKey<NavigatorState> rootNavigatorKey = GetIt.I<GlobalKey<NavigatorState>>(instanceName: 'rootNavigatorKey');
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/',
+  redirect: (context, state) {
+    if (state.matchedLocation.startsWith('/login')) {
+      resetAllCache();
+      return null;
+    }
+    if (state.matchedLocation.startsWith('/otp')) {
+      resetAllCache();
+      return null;
+    }
+    if (state.matchedLocation.startsWith('/signup')) {
+      resetAllCache();
+      return null;
+    }
+    if (state.matchedLocation.startsWith('/onboarding')) {
+      resetAllCache();
+      return null;
+    }
+
+    if (state.uri.path == '/') {
+      return null;
+    }
+    final skipRedirect = bool.tryParse(
+            state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false') ??
+        false;
+
+    if (skipRedirect) {
+      print('Im in the skipRedirect block');
+      return null;
+    }
+
+    if (!homeStore.isHomepageDataLoaded ||
+        store.showOnboarding ||
+        !authStore.isAuthenticated ||
+        !authStore.initialised) {
+      final route = '/?redirectRouteName=${state.fullPath}';
+      print('Im in the redirectRouteName block: ${state.fullPath}');
+      // calculateSelectedBotNavIndex(context,state.fullPath);
+      return route;
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       path: RoutesConstants.initialRoute,
       name: RoutesConstants.initialRoute,
       redirect: (context, state) {
+        final redirectRouteName =
+            state.uri.queryParameters['redirectRouteName'];
+
         if (!homeStore.isHomepageDataLoaded) {
           return null;
         }
@@ -65,23 +112,30 @@ final GoRouter routes = GoRouter(
         if (store.showOnboarding) {
           return RoutesConstants.onboardingRoute;
         }
-        if (authStore.isAuthenticated) {
-          return RoutesConstants.homeRoute;
+
+        if (!authStore.isAuthenticated) {
+          return RoutesConstants.loginRoute;
         }
+
         if (!authStore.initialised) return null;
 
-        return RoutesConstants.loginRoute;
+        if (redirectRouteName != null && redirectRouteName.isNotEmpty) {
+          return redirectRouteName;
+        }
+        return RoutesConstants.homeRoute;
       },
       builder: (context, state) {
-        /// Add splash screen here
-        return const SplashscreenWidget();
+        final redirectRouteName =
+            state.uri.queryParameters['redirectRouteName'];
+        return SplashscreenWidget(redirectRouteName: redirectRouteName);
       },
     ),
     ShellRoute(
       navigatorKey: shellNavigatorKey,
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
-        return MaterialPage(child: MainScreen(child: child));
+        return MaterialPage(child: MainScreen(path: state.fullPath ?? '',
+        child: child));
       },
       routes: <RouteBase>[
         GoRoute(
@@ -367,8 +421,12 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         final extraData = state.extra as Map<String, dynamic>?;
-        final PaymentStatus paymentStatus = extraData?['paymentStatus'] as PaymentStatus;
-        return MaterialPage(child: PaymentScreen(paymentStatus: paymentStatus,));
+        final PaymentStatus paymentStatus =
+            extraData?['paymentStatus'] as PaymentStatus;
+        return MaterialPage(
+            child: PaymentScreen(
+          paymentStatus: paymentStatus,
+        ));
       },
     ),
     GoRoute(
@@ -408,3 +466,10 @@ final GoRouter routes = GoRouter(
     ),
   ),
 );
+
+void resetAllCache() {
+  if (GetIt.I<TokenManager>().hasToken()) {
+    GetIt.I<AuthStore>().logout();
+    GetIt.I<VerityOtpStore>().resetTimer();
+  }
+}

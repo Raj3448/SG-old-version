@@ -138,7 +138,7 @@ abstract class _ProductListingStoreBase with Store {
     productListingService.getAllProductBasicDetails().then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketException: (value) => getProductFailure = 'No Internet',
+          socketError: (value) => getProductFailure = 'No Internet',
           orElse: () {
             getProductFailure = 'Something went wrong';
           },
@@ -156,7 +156,7 @@ abstract class _ProductListingStoreBase with Store {
     productListingService.buyService(formData: formData).then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketException: (value) =>
+          socketError: (value) =>
               buyServiceFailed = 'No Internet Connection',
           orElse: () => buyServiceFailed = 'Something went wrong',
         );

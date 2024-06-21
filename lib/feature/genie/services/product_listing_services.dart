@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
@@ -57,13 +59,15 @@ class ProductLisitingServices extends IProductListingService {
       httpClient.interceptors.remove(dioCacheInterceptor);
       switch (response.statusCode) {
         case 200:
-          print('Need to fetch');
           return _processResponseData(response.data);
         default:
           return const Left(Failure.badResponse());
       }
-    } on SocketException {
-      return const Left(Failure.socketException());
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
@@ -104,8 +108,11 @@ class ProductLisitingServices extends IProductListingService {
       } else {
         return const Left(Failure.badResponse());
       }
-    } on SocketException {
-      return const Left(Failure.socketException());
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
@@ -142,8 +149,11 @@ class ProductLisitingServices extends IProductListingService {
       } else {
         return const Left(Failure.badResponse());
       }
-    } on SocketException {
-      return const Left(Failure.socketException());
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
@@ -154,8 +164,11 @@ class ProductLisitingServices extends IProductListingService {
       {required FormAnswerModel formData}) async {
     try {
       return const Right('Response received successfully');
-    }on SocketException {
-      return const Left(Failure.socketException());
+    }on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }

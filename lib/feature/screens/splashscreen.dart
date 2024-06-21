@@ -12,7 +12,9 @@ import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class SplashscreenWidget extends StatefulWidget {
-  const SplashscreenWidget({super.key});
+  const SplashscreenWidget({super.key, this.redirectRouteName});
+
+  final String? redirectRouteName;
 
   @override
   State<SplashscreenWidget> createState() => _SplashscreenWidgetState();
@@ -44,7 +46,10 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
         }
 
         if (isHomepageDataLoaded && mounted) {
-          context.goNamed('/');
+          context.goNamed(
+            '/',
+            queryParameters: {'redirectRouteName': widget.redirectRouteName},
+          );
         }
       },
     );

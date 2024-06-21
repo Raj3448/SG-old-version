@@ -443,7 +443,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     _formKey.currentState!.save();
     final formAnswerModel = FormAnswerModel(
         formAnswer: formAnswers, productId: int.parse(widget.id));
-    debugPrint('FormData : ${formAnswerModel.toJson()}');
     store.buyService(formData: formAnswerModel);
   }
 

@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late final MembersStore memberStore;
   late final productLStore = GetIt.I<ProductListingStore>();
   final bookingServiceStore = GetIt.I<BookingServiceStore>();
+  final homestore = GetIt.I<HomeStore>();
 
   @override
   void initState() {
@@ -188,11 +189,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           BookServiceButton(
                             iconImagePath: 'assets/icon/ambulance.png',
                             buttonName: 'Emergency',
-                            onTap: () {},
+                            onTap: () {
+                              print(GetIt.I<HomeStore>().isHomepageDataLoaded);
+                            },
                           ),
                         ],
                       ),
-                      _HomeScreenComponents(),
+                      _HomeScreenComponents(
+                        homestore: homestore,
+                      ),
                     ],
                   ),
                 );
@@ -206,7 +211,9 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _HomeScreenComponents extends StatelessWidget {
-  final homestore = GetIt.I<HomeStore>();
+  const _HomeScreenComponents({required this.homestore, super.key});
+
+  final HomeStore homestore;
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +223,7 @@ class _HomeScreenComponents extends StatelessWidget {
     final componentDetailsList = homestore.isHomepageData;
     final widgetList = <Widget>[];
     for (final component in componentDetailsList) {
-      
-      if (component is AboutUsOfferModel ) {
+      if (component is AboutUsOfferModel) {
         widgetList.add(
           _AboutUsOfferComponent(
             aboutUsOfferModel: component,
@@ -231,8 +237,8 @@ class _HomeScreenComponents extends StatelessWidget {
             onTap: () async {
               final url = component.cta?.href;
               print(url);
-              if (url != null && await canLaunch(url)) {
-                await launch(url);
+              if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               }
             },
             child: Padding(
@@ -448,9 +454,9 @@ class _AboutUsOfferComponent extends StatelessWidget {
               String url;
               url = aboutUsOfferModel.cta.href ??
                   aboutUsOfferModel.cta.link!.href;
-              await launchUrl(
-                Uri.parse(url),
-              );
+              if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
             },
             title: aboutUsOfferModel.cta.label,
             showIcon: false,

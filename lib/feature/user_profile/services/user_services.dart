@@ -58,8 +58,11 @@ class UserDetailServices implements IUserFacades {
       } else {
         return const Left(Failure.someThingWentWrong());
       }
-    } on SocketException {
-      return const Left(Failure.socketException());
+    }on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
@@ -80,8 +83,11 @@ class UserDetailServices implements IUserFacades {
         }
       }
       return const Left(Failure.someThingWentWrong());
-    } on SocketException {
-      return const Left(Failure.socketException());
+    }on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.badResponse());
     }
@@ -114,8 +120,11 @@ class UserDetailServices implements IUserFacades {
       } else {
         return const Left(Failure.badResponse());
       }
-    } on SocketException {
-      return const Left(Failure.socketException());
+    }on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }

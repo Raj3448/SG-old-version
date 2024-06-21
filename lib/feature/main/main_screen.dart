@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -12,11 +13,12 @@ import 'package:silver_genie/feature/user_profile/store/user_details_store.dart'
 class MainScreen extends StatefulWidget {
   const MainScreen({
     required this.child,
-    super.key,
-  });
+    required this.path,
+    Key? key,
+  }) : super(key: key);
 
   final Widget child;
-
+  final String path;
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
@@ -94,9 +96,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   int _calculateSelectedIndex(BuildContext context) {
-    final route = GoRouter.of(context);
-    final location = route.routeInformationProvider.value.uri.path;
-
+    final location = widget.path;
     if (location.startsWith('/home')) {
       return 0;
     }
