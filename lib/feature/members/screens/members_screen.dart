@@ -23,7 +23,7 @@ class MembersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<MembersStore>()..refresh();
+    final store = GetIt.I<MembersStore>()..init();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Padding(
