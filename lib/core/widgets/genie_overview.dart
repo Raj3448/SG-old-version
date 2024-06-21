@@ -202,7 +202,6 @@ class _PlanPricingDetailsComponentState
                   } else {
                     selectedIndex = index;
                     widget.onSelect(widget.pricingDetailsList[index]);
-                    print('Selected');
                   }
                 });
               },

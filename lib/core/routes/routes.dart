@@ -80,7 +80,6 @@ final GoRouter routes = GoRouter(
         false;
 
     if (skipRedirect) {
-      print('Im in the skipRedirect block');
       return null;
     }
 
@@ -89,8 +88,6 @@ final GoRouter routes = GoRouter(
         !authStore.isAuthenticated ||
         !authStore.initialised) {
       final route = '/?redirectRouteName=${state.fullPath}';
-      print('Im in the redirectRouteName block: ${state.fullPath}');
-      // calculateSelectedBotNavIndex(context,state.fullPath);
       return route;
     }
 
