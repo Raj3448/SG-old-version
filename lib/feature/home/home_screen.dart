@@ -189,9 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           BookServiceButton(
                             iconImagePath: 'assets/icon/ambulance.png',
                             buttonName: 'Emergency',
-                            onTap: () {
-                              print(GetIt.I<HomeStore>().isHomepageDataLoaded);
-                            },
+                            onTap: () {},
                           ),
                         ],
                       ),
@@ -236,7 +234,6 @@ class _HomeScreenComponents extends StatelessWidget {
           GestureDetector(
             onTap: () async {
               final url = component.cta?.href;
-              print(url);
               if (url != null && await canLaunchUrl(Uri.parse(url))) {
                 await launchUrl(Uri.parse(url));
               }
