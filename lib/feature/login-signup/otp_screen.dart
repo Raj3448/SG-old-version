@@ -39,6 +39,7 @@ class _OTPScreenState extends State<OTPScreen> {
   final store = GetIt.I<VerityOtpStore>();
   final loginStore = GetIt.I<LoginStore>();
   final signupStore = GetIt.I<SignupStore>();
+  bool autoValidate = false;
 
   @override
   void initState() {
@@ -134,12 +135,10 @@ class _OTPScreenState extends State<OTPScreen> {
                           cursorColor: AppColors.black,
                           animationCurve: Curves.easeIn,
                           animationType: AnimationType.fade,
-                          onChanged: (value) {
-                            // Handle OTP changes
-                          },
-                          onCompleted: (value) {
-                            // Handle successful OTP entry
-                          },
+                          autovalidateMode: autoValidate
+                              ? AutovalidateMode.onUserInteraction
+                              : AutovalidateMode.disabled,
+                          autoDisposeControllers: false,
                           errorTextMargin:
                               const EdgeInsets.only(left: Dimension.d14),
                           separatorBuilder: (context, index) {
@@ -173,6 +172,9 @@ class _OTPScreenState extends State<OTPScreen> {
                         type: ButtonType.primary,
                         expanded: true,
                         ontap: () async {
+                          setState(() {
+                            autoValidate = true;
+                          });
                           if (otpController.text.isNotEmpty) {
                             if (widget.isFromLoginPage) {
                               store.verifyOtp(

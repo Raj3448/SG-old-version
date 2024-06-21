@@ -7,7 +7,6 @@ import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
@@ -26,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   final numberFormKey = GlobalKey<FormState>();
   final phoneNumberContr = TextEditingController();
   final emailContr = TextEditingController();
+  bool autoValidate = false;
 
   @override
   void initState() {
@@ -116,6 +116,9 @@ class _LoginPageState extends State<LoginPage> {
                             keyboardType: TextInputType.emailAddress,
                             large: false,
                             enabled: true,
+                            autovalidateMode: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                             validationLogic: (value) {
                               const regex =
                                   r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
@@ -134,6 +137,9 @@ class _LoginPageState extends State<LoginPage> {
                           child: CustomPhoneField(
                             controller: phoneNumberContr,
                             title: 'Enter Mobile Number'.tr(),
+                            autovalidate: autoValidate
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
                           ),
                         ),
                       const SizedBox(height: Dimension.d4),
@@ -143,6 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                         expanded: false,
                         ontap: () {
                           store.isEmail = !store.isEmail;
+                          setState(() {
+                            autoValidate = false;
+                          });
                         },
                         title: store.isEmail
                             ? 'Use Mobile Number instead'.tr()
@@ -159,6 +168,9 @@ class _LoginPageState extends State<LoginPage> {
                           type: ButtonType.primary,
                           expanded: true,
                           ontap: () async {
+                            setState(() {
+                              autoValidate = true;
+                            });
                             if (store.isEmail) {
                               if (emailFormKey.currentState!.validate()) {
                                 store

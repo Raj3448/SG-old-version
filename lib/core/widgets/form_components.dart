@@ -93,6 +93,12 @@ class CustomTextField extends StatelessWidget {
             color: AppColors.line,
           ),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.error,
+          ),
+        ),
         filled: !enabled ? true : null,
         fillColor: !enabled ? AppColors.grayscale200 : null,
         focusedBorder: OutlineInputBorder(
@@ -111,12 +117,14 @@ class CustomTextField extends StatelessWidget {
 class CustomPhoneField extends StatelessWidget {
   const CustomPhoneField({
     required this.title,
+    required this.autovalidate,
     this.controller,
     super.key,
   });
 
   final String title;
   final TextEditingController? controller;
+  final AutovalidateMode autovalidate;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +132,7 @@ class CustomPhoneField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autovalidate,
       decoration: InputDecoration(
         hintText: 'Enter mobile number',
         hintStyle: AppTextStyle.bodyLargeMedium.copyWith(height: 1.5),
@@ -146,6 +154,12 @@ class CustomPhoneField extends StatelessWidget {
             color: AppColors.primary,
           ),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Dimension.d2),
+          borderSide: const BorderSide(
+            color: AppColors.error,
+          ),
+        ),
         prefixIcon: SizedBox(
           child: CountryCodePicker(
             padding: EdgeInsets.zero,
@@ -155,6 +169,7 @@ class CustomPhoneField extends StatelessWidget {
             favorite: const ['+91', 'IN'],
             textStyle: AppTextStyle.bodyLargeMedium
                 .copyWith(color: AppColors.grayscale900),
+            barrierColor: AppColors.black.withOpacity(0.25),
             onChanged: (countryCode) {
               store.selectCountryDialCode = countryCode.dialCode;
             },
