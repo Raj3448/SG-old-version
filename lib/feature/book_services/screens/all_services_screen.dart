@@ -139,6 +139,7 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                     title: '',
                     ontap: () {},
                     showTitle: false,
+                    isService: true,
                   ),
                 if (widget.isConvenience) ...[
                   Column(

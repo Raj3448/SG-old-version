@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_dynamic_calls
+// ignore_for_file: avoid_dynamic_calls, inference_failure_on_function_invocation
 
 import 'dart:io';
 
@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
+import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
@@ -118,6 +119,28 @@ class UserDetailServices implements IUserFacades {
       return const Left(Failure.socketException());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
+    }
+  }
+
+  @override
+  Future<Either<Failure, SubscriptionMemberModel>> fetchSubscriptions() async {
+    try {
+      final response = await httpClient.get('/api/users/');
+
+      if (response.statusCode == 200) {
+        if (response.data != null) {
+          final userdata = User.fromJson(response.data as Map<String, dynamic>);
+          await _userDetailCache.saveUserDetails(userdata);
+          // return Right(userdata);
+        } else {
+          return const Left(Failure.badResponse());
+        }
+      }
+      return const Left(Failure.someThingWentWrong());
+    } on SocketException {
+      return const Left(Failure.socketException());
+    } catch (error) {
+      return const Left(Failure.badResponse());
     }
   }
 }

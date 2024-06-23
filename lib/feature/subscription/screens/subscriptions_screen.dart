@@ -10,9 +10,12 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
+import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';
 import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
 
@@ -35,10 +38,20 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final store = GetIt.I<SubscriptionStore>();
     return SafeArea(
       child: Scaffold(
         appBar: const PageAppbar(title: 'Subscriptions'),
         backgroundColor: AppColors.white,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FixedButton(
+          ontap: () {
+            //context.pushNamed(RoutesConstants.SGSubcscriptionPage);
+          },
+          btnTitle: 'Buy new subscription',
+          showIcon: false,
+          iconPath: AppIcons.add,
+        ),
         body: Column(
           children: [
             Expanded(
@@ -54,18 +67,100 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
                         Tab(icon: Text('Previous')),
                       ],
                     ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
+                    const SizedBox(height: Dimension.d4),
                     Expanded(
                       child: TabBarView(
                         controller: controller,
-                        children: List.generate(
-                          2,
-                          (index) => _SubscriptionUserComponent(
-                            isPrevious: index == 1 ? true : false,
+                        children: [
+                          FutureBuilder(
+                            future: store.fetchSubscriptionMembers(),
+                            builder: (
+                              context,
+                              AsyncSnapshot<List<SubscriptionMemberModel>>
+                                  snapshot,
+                            ) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: LoadingWidget(showShadow: false),
+                                );
+                              } else if (snapshot.hasError) {
+                                return const Center(
+                                  child: ErrorStateComponent(
+                                    errorType: ErrorType.pageNotFound,
+                                  ),
+                                );
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return NoServiceFound(
+                                  title: 'Subscriptions',
+                                  ontap: () {},
+                                  showTitle: false,
+                                  isService: false,
+                                  name: 'subscriptions',
+                                );
+                              } else {
+                                return ListView.builder(
+                                  itemCount: snapshot.data!.length,
+                                  physics: const BouncingScrollPhysics(
+                                    decelerationRate:
+                                        ScrollDecelerationRate.fast,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return _UserDetailsComponent(
+                                      memberDetails: snapshot.data![index],
+                                      isPrevious: false,
+                                    );
+                                  },
+                                );
+                              }
+                            },
                           ),
-                        ),
+                          FutureBuilder(
+                            future: store.fetchSubscriptionMembers(),
+                            builder: (
+                              context,
+                              AsyncSnapshot<List<SubscriptionMemberModel>>
+                                  snapshot,
+                            ) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: LoadingWidget(showShadow: false),
+                                );
+                              } else if (snapshot.hasError) {
+                                return const Center(
+                                  child: ErrorStateComponent(
+                                    errorType: ErrorType.pageNotFound,
+                                  ),
+                                );
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return NoServiceFound(
+                                  title: 'Subscriptions',
+                                  ontap: () {},
+                                  showTitle: false,
+                                  isService: false,
+                                  name: 'subscriptions',
+                                );
+                              } else {
+                                return ListView.builder(
+                                  itemCount: snapshot.data!.length,
+                                  physics: const BouncingScrollPhysics(
+                                    decelerationRate:
+                                        ScrollDecelerationRate.fast,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return _UserDetailsComponent(
+                                      memberDetails: snapshot.data![index],
+                                      isPrevious: true,
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -73,15 +168,6 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
               ),
             ),
           ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FixedButton(
-          ontap: () {
-            //context.pushNamed(RoutesConstants.SGSubcscriptionPage);
-          },
-          btnTitle: 'Buy new subscription',
-          showIcon: false,
-          iconPath: AppIcons.add,
         ),
       ),
     );
@@ -94,16 +180,38 @@ class _SubscriptionUserComponent extends StatelessWidget {
   final bool isPrevious;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: List.generate(
-          store.subscriptionMemberList.length,
-          (index) => _UserDetailsComponent(
-            memberDetails: store.subscriptionMemberList[index],
-            isPrevious: isPrevious,
-          ),
-        ),
-      ),
+    return FutureBuilder(
+      future: store.fetchSubscriptionMembers(),
+      builder: (
+        context,
+        AsyncSnapshot<List<SubscriptionMemberModel>> snapshot,
+      ) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: LoadingWidget(showShadow: false),
+          );
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: ErrorStateComponent(
+              errorType: ErrorType.pageNotFound,
+            ),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text('No data available'),
+          );
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return _UserDetailsComponent(
+                memberDetails: snapshot.data![index],
+                isPrevious: false,
+              );
+            },
+          );
+        }
+      },
     );
   }
 }
@@ -112,8 +220,7 @@ class _UserDetailsComponent extends StatelessWidget {
   const _UserDetailsComponent({
     required this.memberDetails,
     required this.isPrevious,
-    Key? key,
-  }) : super(key: key);
+  });
   final SubscriptionMemberModel memberDetails;
   final bool isPrevious;
 
