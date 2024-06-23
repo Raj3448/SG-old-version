@@ -11,7 +11,6 @@ import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
-import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -43,15 +42,6 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
       child: Scaffold(
         appBar: const PageAppbar(title: 'Subscriptions'),
         backgroundColor: AppColors.white,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FixedButton(
-          ontap: () {
-            //context.pushNamed(RoutesConstants.SGSubcscriptionPage);
-          },
-          btnTitle: 'Buy new subscription',
-          showIcon: false,
-          iconPath: AppIcons.add,
-        ),
         body: Column(
           children: [
             Expanded(
