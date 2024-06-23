@@ -74,7 +74,7 @@ abstract class _UserDetailStoreBase with Store {
         .then((userDetailsResult) {
       userDetailsResult.fold((l) {
         updateFailureMessage = l.maybeMap(
-            socketException: (_) =>
+            socketError: (_) =>
                 'Failed to update, check your internet connection!',
             orElse: () => 'Failed to update the user data');
       }, (r) {
@@ -111,7 +111,7 @@ abstract class _UserDetailStoreBase with Store {
         .then((user) {
       user.fold((l) {
         updateFailureMessage = l.maybeMap(
-            socketException: (_) =>
+            socketError: (_) =>
                 'Failed to update, check your internet connection!',
             orElse: () => 'Failed to update the user data');
       }, (r) {

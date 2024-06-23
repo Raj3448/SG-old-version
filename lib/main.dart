@@ -101,10 +101,6 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
-      GetIt.instance.registerLazySingleton<GlobalKey<NavigatorState>>(
-        () => GlobalKey<NavigatorState>(),
-        instanceName: 'rootNavigatorKey',
-      );
       GetIt.instance.registerLazySingleton(
         () => MembersStore(
           GetIt.instance.get<MemberServices>(),
@@ -157,8 +153,10 @@ void main() async {
       GetIt.instance.registerLazySingleton(() =>
           BookingServiceStore(bookingService: GetIt.I<BookingService>())
             ..initGetAllServices());
-      GetIt.instance.registerLazySingleton(
-          () => PaymentService(httpClient: GetIt.I<HttpClient>(), productListingStore: GetIt.I<ProductListingStore>(),));
+      GetIt.instance.registerLazySingleton(() => PaymentService(
+            httpClient: GetIt.I<HttpClient>(),
+            productListingStore: GetIt.I<ProductListingStore>(),
+          ));
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 

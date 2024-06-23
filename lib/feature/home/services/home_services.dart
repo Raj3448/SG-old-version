@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
@@ -20,13 +23,13 @@ class HomeService implements IHomeServices {
     try {
       final response = await httpClient.get(
           '/api/pages/1?populate[0]=content.bannerImage&populate[1]=content.cta.href&populate[2]=content.offering.offers.values&populate[3]=content.cta.link&populate[4]=content.testimonials.testifierImage');
-
       if (response.statusCode == 200) {
         if (response.data['data']['attributes']['content'] != null) {
           List<dynamic> componetList = [];
           for (var component in response.data['data']['attributes']['content']
               as List<dynamic>) {
-            if (component['__component'] == 'mobile-ui.banner' && component['isActive'] as bool) {
+            if (component['__component'] == 'mobile-ui.banner' &&
+                component['isActive'] as bool) {
               componetList.add(
                   BannerImageModel.fromJson(component as Map<String, dynamic>));
             }
@@ -47,6 +50,11 @@ class HomeService implements IHomeServices {
       } else {
         return const Left(Failure.badResponse());
       }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (er) {
       return const Left(Failure.badResponse());
     }

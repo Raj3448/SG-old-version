@@ -172,9 +172,6 @@ class ChangePicDialog extends StatelessWidget {
       if (croppedFile != null) {
         storedProfileImage = File(croppedFile.path);
         onImageSelected(await saveImageToDirectory(storedProfileImage!));
-        if (!storedProfileImage!.existsSync()) {
-          print("Cropped file does not exist: ${storedProfileImage!.path}");
-        }
       }
     } catch (e) {
       print("Error taking photo: $e");
@@ -196,7 +193,6 @@ class ChangePicDialog extends StatelessWidget {
         storedProfileImage = File(croppedFile.path);
         onImageSelected(await saveImageToDirectory(storedProfileImage!));
         if (!storedProfileImage!.existsSync()) {
-          print("file does not exist: ${storedProfileImage!.path}");
         }
       }
     } catch (e) {

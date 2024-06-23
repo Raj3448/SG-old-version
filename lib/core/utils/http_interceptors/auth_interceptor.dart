@@ -14,7 +14,6 @@ class AuthInterceptor extends Interceptor {
         !options.path.contains('/verify-otp')) {
       // TODO(You): Fetch your access token and plug it in
       final token = await _tokenStorage.getToken();
-      print(token);
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
       }

@@ -55,19 +55,20 @@ abstract class _HomeScreenStore with Store {
         isHomepageComponentInitialloading = false;
         refreshHomePageData();
         return;
+      } else {
+        homeServices.getHomePageInfo().then((value) {
+          homePageComponentDetailsList = value;
+          isHomepageComponentInitialloading = false;
+        });
       }
     });
-
-    homeServices
-        .getHomePageInfo()
-        .then((value) => homePageComponentDetailsList = value);
   }
 
   @action
   Future<void> refreshHomePageData() async {
     isHomepageComponentRefreshing = true;
-    homePageComponentDetailsList = await homeServices.getHomePageInfo();
-    homePageComponentDetailsList?.fold(
+    final responseData = await homeServices.getHomePageInfo();
+    responseData.fold(
       (l) => null,
       (r) => {homePageComponentDetailsList = right(r)},
     );

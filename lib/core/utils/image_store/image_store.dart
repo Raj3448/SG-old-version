@@ -11,6 +11,5 @@ Future<File> saveImageToDirectory(File imageFile) async {
     final fileName = path.basename(imageFile.path);
     final storageResponse =
         await imageFile.copy('${appDirectory.path}/$fileName');
-    print("Image Added Successfully at: $storageResponse");
     return storageResponse;
   }

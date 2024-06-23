@@ -1,5 +1,8 @@
 // ignore_for_file: lines_longer_than_80_chars, one_member_abstracts
 
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/notification/model/notification_model.dart';
@@ -65,8 +68,11 @@ class NotificationServices extends INotificationFacade {
       //   return Left(Failure.badResponse());
       // }
       return Right(_notifications);
-    } on SocketException {
-      return const Left(Failure.socketException());
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
