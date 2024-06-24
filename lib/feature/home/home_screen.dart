@@ -475,7 +475,7 @@ class _ActiveBookingComponent extends StatelessWidget {
   final BookingServiceStore store;
   @override
   Widget build(BuildContext context) {
-    return bookingServicesList.isEmpty
+    return store.getAllActiveServiceList.isEmpty
         ? const SizedBox.shrink()
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -485,9 +485,9 @@ class _ActiveBookingComponent extends StatelessWidget {
                 style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
               ),
               ...List.generate(
-                bookingServicesList.length <= 3
-                    ? bookingServicesList.length
-                    : 3,
+                store.getAllActiveServiceList.length > 3
+                    ? 3
+                    : store.getAllActiveServiceList.length,
                 (index) => BookingListTileComponent(
                   bookingServiceModel: store.getAllActiveServiceList[index],
                   bookingServiceStatus: BookingServiceStatus.active,
