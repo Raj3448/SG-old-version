@@ -54,7 +54,8 @@ class ServiceDetailsScreen extends StatelessWidget {
               final data = snapshot.data!;
               return data.fold(
                 (failure) => const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong),
+                  errorType: ErrorType.somethinWentWrong,
+                ),
                 (product) {
                   final serviceData = product.product;
                   final allServiceList = <dynamic>[];
@@ -153,8 +154,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                               CustomButton(
                                 ontap: () {
                                   context.pushNamed(
-                                      RoutesConstants.bookServiceScreen,
-                                      pathParameters: {'id': id});
+                                    RoutesConstants.bookServiceScreen,
+                                    pathParameters: {'id': id},
+                                  );
                                 },
                                 title: 'Book now',
                                 showIcon: false,
@@ -276,11 +278,12 @@ class _HeaderPicTitle extends StatelessWidget {
             ),
             const SizedBox(height: Dimension.d4),
             Center(
-                child: Text(
-              headerModel.heading,
-              style: AppTextStyle.bodyXLMedium,
-              textAlign: TextAlign.center,
-            )),
+              child: Text(
+                headerModel.heading,
+                style: AppTextStyle.bodyXLMedium,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: Dimension.d3),
@@ -354,6 +357,56 @@ class _OfferTile extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PriceTile extends StatelessWidget {
+  const _PriceTile(
+      {required this.price, required this.subscript, required this.desc});
+
+  final String price;
+  final String subscript;
+  final String desc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        border: Border.all(color: AppColors.primary),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                price,
+                style: AppTextStyle.heading4SemiBold.copyWith(
+                  color: AppColors.grayscale900,
+                ),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                subscript,
+                style: AppTextStyle.bodyMediumMedium.copyWith(
+                  color: AppColors.grayscale700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimension.d2),
+          Text(
+            desc,
+            style: AppTextStyle.bodyLargeMedium.copyWith(
+              color: AppColors.grayscale700,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
