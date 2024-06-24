@@ -1,6 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
@@ -42,23 +40,22 @@ class ProductLisitingServices extends IProductListingService {
       );
       final cacheOptions = CacheOptions(
         store: cacheStore,
-        policy: CachePolicy.request,
+        policy: CachePolicy.refresh,
         priority: CachePriority.high,
-        maxStale: const Duration(days: 100),
-        hitCacheOnErrorExcept: [401, 404],
+        maxStale: const Duration(days: 10),
+        hitCacheOnErrorExcept: [],
       );
 
       final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
       httpClient.interceptors.add(dioCacheInterceptor);
       final response = await httpClient.get(
         '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
-        options: Options(
-          extra: {'cacheOptions': cacheOptions},
-        ),
       );
       httpClient.interceptors.remove(dioCacheInterceptor);
       switch (response.statusCode) {
         case 200:
+          return _processResponseData(response.data);
+        case 304:
           return _processResponseData(response.data);
         default:
           return const Left(Failure.badResponse());
@@ -164,7 +161,7 @@ class ProductLisitingServices extends IProductListingService {
       {required FormAnswerModel formData}) async {
     try {
       return const Right('Response received successfully');
-    }on DioException catch (dioError) {
+    } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());
       }
