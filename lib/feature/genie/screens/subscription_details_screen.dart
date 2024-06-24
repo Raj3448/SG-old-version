@@ -26,54 +26,56 @@ class SubscriptionDetailsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Companion plan (Couple)',
-              style: AppTextStyle.bodyXLMedium,
-            ),
-            const SizedBox(height: Dimension.d6),
-            const Text(
-              'Details',
-              style: AppTextStyle.bodyLargeMedium,
-            ),
-            const SizedBox(height: Dimension.d4),
-            const _DetailsBox(
-              serviceOptedFor: 'Amanjot Singh & Amanj S',
-              duration: '2 months',
-              startDate: '11/06/2024',
-              renewalDate: '11/12/2024',
-              automaticRenewal: false,
-            ),
-            const SizedBox(height: Dimension.d4),
-            const Divider(color: AppColors.line),
-            const SizedBox(height: Dimension.d4),
-            const Text(
-              'Payment details',
-              style: AppTextStyle.bodyLargeMedium,
-            ),
-            const SizedBox(height: Dimension.d3),
-            _PaymentTile(title: 'Subscription cost', value: price),
-            const SizedBox(height: Dimension.d3),
-            const _PaymentTile(title: 'Others', value: '-'),
-            const SizedBox(height: Dimension.d4),
-            const Divider(color: AppColors.line),
-            const SizedBox(height: Dimension.d4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Total to pay',
-                  style: AppTextStyle.bodyXLMedium,
-                ),
-                Text(
-                  price,
-                  style: AppTextStyle.bodyLargeMedium,
-                ),
-              ],
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Companion plan (Couple)',
+                style: AppTextStyle.bodyXLMedium,
+              ),
+              const SizedBox(height: Dimension.d6),
+              const Text(
+                'Details',
+                style: AppTextStyle.bodyLargeMedium,
+              ),
+              const SizedBox(height: Dimension.d4),
+              const _DetailsBox(
+                serviceOptedFor: 'Amanjot Singh & Amanj S',
+                duration: '2 months',
+                startDate: '11/06/2024',
+                renewalDate: '11/12/2024',
+                automaticRenewal: false,
+              ),
+              const SizedBox(height: Dimension.d4),
+              const Divider(color: AppColors.line),
+              const SizedBox(height: Dimension.d4),
+              const Text(
+                'Payment details',
+                style: AppTextStyle.bodyLargeMedium,
+              ),
+              const SizedBox(height: Dimension.d3),
+              _PaymentTile(title: 'Subscription cost', value: price),
+              const SizedBox(height: Dimension.d3),
+              const _PaymentTile(title: 'Others', value: '-'),
+              const SizedBox(height: Dimension.d4),
+              const Divider(color: AppColors.line),
+              const SizedBox(height: Dimension.d4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Total to pay',
+                    style: AppTextStyle.bodyXLMedium,
+                  ),
+                  Text(
+                    price,
+                    style: AppTextStyle.bodyLargeMedium,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

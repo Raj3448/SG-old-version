@@ -47,7 +47,11 @@ class InfoDialog extends StatelessWidget {
                     'assets/icon/success.svg',
                     height: 88,
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(
+                      height: MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? 10
+                          : 30),
                 ],
               )
             else
@@ -63,7 +67,11 @@ class InfoDialog extends StatelessWidget {
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyLargeMedium,
             ),
-            const SizedBox(height: 30),
+            SizedBox(
+                height:
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? 10
+                        : 20),
             CustomButton(
               ontap: () {
                 GoRouter.of(context).pop();

@@ -40,26 +40,31 @@ class PaymentScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.all(Dimension.d3),
-            child: Column(
-              children: [
-                const BookingStatus(currentStep: BookingStep.bookingDetails),
-                const SizedBox(height: Dimension.d2),
-                SvgPicture.asset(
-                  paymentStatus == PaymentStatus.success
-                      ? 'assets/icon/success.svg'
-                      : 'assets/icon/pending.svg',
-                  color: paymentStatus == PaymentStatus.success
-                      ? Colors.green
-                      : null,
-                ),
-                Text(
-                  _getPaymentStatusMessage(paymentStatus),
-                  style: AppTextStyle.bodyXLSemiBold
-                      .copyWith(fontSize: 20, height: 2.8),
-                ),
-                const SizedBox(height: Dimension.d2),
-                _buildNoteContainer(),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const BookingStatus(currentStep: BookingStep.bookingDetails),
+                  const SizedBox(height: Dimension.d4),
+                  SvgPicture.asset(
+                    paymentStatus == PaymentStatus.success
+                        ? 'assets/icon/success.svg'
+                        : 'assets/icon/pending.svg',
+                    color: paymentStatus == PaymentStatus.success
+                        ? Colors.green
+                        : null,
+                  ),
+                  Text(
+                    _getPaymentStatusMessage(paymentStatus),
+                    style: AppTextStyle.bodyXLSemiBold
+                        .copyWith(fontSize: 20, height: 2.8),
+                  ),
+                  const SizedBox(height: Dimension.d2),
+                  _buildNoteContainer(context),
+                  const SizedBox(
+                    height: Dimension.d20,
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -78,10 +83,12 @@ class PaymentScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildNoteContainer() {
+  Widget _buildNoteContainer(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 115,
+      height: MediaQuery.of(context).orientation == Orientation.landscape
+          ? 80
+          : 115,
       padding: const EdgeInsets.symmetric(
           horizontal: Dimension.d2, vertical: Dimension.d2),
       decoration: BoxDecoration(

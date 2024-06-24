@@ -17,10 +17,12 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 class CouplePlanPage extends StatefulWidget {
   final String pageTitle;
   final List<Price> planList;
+  final bool isUpgradable;
 
   const CouplePlanPage({
     required this.pageTitle,
     required this.planList,
+    required this.isUpgradable,
     super.key,
   });
 
@@ -120,7 +122,7 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                               },
                             );
                           },
-                    title: 'Book care',
+                    title: widget.isUpgradable ? 'Upgrade care' : 'Book care',
                     showIcon: false,
                     iconPath: AppIcons.add,
                     size: ButtonSize.normal,

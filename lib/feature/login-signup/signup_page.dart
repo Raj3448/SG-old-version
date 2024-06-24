@@ -88,185 +88,190 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: AppColors.white,
       body: Observer(
         builder: (context) {
-          return Stack(
-            children: [
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimension.d5),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 52,
-                      ),
-                      SizedBox(
-                        width: 130,
-                        height: 60,
-                        child: Image.asset('assets/splash/sg_logo.png'),
-                      ),
-                      const SizedBox(
-                        height: Dimension.d7,
-                      ),
-                      Text(
-                        'Sign Up'.tr(),
-                        style: AppTextStyle.heading4SemiBold,
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                      Form(
-                        key: formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextLabel(title: 'Enter first name'.tr()),
-                            const SizedBox(height: Dimension.d2),
-                            CustomTextField(
-                              hintText: 'Enter first name'.tr(),
-                              autovalidateMode: autoValidate
-                                  ? AutovalidateMode.onUserInteraction
-                                  : AutovalidateMode.disabled,
-                              keyboardType: TextInputType.name,
-                              large: false,
-                              enabled: true,
-                              controller: firstNameContr,
-                              validationLogic: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: Dimension.d4),
-                            TextLabel(title: 'Enter last name'.tr()),
-                            const SizedBox(height: Dimension.d2),
-                            CustomTextField(
-                              hintText: 'Enter last name'.tr(),
-                              keyboardType: TextInputType.name,
-                              autovalidateMode: autoValidate
-                                  ? AutovalidateMode.onUserInteraction
-                                  : AutovalidateMode.disabled,
-                              large: false,
-                              enabled: true,
-                              controller: lastNameContr,
-                              textInputAction: TextInputAction.next,
-                              validationLogic: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: Dimension.d4),
-                            TextLabel(title: 'Enter Email'.tr()),
-                            const SizedBox(height: Dimension.d2),
-                            CustomTextField(
-                              hintText: 'Enter E-mail'.tr(),
-                              keyboardType: TextInputType.emailAddress,
-                              large: false,
-                              enabled: true,
-                              controller: emailContr,
-                              textInputAction: TextInputAction.next,
-                              autovalidateMode: autoValidate
-                                  ? AutovalidateMode.onUserInteraction
-                                  : AutovalidateMode.disabled,
-                              validationLogic: (value) {
-                                const regex =
-                                    r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
-                                if (value!.isEmpty) {
-                                  return 'Please enter your email address';
-                                } else if (!RegExp(regex).hasMatch(value)) {
-                                  return 'Please enter a valid email address';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: Dimension.d4),
-                            TextLabel(title: 'Mobile Number'.tr()),
-                            const SizedBox(height: Dimension.d2),
-                            CustomPhoneField(
-                              controller: phoneNumbContr,
-                              title: 'Enter Mobile Number'.tr(),
-                              autovalidate: autoValidate
-                                  ? AutovalidateMode.onUserInteraction
-                                  : AutovalidateMode.disabled,
-                            ),
-                            const SizedBox(height: Dimension.d4),
-                            TextLabel(title: 'Date of birth'.tr()),
-                            const SizedBox(height: Dimension.d2),
-                            DateDropdown(
-                              controller: dobContr,
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please select the DOB';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: Dimension.d4),
-                            CustomButton(
-                              size: ButtonSize.normal,
-                              type: ButtonType.primary,
-                              expanded: true,
-                              ontap: () {
-                                setState(() {
-                                  autoValidate = true;
-                                });
-                                if (formKey.currentState!.validate() &&
-                                    firstNameContr.text.isNotEmpty) {
-                                  store
-                                    ..signup(
-                                      firstNameContr.text,
-                                      lastNameContr.text,
-                                      dobContr.text,
-                                      emailContr.text,
-                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
-                                          .replaceFirst('+', ''),
-                                    )
-                                    ..firstName = firstNameContr.text
-                                    ..lastName = lastNameContr.text
-                                    ..dob = dobContr.text
-                                    ..email = emailContr.text
-                                    ..phoneNumber = phoneNumbContr.text;
-                                }
-                              },
-                              title: 'Sign Up'.tr(),
-                              showIcon: false,
-                              iconPath: Icons.not_interested,
-                              iconColor: AppColors.white,
-                            ),
-                            const SizedBox(height: Dimension.d6),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+          return OrientationBuilder(
+            builder: (context, orientation) {
+              final isLandscape = orientation == Orientation.landscape;
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Dimension.d5),
+                      child: Column(
                         children: [
+                          SizedBox(
+                            height: isLandscape ? Dimension.d2 : 52,
+                          ),
+                          Image.asset(
+                            'assets/splash/sg_logo.png',
+                            width: 240,
+                            height: 180,
+                          ),
+                          SizedBox(
+                            height: isLandscape ? Dimension.d2 : Dimension.d7,
+                          ),
                           Text(
-                            'Already have an account?'.tr(),
-                            style: AppTextStyle.bodyLargeMedium,
+                            'Sign Up'.tr(),
+                            style: AppTextStyle.heading4SemiBold,
                           ),
-                          const SizedBox(
-                            width: Dimension.d1,
+                          const SizedBox(height: Dimension.d6),
+                          Form(
+                            key: formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextLabel(title: 'Enter first name'.tr()),
+                                const SizedBox(height: Dimension.d2),
+                                CustomTextField(
+                                  hintText: 'Enter first name'.tr(),
+                                  autovalidateMode: autoValidate
+                                      ? AutovalidateMode.onUserInteraction
+                                      : AutovalidateMode.disabled,
+                                  keyboardType: TextInputType.name,
+                                  large: false,
+                                  enabled: true,
+                                  controller: firstNameContr,
+                                  validationLogic: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your name';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: Dimension.d4),
+                                TextLabel(title: 'Enter last name'.tr()),
+                                const SizedBox(height: Dimension.d2),
+                                CustomTextField(
+                                  hintText: 'Enter last name'.tr(),
+                                  keyboardType: TextInputType.name,
+                                  autovalidateMode: autoValidate
+                                      ? AutovalidateMode.onUserInteraction
+                                      : AutovalidateMode.disabled,
+                                  large: false,
+                                  enabled: true,
+                                  controller: lastNameContr,
+                                  textInputAction: TextInputAction.next,
+                                  validationLogic: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your name';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: Dimension.d4),
+                                TextLabel(title: 'Enter Email'.tr()),
+                                const SizedBox(height: Dimension.d2),
+                                CustomTextField(
+                                  hintText: 'Enter E-mail'.tr(),
+                                  keyboardType: TextInputType.emailAddress,
+                                  large: false,
+                                  enabled: true,
+                                  controller: emailContr,
+                                  textInputAction: TextInputAction.next,
+                                  autovalidateMode: autoValidate
+                                      ? AutovalidateMode.onUserInteraction
+                                      : AutovalidateMode.disabled,
+                                  validationLogic: (value) {
+                                    const regex =
+                                        r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your email address';
+                                    } else if (!RegExp(regex).hasMatch(value)) {
+                                      return 'Please enter a valid email address';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: Dimension.d4),
+                                TextLabel(title: 'Mobile Number'.tr()),
+                                const SizedBox(height: Dimension.d2),
+                                CustomPhoneField(
+                                  controller: phoneNumbContr,
+                                  title: 'Enter Mobile Number'.tr(),
+                                  autovalidate: autoValidate
+                                      ? AutovalidateMode.onUserInteraction
+                                      : AutovalidateMode.disabled,
+                                ),
+                                const SizedBox(height: Dimension.d4),
+                                TextLabel(title: 'Date of birth'.tr()),
+                                const SizedBox(height: Dimension.d2),
+                                DateDropdown(
+                                  controller: dobContr,
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Please select the DOB';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: Dimension.d4),
+                                CustomButton(
+                                  size: ButtonSize.normal,
+                                  type: ButtonType.primary,
+                                  expanded: true,
+                                  ontap: () {
+                                    setState(() {
+                                      autoValidate = true;
+                                    });
+                                    if (formKey.currentState!.validate() &&
+                                        firstNameContr.text.isNotEmpty) {
+                                      store
+                                        ..signup(
+                                          firstNameContr.text,
+                                          lastNameContr.text,
+                                          dobContr.text,
+                                          emailContr.text,
+                                          '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
+                                              .replaceFirst('+', ''),
+                                        )
+                                        ..firstName = firstNameContr.text
+                                        ..lastName = lastNameContr.text
+                                        ..dob = dobContr.text
+                                        ..email = emailContr.text
+                                        ..phoneNumber = phoneNumbContr.text;
+                                    }
+                                  },
+                                  title: 'Sign Up'.tr(),
+                                  showIcon: false,
+                                  iconPath: Icons.not_interested,
+                                  iconColor: AppColors.white,
+                                ),
+                                const SizedBox(height: Dimension.d6),
+                              ],
+                            ),
                           ),
-                          CustomButton(
-                            size: ButtonSize.normal,
-                            type: ButtonType.tertiary,
-                            expanded: true,
-                            ontap: () {
-                              GoRouter.of(context)
-                                  .go(RoutesConstants.loginRoute);
-                            },
-                            title: 'Login'.tr(),
-                            showIcon: false,
-                            iconPath: Icons.not_interested,
-                            iconColor: AppColors.primary,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Already have an account?'.tr(),
+                                style: AppTextStyle.bodyLargeMedium,
+                              ),
+                              const SizedBox(
+                                width: Dimension.d1,
+                              ),
+                              CustomButton(
+                                size: ButtonSize.normal,
+                                type: ButtonType.tertiary,
+                                expanded: true,
+                                ontap: () {
+                                  GoRouter.of(context)
+                                      .go(RoutesConstants.loginRoute);
+                                },
+                                title: 'Login'.tr(),
+                                showIcon: false,
+                                iconPath: Icons.not_interested,
+                                iconColor: AppColors.primary,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              if (store.isLoading == true) const LoadingWidget(),
-            ],
+                  if (store.isLoading == true) const LoadingWidget(),
+                ],
+              );
+            },
           );
         },
       ),
