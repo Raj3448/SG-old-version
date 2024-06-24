@@ -356,9 +356,12 @@ class _OfferTile extends StatelessWidget {
 }
 
 class _PriceTile extends StatelessWidget {
-  const _PriceTile({required this.price});
+  const _PriceTile(
+      {required this.price, required this.subscript, required this.desc});
 
   final String price;
+  final String subscript;
+  final String desc;
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +385,7 @@ class _PriceTile extends StatelessWidget {
               ),
               const SizedBox(width: 7),
               Text(
-                'For 12-24 hours',
+                subscript,
                 style: AppTextStyle.bodyMediumMedium.copyWith(
                   color: AppColors.grayscale700,
                 ),
@@ -391,7 +394,7 @@ class _PriceTile extends StatelessWidget {
           ),
           const SizedBox(height: Dimension.d2),
           Text(
-            "Varies based on member's address",
+            desc,
             style: AppTextStyle.bodyLargeMedium.copyWith(
               color: AppColors.grayscale700,
             ),
