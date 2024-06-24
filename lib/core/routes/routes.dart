@@ -131,8 +131,8 @@ final GoRouter routes = GoRouter(
       navigatorKey: shellNavigatorKey,
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
-        return MaterialPage(child: MainScreen(path: state.fullPath ?? '',
-        child: child));
+        return MaterialPage(
+            child: MainScreen(path: state.fullPath ?? '', child: child));
       },
       routes: <RouteBase>[
         GoRoute(
@@ -326,6 +326,7 @@ final GoRouter routes = GoRouter(
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
         final extraData = state.extra as Map<String, dynamic>?;
         final plansListJson = extraData?['plansList'] as String;
+        final isUpgradable = bool.tryParse(extraData?['isUpgradable'].toString() ?? 'false') ?? false;
         final planList = (jsonDecode(plansListJson) as List<dynamic>)
             .map((plan) => Price.fromJson(plan as Map<String, dynamic>))
             .toList();
@@ -333,6 +334,7 @@ final GoRouter routes = GoRouter(
           child: CouplePlanPage(
             pageTitle: pageTitle,
             planList: planList,
+            isUpgradable: isUpgradable
           ),
         );
       },
@@ -346,13 +348,13 @@ final GoRouter routes = GoRouter(
         final id = state.pathParameters['id'] ?? '';
         final isUpgradeableString =
             state.pathParameters['isUpgradeable'] ?? 'false';
-        final isUpgradeable = isUpgradeableString.toLowerCase() == 'true';
+        final isUpgradable = isUpgradeableString.toLowerCase() == 'true';
 
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,
             id: id,
-            isUpgradeable: isUpgradeable,
+            isUpgradable: isUpgradable,
           ),
         );
       },

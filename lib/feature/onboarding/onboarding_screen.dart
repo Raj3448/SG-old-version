@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
@@ -64,43 +65,54 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       floatingActionButton: const _Button(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.8,
-              child: PageView(
-                controller: pageController,
-                children: const [
-                  _PageView(
-                    imgPath: 'assets/onboarding/img1.png',
-                    desc:
-                        'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            final isLandscape = orientation == Orientation.landscape;
+            final mediaQueryContext = MediaQuery.sizeOf(context);
+            return Column(
+              children: [
+                SizedBox(
+                  height: isLandscape
+                      ? mediaQueryContext.height * 0.65
+                      : mediaQueryContext.height * 0.8,
+                  child: PageView(
+                    controller: pageController,
+                    children: [
+                      _PageView(
+                        isLandscape: isLandscape,
+                        imgPath: 'assets/onboarding/img1.png',
+                        desc:
+                            'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
+                      ),
+                      _PageView(
+                        isLandscape: isLandscape,
+                        imgPath: 'assets/onboarding/img2.png',
+                        desc:
+                            'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
+                      ),
+                      _PageView(
+                        isLandscape: isLandscape,
+                        imgPath: 'assets/onboarding/img3.png',
+                        desc:
+                            'Instant access to emergency services, ensuring peace of mind for your loved ones.',
+                      ),
+                    ],
                   ),
-                  _PageView(
-                    imgPath: 'assets/onboarding/img2.png',
-                    desc:
-                        'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
+                ),
+                SizedBox(height: isLandscape ? null : Dimension.d5),
+                SmoothPageIndicator(
+                  controller: pageController,
+                  count: 3,
+                  effect: const ExpandingDotsEffect(
+                    activeDotColor: AppColors.primary,
+                    dotColor: AppColors.grayscale300,
+                    dotHeight: 8,
+                    dotWidth: 8,
                   ),
-                  _PageView(
-                    imgPath: 'assets/onboarding/img3.png',
-                    desc:
-                        'Instant access to emergency services, ensuring peace of mind for your loved ones.',
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            SmoothPageIndicator(
-              controller: pageController,
-              count: 3,
-              effect: const ExpandingDotsEffect(
-                activeDotColor: AppColors.primary,
-                dotColor: AppColors.grayscale300,
-                dotHeight: 8,
-                dotWidth: 8,
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -108,17 +120,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 class _PageView extends StatelessWidget {
-  const _PageView({required this.imgPath, required this.desc});
+  const _PageView(
+      {required this.isLandscape, required this.imgPath, required this.desc});
 
   final String imgPath;
   final String desc;
+  final bool isLandscape;
 
   @override
   Widget build(BuildContext context) {
+    final mediaQueryContext = MediaQuery.sizeOf(context);
     return Column(
       children: [
         Container(
-          height: MediaQuery.sizeOf(context).height * 0.65,
+          height: isLandscape
+              ? mediaQueryContext.height * 0.4
+              : mediaQueryContext.height * 0.65,
+          width: isLandscape ? mediaQueryContext.width * 0.6 : double.infinity,
           decoration: const BoxDecoration(
             color: AppColors.secondary,
           ),

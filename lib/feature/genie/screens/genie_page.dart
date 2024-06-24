@@ -20,13 +20,13 @@ class GeniePage extends StatelessWidget {
   GeniePage({
     required this.pageTitle,
     required this.id,
-    required this.isUpgradeable,
+    required this.isUpgradable,
     super.key,
   });
 
   final String pageTitle;
   final String id;
-  final bool isUpgradeable;
+  final bool isUpgradable;
 
   final services = GetIt.I<ProductLisitingServices>();
 
@@ -113,14 +113,16 @@ class GeniePage extends StatelessWidget {
                         const SizedBox(height: Dimension.d4),
                         CustomButton(
                           ontap: () {
+                            if(planDetails != null){
                             context.pushNamed(
                               RoutesConstants.subscriptionDetailsScreen,
                               pathParameters: {
                                 'price': '${planDetails!.unitAmount}',
                               },
                             );
+                            }
                           },
-                          title: isUpgradeable ? 'Upgrade care' : 'Book Care',
+                          title: isUpgradable ? 'Upgrade care' : 'Book Care',
                           showIcon: false,
                           iconPath: AppIcons.add,
                           size: ButtonSize.normal,
@@ -131,6 +133,7 @@ class GeniePage extends StatelessWidget {
                         if (productListingModel!
                             .product.subscriptionContent!.showCouplePlans)
                           ExploreNowComponent(
+                            isUpgradable:isUpgradable,
                             pageTitle: pageTitle,
                             btnLabel: productListingModel!.product
                                 .subscriptionContent!.exploreNowCtaLabel,

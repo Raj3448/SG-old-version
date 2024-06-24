@@ -142,7 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? MainAxisAlignment.spaceAround
+                            : MainAxisAlignment.spaceBetween,
                         children: [
                           BookServiceButton(
                             iconImagePath: 'assets/icon/volunteer_activism.png',
@@ -592,12 +595,23 @@ class _EmergencyActivation extends StatelessWidget {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) {
-                    return _EmergencyActivateBottomSheet();
+                    return SingleChildScrollView(
+                        physics: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? null
+                            : const NeverScrollableScrollPhysics(),
+                        child: _EmergencyActivateBottomSheet());
                   },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Dimension.d3),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(Dimension.d3),
+                        topRight: Radius.circular(Dimension.d3)),
                   ),
-                  constraints: const BoxConstraints(maxHeight: 320),
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? 400
+                          : 320),
                   backgroundColor: AppColors.white,
                 );
               },

@@ -226,7 +226,7 @@ class ExploreNowComponent extends StatelessWidget {
     required this.iconColorCode,
     required this.plansList,
     required this.backgroundColor,
-    super.key,
+    required this.isUpgradable, super.key,
   });
 
   final String pageTitle;
@@ -236,6 +236,7 @@ class ExploreNowComponent extends StatelessWidget {
   final String iconColorCode;
   final String backgroundColor;
   final List<Price> plansList;
+  final bool isUpgradable;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -261,7 +262,7 @@ class ExploreNowComponent extends StatelessWidget {
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
                 pathParameters: {'pageTitle': pageTitle},
-                extra: {'plansList': plansListJson},
+                extra: {'plansList': plansListJson , 'isUpgradable' : isUpgradable.toString()},
               );
             },
             child: Container(

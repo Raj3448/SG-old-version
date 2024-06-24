@@ -172,58 +172,64 @@ class ServiceDetailsScreen extends StatelessWidget {
                           ontap: () {
                             showModalBottomSheet(
                               backgroundColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(Dimension.d3),
+                                    topRight: Radius.circular(Dimension.d3)),
                               ),
+                              constraints: const BoxConstraints(maxHeight: 400),
                               context: context,
                               builder: (context) {
                                 return Padding(
                                   padding: const EdgeInsets.all(18),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          '$title service',
-                                          style: AppTextStyle.heading5SemiBold,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '$title service',
+                                            style:
+                                                AppTextStyle.heading5SemiBold,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: Dimension.d9),
-                                      const Text(
-                                        'Your request has been received',
-                                        style: AppTextStyle.bodyLargeBold,
-                                      ),
-                                      const SizedBox(height: Dimension.d3),
-                                      SvgPicture.asset(
-                                        'assets/icon/success.svg',
-                                        height: 88,
-                                      ),
-                                      const SizedBox(height: Dimension.d3),
-                                      Text(
-                                        'Thank you for your interest. The SG team will be in touch with you shortly',
-                                        textAlign: TextAlign.center,
-                                        style: AppTextStyle.bodyMediumMedium
-                                            .copyWith(
-                                          color: AppColors.grayscale700,
+                                        const SizedBox(height: Dimension.d9),
+                                        const Text(
+                                          'Your request has been received',
+                                          style: AppTextStyle.bodyLargeBold,
                                         ),
-                                      ),
-                                      const SizedBox(height: Dimension.d9),
-                                      CustomButton(
-                                        ontap: () {
-                                          context
-                                            ..pop()
-                                            ..pop();
-                                        },
-                                        title: 'Done',
-                                        showIcon: false,
-                                        iconPath: AppIcons.add,
-                                        size: ButtonSize.normal,
-                                        type: ButtonType.primary,
-                                        expanded: true,
-                                        iconColor: AppColors.white,
-                                      ),
-                                    ],
+                                        const SizedBox(height: Dimension.d3),
+                                        SvgPicture.asset(
+                                          'assets/icon/success.svg',
+                                          height: 88,
+                                        ),
+                                        const SizedBox(height: Dimension.d3),
+                                        Text(
+                                          'Thank you for your interest. The SG team will be in touch with you shortly',
+                                          textAlign: TextAlign.center,
+                                          style: AppTextStyle.bodyMediumMedium
+                                              .copyWith(
+                                            color: AppColors.grayscale700,
+                                          ),
+                                        ),
+                                        const SizedBox(height: Dimension.d9),
+                                        CustomButton(
+                                          ontap: () {
+                                            context
+                                              ..pop()
+                                              ..pop();
+                                          },
+                                          title: 'Done',
+                                          showIcon: false,
+                                          iconPath: AppIcons.add,
+                                          size: ButtonSize.normal,
+                                          type: ButtonType.primary,
+                                          expanded: true,
+                                          iconColor: AppColors.white,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },

@@ -31,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    // Use reaction or autorun to manage state changes.
     reaction((_) => store.authFailure, (authFailure) {
       if (store.authFailure != null) {
         store.authFailure?.fold(
@@ -83,151 +82,155 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(Dimension.d5),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 240,
-                height: 240,
-                child: Image.asset('assets/splash/sg_logo.png'),
-              ),
-              Text(
-                'Login'.tr(),
-                style: AppTextStyle.heading4SemiBold,
-              ),
-              const SizedBox(height: Dimension.d6),
-              Observer(
-                builder: (context) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextLabel(
-                        title: store.isEmail
-                            ? 'Enter email'
-                            : 'Mobile Number'.tr(),
-                      ),
-                      const SizedBox(height: Dimension.d2),
-                      if (store.isEmail)
-                        Form(
-                          key: emailFormKey,
-                          child: CustomTextField(
-                            controller: emailContr,
-                            hintText: 'Enter e-mail',
-                            keyboardType: TextInputType.emailAddress,
-                            large: false,
-                            enabled: true,
-                            autovalidateMode: autoValidate
-                                ? AutovalidateMode.onUserInteraction
-                                : AutovalidateMode.disabled,
-                            validationLogic: (value) {
-                              const regex =
-                                  r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
-                              if (value!.isEmpty) {
-                                return 'Please enter your email address';
-                              } else if (!RegExp(regex).hasMatch(value)) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
-                            },
-                          ),
-                        )
-                      else
-                        Form(
-                          key: numberFormKey,
-                          child: CustomPhoneField(
-                            controller: phoneNumberContr,
-                            title: 'Enter Mobile Number'.tr(),
-                            autovalidate: autoValidate
-                                ? AutovalidateMode.onUserInteraction
-                                : AutovalidateMode.disabled,
-                          ),
+            padding: const EdgeInsets.all(Dimension.d5),
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/splash/sg_logo.png',
+                  width: 240,
+                  height: 200,
+                  fit: BoxFit.contain,
+                ),
+                Text(
+                  'Login'.tr(),
+                  style: AppTextStyle.heading4SemiBold.copyWith(height: 1),
+                ),
+                SizedBox(
+                    height: MediaQuery.of(context).orientation ==
+                            Orientation.landscape
+                        ? Dimension.d3
+                        : Dimension.d6),
+                Observer(
+                  builder: (context) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextLabel(
+                          title: store.isEmail
+                              ? 'Enter email'
+                              : 'Mobile Number'.tr(),
                         ),
-                      const SizedBox(height: Dimension.d4),
-                      CustomButton(
-                        size: ButtonSize.large,
-                        type: ButtonType.tertiary,
-                        expanded: false,
-                        ontap: () {
-                          store.isEmail = !store.isEmail;
-                          setState(() {
-                            autoValidate = false;
-                          });
-                        },
-                        title: store.isEmail
-                            ? 'Use Mobile Number instead'.tr()
-                            : 'Use email instead'.tr(),
-                        showIcon: false,
-                        iconPath: Icons.not_interested,
-                        iconColor: AppColors.white,
-                      ),
-                      const SizedBox(height: Dimension.d4),
-                      SizedBox(
-                        width: double.infinity,
-                        child: CustomButton(
-                          size: ButtonSize.normal,
-                          type: ButtonType.primary,
-                          expanded: true,
-                          ontap: () async {
+                        const SizedBox(height: Dimension.d2),
+                        if (store.isEmail)
+                          Form(
+                            key: emailFormKey,
+                            child: CustomTextField(
+                              controller: emailContr,
+                              hintText: 'Enter e-mail',
+                              keyboardType: TextInputType.emailAddress,
+                              large: false,
+                              enabled: true,
+                              autovalidateMode: autoValidate
+                                  ? AutovalidateMode.onUserInteraction
+                                  : AutovalidateMode.disabled,
+                              validationLogic: (value) {
+                                const regex =
+                                    r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                                if (value!.isEmpty) {
+                                  return 'Please enter your email address';
+                                } else if (!RegExp(regex).hasMatch(value)) {
+                                  return 'Please enter a valid email address';
+                                }
+                                return null;
+                              },
+                            ),
+                          )
+                        else
+                          Form(
+                            key: numberFormKey,
+                            child: CustomPhoneField(
+                              controller: phoneNumberContr,
+                              title: 'Enter Mobile Number'.tr(),
+                              autovalidate: autoValidate
+                                  ? AutovalidateMode.onUserInteraction
+                                  : AutovalidateMode.disabled,
+                            ),
+                          ),
+                        const SizedBox(height: Dimension.d4),
+                        CustomButton(
+                          size: ButtonSize.large,
+                          type: ButtonType.tertiary,
+                          expanded: false,
+                          ontap: () {
+                            store.isEmail = !store.isEmail;
                             setState(() {
-                              autoValidate = true;
+                              autoValidate = false;
                             });
-                            if (store.isEmail) {
-                              if (emailFormKey.currentState!.validate()) {
-                                store
-                                  ..login(emailContr.text)
-                                  ..identifier = emailContr.text;
-                              }
-                            } else {
-                              if (numberFormKey.currentState!.validate()) {
-                                store
-                                  ..login(
-                                    '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
-                                        .replaceFirst('+', ''),
-                                  )
-                                  ..identifier =
-                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
-                                          .replaceFirst('+', '');
-                              }
-                            }
                           },
-                          title: 'Login'.tr(),
+                          title: store.isEmail
+                              ? 'Use Mobile Number instead'.tr()
+                              : 'Use email instead'.tr(),
                           showIcon: false,
                           iconPath: Icons.not_interested,
                           iconColor: AppColors.white,
                         ),
-                      ),
-                      const SizedBox(height: Dimension.d6),
-                    ],
-                  );
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Don't have an account?".tr(),
-                    style: AppTextStyle.bodyLargeMedium,
-                  ),
-                  const SizedBox(
-                    width: Dimension.d1,
-                  ),
-                  CustomButton(
-                    size: ButtonSize.normal,
-                    type: ButtonType.tertiary,
-                    expanded: true,
-                    ontap: () {
-                      GoRouter.of(context).push(RoutesConstants.signUpRoute);
-                    },
-                    title: 'Signup'.tr(),
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    iconColor: AppColors.primary,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+                        const SizedBox(height: Dimension.d4),
+                        SizedBox(
+                          width: double.infinity,
+                          child: CustomButton(
+                            size: ButtonSize.normal,
+                            type: ButtonType.primary,
+                            expanded: true,
+                            ontap: () async {
+                              setState(() {
+                                autoValidate = true;
+                              });
+                              if (store.isEmail) {
+                                if (emailFormKey.currentState!.validate()) {
+                                  store
+                                    ..login(emailContr.text)
+                                    ..identifier = emailContr.text;
+                                }
+                              } else {
+                                if (numberFormKey.currentState!.validate()) {
+                                  store
+                                    ..login(
+                                      '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                                          .replaceFirst('+', ''),
+                                    )
+                                    ..identifier =
+                                        '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
+                                            .replaceFirst('+', '');
+                                }
+                              }
+                            },
+                            title: 'Login'.tr(),
+                            showIcon: false,
+                            iconPath: Icons.not_interested,
+                            iconColor: AppColors.white,
+                          ),
+                        ),
+                        const SizedBox(height: Dimension.d6),
+                      ],
+                    );
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account?".tr(),
+                      style: AppTextStyle.bodyLargeMedium,
+                    ),
+                    const SizedBox(
+                      width: Dimension.d1,
+                    ),
+                    CustomButton(
+                      size: ButtonSize.normal,
+                      type: ButtonType.tertiary,
+                      expanded: true,
+                      ontap: () {
+                        GoRouter.of(context).push(RoutesConstants.signUpRoute);
+                      },
+                      title: 'Signup'.tr(),
+                      showIcon: false,
+                      iconPath: Icons.not_interested,
+                      iconColor: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ],
+            )),
       ),
     );
   }

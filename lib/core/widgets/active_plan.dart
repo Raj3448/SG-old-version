@@ -252,11 +252,14 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             ),
             GridView.builder(
               itemCount: filteredDiagnosedServices.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2.3,
+                childAspectRatio:
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? 5.3
+                        : 2.3,
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
