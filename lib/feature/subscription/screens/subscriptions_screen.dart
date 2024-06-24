@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -16,28 +13,40 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';
-import 'package:silver_genie/feature/subscription/store/subscription_store.dart';
+import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({super.key});
 
   @override
-  State<SubscriptionsScreen> createState() => IconTitleDetailsComponentState();
+  _SubscriptionsScreenState createState() => _SubscriptionsScreenState();
 }
 
-class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
+class _SubscriptionsScreenState extends State<SubscriptionsScreen>
     with SingleTickerProviderStateMixin {
   late TabController controller;
+  late Future<List<SubscriptionMemberModel>> _futureMembers;
+  final subService = GetIt.I<UserDetailServices>();
 
   @override
   void initState() {
     super.initState();
     controller = TabController(length: 2, vsync: this);
+    _futureMembers = _fetchSubscriptionMembers();
+  }
+
+  Future<List<SubscriptionMemberModel>> _fetchSubscriptionMembers() async {
+    final result = await subService.fetchSubscriptions();
+    return result.fold(
+      (failure) {
+        return [];
+      },
+      (subscriptions) => subscriptions,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<SubscriptionStore>();
     return SafeArea(
       child: Scaffold(
         appBar: const PageAppbar(title: 'Subscriptions'),
@@ -47,113 +56,58 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(Dimension.d4),
-                child: Column(
-                  children: [
-                    CustomizeTabviewComponent(
-                      controller: controller,
-                      tabCount: 2,
-                      widgetList: const [
-                        Tab(icon: Text('Current')),
-                        Tab(icon: Text('Previous')),
-                      ],
-                    ),
-                    const SizedBox(height: Dimension.d4),
-                    Expanded(
-                      child: TabBarView(
-                        controller: controller,
+                child: FutureBuilder<List<SubscriptionMemberModel>>(
+                  future: _futureMembers,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: LoadingWidget(showShadow: false),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: ErrorStateComponent(
+                          errorType: ErrorType.pageNotFound,
+                        ),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return NoServiceFound(
+                        title: 'Subscriptions',
+                        ontap: () {},
+                        showTitle: false,
+                        isService: false,
+                        name: 'subscriptions',
+                      );
+                    } else {
+                      return Column(
                         children: [
-                          FutureBuilder(
-                            future: store.fetchSubscriptionMembers(),
-                            builder: (
-                              context,
-                              AsyncSnapshot<List<SubscriptionMemberModel>>
-                                  snapshot,
-                            ) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: LoadingWidget(showShadow: false),
-                                );
-                              } else if (snapshot.hasError) {
-                                return const Center(
-                                  child: ErrorStateComponent(
-                                    errorType: ErrorType.pageNotFound,
-                                  ),
-                                );
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return NoServiceFound(
-                                  title: 'Subscriptions',
-                                  ontap: () {},
-                                  showTitle: false,
-                                  isService: false,
-                                  name: 'subscriptions',
-                                );
-                              } else {
-                                return ListView.builder(
-                                  itemCount: snapshot.data!.length,
-                                  physics: const BouncingScrollPhysics(
-                                    decelerationRate:
-                                        ScrollDecelerationRate.fast,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    return _UserDetailsComponent(
-                                      memberDetails: snapshot.data![index],
-                                      isPrevious: false,
-                                    );
-                                  },
-                                );
-                              }
-                            },
+                          CustomizeTabviewComponent(
+                            controller: controller,
+                            tabCount: 2,
+                            widgetList: const [
+                              Tab(icon: Text('Current')),
+                              Tab(icon: Text('Previous')),
+                            ],
                           ),
-                          FutureBuilder(
-                            future: store.fetchSubscriptionMembers(),
-                            builder: (
-                              context,
-                              AsyncSnapshot<List<SubscriptionMemberModel>>
-                                  snapshot,
-                            ) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: LoadingWidget(showShadow: false),
-                                );
-                              } else if (snapshot.hasError) {
-                                return const Center(
-                                  child: ErrorStateComponent(
-                                    errorType: ErrorType.pageNotFound,
-                                  ),
-                                );
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return NoServiceFound(
-                                  title: 'Subscriptions',
-                                  ontap: () {},
-                                  showTitle: false,
-                                  isService: false,
-                                  name: 'subscriptions',
-                                );
-                              } else {
-                                return ListView.builder(
-                                  itemCount: snapshot.data!.length,
-                                  physics: const BouncingScrollPhysics(
-                                    decelerationRate:
-                                        ScrollDecelerationRate.fast,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    return _UserDetailsComponent(
-                                      memberDetails: snapshot.data![index],
-                                      isPrevious: true,
-                                    );
-                                  },
-                                );
-                              }
-                            },
+                          const SizedBox(height: Dimension.d4),
+                          Expanded(
+                            child: TabBarView(
+                              controller: controller,
+                              children: [
+                                _SubscriptionList(
+                                  members: snapshot.data!,
+                                  isPrevious: false,
+                                ),
+                                _SubscriptionList(
+                                  members: snapshot.data!,
+                                  isPrevious: true,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
-                      ),
-                    ),
-                  ],
+                      );
+                    }
+                  },
                 ),
               ),
             ),
@@ -164,43 +118,39 @@ class IconTitleDetailsComponentState extends State<SubscriptionsScreen>
   }
 }
 
-class _SubscriptionUserComponent extends StatelessWidget {
-  _SubscriptionUserComponent({required this.isPrevious});
-  final store = GetIt.I<SubscriptionStore>();
+class _SubscriptionList extends StatelessWidget {
+  const _SubscriptionList({
+    required this.members,
+    required this.isPrevious,
+  });
+  final List<SubscriptionMemberModel> members;
   final bool isPrevious;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: store.fetchSubscriptionMembers(),
-      builder: (
-        context,
-        AsyncSnapshot<List<SubscriptionMemberModel>> snapshot,
-      ) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: LoadingWidget(showShadow: false),
-          );
-        } else if (snapshot.hasError) {
-          return const Center(
-            child: ErrorStateComponent(
-              errorType: ErrorType.pageNotFound,
-            ),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(
-            child: Text('No data available'),
-          );
-        } else {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return _UserDetailsComponent(
-                memberDetails: snapshot.data![index],
-                isPrevious: false,
-              );
-            },
-          );
-        }
+    final filteredMembers =
+        members.where((member) => member.status == 'Active').toList();
+
+    if (filteredMembers.isEmpty) {
+      return NoServiceFound(
+        title: 'Subscriptions',
+        ontap: () {},
+        showTitle: false,
+        isService: false,
+        name: 'subscriptions',
+      );
+    }
+
+    return ListView.builder(
+      itemCount: filteredMembers.length,
+      physics: const BouncingScrollPhysics(
+        decelerationRate: ScrollDecelerationRate.fast,
+      ),
+      itemBuilder: (context, index) {
+        return _UserDetailsComponent(
+          memberDetails: filteredMembers[index],
+          isPrevious: isPrevious,
+        );
       },
     );
   }
@@ -211,6 +161,7 @@ class _UserDetailsComponent extends StatelessWidget {
     required this.memberDetails,
     required this.isPrevious,
   });
+
   final SubscriptionMemberModel memberDetails;
   final bool isPrevious;
 
@@ -225,7 +176,7 @@ class _UserDetailsComponent extends StatelessWidget {
         border: Border.all(color: AppColors.grayscale300),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -235,9 +186,7 @@ class _UserDetailsComponent extends StatelessWidget {
                   imgPath: '',
                   size: AvatarSize.size24,
                 ),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
+                const SizedBox(width: Dimension.d3),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -251,17 +200,20 @@ class _UserDetailsComponent extends StatelessWidget {
                     ),
                     Text(
                       'Relation: ${memberDetails.relation}  Age: ${memberDetails.age}',
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.grayscale800, height: 1.5),
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale800,
+                        height: 1.5,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
+            const SizedBox(width: Dimension.d4),
             SizedBox(
               height: 110,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconTitleDetailsComponent(
                     icon: AppIcons.elderly_person,
@@ -296,10 +248,7 @@ class _UserDetailsComponent extends StatelessWidget {
                     iconColor: AppColors.primary,
                   ),
                 ),
-                if (isPrevious)
-                  const SizedBox(
-                    width: Dimension.d2,
-                  ),
+                if (isPrevious) const SizedBox(width: Dimension.d2),
                 if (isPrevious)
                   Expanded(
                     child: CustomButton(

@@ -58,10 +58,4 @@ abstract class _SubscriptionStoreBase with Store {
       status: 'Active',
     ),
   ];
-
-  @action
-  Future<List<SubscriptionMemberModel>> fetchSubscriptionMembers() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return subscriptionMemberList;
-  }
 }

@@ -132,7 +132,8 @@ class UserDetailServices implements IUserFacades {
   }
 
   @override
-  Future<Either<Failure, SubscriptionMemberModel>> fetchSubscriptions() async {
+  Future<Either<Failure, List<SubscriptionMemberModel>>>
+      fetchSubscriptions() async {
     try {
       final response = await httpClient.get('/api/users/');
 
