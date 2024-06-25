@@ -32,17 +32,18 @@ class ProductLisitingServices extends IProductListingService {
   @override
   Future<Either<Failure, List<ProductBasicDetailsModel>>>
       getAllProductBasicDetails() async {
+    late HiveCacheStore cacheStore;
     try {
       final appDocDir = await getApplicationDocumentsDirectory();
-      final cacheStore = HiveCacheStore(
+      cacheStore = HiveCacheStore(
         appDocDir.path,
         hiveBoxName: 'All_product_basic_details',
       );
       final cacheOptions = CacheOptions(
         store: cacheStore,
-        policy: CachePolicy.refresh,
+        policy: CachePolicy.refreshForceCache,
         priority: CachePriority.high,
-        maxStale: const Duration(days: 10),
+        maxStale: const Duration(days: 20),
         hitCacheOnErrorExcept: [],
       );
 
@@ -60,7 +61,7 @@ class ProductLisitingServices extends IProductListingService {
         default:
           return const Left(Failure.badResponse());
       }
-    } on DioException catch (dioError) {
+} on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());
       }
