@@ -40,6 +40,9 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   PaymentStatus? paymentStatus;
 
+  @observable
+  bool isExpanded = false;
+
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
@@ -156,8 +159,7 @@ abstract class _ProductListingStoreBase with Store {
     productListingService.buyService(formData: formData).then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketError: (value) =>
-              buyServiceFailed = 'No Internet Connection',
+          socketError: (value) => buyServiceFailed = 'No Internet Connection',
           orElse: () => buyServiceFailed = 'Something went wrong',
         );
       }, (r) {

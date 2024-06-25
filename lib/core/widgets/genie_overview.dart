@@ -2,7 +2,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -15,6 +17,7 @@ import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class GenieOverviewComponent extends StatelessWidget {
   final String title;
@@ -28,8 +31,8 @@ class GenieOverviewComponent extends StatelessWidget {
     required this.defination,
     required this.subHeading,
     required this.imageUrl,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,59 +98,70 @@ class ServiceProvideComponent extends StatelessWidget {
   final String heading;
 
   final List<Datum> serviceList;
-  const ServiceProvideComponent(
-      {required this.heading, required this.serviceList, Key? key})
-      : super(key: key);
+  const ServiceProvideComponent({
+    required this.heading,
+    required this.serviceList,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          heading,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale900,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.46,
-          ),
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        AnimatedContainer(
-          duration: const Duration(seconds: 1),
-          height: 350,
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: serviceList.length,
-            itemBuilder: (context, index) {
-              return _ServiceCheckBox(
-                servicename: serviceList[index].attributes.label,
-                isProvide: serviceList[index].attributes.isActive,
-              );
-            },
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.grayscale100,
-                blurRadius: 7,
-                spreadRadius: 12,
+    final store = GetIt.I<ProductListingStore>();
+    return Observer(
+      builder: (_) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              heading,
+              style: AppTextStyle.bodyMediumMedium.copyWith(
+                color: AppColors.grayscale900,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                height: 1.46,
               ),
-            ],
-          ),
-          alignment: Alignment(0, 0),
-          child: const Icon(
-            AppIcons.arrow_down_ios,
-            size: 6,
-          ),
-        ),
-      ],
+            ),
+            const SizedBox(height: Dimension.d2),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              height: store.isExpanded ? 320 : 280,
+              child: ListView.builder(
+                physics: store.isExpanded
+                    ? const BouncingScrollPhysics()
+                    : const NeverScrollableScrollPhysics(),
+                itemCount: serviceList.length,
+                itemBuilder: (context, index) {
+                  return _ServiceCheckBox(
+                    servicename: serviceList[index].attributes.label,
+                    isProvide: serviceList[index].attributes.isActive,
+                  );
+                },
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                store.isExpanded = !store.isExpanded;
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.white,
+                      blurRadius: 20,
+                      spreadRadius: 20,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  AppIcons.arrow_down_ios,
+                  size: 10,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -157,8 +171,8 @@ class PlanPricingDetailsComponent extends StatefulWidget {
     required this.planName,
     required this.pricingDetailsList,
     required this.onSelect,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String planName;
   final List<Price> pricingDetailsList;
@@ -226,7 +240,8 @@ class ExploreNowComponent extends StatelessWidget {
     required this.iconColorCode,
     required this.plansList,
     required this.backgroundColor,
-    required this.isUpgradable, super.key,
+    required this.isUpgradable,
+    super.key,
   });
 
   final String pageTitle;
@@ -262,7 +277,10 @@ class ExploreNowComponent extends StatelessWidget {
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
                 pathParameters: {'pageTitle': pageTitle},
-                extra: {'plansList': plansListJson , 'isUpgradable' : isUpgradable.toString()},
+                extra: {
+                  'plansList': plansListJson,
+                  'isUpgradable': isUpgradable.toString(),
+                },
               );
             },
             child: Container(
@@ -272,8 +290,9 @@ class ExploreNowComponent extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(int.parse(backgroundColor, radix: 16)),
                 border: Border.all(
-                    width: 1,
-                    color: Color(int.parse(iconColorCode, radix: 16))),
+                  width: 1,
+                  color: Color(int.parse(iconColorCode, radix: 16)),
+                ),
                 borderRadius: BorderRadius.circular(Dimension.d2),
               ),
               child: Row(
@@ -352,8 +371,8 @@ class _ServiceCheckBox extends StatelessWidget {
   const _ServiceCheckBox({
     required this.servicename,
     required this.isProvide,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
