@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
@@ -21,6 +22,7 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
@@ -36,6 +38,7 @@ class ServiceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final service = GetIt.I<ProductLisitingServices>();
+    final store = GetIt.I<ProductListingStore>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -44,11 +47,15 @@ class ServiceDetailsScreen extends StatelessWidget {
           future: service.getProductById(id: id),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: LoadingWidget(showShadow: false));
+              return const Center(
+                child: LoadingWidget(showShadow: false),
+              );
             }
             if (snapshot.hasError) {
               return const Center(
-                child: ErrorStateComponent(errorType: ErrorType.pageNotFound),
+                child: ErrorStateComponent(
+                  errorType: ErrorType.pageNotFound,
+                ),
               );
             }
             if (snapshot.hasData) {
@@ -95,8 +102,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                       continue;
                     }
                     if (component is ServiceOfferingModel) {
-                      widgetList
-                          .add(_Offerings(serviceOfferingModel: component));
+                      widgetList.add(
+                        _Offerings(serviceOfferingModel: component),
+                      );
                       continue;
                     }
                     if (component is FaqModelDetails) {
@@ -116,9 +124,20 @@ class ServiceDetailsScreen extends StatelessWidget {
                         child: SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widgetList,
+                            child: Observer(
+                              builder: (_) {
+                                return Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: widgetList,
+                                    ),
+                                    if (store.isLoading) const LoadingWidget(),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -173,6 +192,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                       else
                         FixedButton(
                           ontap: () {
+                            store.isLoading = true;
                             final userStore = GetIt.I<UserDetailStore>();
                             service
                                 .bookService(
@@ -183,6 +203,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                               careType: title,
                             )
                                 .then((result) {
+                              store.isLoading = false;
                               result.fold(
                                 (failure) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -198,12 +219,17 @@ class ServiceDetailsScreen extends StatelessWidget {
                                     backgroundColor: AppColors.white,
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(Dimension.d3),
-                                        topRight: Radius.circular(Dimension.d3),
+                                        topLeft: Radius.circular(
+                                          Dimension.d3,
+                                        ),
+                                        topRight: Radius.circular(
+                                          Dimension.d3,
+                                        ),
                                       ),
                                     ),
-                                    constraints:
-                                        const BoxConstraints(maxHeight: 400),
+                                    constraints: const BoxConstraints(
+                                      maxHeight: 400,
+                                    ),
                                     context: context,
                                     builder: (context) {
                                       return Padding(
