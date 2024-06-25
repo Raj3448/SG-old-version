@@ -18,7 +18,7 @@ class AuthInterceptor extends Interceptor {
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
         if (options.path.contains(Env.telecrmUrl)) {
-          options.headers['Authorization'] = 'Bearer ${Env.token}';
+          options.headers['Authorization'] = 'Bearer ${Env.telecrmToken}';
         }
       }
     }
