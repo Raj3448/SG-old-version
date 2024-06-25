@@ -10,6 +10,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
@@ -64,11 +65,16 @@ class _OTPScreenState extends State<OTPScreen> {
           },
           (r) => {
             GetIt.I<AuthStore>().refresh(),
-            GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
-                queryParameters: {'skipRootRedirectCheck': "true"}),
+            if (getIntendedRouteName != null){
+                GoRouter.of(context).goNamed(getIntendedRouteName!,queryParameters: {'skipRootRedirectCheck': 'true'}),
+                setIntendedRouteNameToNull = null,
+              }else{
+                GoRouter.of(context).goNamed(
+                    RoutesConstants.homeRoute,
+                    queryParameters: {'skipRootRedirectCheck': 'true'}),
+              }
           },
         );
-
         store.authFailure = null;
       }
     });

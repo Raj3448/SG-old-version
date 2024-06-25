@@ -47,6 +47,9 @@ import 'package:silver_genie/feature/user_profile/user_profile.dart';
 final store = GetIt.I<OnboardingStore>();
 final authStore = GetIt.I<AuthStore>();
 final homeStore = GetIt.I<HomeStore>();
+String? _intendedRoute;
+String? get getIntendedRouteName => _intendedRoute;
+set setIntendedRouteNameToNull(_) => _intendedRoute = null;
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -55,19 +58,10 @@ final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/',
   redirect: (context, state) {
-    if (state.matchedLocation.startsWith('/login')) {
-      resetAllCache();
-      return null;
-    }
-    if (state.matchedLocation.startsWith('/otp')) {
-      resetAllCache();
-      return null;
-    }
-    if (state.matchedLocation.startsWith('/signup')) {
-      resetAllCache();
-      return null;
-    }
-    if (state.matchedLocation.startsWith('/onboarding')) {
+    if (state.matchedLocation.startsWith('/login') ||
+        state.matchedLocation.startsWith('/otp') ||
+        state.matchedLocation.startsWith('/signup') ||
+        state.matchedLocation.startsWith('/onboarding')) {
       resetAllCache();
       return null;
     }
@@ -88,6 +82,7 @@ final GoRouter routes = GoRouter(
         !authStore.isAuthenticated ||
         !authStore.initialised) {
       final route = '/?redirectRouteName=${state.fullPath}';
+      _intendedRoute = state.fullPath;
       return route;
     }
 
@@ -243,13 +238,6 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.subscriptionsScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: SubscriptionsScreen());
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
       path: '/eprPhrPdfViewPage/:memberPhrId',
       name: RoutesConstants.phrPdfViewPage,
       pageBuilder: (context, state) {
@@ -326,16 +314,17 @@ final GoRouter routes = GoRouter(
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
         final extraData = state.extra as Map<String, dynamic>?;
         final plansListJson = extraData?['plansList'] as String;
-        final isUpgradable = bool.tryParse(extraData?['isUpgradable'].toString() ?? 'false') ?? false;
+        final isUpgradable =
+            bool.tryParse(extraData?['isUpgradable'].toString() ?? 'false') ??
+                false;
         final planList = (jsonDecode(plansListJson) as List<dynamic>)
             .map((plan) => Price.fromJson(plan as Map<String, dynamic>))
             .toList();
         return MaterialPage(
           child: CouplePlanPage(
-            pageTitle: pageTitle,
-            planList: planList,
-            isUpgradable: isUpgradable
-          ),
+              pageTitle: pageTitle,
+              planList: planList,
+              isUpgradable: isUpgradable),
         );
       },
     ),
