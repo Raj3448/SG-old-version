@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -16,6 +17,9 @@ class AuthInterceptor extends Interceptor {
       final token = await _tokenStorage.getToken();
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
+        if (options.path.contains(Env.telecrmUrl)) {
+          options.headers['Authorization'] = 'Bearer ${Env.token}';
+        }
       }
     }
     handler.next(options);

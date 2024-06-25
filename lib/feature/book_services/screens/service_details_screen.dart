@@ -21,6 +21,7 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({
@@ -172,70 +173,106 @@ class ServiceDetailsScreen extends StatelessWidget {
                       else
                         FixedButton(
                           ontap: () {
-                            showModalBottomSheet(
-                              backgroundColor: AppColors.white,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(Dimension.d3),
-                                    topRight: Radius.circular(Dimension.d3)),
-                              ),
-                              constraints: const BoxConstraints(maxHeight: 400),
-                              context: context,
-                              builder: (context) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(18),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '$title service',
-                                            style:
-                                                AppTextStyle.heading5SemiBold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: Dimension.d9),
-                                        const Text(
-                                          'Your request has been received',
-                                          style: AppTextStyle.bodyLargeBold,
-                                        ),
-                                        const SizedBox(height: Dimension.d3),
-                                        SvgPicture.asset(
-                                          'assets/icon/success.svg',
-                                          height: 88,
-                                        ),
-                                        const SizedBox(height: Dimension.d3),
-                                        Text(
-                                          'Thank you for your interest. The SG team will be in touch with you shortly',
-                                          textAlign: TextAlign.center,
-                                          style: AppTextStyle.bodyMediumMedium
-                                              .copyWith(
-                                            color: AppColors.grayscale700,
-                                          ),
-                                        ),
-                                        const SizedBox(height: Dimension.d9),
-                                        CustomButton(
-                                          ontap: () {
-                                            context
-                                              ..pop()
-                                              ..pop();
-                                          },
-                                          title: 'Done',
-                                          showIcon: false,
-                                          iconPath: AppIcons.add,
-                                          size: ButtonSize.normal,
-                                          type: ButtonType.primary,
-                                          expanded: true,
-                                          iconColor: AppColors.white,
-                                        ),
-                                      ],
+                            final userStore = GetIt.I<UserDetailStore>();
+                            service
+                                .bookService(
+                              name: userStore.userDetails?.name ?? '',
+                              phoneNumber:
+                                  userStore.userDetails?.phoneNumber ?? '',
+                              email: userStore.userDetails?.email ?? '',
+                              careType: title,
+                            )
+                                .then((result) {
+                              result.fold(
+                                (failure) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Service booking failed!',
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
+                                  );
+                                },
+                                (success) {
+                                  showModalBottomSheet(
+                                    backgroundColor: AppColors.white,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(Dimension.d3),
+                                        topRight: Radius.circular(Dimension.d3),
+                                      ),
+                                    ),
+                                    constraints:
+                                        const BoxConstraints(maxHeight: 400),
+                                    context: context,
+                                    builder: (context) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(18),
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  '$title service',
+                                                  style: AppTextStyle
+                                                      .heading5SemiBold,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d9,
+                                              ),
+                                              const Text(
+                                                'Your request has been received',
+                                                style:
+                                                    AppTextStyle.bodyLargeBold,
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d3,
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/icon/success.svg',
+                                                height: 88,
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d3,
+                                              ),
+                                              Text(
+                                                'Thank you for your interest. The SG team will be in touch with you shortly',
+                                                textAlign: TextAlign.center,
+                                                style: AppTextStyle
+                                                    .bodyMediumMedium
+                                                    .copyWith(
+                                                  color: AppColors.grayscale700,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d9,
+                                              ),
+                                              CustomButton(
+                                                ontap: () {
+                                                  context
+                                                    ..pop()
+                                                    ..pop();
+                                                },
+                                                title: 'Done',
+                                                showIcon: false,
+                                                iconPath: AppIcons.add,
+                                                size: ButtonSize.normal,
+                                                type: ButtonType.primary,
+                                                expanded: true,
+                                                iconColor: AppColors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            });
                           },
                           btnTitle: 'Request service',
                           showIcon: false,
@@ -362,8 +399,11 @@ class _OfferTile extends StatelessWidget {
 }
 
 class _PriceTile extends StatelessWidget {
-  const _PriceTile(
-      {required this.price, required this.subscript, required this.desc});
+  const _PriceTile({
+    required this.price,
+    required this.subscript,
+    required this.desc,
+  });
 
   final String price;
   final String subscript;

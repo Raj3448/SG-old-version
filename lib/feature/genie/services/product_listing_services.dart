@@ -1,9 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, lines_longer_than_80_chars
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
@@ -20,6 +21,12 @@ abstract class IProductListingService {
   });
   Future<Either<Failure, String>> buyService({
     required FormAnswerModel formData,
+  });
+  Future<Either<Failure, bool>> bookService({
+    required String name,
+    required String email,
+    required String phoneNumber,
+    required String careType,
   });
 }
 
@@ -157,8 +164,9 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, String>> buyService(
-      {required FormAnswerModel formData}) async {
+  Future<Either<Failure, String>> buyService({
+    required FormAnswerModel formData,
+  }) async {
     try {
       return const Right('Response received successfully');
     } on DioException catch (dioError) {
@@ -169,5 +177,36 @@ class ProductLisitingServices extends IProductListingService {
     } catch (error) {
       return const Left(Failure.someThingWentWrong());
     }
+  }
+
+  @override
+  Future<Either<Failure, bool>> bookService({
+    required String name,
+    required String phoneNumber,
+    required String email,
+    required String careType,
+  }) async {
+    final data = {
+      'fields': {
+        'name': name,
+        'phone': phoneNumber,
+        'email': email,
+        'course': 'Silvergenie mobile application',
+      },
+      'actions': [
+        {'type': 'SYSTEM_NOTE', 'text': 'Lead type : Allied care'},
+        {'type': 'SYSTEM_NOTE', 'text': 'Allied care type: $careType'},
+      ],
+    };
+    final response = await httpClient.post(
+      Env.telecrmUrl,
+      data: data,
+    );
+    if (response.statusCode == 200) {
+      return const Right(true);
+    } else if (response.statusCode == 403) {
+      return Left(Failure.validationError('${response.statusMessage}'));
+    }
+    return const Left(Failure.badResponse());
   }
 }
