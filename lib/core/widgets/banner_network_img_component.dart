@@ -16,19 +16,16 @@ class BannerImageComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: width ?? MediaQuery.of(context).size.width * 0.9,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimension.d2),
-        child: CachedNetworkImage(
-          fit: BoxFit.cover,
-          useOldImageOnUrlChange: true,
-          imageUrl: '${Env.serverUrl}$imageUrl',
-          progressIndicatorBuilder: (context, url, downloadProgress) =>
-              CircularProgressIndicator(value: downloadProgress.progress),
-          errorWidget: (context, url, error) => const SizedBox(),
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(Dimension.d2),
+      child: CachedNetworkImage(
+        width: double.infinity,
+        fit: BoxFit.cover,
+        useOldImageOnUrlChange: true,
+        imageUrl: '${Env.serverUrl}$imageUrl',
+        progressIndicatorBuilder: (context, url, downloadProgress) =>
+            CircularProgressIndicator(value: downloadProgress.progress),
+        errorWidget: (context, url, error) => const SizedBox(),
       ),
     );
   }
