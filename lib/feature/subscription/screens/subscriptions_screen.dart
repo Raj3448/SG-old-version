@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -25,24 +27,12 @@ class SubscriptionsScreen extends StatefulWidget {
 class _SubscriptionsScreenState extends State<SubscriptionsScreen>
     with SingleTickerProviderStateMixin {
   late TabController controller;
-  late Future<List<SubscriptionMemberModel>> _futureMembers;
   final subService = GetIt.I<UserDetailServices>();
 
   @override
   void initState() {
     super.initState();
     controller = TabController(length: 2, vsync: this);
-    _futureMembers = _fetchSubscriptionMembers();
-  }
-
-  Future<List<SubscriptionMemberModel>> _fetchSubscriptionMembers() async {
-    final result = await subService.fetchSubscriptions();
-    return result.fold(
-      (failure) {
-        return [];
-      },
-      (subscriptions) => subscriptions,
-    );
   }
 
   @override
@@ -56,8 +46,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(Dimension.d4),
-                child: FutureBuilder<List<SubscriptionMemberModel>>(
-                  future: _futureMembers,
+                child: FutureBuilder(
+                  future: subService.fetchSubscriptions(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -66,46 +56,67 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                     } else if (snapshot.hasError) {
                       return const Center(
                         child: ErrorStateComponent(
-                          errorType: ErrorType.pageNotFound,
+                          errorType: ErrorType.somethinWentWrong,
                         ),
                       );
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return NoServiceFound(
-                        title: 'Subscriptions',
-                        ontap: () {},
-                        showTitle: false,
-                        isService: false,
-                        name: 'subscriptions',
-                      );
                     } else {
-                      return Column(
-                        children: [
-                          CustomizeTabviewComponent(
-                            controller: controller,
-                            tabCount: 2,
-                            widgetList: const [
-                              Tab(icon: Text('Current')),
-                              Tab(icon: Text('Previous')),
-                            ],
-                          ),
-                          const SizedBox(height: Dimension.d4),
-                          Expanded(
-                            child: TabBarView(
-                              controller: controller,
-                              children: [
-                                _SubscriptionList(
-                                  members: snapshot.data!,
-                                  isPrevious: false,
-                                ),
-                                _SubscriptionList(
-                                  members: snapshot.data!,
-                                  isPrevious: true,
-                                ),
-                              ],
+                      final eitherData = snapshot.data;
+
+                      if (eitherData != null) {
+                        return eitherData.fold(
+                          (failure) => const Center(
+                            child: ErrorStateComponent(
+                              errorType: ErrorType.somethinWentWrong,
                             ),
                           ),
-                        ],
-                      );
+                          (list) {
+                            if (list.isEmpty) {
+                              return NoServiceFound(
+                                title: 'Subscriptions',
+                                ontap: () {},
+                                showTitle: false,
+                                isService: false,
+                                name: 'subscriptions',
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  CustomizeTabviewComponent(
+                                    controller: controller,
+                                    tabCount: 2,
+                                    widgetList: const [
+                                      Tab(icon: Text('Current')),
+                                      Tab(icon: Text('Previous')),
+                                    ],
+                                  ),
+                                  const SizedBox(height: Dimension.d4),
+                                  Expanded(
+                                    child: TabBarView(
+                                      controller: controller,
+                                      children: [
+                                        _SubscriptionList(
+                                          members: list,
+                                          isPrevious: false,
+                                        ),
+                                        _SubscriptionList(
+                                          members: list,
+                                          isPrevious: true,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: ErrorStateComponent(
+                            errorType: ErrorType.unknown,
+                          ),
+                        );
+                      }
                     }
                   },
                 ),
