@@ -22,6 +22,7 @@ import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 class OTPScreen extends StatefulWidget {
   const OTPScreen({
     required this.isFromLoginPage,
+    required this.redirectRouteName,
     this.phoneNumber,
     this.email,
     super.key,
@@ -29,6 +30,7 @@ class OTPScreen extends StatefulWidget {
   final String? email;
   final String? phoneNumber;
   final bool isFromLoginPage;
+  final String? redirectRouteName;
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -65,12 +67,15 @@ class _OTPScreenState extends State<OTPScreen> {
           },
           (r) => {
             GetIt.I<AuthStore>().refresh(),
-            if (getIntendedRouteName != null){
-                GoRouter.of(context).goNamed(getIntendedRouteName!,queryParameters: {'skipRootRedirectCheck': 'true'}),
-                setIntendedRouteNameToNull = null,
-              }else{
-                GoRouter.of(context).goNamed(
-                    RoutesConstants.homeRoute,
+            if (widget.redirectRouteName != null && widget.redirectRouteName!.isNotEmpty)
+              {
+                print(widget.redirectRouteName),
+                GoRouter.of(context).goNamed(widget.redirectRouteName!,
+                    queryParameters: {'skipRootRedirectCheck': 'true'}),
+              }
+            else
+              {
+                GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
                     queryParameters: {'skipRootRedirectCheck': 'true'}),
               }
           },

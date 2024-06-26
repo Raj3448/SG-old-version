@@ -47,9 +47,6 @@ import 'package:silver_genie/feature/user_profile/user_profile.dart';
 final store = GetIt.I<OnboardingStore>();
 final authStore = GetIt.I<AuthStore>();
 final homeStore = GetIt.I<HomeStore>();
-String? _intendedRoute;
-String? get getIntendedRouteName => _intendedRoute;
-set setIntendedRouteNameToNull(_) => _intendedRoute = null;
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -58,6 +55,7 @@ final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/',
   redirect: (context, state) {
+    
     if (state.matchedLocation.startsWith('/login') ||
         state.matchedLocation.startsWith('/otp') ||
         state.matchedLocation.startsWith('/signup') ||
@@ -82,7 +80,6 @@ final GoRouter routes = GoRouter(
         !authStore.isAuthenticated ||
         !authStore.initialised) {
       final route = '/?redirectRouteName=${state.fullPath}';
-      _intendedRoute = state.fullPath;
       return route;
     }
 
@@ -106,7 +103,8 @@ final GoRouter routes = GoRouter(
         }
 
         if (!authStore.isAuthenticated) {
-          return RoutesConstants.loginRoute;
+          return '${RoutesConstants.loginRoute}?redirectRouteName=${redirectRouteName??''}';
+              
         }
 
         if (!authStore.initialised) return null;
@@ -170,10 +168,14 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.loginRoute,
+      path: '${RoutesConstants.loginRoute}',
       name: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: LoginPage());
+        final redirectRouteName = state.uri.queryParameters['redirectRouteName'];
+        return MaterialPage(
+            child: LoginPage(
+          redirectRouteName: redirectRouteName,
+        ));
       },
     ),
     GoRoute(
@@ -192,11 +194,13 @@ final GoRouter routes = GoRouter(
         final email = extraData?['email'] as String?;
         final phoneNumber = extraData?['phoneNumber'] as String?;
         final isFromLoginPage = extraData?['isFromLoginPage'] == 'true';
+        final redirectRouteName = extraData?['redirectRouteName'] as String?;
         return MaterialPage(
           child: OTPScreen(
             isFromLoginPage: isFromLoginPage,
             email: email,
             phoneNumber: phoneNumber,
+            redirectRouteName : redirectRouteName
           ),
         );
       },
