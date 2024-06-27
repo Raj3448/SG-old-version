@@ -21,10 +21,12 @@ dependencies:
   firebase_analytics: ^10.6.3
   firebase_core: ^2.21.0
   firebase_crashlytics: ^3.4.3
+  firebase_messaging: ^14.7.19
   firebase_performance: ^0.9.3+3
   firebase_performance_dio: ^0.6.0
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^17.1.2
   flutter_mobx: ^2.2.0+2
   flutter_native_splash: ^2.3.5
   # dart run flutter_native_splash:create

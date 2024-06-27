@@ -33,6 +33,7 @@ import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
+import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
@@ -54,7 +55,6 @@ void main() async {
 
       await Hive.initFlutter();
       await setupHiveBox();
-
       // Initialize SharedPreferences asynchronously
       GetIt.instance.registerSingletonAsync<SharedPreferences>(
         () => SharedPreferences.getInstance(),

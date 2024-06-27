@@ -18,6 +18,7 @@ import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
+import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen({
@@ -77,7 +78,8 @@ class _OTPScreenState extends State<OTPScreen> {
               {
                 GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
                     queryParameters: {'skipRootRedirectCheck': 'true'}),
-              }
+              },
+            FcmNotificationManager().init(),
           },
         );
         store.authFailure = null;
