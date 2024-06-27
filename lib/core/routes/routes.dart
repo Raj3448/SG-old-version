@@ -55,19 +55,11 @@ final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/',
   redirect: (context, state) {
-    if (state.matchedLocation.startsWith('/login')) {
-      resetAllCache();
-      return null;
-    }
-    if (state.matchedLocation.startsWith('/otp')) {
-      resetAllCache();
-      return null;
-    }
-    if (state.matchedLocation.startsWith('/signup')) {
-      resetAllCache();
-      return null;
-    }
-    if (state.matchedLocation.startsWith('/onboarding')) {
+    
+    if (state.matchedLocation.startsWith('/login') ||
+        state.matchedLocation.startsWith('/otp') ||
+        state.matchedLocation.startsWith('/signup') ||
+        state.matchedLocation.startsWith('/onboarding')) {
       resetAllCache();
       return null;
     }
@@ -111,7 +103,8 @@ final GoRouter routes = GoRouter(
         }
 
         if (!authStore.isAuthenticated) {
-          return RoutesConstants.loginRoute;
+          return '${RoutesConstants.loginRoute}?redirectRouteName=${redirectRouteName??''}';
+              
         }
 
         if (!authStore.initialised) return null;
@@ -175,10 +168,14 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.loginRoute,
+      path: '${RoutesConstants.loginRoute}',
       name: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: LoginPage());
+        final redirectRouteName = state.uri.queryParameters['redirectRouteName'];
+        return MaterialPage(
+            child: LoginPage(
+          redirectRouteName: redirectRouteName,
+        ));
       },
     ),
     GoRoute(
@@ -197,11 +194,13 @@ final GoRouter routes = GoRouter(
         final email = extraData?['email'] as String?;
         final phoneNumber = extraData?['phoneNumber'] as String?;
         final isFromLoginPage = extraData?['isFromLoginPage'] == 'true';
+        final redirectRouteName = extraData?['redirectRouteName'] as String?;
         return MaterialPage(
           child: OTPScreen(
             isFromLoginPage: isFromLoginPage,
             email: email,
             phoneNumber: phoneNumber,
+            redirectRouteName : redirectRouteName
           ),
         );
       },
@@ -237,13 +236,6 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       path: '/subscriptionsScreen',
       name: RoutesConstants.subscriptionsScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: SubscriptionsScreen());
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.subscriptionsScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: SubscriptionsScreen());
       },
@@ -326,16 +318,17 @@ final GoRouter routes = GoRouter(
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
         final extraData = state.extra as Map<String, dynamic>?;
         final plansListJson = extraData?['plansList'] as String;
-        final isUpgradable = bool.tryParse(extraData?['isUpgradable'].toString() ?? 'false') ?? false;
+        final isUpgradable =
+            bool.tryParse(extraData?['isUpgradable'].toString() ?? 'false') ??
+                false;
         final planList = (jsonDecode(plansListJson) as List<dynamic>)
             .map((plan) => Price.fromJson(plan as Map<String, dynamic>))
             .toList();
         return MaterialPage(
           child: CouplePlanPage(
-            pageTitle: pageTitle,
-            planList: planList,
-            isUpgradable: isUpgradable
-          ),
+              pageTitle: pageTitle,
+              planList: planList,
+              isUpgradable: isUpgradable),
         );
       },
     ),

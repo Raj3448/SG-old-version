@@ -10,6 +10,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
@@ -21,6 +22,7 @@ import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 class OTPScreen extends StatefulWidget {
   const OTPScreen({
     required this.isFromLoginPage,
+    required this.redirectRouteName,
     this.phoneNumber,
     this.email,
     super.key,
@@ -28,6 +30,7 @@ class OTPScreen extends StatefulWidget {
   final String? email;
   final String? phoneNumber;
   final bool isFromLoginPage;
+  final String? redirectRouteName;
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -64,11 +67,19 @@ class _OTPScreenState extends State<OTPScreen> {
           },
           (r) => {
             GetIt.I<AuthStore>().refresh(),
-            GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
-                queryParameters: {'skipRootRedirectCheck': "true"}),
+            if (widget.redirectRouteName != null && widget.redirectRouteName!.isNotEmpty)
+              {
+                print(widget.redirectRouteName),
+                GoRouter.of(context).goNamed(widget.redirectRouteName!,
+                    queryParameters: {'skipRootRedirectCheck': 'true'}),
+              }
+            else
+              {
+                GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
+                    queryParameters: {'skipRootRedirectCheck': 'true'}),
+              }
           },
         );
-
         store.authFailure = null;
       }
     });

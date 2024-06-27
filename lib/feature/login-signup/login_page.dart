@@ -13,7 +13,8 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String? redirectRouteName;
+  const LoginPage({required this.redirectRouteName, super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -66,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                     '${store.selectCountryDialCode ?? '91'} ${phoneNumberContr.text}'
                         .replaceFirst('+', ''),
                 'isFromLoginPage': 'true',
+                'redirectRouteName' : widget.redirectRouteName,
               },
             );
           },
