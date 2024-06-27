@@ -49,7 +49,7 @@ class FcmNotificationManager {
     try{
       // Get the token each time the application loads
       String? token = await FirebaseMessaging.instance.getToken();
-
+      debugPrint('FCM device token $token');
       // Save the initial token to the database
       await saveTokenToOurDatabase(token!);
 
@@ -78,7 +78,7 @@ class FcmNotificationManager {
     const channel = AndroidNotificationChannel(
       'high_importance_channel',
       'High Importance Notifications',
-      importance: Importance.max,
+      importance: Importance.high,
     );
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -115,6 +115,11 @@ class FcmNotificationManager {
             'high_importance_channel',
             'High Importance Notifications',
             icon: android.smallIcon,
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: false,
+            fullScreenIntent: true,
+            visibility: NotificationVisibility.public
           ),
         ),
       );

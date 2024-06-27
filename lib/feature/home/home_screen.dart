@@ -21,13 +21,13 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
-import 'package:silver_genie/dummy_variables.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
+import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    FcmNotificationManager().init();
     memberStore = GetIt.I<MembersStore>()..init();
     reaction((_) => memberStore.errorMessage, (loaded) {
       if (memberStore.errorMessage == null) {
@@ -236,6 +237,7 @@ class _HomeScreenComponents extends StatelessWidget {
         widgetList.add(
           GestureDetector(
             onTap: () async {
+              debugPrint(component.bannerImage.data.attributes.url);
               final url = component.cta?.href;
               if (url != null && await canLaunchUrl(Uri.parse(url))) {
                 await launchUrl(Uri.parse(url));

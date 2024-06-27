@@ -79,7 +79,6 @@ class _OTPScreenState extends State<OTPScreen> {
                 GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
                     queryParameters: {'skipRootRedirectCheck': 'true'}),
               },
-            FcmNotificationManager().init(),
           },
         );
         store.authFailure = null;
