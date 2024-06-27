@@ -6,17 +6,23 @@ import 'package:silver_genie/core/env.dart';
 class BannerImageComponent extends StatelessWidget {
   const BannerImageComponent({
     required this.imageUrl,
+    this.height = 240.0,
+    this.width,
   });
 
   final String imageUrl;
+  final double height;
+  final double? width;
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(Dimension.d2),
       child: CachedNetworkImage(
+        width: double.infinity,
         fit: BoxFit.cover,
-        imageUrl:
-            '${Env.serverUrl}$imageUrl',
+        useOldImageOnUrlChange: true,
+        imageUrl: '${Env.serverUrl}$imageUrl',
         progressIndicatorBuilder: (context, url, downloadProgress) =>
             CircularProgressIndicator(value: downloadProgress.progress),
         errorWidget: (context, url, error) => const SizedBox(),
