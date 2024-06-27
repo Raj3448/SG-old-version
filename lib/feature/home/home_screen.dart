@@ -1,11 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, use_if_null_to_convert_nulls_to_bools, use_build_context_synchronously
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -21,7 +25,6 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/coach_contact.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/member_creation.dart';
-import 'package:silver_genie/dummy_variables.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
@@ -259,42 +262,19 @@ class _HomeScreenComponents extends StatelessWidget {
         );
         continue;
       }
+      if (component is NewsletterModel) {
+        widgetList.add(
+          _NewsletterComponent(
+            newsletterModel: component,
+          ),
+        );
+        continue;
+      }
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            ...widgetList,
-            // Text(
-            //   'Stay ahead with exclusive updates, offers, and content. Subscribe now for the latest news delivered straight to your inbox.',
-            //   style: AppTextStyle.bodyLargeMedium.copyWith(
-            //     fontWeight: FontWeight.w400,
-            //     fontSize: 16,
-            //     height: 1.4,
-            //     color: AppColors.grayscale700,
-            //   ),
-            // ),
-            // const SizedBox(
-            //   height: Dimension.d4,
-            // ),
-            // CustomButton(
-            //   ontap: () {},
-            //   iconColor: AppColors.error,
-            //   title: 'Subscribe',
-            //   showIcon: false,
-            //   iconPath: AppIcons.add,
-            //   size: ButtonSize.normal,
-            //   type: ButtonType.secondary,
-            //   expanded: true,
-            // ),
-            // const SizedBox(
-            //   height: Dimension.d10,
-            // ),
-          ],
-        ),
-      ],
+      children: widgetList,
     );
   }
 }
@@ -596,22 +576,25 @@ class _EmergencyActivation extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return SingleChildScrollView(
-                        physics: MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                            ? null
-                            : const NeverScrollableScrollPhysics(),
-                        child: _EmergencyActivateBottomSheet());
+                      physics: MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? null
+                          : const NeverScrollableScrollPhysics(),
+                      child: _EmergencyActivateBottomSheet(),
+                    );
                   },
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(Dimension.d3),
-                        topRight: Radius.circular(Dimension.d3)),
+                      topLeft: Radius.circular(Dimension.d3),
+                      topRight: Radius.circular(Dimension.d3),
+                    ),
                   ),
                   constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? 400
-                          : 320),
+                    maxHeight: MediaQuery.of(context).orientation ==
+                            Orientation.landscape
+                        ? 400
+                        : 320,
+                  ),
                   backgroundColor: AppColors.white,
                 );
               },
@@ -1057,5 +1040,137 @@ class _HomeScreenOfferCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _NewsletterComponent extends StatelessWidget {
+  const _NewsletterComponent({required this.newsletterModel});
+
+  final NewsletterModel newsletterModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: Dimension.d6),
+        Text(
+          newsletterModel.title,
+          style:
+              AppTextStyle.bodyXLMedium.copyWith(color: AppColors.grayscale900),
+        ),
+        const SizedBox(height: Dimension.d3),
+        Text(
+          newsletterModel.description,
+          style: AppTextStyle.bodyLargeMedium
+              .copyWith(color: AppColors.grayscale700),
+        ),
+        const SizedBox(height: Dimension.d3),
+        if (newsletterModel.newsletters.isNotEmpty)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomButton(
+                ontap: () {
+                  if (newsletterModel.newsletters[0].link.downloadLink ==
+                      true) {
+                    downloadAndSavePDF(
+                      newsletterModel.newsletters[0].link.href,
+                      '${newsletterModel.newsletters[0].link.label}',
+                      context,
+                    );
+                  } else {
+                    launchUrl(
+                      Uri.parse(newsletterModel.newsletters[0].link.href),
+                    );
+                  }
+                },
+                title: newsletterModel.newsletters[0].label,
+                showIcon: false,
+                iconPath: AppIcons.add,
+                size: ButtonSize.normal,
+                type: newsletterModel.newsletters[0].theme == 'secondary'
+                    ? ButtonType.secondary
+                    : newsletterModel.newsletters[0].theme == 'primary'
+                        ? ButtonType.primary
+                        : ButtonType.tertiary,
+                expanded: false,
+                iconColor: AppColors.primary,
+              ),
+              if (newsletterModel.newsletters.length > 1)
+                CustomButton(
+                  ontap: () {
+                    if (newsletterModel.newsletters[1].link.downloadLink ==
+                        true) {
+                      downloadAndSavePDF(
+                        newsletterModel.newsletters[1].link.href,
+                        '${newsletterModel.newsletters[1].link.label}',
+                        context,
+                      );
+                    } else {
+                      launchUrl(
+                        Uri.parse(newsletterModel.newsletters[1].link.href),
+                      );
+                    }
+                  },
+                  title: newsletterModel.newsletters[1].label,
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                  size: ButtonSize.normal,
+                  type: newsletterModel.newsletters[1].theme == 'secondary'
+                      ? ButtonType.secondary
+                      : newsletterModel.newsletters[1].theme == 'primary'
+                          ? ButtonType.primary
+                          : ButtonType.tertiary,
+                  expanded: false,
+                  iconColor: AppColors.primary,
+                ),
+            ],
+          ),
+        const SizedBox(height: Dimension.d6),
+      ],
+    );
+  }
+}
+
+Future<void> downloadAndSavePDF(
+  String url,
+  String fileName,
+  BuildContext context,
+) async {
+  try {
+    Directory? directory;
+    if (Platform.isAndroid) {
+      directory = Directory('/storage/emulated/0/Download');
+    } else if (Platform.isIOS) {
+      directory = await getApplicationDocumentsDirectory();
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+
+    final filePath = '${directory.path}/$fileName.pdf';
+
+    final dio = Dio();
+    final response = await dio.download(url, filePath);
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'File downloaded successfully: $filePath',
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error downloading file: ${response.statusCode}',
+          ),
+        ),
+      );
+    }
+  } catch (e) {
+    print('Error: $e');
   }
 }

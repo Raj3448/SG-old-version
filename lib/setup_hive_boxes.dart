@@ -37,9 +37,13 @@ Future<void> initializeBoxForHomePageDetails() async {
     ..registerAdapter(LinkAdapter())
     ..registerAdapter(OfferingAdapter())
     ..registerAdapter(OfferAdapter())
-    ..registerAdapter(ValueAdapter());
-  await Hive.openBox<List<dynamic>>(HOMEPAGE_DETAILS_BOX_NAME,
-      compactionStrategy: (int total, int deleted) => deleted > 2);
+    ..registerAdapter(ValueAdapter())
+    ..registerAdapter(NewsletterAdapter())
+    ..registerAdapter(NewsletterModelAdapter());
+  await Hive.openBox<List<dynamic>>(
+    HOMEPAGE_DETAILS_BOX_NAME,
+    compactionStrategy: (int total, int deleted) => deleted > 2,
+  );
 }
 
 Future<void> initializeBoxForUserDetails() async {
