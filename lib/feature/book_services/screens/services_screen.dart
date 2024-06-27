@@ -120,6 +120,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               );
                             },
                             showTitle: true,
+                            isService: true,
                           ),
                         if (healthCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -150,6 +151,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               );
                             },
                             showTitle: true,
+                            isService: true,
                           ),
                         if (convenienceCareServices.isNotEmpty)
                           _ServiceCategorySection(
@@ -180,6 +182,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               );
                             },
                             showTitle: true,
+                            isService: true,
                           ),
                       ],
                     )
@@ -200,6 +203,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       title: '',
                       ontap: () {},
                       showTitle: false,
+                      isService: true,
                     ),
                   const SizedBox(height: Dimension.d6),
                 ],
@@ -388,12 +392,16 @@ class NoServiceFound extends StatelessWidget {
     required this.title,
     required this.ontap,
     required this.showTitle,
+    required this.isService,
+    this.name,
     super.key,
   });
 
   final String title;
   final VoidCallback ontap;
   final bool showTitle;
+  final bool isService;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +419,7 @@ class NoServiceFound extends StatelessWidget {
           ),
           const SizedBox(height: Dimension.d2),
           Text(
-            'No services found!',
+            isService ? 'No services found!' : 'No $name found!',
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(color: AppColors.grayscale800),
           ),
