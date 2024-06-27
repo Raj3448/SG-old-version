@@ -113,13 +113,13 @@ class GeniePage extends StatelessWidget {
                         const SizedBox(height: Dimension.d4),
                         CustomButton(
                           ontap: () {
-                            if(planDetails != null){
-                            context.pushNamed(
-                              RoutesConstants.subscriptionDetailsScreen,
-                              pathParameters: {
-                                'price': '${planDetails!.unitAmount}',
-                              },
-                            );
+                            if (planDetails != null) {
+                              context.pushNamed(
+                                RoutesConstants.subscriptionDetailsScreen,
+                                pathParameters: {
+                                  'price': '${planDetails!.unitAmount}',
+                                },
+                              );
                             }
                           },
                           title: isUpgradable ? 'Upgrade care' : 'Book Care',
@@ -133,7 +133,7 @@ class GeniePage extends StatelessWidget {
                         if (productListingModel!
                             .product.subscriptionContent!.showCouplePlans)
                           ExploreNowComponent(
-                            isUpgradable:isUpgradable,
+                            isUpgradable: isUpgradable,
                             pageTitle: pageTitle,
                             btnLabel: productListingModel!.product
                                 .subscriptionContent!.exploreNowCtaLabel,

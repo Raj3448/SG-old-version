@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -17,7 +16,6 @@ import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
-import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class GenieOverviewComponent extends StatelessWidget {
   final String title;
@@ -94,7 +92,7 @@ class GenieOverviewComponent extends StatelessWidget {
   }
 }
 
-class ServiceProvideComponent extends StatelessWidget {
+class ServiceProvideComponent extends StatefulWidget {
   final String heading;
 
   final List<Datum> serviceList;
@@ -105,15 +103,22 @@ class ServiceProvideComponent extends StatelessWidget {
   });
 
   @override
+  State<ServiceProvideComponent> createState() =>
+      _ServiceProvideComponentState();
+}
+
+class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
+  bool isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<ProductListingStore>();
     return Observer(
       builder: (_) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              heading,
+              widget.heading,
               style: AppTextStyle.bodyMediumMedium.copyWith(
                 color: AppColors.grayscale900,
                 fontSize: 18,
@@ -124,23 +129,23 @@ class ServiceProvideComponent extends StatelessWidget {
             const SizedBox(height: Dimension.d2),
             AnimatedContainer(
               duration: const Duration(milliseconds: 400),
-              height: store.isExpanded ? 320 : 280,
+              height: isExpanded ? widget.serviceList.length * 30 : 280,
               child: ListView.builder(
-                physics: store.isExpanded
-                    ? const BouncingScrollPhysics()
-                    : const NeverScrollableScrollPhysics(),
-                itemCount: serviceList.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.serviceList.length,
                 itemBuilder: (context, index) {
                   return _ServiceCheckBox(
-                    servicename: serviceList[index].attributes.label,
-                    isProvide: serviceList[index].attributes.isActive,
+                    servicename: widget.serviceList[index].attributes.label,
+                    isProvide: widget.serviceList[index].attributes.isActive,
                   );
                 },
               ),
             ),
             GestureDetector(
               onTap: () {
-                store.isExpanded = !store.isExpanded;
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
               },
               child: Container(
                 width: double.infinity,
@@ -153,8 +158,8 @@ class ServiceProvideComponent extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  AppIcons.arrow_down_ios,
+                child: Icon(
+                  isExpanded ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
                   size: 10,
                 ),
               ),

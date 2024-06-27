@@ -40,9 +40,6 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   PaymentStatus? paymentStatus;
 
-  @observable
-  bool isExpanded = false;
-
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
@@ -56,10 +53,13 @@ abstract class _ProductListingStoreBase with Store {
           : [];
 
   List<ProductBasicDetailsModel> getProdListRankOrder(
-      List<ProductBasicDetailsModel> prodList) {
+    List<ProductBasicDetailsModel> prodList,
+  ) {
     return prodList
-        .where((element) => element.attributes.metadata
-            .any((metadata) => metadata.key == 'rank'))
+        .where(
+          (element) => element.attributes.metadata
+              .any((metadata) => metadata.key == 'rank'),
+        )
         .toList()
       ..sort((a, b) {
         final aRank = a.attributes.metadata
