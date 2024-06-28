@@ -258,8 +258,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 mainAxisSpacing: 8,
                 childAspectRatio:
                     MediaQuery.of(context).orientation == Orientation.landscape
-                        ? 5.3
-                        : 2.3,
+                        ? 5.2
+                        : 2.1,
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

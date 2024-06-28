@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -46,7 +48,7 @@ class FcmNotificationManager {
   }
 
   Future<void> setupToken() async {
-    try{
+    try {
       // Get the token each time the application loads
       String? token = await FirebaseMessaging.instance.getToken();
       debugPrint('FCM device token $token');
@@ -66,7 +68,6 @@ class FcmNotificationManager {
     } catch (e) {
       debugPrint('An unknown error occurred: $e');
     }
-
   }
 
   Future<void> saveTokenToOurDatabase(String token) async {
@@ -84,9 +85,9 @@ class FcmNotificationManager {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
-        
+
     const initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
     const initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid,
         iOS: DarwinInitializationSettings());
@@ -96,34 +97,52 @@ class FcmNotificationManager {
       onDidReceiveBackgroundNotificationResponse:
           _onSelectNotificationBackground,
       onDidReceiveNotificationResponse: (details) async {
-        debugPrint('Notification Details : $details');
+        debugPrint('Notification Details : ${details.payload}');
       },
     );
   }
 
   void _onMessageReceived(RemoteMessage message) {
     var notification = message.notification;
-    var android = message.notification?.android;
-
-    if (notification != null && android != null) {
-      _flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            'high_importance_channel',
-            'High Importance Notifications',
-            icon: android.smallIcon,
-            importance: Importance.max,
-            priority: Priority.high,
-            showWhen: false,
-            fullScreenIntent: true,
-            visibility: NotificationVisibility.public
-          ),
-        ),
-      );
+    if (kDebugMode) {
+      print('Notification title: ${notification?.title}');
+      print('Notification Body: ${notification?.body}');
     }
+    showNotification(notification);
+  }
+
+  void showNotification(RemoteNotification? notification) {
+    final androidNotificationChannel = AndroidNotificationChannel(
+        Random.secure().nextInt(100000).toString(),
+        'High Importance Notifications',
+        importance: Importance.max,
+        playSound: true);
+    const darwinNotificationDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+    final androidNotificationdetails = AndroidNotificationDetails(
+        androidNotificationChannel.id, androidNotificationChannel.name,
+        channelDescription: 'your channel description',
+        icon: notification?.android?.smallIcon,
+        importance: Importance.high,
+        priority: Priority.high,
+        fullScreenIntent: true,
+        visibility: NotificationVisibility.public,
+        ticker: 'ticker');
+    final notificationDetails = NotificationDetails(
+      iOS: darwinNotificationDetails,
+      android: androidNotificationdetails,
+    );
+
+    Future.delayed(Duration.zero, () {
+      _flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification?.title.toString(),
+          notification?.body.toString(),
+          notificationDetails);
+    });
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
@@ -155,4 +174,12 @@ class FcmNotificationManager {
   Future<void> unsubscribeFromTopic(String topic) async {
     await _firebaseMessaging.unsubscribeFromTopic(topic);
   }
+}
+
+@pragma('vm:entry-point')
+Future<void> backgroundMessageHandler(RemoteMessage remoteMessage) async {
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp();
+  }
+  debugPrint('${remoteMessage.notification?.title}');
 }
