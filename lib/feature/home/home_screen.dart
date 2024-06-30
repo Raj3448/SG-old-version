@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    FcmNotificationManager().init();
+    FcmNotificationManager(context).init();
     memberStore = GetIt.I<MembersStore>()..init();
     reaction((_) => memberStore.errorMessage, (loaded) {
       if (memberStore.errorMessage == null) {

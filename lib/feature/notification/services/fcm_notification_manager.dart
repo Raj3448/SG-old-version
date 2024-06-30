@@ -5,16 +5,19 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 
 class FcmNotificationManager {
-  factory FcmNotificationManager() {
+  FcmNotificationManager._internal();
+  factory FcmNotificationManager(BuildContext cntxt) {
+    _notificationService.context = cntxt;
     return _notificationService;
   }
-
-  FcmNotificationManager._internal();
+  BuildContext? context;
+  RemoteMessage? message;
   static final FcmNotificationManager _notificationService =
       FcmNotificationManager._internal();
 
@@ -98,15 +101,22 @@ class FcmNotificationManager {
           _onSelectNotificationBackground,
       onDidReceiveNotificationResponse: (details) async {
         debugPrint('Notification Details : ${details.payload}');
+        if(Platform.isAndroid){
+          _handleMessage(message);
+        }
       },
     );
   }
 
-  void _onMessageReceived(RemoteMessage message) {
-    var notification = message.notification;
+  void _onMessageReceived(RemoteMessage _message) {
+    var notification = _message.notification;
+    message = _message;
     if (kDebugMode) {
       print('Notification title: ${notification?.title}');
       print('Notification Body: ${notification?.body}');
+      print('Notification Body: ${_message.data}');
+      print('Notification Body: ${_message.data['id']}');
+      print('Notification Body: ${_message.data['pageName']}');
     }
     showNotification(notification);
   }
@@ -149,9 +159,12 @@ class FcmNotificationManager {
     _handleMessage(message);
   }
 
-  Future<void> _handleMessage(RemoteMessage message) async {
+  Future<void> _handleMessage(RemoteMessage? msg) async {
     // Handle the message when the app is opened from a notification
     // You can navigate to a specific screen here
+    if(msg!.data['pageName'] != null){
+      context?.pushNamed(msg!.data['pageName'].toString());
+    }
   }
 
   @pragma('vm:entry-point')
@@ -182,4 +195,5 @@ Future<void> backgroundMessageHandler(RemoteMessage remoteMessage) async {
     await Firebase.initializeApp();
   }
   debugPrint('${remoteMessage.notification?.title}');
+  debugPrint('${remoteMessage.notification?.bodyLocArgs}');
 }
