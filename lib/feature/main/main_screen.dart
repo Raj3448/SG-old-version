@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 BottomNavigationBarItem(
-                  label: 'Members'.tr(),
+                  label: 'Family'.tr(),
                   icon: const Padding(
                     padding: EdgeInsets.only(top: 4, left: 20, right: 20),
                     child: Icon(AppIcons.family, size: 16),
@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
     if (location.startsWith('/bookings')) {
       return 2;
     }
-    if (location.startsWith('/members')) {
+    if (location.startsWith('/family')) {
       return 3;
     }
     return 0;
@@ -121,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         return GoRouter.of(context).goNamed(RoutesConstants.bookingsRoute);
       default:
-        return GoRouter.of(context).goNamed(RoutesConstants.membersRoute);
+        return GoRouter.of(context).goNamed(RoutesConstants.familyRoute);
     }
   }
 }

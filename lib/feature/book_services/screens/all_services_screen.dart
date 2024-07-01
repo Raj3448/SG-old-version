@@ -9,6 +9,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/contact_sg_team_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -154,47 +155,7 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                           color: AppColors.grayscale900,
                         ),
                       ),
-                      Container(
-                        height: 56,
-                        margin: const EdgeInsets.only(
-                          bottom: Dimension.d4,
-                          top: Dimension.d2,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: Dimension.d2),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.primary,
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Contact SilverGenie team',
-                              style: AppTextStyle.bodyMediumMedium.copyWith(
-                                height: 2,
-                                color: AppColors.grayscale900,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 120,
-                              height: 40,
-                              child: CustomButton(
-                                ontap: () {},
-                                title: 'Call now',
-                                showIcon: false,
-                                iconPath: AppIcons.add,
-                                size: ButtonSize.values[0],
-                                type: ButtonType.primary,
-                                expanded: true,
-                                iconColor: AppColors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const ContactSgTeamComponent(phoneNumber: '+91 0000000000',)
                     ],
                   ),
                 ],

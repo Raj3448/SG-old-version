@@ -12,6 +12,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -131,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )
                                 : const _MemberInfo(),
                       ),
-                      _EmergencyActivation(),
+                      if (memberStore.members.isNotEmpty)
+                        _EmergencyActivation(),
                       if (bookingServiceStore.isAllServiceLoaded)
                         _ActiveBookingComponent(store: bookingServiceStore),
                       Text(
@@ -640,19 +642,6 @@ class _EmergencyActivateBottomSheetState
     extends State<_EmergencyActivateBottomSheet> {
   bool isActivate = false;
 
-  void launchDialer(String phoneNumber) async {
-    final telUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-
-    if (await canLaunchUrl(telUri)) {
-      await launchUrl(telUri);
-    } else {
-      throw Exception('Could not launch $telUri');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -702,8 +691,8 @@ class _EmergencyActivateBottomSheetState
                   height: Dimension.d2,
                 ),
                 _ActivateListileComponent(
-                  onPressed: () {
-                    launchDialer('+910000000000');
+                  onPressed: () async {
+                    await launchDialer('+910000000000');
                     setState(() {
                       isActivate = true;
                     });
@@ -890,7 +879,6 @@ class _MemberInfo extends StatelessWidget {
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
-
                         if (activeMember != null &&
                             memberStore.isActive &&
                             activeMember.relation != 'Brother') {

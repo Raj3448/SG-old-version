@@ -12,7 +12,7 @@ class RoutesConstants {
   static const homeRoute = '/home';
   static const serviceRoute = '/service';
   static const bookingsRoute = '/bookings';
-  static const membersRoute = '/members';
+  static const familyRoute = '/family';
   static const userProfileRoute = '/userProfile';
 
   //---- Screens ------------------//
