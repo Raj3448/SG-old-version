@@ -10,7 +10,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
@@ -67,17 +66,22 @@ class _OTPScreenState extends State<OTPScreen> {
           },
           (r) => {
             GetIt.I<AuthStore>().refresh(),
-            if (widget.redirectRouteName != null && widget.redirectRouteName!.isNotEmpty)
+            if (widget.redirectRouteName != null &&
+                widget.redirectRouteName!.isNotEmpty)
               {
                 print(widget.redirectRouteName),
-                GoRouter.of(context).goNamed(widget.redirectRouteName!,
-                    queryParameters: {'skipRootRedirectCheck': 'true'}),
+                GoRouter.of(context).goNamed(
+                  widget.redirectRouteName!,
+                  queryParameters: {'skipRootRedirectCheck': 'true'},
+                ),
               }
             else
               {
-                GoRouter.of(context).goNamed(RoutesConstants.homeRoute,
-                    queryParameters: {'skipRootRedirectCheck': 'true'}),
-              }
+                GoRouter.of(context).goNamed(
+                  RoutesConstants.homeRoute,
+                  queryParameters: {'skipRootRedirectCheck': 'true'},
+                ),
+              },
           },
         );
         store.authFailure = null;
@@ -124,14 +128,16 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       Text(
                         'Verify OTP'.tr(),
-                        style: AppTextStyle.heading4SemiBold,
+                        style: AppTextStyle.heading4SemiBold
+                            .copyWith(color: AppColors.grayscale900),
                       ),
                       const SizedBox(height: Dimension.d6),
                       Text(
                         'We have just sent you 4 digit code to your email and phone number'
                             .tr(),
                         textAlign: TextAlign.center,
-                        style: AppTextStyle.bodyMediumMedium,
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.grayscale700),
                       ),
                       const SizedBox(height: Dimension.d6),
                       Form(
@@ -139,13 +145,15 @@ class _OTPScreenState extends State<OTPScreen> {
                         child: PinCodeTextField(
                           controller: otpController,
                           appContext: context,
+                          autoFocus: true,
                           mainAxisAlignment: MainAxisAlignment.center,
                           enablePinAutofill: false,
                           length: 4,
                           keyboardType: TextInputType.number,
-                          cursorColor: AppColors.black,
+                          cursorColor: AppColors.grayscale900,
                           animationCurve: Curves.easeIn,
                           animationType: AnimationType.fade,
+                          enableActiveFill: true,
                           autovalidateMode: autoValidate
                               ? AutovalidateMode.onUserInteraction
                               : AutovalidateMode.disabled,
@@ -164,8 +172,9 @@ class _OTPScreenState extends State<OTPScreen> {
                             activeColor: AppColors.primary,
                             inactiveColor: AppColors.line,
                             selectedColor: AppColors.primary,
-                            activeFillColor: AppColors.grayscale900,
                             selectedFillColor: AppColors.secondary,
+                            activeFillColor: AppColors.secondary,
+                            inactiveFillColor: AppColors.white,
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -218,7 +227,8 @@ class _OTPScreenState extends State<OTPScreen> {
                         children: [
                           Text(
                             "Didn't receive OTP?".tr(),
-                            style: AppTextStyle.bodyLargeMedium,
+                            style: AppTextStyle.bodyLargeMedium
+                                .copyWith(color: AppColors.grayscale800),
                           ),
                           const SizedBox(
                             width: Dimension.d1,
@@ -235,7 +245,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                           : () {
                                               widget.isFromLoginPage == true
                                                   ? store.resendOTPLogin(
-                                                      loginStore.identifier)
+                                                      loginStore.identifier,
+                                                    )
                                                   : store.resendOTPSignup(
                                                       signupStore.firstName,
                                                       signupStore.lastName,

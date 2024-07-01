@@ -99,15 +99,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: isLandscape ? Dimension.d2 : 52,
+                            height: isLandscape ? Dimension.d2 : 0,
                           ),
                           Image.asset(
                             'assets/splash/sg_logo.png',
                             width: 240,
                             height: 180,
-                          ),
-                          SizedBox(
-                            height: isLandscape ? Dimension.d2 : Dimension.d7,
                           ),
                           Text(
                             'Sign Up'.tr(),
