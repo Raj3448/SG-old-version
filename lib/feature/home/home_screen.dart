@@ -1068,64 +1068,39 @@ class _NewsletterComponent extends StatelessWidget {
         const SizedBox(height: Dimension.d3),
         if (newsletterModel.newsletters.isNotEmpty)
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomButton(
+            mainAxisAlignment: newsletterModel.newsletters.length > 1
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
+            children: List.generate(
+              newsletterModel.newsletters.length > 1 ? 2 : 1,
+              (index) => CustomButton(
                 ontap: () {
-                  if (newsletterModel.newsletters[0].link.downloadLink ==
+                  if (newsletterModel.newsletters[index].link.downloadLink ==
                       true) {
                     downloadAndSavePDF(
-                      newsletterModel.newsletters[0].link.href,
-                      '${newsletterModel.newsletters[0].link.label}',
+                      newsletterModel.newsletters[index].link.href,
+                      '${newsletterModel.newsletters[index].link.label}',
                       context,
                     );
                   } else {
                     launchUrl(
-                      Uri.parse(newsletterModel.newsletters[0].link.href),
+                      Uri.parse(newsletterModel.newsletters[index].link.href),
                     );
                   }
                 },
-                title: newsletterModel.newsletters[0].label,
+                title: newsletterModel.newsletters[index].label,
                 showIcon: false,
                 iconPath: AppIcons.add,
                 size: ButtonSize.normal,
-                type: newsletterModel.newsletters[0].theme == 'secondary'
+                type: newsletterModel.newsletters[index].theme == 'secondary'
                     ? ButtonType.secondary
-                    : newsletterModel.newsletters[0].theme == 'primary'
+                    : newsletterModel.newsletters[index].theme == 'primary'
                         ? ButtonType.primary
                         : ButtonType.tertiary,
                 expanded: false,
                 iconColor: AppColors.primary,
               ),
-              if (newsletterModel.newsletters.length > 1)
-                CustomButton(
-                  ontap: () {
-                    if (newsletterModel.newsletters[1].link.downloadLink ==
-                        true) {
-                      downloadAndSavePDF(
-                        newsletterModel.newsletters[1].link.href,
-                        '${newsletterModel.newsletters[1].link.label}',
-                        context,
-                      );
-                    } else {
-                      launchUrl(
-                        Uri.parse(newsletterModel.newsletters[1].link.href),
-                      );
-                    }
-                  },
-                  title: newsletterModel.newsletters[1].label,
-                  showIcon: false,
-                  iconPath: AppIcons.add,
-                  size: ButtonSize.normal,
-                  type: newsletterModel.newsletters[1].theme == 'secondary'
-                      ? ButtonType.secondary
-                      : newsletterModel.newsletters[1].theme == 'primary'
-                          ? ButtonType.primary
-                          : ButtonType.tertiary,
-                  expanded: false,
-                  iconColor: AppColors.primary,
-                ),
-            ],
+            ),
           ),
         const SizedBox(height: Dimension.d6),
       ],
