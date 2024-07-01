@@ -62,20 +62,18 @@ class AnalogComponent extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyle.bodyMediumMedium
-              .copyWith(color: AppColors.grayscale900),
+          style: AppTextStyle.bodySmallMedium
+              .copyWith(color: AppColors.grayscale700),
         ),
         Text(
           ':',
-          style: AppTextStyle.bodyMediumMedium
-              .copyWith(color: AppColors.grayscale900),
+          style: AppTextStyle.bodySmallMedium
+              .copyWith(color: AppColors.grayscale700),
         ),
-        const SizedBox(
-          width: Dimension.d1,
-        ),
+        const SizedBox(width: Dimension.d1),
         Text(
           value,
-          style: AppTextStyle.bodyMediumMedium
+          style: AppTextStyle.bodySmallMedium
               .copyWith(color: AppColors.grayscale700),
         ),
       ],
@@ -199,9 +197,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.line,
-        ),
+        border: Border.all(color: AppColors.line),
         borderRadius: BorderRadius.circular(Dimension.d2),
       ),
       child: Padding(
@@ -222,9 +218,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: Dimension.d1,
-            ),
+            const SizedBox(height: Dimension.d1),
             Row(
               children: [
                 AnalogComponent(
@@ -240,26 +234,19 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: Dimension.d3,
-            ),
+            const SizedBox(height: Dimension.d3),
             const Text(
               'Vital Info',
               style: AppTextStyle.bodyMediumSemiBold,
             ),
-            const SizedBox(
-              height: Dimension.d2,
-            ),
+            const SizedBox(height: Dimension.d2),
             GridView.builder(
-              itemCount: filteredDiagnosedServices.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
+              itemCount: 4,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 170,
+                mainAxisExtent: 70,
                 mainAxisSpacing: 8,
-                childAspectRatio:
-                    MediaQuery.of(context).orientation == Orientation.landscape
-                        ? 5.3
-                        : 2.3,
+                crossAxisSpacing: 8,
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -315,9 +302,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                     iconColor: AppColors.primary,
                   ),
                 ),
-                const SizedBox(
-                  width: Dimension.d4,
-                ),
+                const SizedBox(width: Dimension.d4),
                 Expanded(
                   child: CustomButton(
                     ontap: () {
