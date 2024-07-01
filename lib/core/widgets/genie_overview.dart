@@ -444,24 +444,26 @@ class _ExpandingQuestionComponentState
                       fontSize: 16,
                       fontFamily: FontFamily.inter,
                       fontWeight: FontWeight.w400,
-                      //overflow: isExpanding ? null : TextOverflow.ellipsis,
                       height: 2,
                     ),
                   ),
                 ),
                 const Spacer(),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Image.asset(
-                    'assets/icon/Frame.png',
-                    height: 20,
-                  ),
+                  padding: const EdgeInsets.only(top: 10, right: 10),
+                  child: Icon(
+                      isExpanding
+                          ? AppIcons.arrow_up_ios
+                          : AppIcons.arrow_down_ios,
+                      size: 8),
                 ),
               ],
             ),
           ),
         ),
-        const Divider(),
+        const Divider(
+          color: AppColors.grayscale300,
+        ),
       ],
     );
   }

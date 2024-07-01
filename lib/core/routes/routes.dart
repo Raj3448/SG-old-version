@@ -32,7 +32,7 @@ import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
 import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
 import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
-import 'package:silver_genie/feature/members/screens/members_screen.dart';
+import 'package:silver_genie/feature/members/screens/family_screen.dart';
 import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
 import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
@@ -150,10 +150,10 @@ final GoRouter routes = GoRouter(
           },
         ),
         GoRoute(
-          name: RoutesConstants.membersRoute,
-          path: '/members',
+          name: RoutesConstants.familyRoute,
+          path: '/family',
           pageBuilder: (context, state) {
-            return const NoTransitionPage(child: MembersScreen());
+            return const NoTransitionPage(child: FamilyScreen());
           },
         ),
       ],

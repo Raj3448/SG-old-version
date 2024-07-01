@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
 
 final List<String> memberNames = [

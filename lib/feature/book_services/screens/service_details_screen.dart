@@ -15,6 +15,7 @@ import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
+import 'package:silver_genie/core/widgets/contact_sg_team_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
@@ -132,7 +133,21 @@ class ServiceDetailsScreen extends StatelessWidget {
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: widgetList,
+                                      children: [
+                                        ...widgetList,
+                                        if (serviceData.category ==
+                                            'homeCare') ...[
+                                          Text(
+                                            'For More enquires',
+                                            style: AppTextStyle.bodyXLSemiBold
+                                                .copyWith(
+                                              height: 2.4,
+                                              color: AppColors.grayscale900,
+                                            ),
+                                          ),
+                                          const ContactSgTeamComponent(phoneNumber: '+91 0000000000',)
+                                        ]
+                                      ],
                                     ),
                                     if (store.isLoading) const LoadingWidget(),
                                   ],

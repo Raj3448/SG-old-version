@@ -3,6 +3,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 
 class CoachContact extends StatelessWidget {
@@ -57,22 +58,27 @@ class CoachContact extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              children: [
-                const Icon(
-                  AppIcons.phone,
-                  color: AppColors.primary,
-                  size: Dimension.d4,
-                ),
-                const SizedBox(
-                  width: Dimension.d1,
-                ),
-                Text(
-                  'Call',
-                  style: AppTextStyle.bodyLargeSemiBold
-                      .copyWith(color: AppColors.primary),
-                ),
-              ],
+            GestureDetector(
+              onTap: () async {
+                await launchDialer('+91000000000');
+              },
+              child: Row(
+                children: [
+                  const Icon(
+                    AppIcons.phone,
+                    color: AppColors.primary,
+                    size: Dimension.d4,
+                  ),
+                  const SizedBox(
+                    width: Dimension.d1,
+                  ),
+                  Text(
+                    'Call',
+                    style: AppTextStyle.bodyLargeSemiBold
+                        .copyWith(color: AppColors.primary),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
