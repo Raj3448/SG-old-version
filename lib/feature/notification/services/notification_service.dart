@@ -1,7 +1,4 @@
 // ignore_for_file: lines_longer_than_80_chars, one_member_abstracts
-
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';

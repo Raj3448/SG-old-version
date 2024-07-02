@@ -101,7 +101,7 @@ class FcmNotificationManager {
           _onSelectNotificationBackground,
       onDidReceiveNotificationResponse: (details) async {
         debugPrint('Notification Details : ${details.payload}');
-        if(Platform.isAndroid){
+        if (Platform.isAndroid) {
           _handleMessage(message);
         }
       },
@@ -162,8 +162,12 @@ class FcmNotificationManager {
   Future<void> _handleMessage(RemoteMessage? msg) async {
     // Handle the message when the app is opened from a notification
     // You can navigate to a specific screen here
-    if(msg!.data['pageName'] != null){
-      context?.pushNamed(msg!.data['pageName'].toString());
+    if (msg?.data['pageName'] != null) {
+      if (isBottomNavScreen(msg?.data['pageName'] as String)) {
+        context?.goNamed(msg?.data['pageName'].toString() ?? '/home');
+      }else{
+        context?.pushNamed(msg?.data['pageName'].toString() ?? '/home');
+      }
     }
   }
 
@@ -186,6 +190,18 @@ class FcmNotificationManager {
 
   Future<void> unsubscribeFromTopic(String topic) async {
     await _firebaseMessaging.unsubscribeFromTopic(topic);
+  }
+
+  bool isBottomNavScreen(String pageName) {
+    switch (pageName) {
+      case '/home':
+      case '/service':
+      case '/bookings':
+      case '/family':
+        return true;
+      default:
+        return false;
+    }
   }
 }
 
