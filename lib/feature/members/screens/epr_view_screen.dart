@@ -90,6 +90,7 @@ class EPRViewScreen extends StatelessWidget {
                         phoneNumber: userInfo.phoneNumber,
                         relation: userInfo.relation,
                         dateOfBirth: userInfo.dateOfBirth,
+                        streetAddress: userInfo.fullAddress,
                       ),
                     );
                   }
@@ -119,6 +120,7 @@ class EPRViewScreen extends StatelessWidget {
                                 phoneNumber: userInfo.phoneNumber,
                                 relation: userInfo.relation,
                                 dateOfBirth: userInfo.dateOfBirth,
+                                streetAddress: userInfo.fullAddress,
                               ),
                               _ExpandedButton(
                                 title: 'Insurance details',
@@ -199,7 +201,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
       children: [
         Text(
           'Personal Details',
-          style: AppTextStyle.bodyXLMedium.copyWith(
+          style: AppTextStyle.bodyXLSemiBold.copyWith(
             color: AppColors.grayscale900,
           ),
         ),
@@ -234,10 +236,8 @@ class _PersonalDetailsComponent extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: AppTextStyle.bodyLargeMedium.copyWith(
+                          style: AppTextStyle.bodyLargeBold.copyWith(
                             color: AppColors.grayscale900,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -269,6 +269,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
                     icon: AppIcons.home,
                     title: 'Address',
                     details: streetAddress ?? '---',
+                    detailsTextOverflow: null,
                   ),
                 ],
               ],

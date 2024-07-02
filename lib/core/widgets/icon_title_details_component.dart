@@ -10,11 +10,13 @@ class IconTitleDetailsComponent extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.details,
+    this.detailsTextOverflow = TextOverflow.ellipsis,
     super.key,
   });
   final IconData icon;
   final String title;
   final String details;
+  final TextOverflow? detailsTextOverflow;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -32,14 +34,13 @@ class IconTitleDetailsComponent extends StatelessWidget {
           style: AppTextStyle.bodyLargeMedium
               .copyWith(color: AppColors.grayscale600),
         ),
-        const SizedBox(width: Dimension.d5),
+        const SizedBox(width: Dimension.d4),
         Expanded(
           child: Text(
             details,
             textAlign: TextAlign.end,
-            style: AppTextStyle.bodyMediumMedium.copyWith(
-              color: AppColors.grayscale900,
-            ),
+            style: AppTextStyle.bodyLargeMedium.copyWith(
+                color: AppColors.grayscale900, overflow: detailsTextOverflow),
           ),
         ),
       ],

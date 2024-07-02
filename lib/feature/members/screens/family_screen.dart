@@ -18,8 +18,8 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
-class MembersScreen extends StatelessWidget {
-  const MembersScreen({super.key});
+class FamilyScreen extends StatelessWidget {
+  const FamilyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,16 @@ class MembersScreen extends StatelessWidget {
             if (store.familyMembers.isEmpty) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: Dimension.d4),
+                    child: Text(
+                      'Your Family Members'.tr(),
+                      style: AppTextStyle.bodyLargeBold
+                          .copyWith(height: 2.4, color: AppColors.grayscale900),
+                    ),
+                  ),
                   NoMember(
                     ontap: () {
                       final user = GetIt.I<UserDetailStore>().userDetails;

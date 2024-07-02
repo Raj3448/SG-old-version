@@ -10,36 +10,46 @@ class PageAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      surfaceTintColor: AppColors.white,
-      backgroundColor: AppColors.white,
-      automaticallyImplyLeading: false,
-      elevation: 5,
-      title: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              GoRouter.of(context).pop();
-            },
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.transparent,
-              ),
-              padding: const EdgeInsets.all(15),
-              child: const Icon(
-                AppIcons.arrow_backward,
-                color: AppColors.grayscale900,
-                size: 18,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            title,
-            style: AppTextStyle.bodyXLMedium.copyWith(height: 1.5),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 10,
+            color: AppColors.black.withOpacity(0.12),
           ),
         ],
+      ),
+      child: AppBar(
+        surfaceTintColor: AppColors.white,
+        backgroundColor: AppColors.white,
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                GoRouter.of(context).pop();
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.transparent,
+                ),
+                padding: const EdgeInsets.all(15),
+                child: const Icon(
+                  AppIcons.arrow_backward,
+                  color: AppColors.grayscale900,
+                  size: 18,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              title,
+              style: AppTextStyle.bodyXLMedium.copyWith(height: 1.5),
+            ),
+          ],
+        ),
       ),
     );
   }

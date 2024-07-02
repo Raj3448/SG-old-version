@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -28,8 +29,8 @@ class GenieOverviewComponent extends StatelessWidget {
     required this.defination,
     required this.subHeading,
     required this.imageUrl,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,63 +92,81 @@ class GenieOverviewComponent extends StatelessWidget {
   }
 }
 
-class ServiceProvideComponent extends StatelessWidget {
+class ServiceProvideComponent extends StatefulWidget {
   final String heading;
 
   final List<Datum> serviceList;
-  const ServiceProvideComponent(
-      {required this.heading, required this.serviceList, Key? key})
-      : super(key: key);
+  const ServiceProvideComponent({
+    required this.heading,
+    required this.serviceList,
+    super.key,
+  });
+
+  @override
+  State<ServiceProvideComponent> createState() =>
+      _ServiceProvideComponentState();
+}
+
+class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          heading,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale900,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.46,
-          ),
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        AnimatedContainer(
-          duration: const Duration(seconds: 1),
-          height: 350,
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: serviceList.length,
-            itemBuilder: (context, index) {
-              return _ServiceCheckBox(
-                servicename: serviceList[index].attributes.label,
-                isProvide: serviceList[index].attributes.isActive,
-              );
-            },
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.grayscale100,
-                blurRadius: 7,
-                spreadRadius: 12,
+    return Observer(
+      builder: (_) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.heading,
+              style: AppTextStyle.bodyMediumMedium.copyWith(
+                color: AppColors.grayscale900,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                height: 1.46,
               ),
-            ],
-          ),
-          alignment: Alignment(0, 0),
-          child: const Icon(
-            AppIcons.arrow_down_ios,
-            size: 6,
-          ),
-        ),
-      ],
+            ),
+            const SizedBox(height: Dimension.d2),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              height: isExpanded ? widget.serviceList.length * 30 : 280,
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.serviceList.length,
+                itemBuilder: (context, index) {
+                  return _ServiceCheckBox(
+                    servicename: widget.serviceList[index].attributes.label,
+                    isProvide: widget.serviceList[index].attributes.isActive,
+                  );
+                },
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.white,
+                      blurRadius: 20,
+                      spreadRadius: 20,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  isExpanded ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
+                  size: 10,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -157,8 +176,8 @@ class PlanPricingDetailsComponent extends StatefulWidget {
     required this.planName,
     required this.pricingDetailsList,
     required this.onSelect,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String planName;
   final List<Price> pricingDetailsList;
@@ -226,7 +245,8 @@ class ExploreNowComponent extends StatelessWidget {
     required this.iconColorCode,
     required this.plansList,
     required this.backgroundColor,
-    required this.isUpgradable, super.key,
+    required this.isUpgradable,
+    super.key,
   });
 
   final String pageTitle;
@@ -262,7 +282,10 @@ class ExploreNowComponent extends StatelessWidget {
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
                 pathParameters: {'pageTitle': pageTitle},
-                extra: {'plansList': plansListJson , 'isUpgradable' : isUpgradable.toString()},
+                extra: {
+                  'plansList': plansListJson,
+                  'isUpgradable': isUpgradable.toString(),
+                },
               );
             },
             child: Container(
@@ -272,8 +295,9 @@ class ExploreNowComponent extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(int.parse(backgroundColor, radix: 16)),
                 border: Border.all(
-                    width: 1,
-                    color: Color(int.parse(iconColorCode, radix: 16))),
+                  width: 1,
+                  color: Color(int.parse(iconColorCode, radix: 16)),
+                ),
                 borderRadius: BorderRadius.circular(Dimension.d2),
               ),
               child: Row(
@@ -352,8 +376,8 @@ class _ServiceCheckBox extends StatelessWidget {
   const _ServiceCheckBox({
     required this.servicename,
     required this.isProvide,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -420,24 +444,26 @@ class _ExpandingQuestionComponentState
                       fontSize: 16,
                       fontFamily: FontFamily.inter,
                       fontWeight: FontWeight.w400,
-                      //overflow: isExpanding ? null : TextOverflow.ellipsis,
                       height: 2,
                     ),
                   ),
                 ),
                 const Spacer(),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Image.asset(
-                    'assets/icon/Frame.png',
-                    height: 20,
-                  ),
+                  padding: const EdgeInsets.only(top: 10, right: 10),
+                  child: Icon(
+                      isExpanding
+                          ? AppIcons.arrow_up_ios
+                          : AppIcons.arrow_down_ios,
+                      size: 8),
                 ),
               ],
             ),
           ),
         ),
-        const Divider(),
+        const Divider(
+          color: AppColors.grayscale300,
+        ),
       ],
     );
   }

@@ -162,7 +162,7 @@ class CustomButton extends StatelessWidget {
           color: _getTextColor(),
         );
       case ButtonSize.large:
-        return AppTextStyle.bodyLargeMedium.copyWith(
+        return AppTextStyle.bodyLargeBold.copyWith(
           color: _getTextColor(),
         );
     }

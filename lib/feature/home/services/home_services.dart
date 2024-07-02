@@ -1,4 +1,4 @@
-import 'dart:io';
+// ignore_for_file: inference_failure_on_function_invocation, avoid_dynamic_calls
 
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
@@ -13,8 +13,10 @@ abstract class IHomeServices {
 }
 
 class HomeService implements IHomeServices {
-  HomeService(
-      {required this.httpClient, required this.homePageComponentDetailscache});
+  HomeService({
+    required this.httpClient,
+    required this.homePageComponentDetailscache,
+  });
 
   final HttpClient httpClient;
   final HomePageComponentDetailscache homePageComponentDetailscache;
@@ -22,24 +24,39 @@ class HomeService implements IHomeServices {
   Future<Either<Failure, List<dynamic>>> getHomePageInfo() async {
     try {
       final response = await httpClient.get(
-          '/api/pages/1?populate[0]=content.bannerImage&populate[1]=content.cta.href&populate[2]=content.offering.offers.values&populate[3]=content.cta.link&populate[4]=content.testimonials.testifierImage');
+        '/api/pages/1?populate[0]=content.bannerImage&populate[1]=content.cta.href&populate[2]=content.offering.offers.values&populate[3]=content.cta.link&populate[4]=content.testimonials.testifierImage&populate[5]=content.newsletters.link',
+      );
       if (response.statusCode == 200) {
         if (response.data['data']['attributes']['content'] != null) {
-          List<dynamic> componetList = [];
-          for (var component in response.data['data']['attributes']['content']
+          final componetList = <dynamic>[];
+          for (final component in response.data['data']['attributes']['content']
               as List<dynamic>) {
             if (component['__component'] == 'mobile-ui.banner' &&
                 component['isActive'] as bool) {
               componetList.add(
-                  BannerImageModel.fromJson(component as Map<String, dynamic>));
+                BannerImageModel.fromJson(component as Map<String, dynamic>),
+              );
             }
             if (component['__component'] == 'mobile-ui.about-us') {
-              componetList.add(AboutUsOfferModel.fromJson(
-                  component as Map<String, dynamic>));
+              componetList.add(
+                AboutUsOfferModel.fromJson(
+                  component as Map<String, dynamic>,
+                ),
+              );
             }
             if (component['__component'] == 'mobile-ui.testimonials') {
-              componetList.add(TestimonialsModel.fromJson(
-                  component as Map<String, dynamic>));
+              componetList.add(
+                TestimonialsModel.fromJson(
+                  component as Map<String, dynamic>,
+                ),
+              );
+            }
+            if (component['__component'] == 'mobile-ui.news-letter') {
+              componetList.add(
+                NewsletterModel.fromJson(
+                  component as Map<String, dynamic>,
+                ),
+              );
             }
           }
           await homePageComponentDetailscache

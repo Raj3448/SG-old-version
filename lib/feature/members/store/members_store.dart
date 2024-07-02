@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 part 'members_store.g.dart';
@@ -278,7 +279,7 @@ extension MemberExtension on Member {
         address.streetAddress,
         address.city,
         address.state,
-        address.country,
+        countries.firstWhere((element) => element.isoCode == address.country,orElse: () => Country('', address.country)).name,
       ].where((part) => part.isNotEmpty).join(', '),
       address.postalCode
     ].where((part) => part.isNotEmpty).join(' - ');
