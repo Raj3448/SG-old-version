@@ -38,7 +38,7 @@ class ServiceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = GetIt.I<ProductLisitingServices>();
+    final service = GetIt.I<ProductListingServices>();
     final store = GetIt.I<ProductListingStore>();
     return SafeArea(
       child: Scaffold(
@@ -145,7 +145,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                                               color: AppColors.grayscale900,
                                             ),
                                           ),
-                                          const ContactSgTeamComponent(phoneNumber: '+91 0000000000',)
+                                          const ContactSgTeamComponent(
+                                            phoneNumber: '+91 0000000000',
+                                          )
                                         ]
                                       ],
                                     ),

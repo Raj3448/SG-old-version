@@ -86,7 +86,8 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                 PlanPricingDetailsComponent(
                   planName: widget.pageTitle,
                   pricingDetailsList: widget.planList,
-                  onSelect: _updatePlan,
+                  // onSelect: _updatePlan,
+                  onSelect: (p0) {},
                 ),
                 _buildMemberSelectionText('1. Select family member'),
                 CustomDropDownBox(

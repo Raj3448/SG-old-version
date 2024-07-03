@@ -43,6 +43,17 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   bool isLoading = false;
 
+  @observable
+  Price? _planDetails;
+
+  @computed
+  Price? get planDetails => _planDetails;
+
+  @action
+  void updatePlan(Price? plan) {
+    _planDetails = plan;
+  }
+
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null

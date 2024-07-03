@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -15,6 +16,8 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class GeniePage extends StatelessWidget {
   GeniePage({
@@ -28,54 +31,49 @@ class GeniePage extends StatelessWidget {
   final String id;
   final bool isUpgradable;
 
-  final services = GetIt.I<ProductLisitingServices>();
-
-  Price? planDetails;
-
-  void _updatePlan(Price plan) {
-    planDetails = plan;
-  }
+  final services = GetIt.I<ProductListingServices>();
+  final store = GetIt.I<ProductListingStore>();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Observer(
-        builder: (context) {
-          return Scaffold(
-            appBar: PageAppbar(title: pageTitle),
-            backgroundColor: AppColors.white,
-            body: FutureBuilder(
-              future: services.getProductById(id: id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const LoadingWidget(
-                    showShadow: false,
-                  );
-                }
-                if (snapshot.hasError || !snapshot.hasData) {
-                  return const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong,
-                  );
-                }
-                ProductListingModel? productListingModel;
-                snapshot.data!.fold((l) {
-                  return const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong,
-                  );
-                }, (r) {
-                  productListingModel = r;
-                });
+      child: Scaffold(
+        appBar: PageAppbar(title: pageTitle),
+        backgroundColor: AppColors.white,
+        body: FutureBuilder(
+          future: services.getProductById(id: id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LoadingWidget(
+                showShadow: false,
+              );
+            }
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const ErrorStateComponent(
+                errorType: ErrorType.somethinWentWrong,
+              );
+            }
+            ProductListingModel? productListingModel;
+            snapshot.data!.fold((l) {
+              return const ErrorStateComponent(
+                errorType: ErrorType.somethinWentWrong,
+              );
+            }, (r) {
+              productListingModel = r;
+            });
 
-                if (productListingModel == null ||
-                    productListingModel!.product.subscriptionContent == null) {
-                  return const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong,
-                  );
-                }
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-                  child: SingleChildScrollView(
-                    child: Column(
+            if (productListingModel == null ||
+                productListingModel!.product.subscriptionContent == null) {
+              return const ErrorStateComponent(
+                errorType: ErrorType.somethinWentWrong,
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+              child: SingleChildScrollView(
+                child: Observer(
+                  builder: (context) {
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GenieOverviewComponent(
@@ -90,7 +88,7 @@ class GeniePage extends StatelessWidget {
                           imageUrl: productListingModel!
                               .product
                               .subscriptionContent!
-                              .productImage
+                              .productImage!
                               .data
                               .attributes
                               .url,
@@ -108,25 +106,55 @@ class GeniePage extends StatelessWidget {
                           pricingDetailsList: services.getPlansforNonCouple(
                             productListingModel!.product.prices,
                           ),
-                          onSelect: _updatePlan,
+                          onSelect: store.updatePlan,
                         ),
                         const SizedBox(height: Dimension.d4),
                         CustomButton(
                           ontap: () {
-                            if (planDetails != null) {
-                              context.pushNamed(
-                                RoutesConstants.subscriptionDetailsScreen,
-                                pathParameters: {
-                                  'price': '${planDetails!.unitAmount}',
+                            final userStore = GetIt.I<UserDetailStore>();
+                            if (store.planDetails != null) {
+                              final service = GetIt.I<ProductListingServices>();
+                              service.createSubscription(
+                                priceId: store.planDetails!.id,
+                                startDate: '2024-05-03',
+                                expireDate: '2024-09-03',
+                                productId: int.parse(id),
+                                familyMemberIds: [
+                                  userStore.userDetails!.id,
+                                ],
+                              ).then(
+                                (result) {
+                                  store.isLoading = true;
+                                  result.fold(
+                                    (failure) {
+                                      store.isLoading = false;
+                                      print(failure);
+                                      return const Failure.someThingWentWrong();
+                                    },
+                                    (right) {
+                                      store.isLoading = false;
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .subscriptionDetailsScreen,
+                                        pathParameters: {
+                                          'price':
+                                              '${store.planDetails!.unitAmount}',
+                                        },
+                                      );
+                                    },
+                                  );
                                 },
                               );
                             }
+                            print(store.planDetails);
                           },
                           title: isUpgradable ? 'Upgrade care' : 'Book Care',
                           showIcon: false,
                           iconPath: AppIcons.add,
                           size: ButtonSize.normal,
-                          type: ButtonType.primary,
+                          type: store.planDetails != null
+                              ? ButtonType.primary
+                              : ButtonType.disable,
                           expanded: true,
                           iconColor: AppColors.white,
                         ),
@@ -149,18 +177,20 @@ class GeniePage extends StatelessWidget {
                                   (element) =>
                                       element.key == 'background_color_code',
                                   orElse: () => const Metadatum(
-                                      id: 1,
-                                      key: 'background_color_code',
-                                      value: 'FFFDFDFD'),
+                                    id: 1,
+                                    key: 'background_color_code',
+                                    value: 'FFFDFDFD',
+                                  ),
                                 )
                                 .value,
                             iconColorCode: productListingModel!.product.metadata
                                 .firstWhere(
                                   (element) => element.key == 'icon_color_code',
                                   orElse: () => const Metadatum(
-                                      id: 1,
-                                      key: 'icon_color_code',
-                                      value: 'FFFDFDFD'),
+                                    id: 1,
+                                    key: 'icon_color_code',
+                                    value: 'FFFDFDFD',
+                                  ),
                                 )
                                 .value,
                             plansList: services.getPlansforCouple(
@@ -171,16 +201,17 @@ class GeniePage extends StatelessWidget {
                           heading: productListingModel!
                               .product.subscriptionContent!.faqHeading,
                           faqList: productListingModel!
-                              .product.subscriptionContent!.faq,
+                                  .product.subscriptionContent!.faq ??
+                              [],
                         ),
                       ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
