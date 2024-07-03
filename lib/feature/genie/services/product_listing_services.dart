@@ -17,7 +17,7 @@ abstract class IProductListingService {
     required String id,
   });
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
-    required String id,
+    required String productCode,
   });
   Future<Either<Failure, String>> buyService({
     required FormAnswerModel formData,
@@ -68,7 +68,7 @@ class ProductLisitingServices extends IProductListingService {
         default:
           return const Left(Failure.badResponse());
       }
-} on DioException catch (dioError) {
+    } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());
       }
@@ -137,15 +137,15 @@ class ProductLisitingServices extends IProductListingService {
 
   @override
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
-    required String id,
+    required String productCode,
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/products/$id?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
+        '/api/products?filters[code][\$eq]=$productCode&populate[1]=product_form.form.formDetails&populate[2]=product_form.form.options&populate[3]=product_form.form.validations.valueMsg',
       );
       if (response.statusCode == 200) {
-        if (response.data['data'] != null) {
-          final data = response.data['data'];
+        final data = response.data['data'][0];
+        if (data != null) {
           return Right(
             FormDetailModel.fromJson(data as Map<String, dynamic>),
           );

@@ -30,11 +30,12 @@ class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({
     required this.id,
     required this.title,
-    super.key,
+    required this.productCode, super.key,
   });
 
   final String id;
   final String title;
+  final String productCode;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +146,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                                               color: AppColors.grayscale900,
                                             ),
                                           ),
-                                          const ContactSgTeamComponent(phoneNumber: '+91 0000000000',)
+                                          const ContactSgTeamComponent(
+                                            phoneNumber: '+91 0000000000',
+                                          )
                                         ]
                                       ],
                                     ),
@@ -190,7 +193,10 @@ class ServiceDetailsScreen extends StatelessWidget {
                                 ontap: () {
                                   context.pushNamed(
                                     RoutesConstants.bookServiceScreen,
-                                    pathParameters: {'id': id},
+                                    pathParameters: {
+                                      'id': id,
+                                      'productCode': productCode
+                                    },
                                   );
                                 },
                                 title: 'Book now',

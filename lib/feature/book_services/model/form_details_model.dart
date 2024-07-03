@@ -23,11 +23,44 @@ class FormData with _$FormData {
     required String category,
     required DateTime createdAt,
     required DateTime updatedAt,
-    required List<FormModel> form,
+    @JsonKey(name: 'product_form') required FormInfoModel productForm,
   }) = _FormData;
 
   factory FormData.fromJson(Map<String, dynamic> json) =>
       _$FormDataFromJson(json);
+}
+
+@freezed
+class FormInfoModel with _$FormInfoModel {
+    const factory FormInfoModel({
+        required Data data,
+    }) = _FormInfoModel;
+    factory FormInfoModel.fromJson(Map<String, dynamic> json) =>
+      _$FormInfoModelFromJson(json);
+}
+
+@freezed
+class Data with _$Data {
+    const factory Data({
+        required int id,
+        required Attributes attributes,
+    }) = _Data;
+    factory Data.fromJson(Map<String, dynamic> json) =>
+      _$DataFromJson(json);
+}
+
+@freezed
+class Attributes with _$Attributes {
+    const factory Attributes({
+        required String name,
+        required bool isActive,
+        required DateTime createdAt,
+        required DateTime updatedAt,
+        required DateTime publishedAt,
+        required List<FormModel> form,
+    }) = _Attributes;
+    factory Attributes.fromJson(Map<String, dynamic> json) =>
+      _$AttributesFromJson(json);
 }
 
 @freezed
@@ -61,7 +94,6 @@ class FormDetails with _$FormDetails {
     required String? placeholder,
     required bool hidden,
     required String? hint,
-    required String code,
   }) = _FormDetails;
 
   factory FormDetails.fromJson(Map<String, dynamic> json) =>

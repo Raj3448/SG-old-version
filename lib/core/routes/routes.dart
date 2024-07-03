@@ -366,27 +366,29 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/serviceDetailsScreen/:id/:title',
+      path: '/serviceDetailsScreen/:id/:title/:productCode',
       name: RoutesConstants.serviceDetailsScreen,
       pageBuilder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
         return MaterialPage(
           child: ServiceDetailsScreen(
             id: id,
-            title: state.pathParameters['title'] ?? '',
+            title: state.pathParameters['title'] ?? '', productCode: state.pathParameters['productCode'] ?? '',
           ),
         );
       },
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookServiceScreen/:id',
+      path: '/bookServiceScreen/:id/:productCode',
       name: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         final serviceId = state.pathParameters['id'].toString();
+        final productCode = state.pathParameters['productCode'].toString();
         return MaterialPage(
           child: BookServiceScreen(
             id: serviceId,
+            productCode: productCode,
           ),
         );
       },

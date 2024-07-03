@@ -29,7 +29,8 @@ import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class BookServiceScreen extends StatefulWidget {
-  BookServiceScreen({required this.id, super.key});
+  const BookServiceScreen({required this.productCode, required this.id, super.key});
+  final String productCode;
   final String id;
 
   @override
@@ -100,7 +101,8 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         },
       ),
       body: FutureBuilder(
-        future: service.getBookingServiceDetailsById(id: widget.id),
+        future: service.getBookingServiceDetailsById(
+            productCode: widget.productCode),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingWidget(
@@ -119,9 +121,9 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                   errorType: ErrorType.somethinWentWrong),
               (t) => formDetailModel = t);
           List<Widget> widgetList = [];
-          final components = formDetailModel.attributes.form;
-          for (var i = 0; i < components.length; i++) {
-            final component = components[i];
+          final components = formDetailModel.attributes.productForm;
+          for (var i = 0; i < components.data.attributes.form.length; i++) {
+            final component = components.data.attributes.form[i];
             switch (component.component) {
               case 'form-field-type.reference-question':
                 if (component.controlType == 'familyDropDown') {
@@ -157,8 +159,8 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                   ]);
                 }
                 break;
-              case 'form-field-type.string-question':
-                if (component.type == 'string') {
+              case 'form-field-type.text-question':
+                if (component.type == 'text') {
                   widgetList.addAll([
                     const SizedBox(height: Dimension.d4),
                     if (component.formDetails.required)
@@ -292,8 +294,8 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                   ]);
                 }
                 break;
-              case 'form-field-type.decimal-question':
-                if (component.type == 'decimal') {
+              case 'form-field-type.integer-question':
+                if (component.type == 'integer') {
                   widgetList.addAll([
                     const SizedBox(height: Dimension.d4),
                     if (component.formDetails.required)
@@ -314,6 +316,9 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                           ? (value) {
                               if (value == null) {
                                 return '${component.formDetails.title} must not be empty';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return '${component.formDetails.title} must be an integer';
                               }
                               return applyValidations(
                                   value: value,

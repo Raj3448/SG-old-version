@@ -94,7 +94,6 @@ class Price with _$Price {
     required String pricingType,
     required String? recurringInterval,
     required int? recurringIntervalCount,
-    required String code,
     required dynamic recurringPlanId,
     required int benefitApplicableToMembersLimit,
     required int? discountPercentage,
