@@ -151,13 +151,17 @@ class FormAnswer with _$FormAnswer {
   @JsonSerializable(includeIfNull: false,explicitToJson: true)
   const factory FormAnswer({
     @JsonKey(includeToJson: false) required String forDId,
-    required int id,
-    required String questionTitle,
+    required int questionId,
+    required String question,
     required String type,
-    String? valueChoice,
+    List<String>? valueChoice,
     String? hint,
     String? controlType,
     List<String>? valueReference,
+    String? valueInteger,
+    String? valueDate,
+    String? valueText,
+
   }) = _FormAnswer;
 
   factory FormAnswer.fromJson(Map<String, dynamic> json) =>
