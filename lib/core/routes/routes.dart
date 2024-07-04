@@ -58,7 +58,6 @@ final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/',
   redirect: (context, state) {
-    
     if (state.matchedLocation.startsWith('/login') ||
         state.matchedLocation.startsWith('/otp') ||
         state.matchedLocation.startsWith('/signup') ||
@@ -71,7 +70,8 @@ final GoRouter routes = GoRouter(
       return null;
     }
     final skipRedirect = bool.tryParse(
-            state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false') ??
+          state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false',
+        ) ??
         false;
 
     if (skipRedirect) {
@@ -106,8 +106,7 @@ final GoRouter routes = GoRouter(
         }
 
         if (!authStore.isAuthenticated) {
-          return '${RoutesConstants.loginRoute}?redirectRouteName=${redirectRouteName??''}';
-              
+          return '${RoutesConstants.loginRoute}?redirectRouteName=${redirectRouteName ?? ''}';
         }
 
         if (!authStore.initialised) return null;
@@ -128,7 +127,8 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
         return MaterialPage(
-            child: MainScreen(path: state.fullPath ?? '', child: child));
+          child: MainScreen(path: state.fullPath ?? '', child: child),
+        );
       },
       routes: <RouteBase>[
         GoRoute(
@@ -174,11 +174,13 @@ final GoRouter routes = GoRouter(
       path: '${RoutesConstants.loginRoute}',
       name: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
-        final redirectRouteName = state.uri.queryParameters['redirectRouteName'];
+        final redirectRouteName =
+            state.uri.queryParameters['redirectRouteName'];
         return MaterialPage(
-            child: LoginPage(
-          redirectRouteName: redirectRouteName,
-        ));
+          child: LoginPage(
+            redirectRouteName: redirectRouteName,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -203,7 +205,7 @@ final GoRouter routes = GoRouter(
             isFromLoginPage: isFromLoginPage,
             email: email,
             phoneNumber: phoneNumber,
-            redirectRouteName : redirectRouteName
+            redirectRouteName: redirectRouteName,
           ),
         );
       },
@@ -315,9 +317,10 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/couplePlanPage/:pageTitle',
+      path: '/couplePlanPage/:id/:pageTitle',
       name: RoutesConstants.couplePlanPage,
       pageBuilder: (context, state) {
+        final id = state.pathParameters['id'] ?? '';
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
         final extraData = state.extra as Map<String, dynamic>?;
         final plansListJson = extraData?['plansList'] as String;
@@ -329,9 +332,11 @@ final GoRouter routes = GoRouter(
             .toList();
         return MaterialPage(
           child: CouplePlanPage(
-              pageTitle: pageTitle,
-              planList: planList,
-              isUpgradable: isUpgradable),
+            id: id,
+            pageTitle: pageTitle,
+            planList: planList,
+            isUpgradable: isUpgradable,
+          ),
         );
       },
     ),
@@ -376,7 +381,8 @@ final GoRouter routes = GoRouter(
         return MaterialPage(
           child: ServiceDetailsScreen(
             id: id,
-            title: state.pathParameters['title'] ?? '', productCode: state.pathParameters['productCode'] ?? '',
+            title: state.pathParameters['title'] ?? '',
+            productCode: state.pathParameters['productCode'] ?? '',
           ),
         );
       },
@@ -456,12 +462,22 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/subscriDetailsScreen/:price',
+      path: '/subscriDetailsScreen/:price/:subscriptionData/:isCouple',
+      // path: '/subscriDetailsScreen/:price/:isCouple',
       name: RoutesConstants.subscriptionDetailsScreen,
       pageBuilder: (context, state) {
+        final isCoupleString = state.pathParameters['isCouple'] ?? 'false';
+        final isCouple = isCoupleString.toLowerCase() == 'true';
+        final subscriptionDataString =
+            state.pathParameters['subscriptionData'] ?? '{}';
+        final subscriptionDataMap =
+            json.decode(subscriptionDataString) as Map<String, dynamic>;
+
         return MaterialPage(
           child: SubscriptionDetailsScreen(
             price: state.pathParameters['price'] ?? '',
+            subscriptionData: SubscriptionData.fromJson(subscriptionDataMap),
+            isCouple: isCouple,
           ),
         );
       },
