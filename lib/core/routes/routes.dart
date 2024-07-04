@@ -9,9 +9,11 @@ import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
+import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
@@ -371,27 +373,29 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/serviceDetailsScreen/:id/:title',
+      path: '/serviceDetailsScreen/:id/:title/:productCode',
       name: RoutesConstants.serviceDetailsScreen,
       pageBuilder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
         return MaterialPage(
           child: ServiceDetailsScreen(
             id: id,
-            title: state.pathParameters['title'] ?? '',
+            title: state.pathParameters['title'] ?? '', productCode: state.pathParameters['productCode'] ?? '',
           ),
         );
       },
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookServiceScreen/:id',
+      path: '/bookServiceScreen/:id/:productCode',
       name: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         final serviceId = state.pathParameters['id'].toString();
+        final productCode = state.pathParameters['productCode'].toString();
         return MaterialPage(
           child: BookServiceScreen(
             id: serviceId,
+            productCode: productCode,
           ),
         );
       },
@@ -425,6 +429,20 @@ final GoRouter routes = GoRouter(
             paymentStatus: paymentStatus,
           ),
         );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/bookingPaymentDetailScreen',
+      name: RoutesConstants.bookingPaymentDetailScreen,
+      pageBuilder: (context, state) {
+        final extraData = state.extra as Map<String, dynamic>?;
+        final paymentDetails =
+            extraData?['paymentDetails'] as ServiceTrackerResponse;
+        return MaterialPage(
+            child: BookingPaymentDetailScreen(
+          paymentDetails: paymentDetails,
+        ));
       },
     ),
     GoRoute(

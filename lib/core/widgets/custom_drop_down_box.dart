@@ -17,10 +17,12 @@ class CustomDropDownBox extends StatefulWidget {
     this.memberName,
     this.selectedMembers = const [],
     this.isRequired = false,
+    this.placeHolder,
     super.key,
   });
   final List<Member> memberList;
   String? memberName;
+  String? placeHolder;
   List<Member> selectedMembers = [];
   void Function(Member?) updateMember;
   final bool isRequired;
@@ -77,7 +79,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.memberName ?? 'Select',
+                  widget.memberName ?? widget.placeHolder ??'Select',
                   style: AppTextStyle.bodyLargeMedium.copyWith(
                     height: 2.4,
                     color: widget.memberName == null

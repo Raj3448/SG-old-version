@@ -8,6 +8,7 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
+import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 abstract class IProductListingService {
@@ -17,9 +18,9 @@ abstract class IProductListingService {
     required String id,
   });
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
-    required String id,
+    required String productCode,
   });
-  Future<Either<Failure, String>> buyService({
+  Future<Either<Failure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   });
   Future<Either<Failure, bool>> bookService({
@@ -142,15 +143,15 @@ class ProductListingServices extends IProductListingService {
 
   @override
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
-    required String id,
+    required String productCode,
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/products/$id?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
+        '/api/products?filters[code][\$eq]=$productCode&populate[1]=product_form.form.formDetails&populate[2]=product_form.form.options&populate[3]=product_form.form.validations.valueMsg',
       );
       if (response.statusCode == 200) {
-        if (response.data['data'] != null) {
-          final data = response.data['data'];
+        final data = response.data['data'][0];
+        if (data != null) {
           return Right(
             FormDetailModel.fromJson(data as Map<String, dynamic>),
           );
@@ -170,11 +171,25 @@ class ProductListingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, String>> buyService({
+  Future<Either<Failure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   }) async {
     try {
-      return const Right('Response received successfully');
+      final response = await httpClient.post(
+        '/api/service-tracker/request-new',
+        data: formData.toJson()
+      );
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        if (data != null) {
+          return Right(
+            ServiceTrackerResponse.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());
