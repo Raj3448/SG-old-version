@@ -30,8 +30,6 @@ abstract class IProductListingService {
   });
   Future<Either<Failure, SubscriptionData>> createSubscription({
     required int priceId,
-    required String startDate,
-    required String expireDate,
     required int productId,
     required List<int> familyMemberIds,
   });
@@ -221,16 +219,12 @@ class ProductListingServices extends IProductListingService {
   @override
   Future<Either<Failure, SubscriptionData>> createSubscription({
     required int priceId,
-    required String startDate,
-    required String expireDate,
     required int productId,
     required List<int> familyMemberIds,
   }) async {
     try {
       final data = {
         'priceId': priceId,
-        'startDate': startDate,
-        'expireDate': expireDate,
         'productId': productId,
         'familyMemberIds': familyMemberIds,
       };
@@ -241,9 +235,7 @@ class ProductListingServices extends IProductListingService {
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {
           final data = response.data['data'];
-          print(data);
           return Right(
-            // BookSubscriptionModel.fromJson(data as Map<String, dynamic>),
             SubscriptionData.fromJson(data as Map<String, dynamic>),
           );
         }
@@ -257,7 +249,6 @@ class ProductListingServices extends IProductListingService {
       }
       return const Left(Failure.someThingWentWrong());
     } catch (error) {
-      print(error);
       return const Left(Failure.someThingWentWrong());
     }
   }

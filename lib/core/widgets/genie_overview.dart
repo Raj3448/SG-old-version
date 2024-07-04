@@ -200,6 +200,7 @@ class _PlanPricingDetailsComponentState
 
 class ExploreNowComponent extends StatelessWidget {
   const ExploreNowComponent({
+    required this.id,
     required this.pageTitle,
     required this.btnLabel,
     required this.planHeading,
@@ -211,6 +212,7 @@ class ExploreNowComponent extends StatelessWidget {
     super.key,
   });
 
+  final String id;
   final String pageTitle;
   final String btnLabel;
   final String planHeading;
@@ -243,7 +245,7 @@ class ExploreNowComponent extends StatelessWidget {
                   jsonEncode(plansList.map((plan) => plan.toJson()).toList());
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
-                pathParameters: {'pageTitle': pageTitle},
+                pathParameters: {'id': id, 'pageTitle': pageTitle},
                 extra: {
                   'plansList': plansListJson,
                   'isUpgradable': isUpgradable.toString(),
