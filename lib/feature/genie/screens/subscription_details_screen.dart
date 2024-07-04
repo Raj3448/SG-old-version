@@ -1,16 +1,61 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/core/widgets/plan_display_component.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class SubscriptionDetailsScreen extends StatelessWidget {
-  const SubscriptionDetailsScreen({required this.price, super.key});
+  SubscriptionDetailsScreen({
+    required this.price,
+    required this.subscriptionData,
+    required this.isCouple,
+    super.key,
+  });
 
   final String price;
+  final SubscriptionData subscriptionData;
+  final bool isCouple;
+
+  final memberStore = GetIt.I<MembersStore>();
+
+  Price getPriceById(SubscriptionData subscriptionData, int id) {
+    final price = subscriptionData.product.prices.firstWhere(
+      (price) => price.id == id,
+    );
+
+    return price;
+  }
+
+  String getFormattedFamilyMembers(List<int> ids) {
+    var names = <String>[];
+    for (final id in ids) {
+      final member = memberStore.findMemberById(id);
+      if (member != null) {
+        names.add(member.name);
+      }
+    }
+    if (names.isEmpty) {
+      return '';
+    }
+    if (names.length > 2) {
+      names = names.sublist(0, 2);
+    }
+    if (names.length > 1) {
+      return names.join(' & ');
+    }
+
+    return names.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +75,10 @@ class SubscriptionDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Companion plan (Couple)',
+              Text(
+                isCouple
+                    ? 'Companion plan (Couple)'
+                    : 'Companion plan (Single)',
                 style: AppTextStyle.bodyXLMedium,
               ),
               const SizedBox(height: Dimension.d6),
@@ -40,12 +87,16 @@ class SubscriptionDetailsScreen extends StatelessWidget {
                 style: AppTextStyle.bodyLargeMedium,
               ),
               const SizedBox(height: Dimension.d4),
-              const _DetailsBox(
-                serviceOptedFor: 'Amanjot Singh & Amanj S',
-                duration: '2 months',
-                startDate: '11/06/2024',
-                renewalDate: '11/12/2024',
-                automaticRenewal: false,
+              _DetailsBox(
+                serviceOptedFor:
+                    getFormattedFamilyMembers(subscriptionData.familyMemberIds),
+                duration:
+                    '${getPriceById(subscriptionData, subscriptionData.priceId).recurringIntervalCount} ${removeLastLy(
+                  getPriceById(subscriptionData, subscriptionData.priceId)
+                      .recurringInterval!,
+                )}',
+                startDate: formatDate(subscriptionData.startDate),
+                renewalDate: formatDate(subscriptionData.expiresOn),
               ),
               const SizedBox(height: Dimension.d4),
               const Divider(color: AppColors.line),
@@ -55,7 +106,11 @@ class SubscriptionDetailsScreen extends StatelessWidget {
                 style: AppTextStyle.bodyLargeMedium,
               ),
               const SizedBox(height: Dimension.d3),
-              _PaymentTile(title: 'Subscription cost', value: price),
+              _PaymentTile(
+                title: 'Subscription cost',
+                value:
+                    '₹ ${getPriceById(subscriptionData, subscriptionData.priceId).unitAmount}',
+              ),
               const SizedBox(height: Dimension.d3),
               const _PaymentTile(title: 'Others', value: '-'),
               const SizedBox(height: Dimension.d4),
@@ -69,7 +124,7 @@ class SubscriptionDetailsScreen extends StatelessWidget {
                     style: AppTextStyle.bodyXLMedium,
                   ),
                   Text(
-                    price,
+                    '₹ ${getPriceById(subscriptionData, subscriptionData.priceId).unitAmount}',
                     style: AppTextStyle.bodyLargeMedium,
                   ),
                 ],
@@ -88,14 +143,12 @@ class _DetailsBox extends StatelessWidget {
     required this.duration,
     required this.startDate,
     required this.renewalDate,
-    required this.automaticRenewal,
   });
 
   final String serviceOptedFor;
   final String duration;
   final String startDate;
   final String renewalDate;
-  final bool automaticRenewal;
 
   @override
   Widget build(BuildContext context) {
@@ -111,11 +164,6 @@ class _DetailsBox extends StatelessWidget {
         ExpandedAnalogComponent(label: 'Plan start date', value: startDate),
         const SizedBox(height: Dimension.d3),
         ExpandedAnalogComponent(label: 'Next renewal date', value: renewalDate),
-        const SizedBox(height: Dimension.d3),
-        ExpandedAnalogComponent(
-          label: 'Automatic renewal',
-          value: automaticRenewal.toString() == 'true' ? 'On' : 'Off',
-        ),
       ],
     );
   }

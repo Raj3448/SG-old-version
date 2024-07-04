@@ -43,7 +43,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
       GlobalKey<CustomDropDownBoxState>();
   List<FormAnswer> formAnswers = [];
   Member? selectedMember;
-  final service = GetIt.I<ProductLisitingServices>();
+  final service = GetIt.I<ProductListingServices>();
   final store = GetIt.I<ProductListingStore>();
 
   @override

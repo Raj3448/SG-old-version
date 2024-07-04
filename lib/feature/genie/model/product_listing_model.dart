@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -94,13 +96,13 @@ class Price with _$Price {
     required String pricingType,
     required String? recurringInterval,
     required int? recurringIntervalCount,
-    required String code,
+    @Default('') String? code,
     required dynamic recurringPlanId,
     required int benefitApplicableToMembersLimit,
     required int? discountPercentage,
     required int? amountWithoutDiscount,
-    required List<Rule> rules,
-    @Default(false) bool isSelected,
+    @Default([]) List<Rule>? rules,
+    @Default(false) bool? isSelected,
   }) = _Price;
 
   factory Price.fromJson(Map<String, dynamic> json) => _$PriceFromJson(json);
@@ -132,8 +134,8 @@ class SubscriptionContent with _$SubscriptionContent {
     required String faqHeading,
     @JsonKey(name: 'exploreNowCTALabel') required String exploreNowCtaLabel,
     required String benefitsHeading,
-    @JsonKey(name: 'FAQ') required List<Faq> faq,
-    required ProductImage productImage,
+    @JsonKey(name: 'FAQ') @Default([]) List<Faq>? faq,
+    @Default(null) ProductImage? productImage,
   }) = _SubscriptionContent;
 
   factory SubscriptionContent.fromJson(Map<String, dynamic> json) =>
@@ -255,7 +257,7 @@ class IconImgMetaData with _$IconImgMetaData {
     required String url,
     required dynamic previewUrl,
     required String provider,
-    required dynamic providerMetadata,
+    @JsonKey(name: 'provider_metadata') required dynamic providerMetadata,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _IconImgMetaData;
@@ -320,4 +322,139 @@ class FaqModelDetails with _$FaqModelDetails {
   }) = _FaqModelDetails;
   factory FaqModelDetails.fromJson(Map<String, dynamic> json) =>
       _$FaqModelDetailsFromJson(json);
+}
+
+@freezed
+class BookSubscriptionModel with _$BookSubscriptionModel {
+  const factory BookSubscriptionModel({
+    required SubscriptionData data,
+    required Details details,
+    required bool success,
+  }) = _BookSubscriptionModel;
+
+  factory BookSubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      _$BookSubscriptionModelFromJson(json);
+}
+
+@freezed
+class SubscriptionData with _$SubscriptionData {
+  const factory SubscriptionData({
+    required int id,
+    required String paymentStatus,
+    required String status,
+    required DateTime expiresOn,
+    required DateTime startDate,
+    required int priceId,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required SubscriptionProduct product,
+    required int userId,
+    required List<int> familyMemberIds,
+    required int amount,
+    required String razorpaySubscriptionId,
+    @JsonKey(name: 'Subscription') required Subscription subscription,
+  }) = _SubscriptionData;
+
+  factory SubscriptionData.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionDataFromJson(json);
+}
+
+@freezed
+class SubscriptionProduct with _$SubscriptionProduct {
+  const factory SubscriptionProduct({
+    required int id,
+    required String name,
+    required String type,
+    required String code,
+    required bool isActive,
+    required String category,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required List<Metadatum> metadata,
+    required List<DatumAttributes> benefits,
+    required List<Price> prices,
+    required SubscriptionContent? subscriptionContent,
+    @Default([]) List<dynamic>? form,
+    @Default([]) List<dynamic>? serviceContent,
+    @Default([]) List<dynamic>? upgradeableProducts,
+    @JsonKey(name: 'icon') required IconImgMetaData icon,
+    @JsonKey(name: 'subscription_trackers')
+    required List<SubscriptionTracker> subscriptionTrackers,
+  }) = _SubscriptionProduct;
+
+  factory SubscriptionProduct.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionProductFromJson(json);
+}
+
+@freezed
+class Subscription with _$Subscription {
+  const factory Subscription({
+    required String id,
+    required String entity,
+    @JsonKey(name: 'plan_id') required String planId,
+    required String status,
+    @JsonKey(name: 'current_start') required dynamic currentStart,
+    @JsonKey(name: 'current_end') required dynamic currentEnd,
+    @JsonKey(name: 'ended_at') required dynamic endedAt,
+    required int quantity,
+    required Notes notes,
+    @JsonKey(name: 'charge_at') required dynamic chargeAt,
+    @JsonKey(name: 'start_at') required dynamic startAt,
+    @JsonKey(name: 'end_at') required dynamic endAt,
+    @JsonKey(name: 'auth_attempts') required int authAttempts,
+    @JsonKey(name: 'total_count') required int totalCount,
+    @JsonKey(name: 'paid_count') required int paidCount,
+    @JsonKey(name: 'customer_notify') required bool customerNotify,
+    @JsonKey(name: 'created_at') required int createdAt,
+    @JsonKey(name: 'expire_by') required dynamic expireBy,
+    @JsonKey(name: 'short_url') required String shortUrl,
+    @JsonKey(name: 'has_scheduled_changes') required bool hasScheduledChanges,
+    @JsonKey(name: 'change_scheduled_at') required dynamic changeScheduledAt,
+    required String source,
+    @JsonKey(name: 'remaining_count') required int remainingCount,
+  }) = _Subscription;
+
+  factory Subscription.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionFromJson(json);
+}
+
+@freezed
+class SubscriptionTracker with _$SubscriptionTracker {
+  const factory SubscriptionTracker({
+    required int id,
+    required String paymentStatus,
+    required String status,
+    required DateTime expiresOn,
+    required DateTime startDate,
+    required int amount,
+    required int priceId,
+    required dynamic razorpaySubscriptionId,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _SubscriptionTracker;
+
+  factory SubscriptionTracker.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionTrackerFromJson(json);
+}
+
+@freezed
+class Notes with _$Notes {
+  const factory Notes({
+    required String userId,
+    required String subscriptionTrackerId,
+  }) = _Notes;
+
+  factory Notes.fromJson(Map<String, dynamic> json) => _$NotesFromJson(json);
+}
+
+@freezed
+class Details with _$Details {
+  const factory Details({
+    required String message,
+    required String name,
+    required int status,
+  }) = _Details;
+
+  factory Details.fromJson(Map<String, dynamic> json) =>
+      _$DetailsFromJson(json);
 }
