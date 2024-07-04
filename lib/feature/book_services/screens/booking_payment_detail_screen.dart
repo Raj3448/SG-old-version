@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -46,7 +47,7 @@ class _BookingPaymentDetailScreenState
     reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
         context.pushReplacementNamed(RoutesConstants.paymentScreen,
-          extra: {'paymentStatusModel' : paymentStatusModel});
+            extra: {'paymentStatusModel': paymentStatusModel});
         store.paymentStatusModel = null;
       }
     });
@@ -83,6 +84,9 @@ class _BookingPaymentDetailScreenState
                             fontSize: 18,
                             color: AppColors.grayscale900,
                             height: 2.6)),
+                    const SizedBox(
+                      height: Dimension.d2,
+                    ),
                     AssigningComponent(
                       name: 'Service opted for',
                       initializeElement: widget.paymentDetails.memberName,
@@ -104,16 +108,20 @@ class _BookingPaymentDetailScreenState
                         separatorBuilder: (context, index) =>
                             !widget.paymentDetails.metaData[index].private
                                 ? const SizedBox(
-                                    height: Dimension.d2,
+                                    height: Dimension.d3,
                                   )
                                 : const SizedBox(),
                         itemCount: widget.paymentDetails.metaData.length),
+                    const SizedBox(
+                      height: Dimension.d4,
+                    ),
                     const Divider(
                       color: AppColors.line,
                     ),
                     ElementSpaceBetween(
                       title: 'Total to pay',
-                      description: '₹ ${widget.paymentDetails.amount}',
+                      description:
+                          '₹ ${formatNumberWithCommas(widget.paymentDetails.amount.toInt())}',
                       isTitleBold: true,
                     ),
                   ],
@@ -134,5 +142,10 @@ class _BookingPaymentDetailScreenState
         amount: widget.paymentDetails.amount,
         orderId: widget.paymentDetails.orderId,
         razorpayApiKey: widget.paymentDetails.razorpayApiKey);
+  }
+
+  String formatNumberWithCommas(int number) {
+    final formatter = NumberFormat('#,##0');
+    return formatter.format(number);
   }
 }
