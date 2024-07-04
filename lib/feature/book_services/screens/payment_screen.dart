@@ -23,7 +23,7 @@ class PaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paymentStatus = _isPaymentStatusSuccess();
-    
+
     return Observer(
       builder: (_) {
         return Scaffold(
@@ -35,7 +35,8 @@ class PaymentScreen extends StatelessWidget {
             ontap: () {
               GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
                   null;
-              context.pop();
+              context..pop()
+              ..pop();
             },
             btnTitle: 'Back',
             showIcon: false,
@@ -50,8 +51,10 @@ class PaymentScreen extends StatelessWidget {
                   const SizedBox(height: Dimension.d4),
                   SvgPicture.asset(
                     paymentStatus == PaymentStatus.success
-                        ? 'assets/icon/success.svg' : paymentStatus == PaymentStatus.pending
-                        ? 'assets/icon/pending.svg' : 'assets/icon/failure.svg',
+                        ? 'assets/icon/success.svg'
+                        : paymentStatus == PaymentStatus.pending
+                            ? 'assets/icon/pending.svg'
+                            : 'assets/icon/failure.svg',
                     color: paymentStatus == PaymentStatus.success
                         ? Colors.green
                         : null,
@@ -123,12 +126,12 @@ class PaymentScreen extends StatelessWidget {
   PaymentStatus _isPaymentStatusSuccess() {
     if (paymentStatusModel.paymentStatus == 'due' &&
         paymentStatusModel.status == 'requested') {
-      return PaymentStatus.pending;
+      return PaymentStatus.failure;
     }
-    if(paymentStatusModel.paymentStatus == 'paid' &&
+    if (paymentStatusModel.paymentStatus == 'paid' &&
         paymentStatusModel.status == 'processing') {
       return PaymentStatus.success;
-    }else{
+    } else {
       return PaymentStatus.failure;
     }
   }

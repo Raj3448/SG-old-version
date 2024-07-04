@@ -276,7 +276,7 @@ class ProductListingServices extends IProductListingService {
         '/api/service-trackers/$id',
       );
       if (response.statusCode == 200) {
-        final data = response.data['data'];
+        final data = response.data;
         if (data != null) {
           return Right(
             PaymentStatusModel.fromJson(data as Map<String, dynamic>),

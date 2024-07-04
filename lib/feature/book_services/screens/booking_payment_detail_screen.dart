@@ -38,11 +38,13 @@ class _BookingPaymentDetailScreenState
   @override
   void initState() {
     reaction((_) => store.paymentStatus, (paymentStatus) {
-      if (paymentStatus == PaymentStatus.success ||
-          paymentStatus == PaymentStatus.failure) {
-        store.getPaymentStatus(id: widget.paymentDetails.id.toString());
+      if (paymentStatus != null) {
+        if (paymentStatus == PaymentStatus.success ||
+            paymentStatus == PaymentStatus.failure) {
+          store.getPaymentStatus(id: widget.paymentDetails.id.toString());
+        }
+        store.paymentStatus = null;
       }
-      store.buyServiceFailed = null;
     });
     reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
