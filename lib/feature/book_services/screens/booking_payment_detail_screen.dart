@@ -45,8 +45,8 @@ class _BookingPaymentDetailScreenState
     });
     reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
-        // context.pushReplacementNamed(RoutesConstants.paymentScreen,
-        //   extra: {'paymentStatusModel' : paymentStatusModel});
+        context.pushReplacementNamed(RoutesConstants.paymentScreen,
+          extra: {'paymentStatusModel' : paymentStatusModel});
         store.paymentStatusModel = null;
       }
     });

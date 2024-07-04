@@ -184,7 +184,6 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               ),
                             const SizedBox(height: Dimension.d2),
                             CustomTextField(
-                              controller: TextEditingController(),
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
