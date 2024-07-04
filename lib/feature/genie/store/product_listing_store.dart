@@ -1,6 +1,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
@@ -18,10 +19,19 @@ abstract class _ProductListingStoreBase with Store {
   bool fetchProductLoading = false;
 
   @observable
+  bool pytmStatusLoading = false;
+
+  @observable
   List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
   @observable
   String? getProductFailure;
+
+  @observable
+  String? getPaymentStatusFailure;
+
+  @observable
+  PaymentStatusModel? paymentStatusModel;
 
   @observable
   bool isProductLoaded = false;
@@ -170,6 +180,25 @@ abstract class _ProductListingStoreBase with Store {
         servicePaymentInfoGotSuccess = r;
       });
       isBuyServiceLoading = false;
+    });
+  }
+
+  void getPaymentStatus({required String id}) {
+    pytmStatusLoading = true;
+    productListingService.getPaymentStatus(id: id).then((response) {
+      response.fold(
+        (l) {
+          l.maybeMap(
+            socketError: (value) =>
+                getPaymentStatusFailure = 'No Internet Connection',
+            orElse: () => getPaymentStatusFailure = 'Something went wrong',
+          );
+        },
+        (r) {
+          paymentStatusModel = r;
+        },
+      );
+      pytmStatusLoading = false;
     });
   }
 }

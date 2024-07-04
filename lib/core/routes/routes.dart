@@ -9,6 +9,7 @@ import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
@@ -417,11 +418,11 @@ final GoRouter routes = GoRouter(
       name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         final extraData = state.extra as Map<String, dynamic>?;
-        final PaymentStatus paymentStatus =
-            extraData?['paymentStatus'] as PaymentStatus;
+        final paymentStatusModel =
+            extraData?['paymentStatusModel'] as PaymentStatusModel;
         return MaterialPage(
             child: PaymentScreen(
-          paymentStatus: paymentStatus,
+          paymentStatusModel: paymentStatusModel,
         ));
       },
     ),

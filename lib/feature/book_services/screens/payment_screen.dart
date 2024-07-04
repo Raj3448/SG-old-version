@@ -10,17 +10,20 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class PaymentScreen extends StatelessWidget {
-  final PaymentStatus paymentStatus;
+  final PaymentStatusModel paymentStatusModel;
 
-  const PaymentScreen({required this.paymentStatus, Key? key})
+  const PaymentScreen({required this.paymentStatusModel, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final paymentStatus = _isPaymentStatusSuccess();
+    
     return Observer(
       builder: (_) {
         return Scaffold(
@@ -47,8 +50,8 @@ class PaymentScreen extends StatelessWidget {
                   const SizedBox(height: Dimension.d4),
                   SvgPicture.asset(
                     paymentStatus == PaymentStatus.success
-                        ? 'assets/icon/success.svg'
-                        : 'assets/icon/pending.svg',
+                        ? 'assets/icon/success.svg' : paymentStatus == PaymentStatus.pending
+                        ? 'assets/icon/pending.svg' : 'assets/icon/failure.svg',
                     color: paymentStatus == PaymentStatus.success
                         ? Colors.green
                         : null,
@@ -115,5 +118,18 @@ class PaymentScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  PaymentStatus _isPaymentStatusSuccess() {
+    if (paymentStatusModel.paymentStatus == 'due' &&
+        paymentStatusModel.status == 'requested') {
+      return PaymentStatus.pending;
+    }
+    if(paymentStatusModel.paymentStatus == 'paid' &&
+        paymentStatusModel.status == 'processing') {
+      return PaymentStatus.success;
+    }else{
+      return PaymentStatus.failure;
+    }
   }
 }

@@ -8,6 +8,7 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
@@ -29,6 +30,7 @@ abstract class IProductListingService {
     required String phoneNumber,
     required String careType,
   });
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({required String id});
 }
 
 class ProductLisitingServices extends IProductListingService {
@@ -224,5 +226,32 @@ class ProductLisitingServices extends IProductListingService {
       return Left(Failure.validationError('${response.statusMessage}'));
     }
     return const Left(Failure.badResponse());
+  }
+  
+  @override
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({required String id}) async{
+    try {
+      final response = await httpClient.get(
+        '/api/service-trackers/$id',
+      );
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        if (data != null) {
+          return Right(
+            PaymentStatusModel.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
   }
 }
