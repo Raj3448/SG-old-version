@@ -9,7 +9,6 @@ int calculateAge(DateTime dob) {
   return age;
 }
 
-
 String formatDateTime(DateTime dateTime) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
@@ -22,4 +21,8 @@ String formatDateTime(DateTime dateTime) {
   } else {
     return '${DateFormat('MMM d, y').format(dateTime)} at $formattedTime';
   }
+}
+
+String formatDate(DateTime date) {
+  return DateFormat('dd/MM/yyyy').format(date);
 }

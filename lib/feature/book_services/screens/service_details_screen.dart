@@ -39,7 +39,7 @@ class ServiceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = GetIt.I<ProductLisitingServices>();
+    final service = GetIt.I<ProductListingServices>();
     final store = GetIt.I<ProductListingStore>();
     return SafeArea(
       child: Scaffold(

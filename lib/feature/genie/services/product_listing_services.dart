@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, lines_longer_than_80_chars
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, lines_longer_than_80_chars, avoid_dynamic_calls
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
@@ -30,12 +30,18 @@ abstract class IProductListingService {
     required String phoneNumber,
     required String careType,
   });
-  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({required String id});
+  Future<Either<Failure, SubscriptionData>> createSubscription({
+    required int priceId,
+    required int productId,
+    required List<int> familyMemberIds,
+  });
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus(
+      {required String id});
 }
 
-class ProductLisitingServices extends IProductListingService {
+class ProductListingServices extends IProductListingService {
   HttpClient httpClient;
-  ProductLisitingServices({
+  ProductListingServices({
     required this.httpClient,
   });
 
@@ -172,10 +178,8 @@ class ProductLisitingServices extends IProductListingService {
     required FormAnswerModel formData,
   }) async {
     try {
-      final response = await httpClient.post(
-        '/api/service-tracker/request-new',
-        data: formData.toJson()
-      );
+      final response = await httpClient.post('/api/service-tracker/request-new',
+          data: formData.toJson());
       if (response.statusCode == 200) {
         final data = response.data['data'];
         if (data != null) {
@@ -227,9 +231,46 @@ class ProductLisitingServices extends IProductListingService {
     }
     return const Left(Failure.badResponse());
   }
-  
+
+  Future<Either<Failure, SubscriptionData>> createSubscription({
+    required int priceId,
+    required int productId,
+    required List<int> familyMemberIds,
+  }) async {
+    try {
+      final data = {
+        'priceId': priceId,
+        'productId': productId,
+        'familyMemberIds': familyMemberIds,
+      };
+      final response = await httpClient.post(
+        '/api/create-subscription',
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        if (response.data['data'] != null) {
+          final data = response.data['data'];
+          return Right(
+            SubscriptionData.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
+  }
+
   @override
-  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({required String id}) async{
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus(
+      {required String id}) async {
     try {
       final response = await httpClient.get(
         '/api/service-trackers/$id',

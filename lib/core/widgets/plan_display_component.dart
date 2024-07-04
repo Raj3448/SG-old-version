@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -22,15 +22,14 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         border: Border.all(
-            width: 1,
-            color:
-                widget.isSelected ? AppColors.primary : AppColors.grayscale400),
+          color: widget.isSelected ? AppColors.primary : AppColors.grayscale400,
+        ),
         color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,12 +39,8 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
             children: [
               Text(
                 widget.planPriceDetails!.label,
-                style: AppTextStyle.bodyMediumMedium.copyWith(
-                  color: AppColors.grayscale900,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  height: 2.6,
-                ),
+                style: AppTextStyle.bodyXLSemiBold
+                    .copyWith(color: AppColors.grayscale900),
               ),
               if (widget.planPriceDetails!.discountPercentage != null)
                 Container(
@@ -62,6 +57,7 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
                 ),
             ],
           ),
+          const SizedBox(height: Dimension.d2),
           Row(
             children: [
               Column(
@@ -71,22 +67,14 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
                     width: 150,
                     child: Text(
                       'Including all tax',
-                      style: AppTextStyle.bodyMediumMedium.copyWith(
-                        color: AppColors.grayscale700,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.46,
-                      ),
+                      style: AppTextStyle.bodyMediumMedium
+                          .copyWith(color: AppColors.grayscale700),
                     ),
                   ),
                   Text(
                     '${widget.planPriceDetails!.recurringIntervalCount} ${removeLastLy(widget.planPriceDetails!.recurringInterval!)}',
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale900,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      height: 1.46,
-                    ),
+                    style: AppTextStyle.bodyXLBold
+                        .copyWith(color: AppColors.grayscale900),
                   ),
                 ],
               ),
@@ -94,25 +82,18 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if(widget.planPriceDetails!.amountWithoutDiscount != null)
-                  Text(
-                    ' ${widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2)} Rs',
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale700,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      height: 1.46,
-                      decoration: TextDecoration.lineThrough,
+                  if (widget.planPriceDetails!.amountWithoutDiscount != null)
+                    Text(
+                      ' ${widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2)} Rs',
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale700,
+                        decoration: TextDecoration.lineThrough,
+                      ),
                     ),
-                  ),
                   Text(
-                    '${widget.planPriceDetails!.unitAmount.toStringAsFixed(2)}Rs',
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale900,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      height: 1.46,
-                    ),
+                    '${widget.planPriceDetails!.unitAmount.toStringAsFixed(2)} Rs',
+                    style: AppTextStyle.bodyXLBold
+                        .copyWith(color: AppColors.grayscale900),
                   ),
                 ],
               ),

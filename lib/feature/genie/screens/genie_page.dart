@@ -1,4 +1,6 @@
-// ignore_for_file: inference_failure_on_function_invocation, lines_longer_than_80_chars, must_be_immutable
+// ignore_for_file: inference_failure_on_function_invocation, lines_longer_than_80_chars, must_be_immutable, inference_failure_on_instance_creation
+
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -15,6 +17,8 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class GeniePage extends StatelessWidget {
   GeniePage({
@@ -28,13 +32,11 @@ class GeniePage extends StatelessWidget {
   final String id;
   final bool isUpgradable;
 
-  final services = GetIt.I<ProductLisitingServices>();
+  final services = GetIt.I<ProductListingServices>();
 
-  Price? planDetails;
+  final store = GetIt.I<ProductListingStore>();
 
-  void _updatePlan(Price plan) {
-    planDetails = plan;
-  }
+  final userStore = GetIt.I<UserDetailStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,105 +77,146 @@ class GeniePage extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GenieOverviewComponent(
-                          title: productListingModel!
-                              .product.subscriptionContent!.mainHeading,
-                          headline: productListingModel!
-                              .product.subscriptionContent!.headingDescription,
-                          defination: productListingModel!.product
-                              .subscriptionContent!.subHeading1Description,
-                          subHeading: productListingModel!
-                              .product.subscriptionContent!.subHeading1,
-                          imageUrl: productListingModel!
-                              .product
-                              .subscriptionContent!
-                              .productImage
-                              .data
-                              .attributes
-                              .url,
-                        ),
-                        ServiceProvideComponent(
-                          heading: productListingModel!
-                              .product.subscriptionContent!.benefitsHeading,
-                          serviceList:
-                              productListingModel!.product.benefits.data,
-                        ),
-                        const SizedBox(height: Dimension.d4),
-                        PlanPricingDetailsComponent(
-                          planName: productListingModel!
-                              .product.subscriptionContent!.mainHeading,
-                          pricingDetailsList: services.getPlansforNonCouple(
-                            productListingModel!.product.prices,
-                          ),
-                          onSelect: _updatePlan,
-                        ),
-                        const SizedBox(height: Dimension.d4),
-                        CustomButton(
-                          ontap: () {
-                            if (planDetails != null) {
-                              context.pushNamed(
-                                RoutesConstants.subscriptionDetailsScreen,
-                                pathParameters: {
-                                  'price': '${planDetails!.unitAmount}',
-                                },
-                              );
-                            }
-                          },
-                          title: isUpgradable ? 'Upgrade care' : 'Book Care',
-                          showIcon: false,
-                          iconPath: AppIcons.add,
-                          size: ButtonSize.normal,
-                          type: ButtonType.primary,
-                          expanded: true,
-                          iconColor: AppColors.white,
-                        ),
-                        if (productListingModel!
-                            .product.subscriptionContent!.showCouplePlans)
-                          ExploreNowComponent(
-                            isUpgradable: isUpgradable,
-                            pageTitle: pageTitle,
-                            btnLabel: productListingModel!.product
-                                .subscriptionContent!.exploreNowCtaLabel,
-                            planHeading: productListingModel!
-                                .product
-                                .subscriptionContent!
-                                .exploreCouplePlansHeading!,
-                            imgPath: productListingModel!
-                                .product.icon.data.attributes.url,
-                            backgroundColor: productListingModel!
-                                .product.metadata
-                                .firstWhere(
-                                  (element) =>
-                                      element.key == 'background_color_code',
-                                  orElse: () => const Metadatum(
-                                      id: 1,
-                                      key: 'background_color_code',
-                                      value: 'FFFDFDFD'),
-                                )
-                                .value,
-                            iconColorCode: productListingModel!.product.metadata
-                                .firstWhere(
-                                  (element) => element.key == 'icon_color_code',
-                                  orElse: () => const Metadatum(
-                                      id: 1,
-                                      key: 'icon_color_code',
-                                      value: 'FFFDFDFD'),
-                                )
-                                .value,
-                            plansList: services.getPlansforCouple(
-                              productListingModel!.product.prices,
+                    child: Observer(
+                      builder: (context) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GenieOverviewComponent(
+                              title: productListingModel!
+                                  .product.subscriptionContent!.mainHeading,
+                              headline: productListingModel!.product
+                                  .subscriptionContent!.headingDescription,
+                              defination: productListingModel!.product
+                                  .subscriptionContent!.subHeading1Description,
+                              subHeading: productListingModel!
+                                  .product.subscriptionContent!.subHeading1,
+                              imageUrl: productListingModel!
+                                  .product
+                                  .subscriptionContent!
+                                  .productImage!
+                                  .data
+                                  .attributes
+                                  .url,
                             ),
-                          ),
-                        FAQComponent(
-                          heading: productListingModel!
-                              .product.subscriptionContent!.faqHeading,
-                          faqList: productListingModel!
-                              .product.subscriptionContent!.faq,
-                        ),
-                      ],
+                            ServiceProvideComponent(
+                              heading: productListingModel!
+                                  .product.subscriptionContent!.benefitsHeading,
+                              serviceList:
+                                  productListingModel!.product.benefits.data,
+                            ),
+                            const SizedBox(height: Dimension.d4),
+                            PlanPricingDetailsComponent(
+                              planName: productListingModel!
+                                  .product.subscriptionContent!.mainHeading,
+                              pricingDetailsList: services.getPlansforNonCouple(
+                                productListingModel!.product.prices,
+                              ),
+                              onSelect: store.updatePlan,
+                            ),
+                            const SizedBox(height: Dimension.d4),
+                            CustomButton(
+                              ontap: () {
+                                if (store.planDetails != null) {
+                                  store.createSubscription(
+                                    priceId: store.planDetails!.id,
+                                    productId: int.parse(id),
+                                    familyMemberIds: [
+                                      userStore.userDetails!.id,
+                                    ],
+                                  ).then((result) {
+                                    result.fold(
+                                      (failure) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Subscription booking failed: $failure.',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      (right) {
+                                        context.pushNamed(
+                                          RoutesConstants
+                                              .subscriptionDetailsScreen,
+                                          pathParameters: {
+                                            'price':
+                                                '${store.planDetails!.unitAmount}',
+                                            'subscriptionData':
+                                                json.encode(right.toJson()),
+                                            'isCouple': 'false',
+                                          },
+                                        );
+                                      },
+                                    );
+                                  });
+                                }
+                              },
+                              title:
+                                  isUpgradable ? 'Upgrade care' : 'Book Care',
+                              showIcon: false,
+                              iconPath: AppIcons.add,
+                              size: ButtonSize.normal,
+                              type: store.planDetails != null
+                                  ? ButtonType.primary
+                                  : ButtonType.disable,
+                              expanded: true,
+                              iconColor: AppColors.white,
+                            ),
+                            if (productListingModel!
+                                .product.subscriptionContent!.showCouplePlans)
+                              ExploreNowComponent(
+                                id: id,
+                                isUpgradable: isUpgradable,
+                                pageTitle: pageTitle,
+                                btnLabel: productListingModel!.product
+                                    .subscriptionContent!.exploreNowCtaLabel,
+                                planHeading: productListingModel!
+                                    .product
+                                    .subscriptionContent!
+                                    .exploreCouplePlansHeading!,
+                                imgPath: productListingModel!
+                                    .product.icon.data.attributes.url,
+                                backgroundColor:
+                                    productListingModel!.product.metadata
+                                        .firstWhere(
+                                          (element) =>
+                                              element.key ==
+                                              'background_color_code',
+                                          orElse: () => const Metadatum(
+                                            id: 1,
+                                            key: 'background_color_code',
+                                            value: 'FFFDFDFD',
+                                          ),
+                                        )
+                                        .value,
+                                iconColorCode:
+                                    productListingModel!.product.metadata
+                                        .firstWhere(
+                                          (element) =>
+                                              element.key == 'icon_color_code',
+                                          orElse: () => const Metadatum(
+                                            id: 1,
+                                            key: 'icon_color_code',
+                                            value: 'FFFDFDFD',
+                                          ),
+                                        )
+                                        .value,
+                                plansList: services.getPlansforCouple(
+                                  productListingModel!.product.prices,
+                                ),
+                              ),
+                            FAQComponent(
+                              heading: productListingModel!
+                                  .product.subscriptionContent!.faqHeading,
+                              faqList: productListingModel!
+                                      .product.subscriptionContent!.faq ??
+                                  [],
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 );
