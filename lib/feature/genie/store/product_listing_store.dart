@@ -49,6 +49,12 @@ abstract class _ProductListingStoreBase with Store {
   @observable
   Price? _planDetails;
 
+  @observable
+  ProductListingModel? subscriptionModel;
+
+  @observable
+  bool subscriptionLoading = false;
+
   @computed
   Price? get planDetails => _planDetails;
 
@@ -199,5 +205,22 @@ abstract class _ProductListingStoreBase with Store {
     );
     isLoading = false;
     return response;
+  }
+
+  @action
+  Future<void> getProductById({
+    required String id,
+  }) async {
+    subscriptionLoading = true;
+    final response = await productListingService.getProductById(id: id);
+    subscriptionLoading = false;
+    response.fold(
+      (failure) {
+        subscriptionModel = null;
+      },
+      (productListingModel) {
+        subscriptionModel = productListingModel;
+      },
+    );
   }
 }
