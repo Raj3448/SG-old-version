@@ -1,4 +1,6 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
@@ -43,6 +45,17 @@ abstract class _ProductListingStoreBase with Store {
 
   @observable
   bool isLoading = false;
+
+  @observable
+  Price? _planDetails;
+
+  @computed
+  Price? get planDetails => _planDetails;
+
+  @action
+  void updatePlan(Price? plan) {
+    _planDetails = plan;
+  }
 
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
@@ -171,5 +184,20 @@ abstract class _ProductListingStoreBase with Store {
       });
       isBuyServiceLoading = false;
     });
+  }
+
+  Future<Either<Failure, SubscriptionData>> createSubscription({
+    required int priceId,
+    required int productId,
+    required List<int> familyMemberIds,
+  }) async {
+    isLoading = true;
+    final response = await productListingService.createSubscription(
+      priceId: priceId,
+      productId: productId,
+      familyMemberIds: familyMemberIds,
+    );
+    isLoading = false;
+    return response;
   }
 }

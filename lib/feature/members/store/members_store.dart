@@ -29,6 +29,11 @@ abstract class _MembersStoreBase with Store {
       .where((member) => member.isFamilyMember ?? false == true)
       .toList();
 
+  @action
+  Member? findMemberById(int id) {
+    return familyMembers.firstWhere((member) => member.id == id);
+  }
+
   @computed
   int? get activeMemberId => selectedMemberId ?? familyMembers.firstOrNull?.id;
 
@@ -279,7 +284,10 @@ extension MemberExtension on Member {
         address.streetAddress,
         address.city,
         address.state,
-        countries.firstWhere((element) => element.isoCode == address.country,orElse: () => Country('', address.country)).name,
+        countries
+            .firstWhere((element) => element.isoCode == address.country,
+                orElse: () => Country('', address.country))
+            .name,
       ].where((part) => part.isNotEmpty).join(', '),
       address.postalCode
     ].where((part) => part.isNotEmpty).join(' - ');
