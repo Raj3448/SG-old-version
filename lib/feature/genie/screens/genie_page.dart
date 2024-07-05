@@ -133,9 +133,9 @@ class _GeniePageState extends State<GeniePage> {
                                             (failure) {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
-                                                SnackBar(
+                                                const SnackBar(
                                                   content: Text(
-                                                    'Subscription booking failed: $failure.',
+                                                    'Something went wrong!',
                                                   ),
                                                 ),
                                               );

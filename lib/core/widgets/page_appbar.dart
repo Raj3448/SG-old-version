@@ -5,8 +5,9 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 
 class PageAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const PageAppbar({required this.title, super.key});
+  const PageAppbar({required this.title, this.onTap, super.key});
   final String title;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class PageAppbar extends StatelessWidget implements PreferredSizeWidget {
         title: Row(
           children: [
             GestureDetector(
-              onTap: () {
+              onTap: onTap ?? () {
                 GoRouter.of(context).pop();
               },
               child: Container(

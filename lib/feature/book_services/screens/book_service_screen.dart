@@ -22,7 +22,6 @@ import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
-import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
@@ -78,6 +77,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
 
   @override
   void dispose() {
+    store
+      ..servicePaymentInfoGotSuccess = null
+      ..paymentStatusModel = null;
     dobContr.dispose();
     super.dispose();
   }
@@ -159,7 +161,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                     controlType: component.controlType,
                                     hint: component.formDetails.hint,
                                     valueReference: [
-                                      member?.id.toString() ?? ''
+                                      '${member?.id.toString()}' ?? ''
                                     ],
                                     forDId:
                                         component.formDetails.id.toString());
@@ -185,7 +187,6 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               ),
                             const SizedBox(height: Dimension.d2),
                             CustomTextField(
-                              controller: TextEditingController(),
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
@@ -241,7 +242,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                     title: component.formDetails.title,
                                     type: component.type,
                                     valueChoice: [
-                                      newValue!.first.value.toString().trim()
+                                      '${newValue!.first.value.toString().trim()}'
                                     ],
                                     controlType: component.controlType,
                                     hint: component.formDetails.hint,
@@ -475,7 +476,6 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     _formKey.currentState!.save();
     final formAnswerModel = FormAnswerModel(
         formAnswer: formAnswers, productId: int.parse(widget.id));
-    print(formAnswerModel.toJson());
     store.buyService(formData: formAnswerModel);
   }
 }
