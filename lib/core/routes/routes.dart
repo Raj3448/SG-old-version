@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
@@ -13,7 +12,6 @@ import 'package:silver_genie/feature/book_services/model/payment_status_model.da
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
@@ -425,10 +423,16 @@ final GoRouter routes = GoRouter(
       pageBuilder: (context, state) {
         final extraData = state.extra as Map<String, dynamic>?;
         final paymentStatusModel =
-            extraData?['paymentStatusModel'] as PaymentStatusModel;
+            extraData?['paymentStatusModel'] as PaymentStatusModel?;
+        final priceDetails =
+            extraData?['priceDetails'] as PriceDetails?;
+        final id =
+            extraData?['id'] as String;
         return MaterialPage(
             child: PaymentScreen(
           paymentStatusModel: paymentStatusModel,
+          priceDetails: priceDetails,
+          id: id,
         ));
       },
     ),
@@ -444,13 +448,6 @@ final GoRouter routes = GoRouter(
             child: BookingPaymentDetailScreen(
           paymentDetails: paymentDetails,
         ));
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.bookingDetailsScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: BookingDetailsScreen());
       },
     ),
     GoRoute(

@@ -35,25 +35,44 @@ class _BookingPaymentDetailScreenState
     extends State<BookingPaymentDetailScreen> {
   final store = GetIt.I<ProductListingStore>();
   bool pytmStatusLoading = false;
+  late ReactionDisposer _reactionDisposer1;
+  late ReactionDisposer _reactionDisposer2;
   @override
   void initState() {
-    reaction((_) => store.paymentStatus, (paymentStatus) {
+    _reactionDisposer1 = reaction((_) => store.paymentStatus, (paymentStatus) {
       if (paymentStatus != null) {
-        if (paymentStatus == PaymentStatus.success ||
-            paymentStatus == PaymentStatus.failure) {
+        if (paymentStatus == PaymentStatus.failure) {
+          context.pushNamed(RoutesConstants.paymentScreen, extra: {
+            'paymentStatusModel': null,
+            'priceDetails': widget.paymentDetails.priceDetails,
+            'id': widget.paymentDetails.id.toString()
+          });
+        }
+        if (paymentStatus == PaymentStatus.success) {
           store.getPaymentStatus(id: widget.paymentDetails.id.toString());
         }
         store.paymentStatus = null;
       }
     });
-    reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
+    _reactionDisposer2 =
+        reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
-        context.pushReplacementNamed(RoutesConstants.paymentScreen,
-            extra: {'paymentStatusModel': paymentStatusModel});
-        store.paymentStatusModel = null;
+        context.pushReplacementNamed(RoutesConstants.paymentScreen, extra: {
+          'paymentStatusModel': paymentStatusModel,
+          'priceDetails': null,
+          'id': widget.paymentDetails.id.toString()
+        });
       }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    store.paymentStatusModel = null;
+    _reactionDisposer1();
+    _reactionDisposer2();
+    super.dispose();
   }
 
   @override
@@ -75,58 +94,93 @@ class _BookingPaymentDetailScreenState
               appBar: const PageAppbar(title: 'Book Service'),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const BookingStatus(
-                      currentStep: BookingStep.payment,
-                    ),
-                    Text('Order Summery',
-                        style: AppTextStyle.bodyLargeSemiBold.copyWith(
-                            fontSize: 18,
-                            color: AppColors.grayscale900,
-                            height: 2.6)),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
-                    AssigningComponent(
-                      name: 'Service opted for',
-                      initializeElement: widget.paymentDetails.memberName,
-                    ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
-                    ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => !widget
-                                .paymentDetails.metaData[index].private
-                            ? AssigningComponent(
-                                name: widget.paymentDetails.metaData[index].key,
-                                initializeElement:
-                                    widget.paymentDetails.metaData[index].value,
-                              )
-                            : const SizedBox(),
-                        separatorBuilder: (context, index) =>
-                            !widget.paymentDetails.metaData[index].private
-                                ? const SizedBox(
-                                    height: Dimension.d3,
-                                  )
-                                : const SizedBox(),
-                        itemCount: widget.paymentDetails.metaData.length),
-                    const SizedBox(
-                      height: Dimension.d4,
-                    ),
-                    const Divider(
-                      color: AppColors.line,
-                    ),
-                    ElementSpaceBetween(
-                      title: 'Total to pay',
-                      description:
-                          '₹ ${formatNumberWithCommas(widget.paymentDetails.amount.toInt())}',
-                      isTitleBold: true,
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const BookingStatus(
+                        currentStep: BookingStep.payment,
+                      ),
+                      Text('Order Summery',
+                          style: AppTextStyle.bodyLargeSemiBold.copyWith(
+                              fontSize: 18,
+                              color: AppColors.grayscale900,
+                              height: 2.6)),
+                      const SizedBox(
+                        height: Dimension.d2,
+                      ),
+                      AssigningComponent(
+                        name: 'Service opted for',
+                        initializeElement: widget.paymentDetails.memberName,
+                      ),
+                      const SizedBox(
+                        height: Dimension.d2,
+                      ),
+                      ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) =>
+                              !widget.paymentDetails.metaData[index].private
+                                  ? AssigningComponent(
+                                      name: widget
+                                          .paymentDetails.metaData[index].key,
+                                      initializeElement: widget
+                                          .paymentDetails.metaData[index].value,
+                                    )
+                                  : const SizedBox(),
+                          separatorBuilder: (context, index) =>
+                              !widget.paymentDetails.metaData[index].private
+                                  ? const SizedBox(
+                                      height: Dimension.d3,
+                                    )
+                                  : const SizedBox(),
+                          itemCount: widget.paymentDetails.metaData.length),
+                      const SizedBox(
+                        height: Dimension.d4,
+                      ),
+                      const Divider(
+                        color: AppColors.line,
+                      ),
+                      Text('Payment breakdown',
+                          style: AppTextStyle.bodyLargeSemiBold.copyWith(
+                              fontSize: 18,
+                              color: AppColors.grayscale900,
+                              height: 2.6)),
+                      ElementSpaceBetween(
+                        title: widget.paymentDetails.priceDetails.products.first
+                            .displayName,
+                        description:
+                            '₹ ${formatNumberWithCommas(widget.paymentDetails.priceDetails.products.first.price.toInt())}',
+                      ),
+                      const Divider(
+                        color: AppColors.line,
+                      ),
+                      ElementSpaceBetween(
+                        title:
+                            '${widget.paymentDetails.priceDetails.products.first.displayName} x ${widget.paymentDetails.priceDetails.products.first.quantity} days',
+                        description:
+                            '₹ ${formatNumberWithCommas(widget.paymentDetails.amount.toInt())}',
+                      ),
+                      const Divider(
+                        color: AppColors.line,
+                      ),
+                      const SizedBox(
+                        height: Dimension.d2,
+                      ),
+                      ElementSpaceBetween(
+                        title: 'Total to pay',
+                        description:
+                            '₹ ${formatNumberWithCommas(widget.paymentDetails.amount.toInt())}',
+                        isTitleBold: true,
+                      ),
+                      const SizedBox(
+                        height: Dimension.d20,
+                      ),
+                      const SizedBox(
+                        height: Dimension.d4,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -145,9 +199,9 @@ class _BookingPaymentDetailScreenState
         orderId: widget.paymentDetails.orderId,
         razorpayApiKey: widget.paymentDetails.razorpayApiKey);
   }
+}
 
-  String formatNumberWithCommas(int number) {
-    final formatter = NumberFormat('#,##0');
-    return formatter.format(number);
-  }
+String formatNumberWithCommas(int number) {
+  final formatter = NumberFormat('#,##0');
+  return formatter.format(number);
 }

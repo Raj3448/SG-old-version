@@ -20,6 +20,7 @@ class PaymentStatusModel with _$PaymentStatusModel {
     required Product product,
     required RequestedBy requestedBy,
     required List<RequestedFor> requestedFor,
+    required PriceDetails priceDetails,
   }) = _PaymentStatusModel;
   factory PaymentStatusModel.fromJson(Map<String, dynamic> json) =>
       _$PaymentStatusModelFromJson(json);
@@ -58,4 +59,33 @@ class RequestedFor with _$RequestedFor {
   }) = _RequestedFor;
   factory RequestedFor.fromJson(Map<String, dynamic> json) =>
       _$RequestedForFromJson(json);
+}
+
+@freezed
+class PriceDetails with _$PriceDetails {
+    const factory PriceDetails({
+        required int id,
+        required int totalAmount,
+        required int subTotal,
+        required int totalTax,
+        required int totalDiscount,
+        required List<ProductMetaData> products,
+    }) = _PriceDetails;
+  factory PriceDetails.fromJson(Map<String, dynamic> json) =>
+      _$PriceDetailsFromJson(json);
+}
+
+@freezed
+class ProductMetaData with _$ProductMetaData {
+    const factory ProductMetaData({
+        required int id,
+        required String productId,
+        required String displayName,
+        required String productName,
+        required int price,
+        required String priceId,
+        required int quantity,
+    }) = _Products;
+    factory ProductMetaData.fromJson(Map<String, dynamic> json) =>
+      _$ProductMetaDataFromJson(json);
 }

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -12,18 +15,69 @@ import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
+import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-class PaymentScreen extends StatelessWidget {
-  final PaymentStatusModel paymentStatusModel;
+import 'booking_payment_detail_screen.dart';
 
-  const PaymentScreen({required this.paymentStatusModel, Key? key})
+class PaymentScreen extends StatefulWidget {
+  PaymentStatusModel? paymentStatusModel;
+  final PriceDetails? priceDetails;
+  String id;
+
+  PaymentScreen(
+      {required this.paymentStatusModel,
+      required this.priceDetails,
+      required this.id,
+      Key? key})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final paymentStatus = _isPaymentStatusSuccess();
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
 
+class _PaymentScreenState extends State<PaymentScreen> {
+  late final PaymentStatus paymentStatus;
+  final store = GetIt.I<ProductListingStore>();
+  Timer? _timer;
+  @override
+  void initState() {
+    paymentStatus = widget.paymentStatusModel == null
+        ? PaymentStatus.failure
+        : _getPaymentStatus();
+    if (paymentStatus == PaymentStatus.pending) {
+      _startPaymentStatusPolling();
+    }
+    reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
+      if (paymentStatusModel != null) {
+        setState(() {
+          widget.paymentStatusModel = paymentStatusModel;
+        });
+        _stopPaymentStatusPolling();
+      }
+      store.paymentStatusModel = null;
+    });
+    super.initState();
+  }
+
+  void _startPaymentStatusPolling() {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      store.getPaymentStatus(id: widget.id);
+    });
+  }
+
+  void _stopPaymentStatusPolling() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _stopPaymentStatusPolling();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Observer(
       builder: (_) {
         return Scaffold(
@@ -33,12 +87,19 @@ class PaymentScreen extends StatelessWidget {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () {
-              GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
-                  null;
-              context..pop()
-              ..pop();
+              if (widget.paymentStatusModel != null) {
+                GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
+                    null;
+                context
+                  ..pop()
+                  ..pop();
+              } else {
+                context.pop();
+              }
             },
-            btnTitle: 'Back',
+            btnTitle: widget.paymentStatusModel != null
+                ? 'Track Booking status'
+                : 'Retry Payment',
             showIcon: false,
             iconPath: AppIcons.add,
           ),
@@ -65,7 +126,41 @@ class PaymentScreen extends StatelessWidget {
                         .copyWith(fontSize: 20, height: 2.8),
                   ),
                   const SizedBox(height: Dimension.d2),
-                  _buildNoteContainer(context),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Order Info',
+                        style: AppTextStyle.bodyXLSemiBold.copyWith(
+                            color: AppColors.grayscale900, height: 2.6),
+                      ),
+                      const Divider(
+                        color: AppColors.grayscale300,
+                      ),
+                      ElementSpaceBetween(
+                        title: paymentStatus == PaymentStatus.failure
+                            ? widget.priceDetails!.products.first.displayName
+                            : widget.paymentStatusModel!.priceDetails.products
+                                .first.displayName,
+                        description: paymentStatus == PaymentStatus.failure
+                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
+                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.priceDetails.products.first.price.toInt())}',
+                      ),
+                      const Divider(
+                        color: AppColors.grayscale300,
+                      ),
+                      ElementSpaceBetween(
+                        title: 'Total to pay',
+                        description: paymentStatus == PaymentStatus.failure
+                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
+                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.amount.toInt())}',
+                        isTitleBold: true,
+                      ),
+                      const Divider(
+                        color: AppColors.grayscale300,
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: Dimension.d20,
                   )
@@ -89,47 +184,13 @@ class PaymentScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildNoteContainer(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).orientation == Orientation.landscape
-          ? 80
-          : 115,
-      padding: const EdgeInsets.symmetric(
-          horizontal: Dimension.d2, vertical: Dimension.d2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimension.d1),
-        color: AppColors.secondary,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text('Note',
-                  style: AppTextStyle.bodyMediumSemiBold.copyWith(height: 2)),
-              const SizedBox(width: Dimension.d1),
-              const Icon(Icons.error_outline_rounded, size: 20),
-            ],
-          ),
-          const SizedBox(height: Dimension.d1),
-          Text(
-            'Please complete the payment by clicking the payment link sent to your registered mobile number.',
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(color: AppColors.grayscale800),
-          ),
-        ],
-      ),
-    );
-  }
-
-  PaymentStatus _isPaymentStatusSuccess() {
-    if (paymentStatusModel.paymentStatus == 'due' &&
-        paymentStatusModel.status == 'requested') {
-      return PaymentStatus.failure;
+  PaymentStatus _getPaymentStatus() {
+    if (widget.paymentStatusModel!.paymentStatus == 'due' &&
+        widget.paymentStatusModel!.status == 'requested') {
+      return PaymentStatus.pending;
     }
-    if (paymentStatusModel.paymentStatus == 'paid' &&
-        paymentStatusModel.status == 'processing') {
+    if (widget.paymentStatusModel!.paymentStatus == 'paid' &&
+        widget.paymentStatusModel!.status == 'processing') {
       return PaymentStatus.success;
     } else {
       return PaymentStatus.failure;

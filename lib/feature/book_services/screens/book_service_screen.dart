@@ -77,6 +77,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
 
   @override
   void dispose() {
+    store
+      ..servicePaymentInfoGotSuccess = null
+      ..paymentStatusModel = null;
     dobContr.dispose();
     super.dispose();
   }
@@ -158,7 +161,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                     controlType: component.controlType,
                                     hint: component.formDetails.hint,
                                     valueReference: [
-                                      member?.id.toString() ?? ''
+                                      '${member?.id.toString()}' ?? ''
                                     ],
                                     forDId:
                                         component.formDetails.id.toString());
@@ -239,7 +242,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                     title: component.formDetails.title,
                                     type: component.type,
                                     valueChoice: [
-                                      newValue!.first.value.toString().trim()
+                                      '${newValue!.first.value.toString().trim()}'
                                     ],
                                     controlType: component.controlType,
                                     hint: component.formDetails.hint,
@@ -473,7 +476,6 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     _formKey.currentState!.save();
     final formAnswerModel = FormAnswerModel(
         formAnswer: formAnswers, productId: int.parse(widget.id));
-    print(formAnswerModel.toJson());
     store.buyService(formData: formAnswerModel);
   }
 }

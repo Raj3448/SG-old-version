@@ -148,16 +148,18 @@ class FormAnswerModel with _$FormAnswerModel {
 
 @freezed
 class FormAnswer with _$FormAnswer {
-  @JsonSerializable(includeIfNull: false,explicitToJson: true)
+  @JsonSerializable(includeIfNull: false,explicitToJson: true,
+  
+  )
   const factory FormAnswer({
     @JsonKey(includeToJson: false) required String forDId,
     required int questionId,
     required String question,
     required String type,
-    List<String>? valueChoice,
+    @Default(null) List<String>? valueChoice,
     String? hint,
     String? controlType,
-    List<String>? valueReference,
+    @Default(null) List<String>? valueReference,
     String? valueInteger,
     String? valueDate,
     String? valueText,

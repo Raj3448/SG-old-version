@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 part 'service_tracking_response.freezed.dart';
 part 'service_tracking_response.g.dart';
 
@@ -11,6 +12,7 @@ class ServiceTrackerResponse with _$ServiceTrackerResponse {
         required double amount,
         required String memberName,
         required List<ServiceMetaDatum> metaData,
+        required PriceDetails priceDetails,
     }) = _ServiceTrackerResponse;
     factory ServiceTrackerResponse.fromJson(Map<String, dynamic> json) =>
       _$ServiceTrackerResponseFromJson(json);
