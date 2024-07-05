@@ -62,6 +62,7 @@ class _BookingPaymentDetailScreenState
           'priceDetails': null,
           'id': widget.paymentDetails.id.toString()
         });
+        store.paymentStatusModel = null;
       }
     });
     super.initState();

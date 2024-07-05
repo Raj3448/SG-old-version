@@ -20,6 +20,9 @@ import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
+bool isSecendCall = true;
+int count = 0;
+
 class PaymentScreen extends StatefulWidget {
   PaymentStatusModel? paymentStatusModel;
   final PriceDetails? priceDetails;
@@ -40,6 +43,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   late final PaymentStatus paymentStatus;
   final store = GetIt.I<ProductListingStore>();
   Timer? _timer;
+  late ReactionDisposer _reactionDisposer;
+
   @override
   void initState() {
     paymentStatus = widget.paymentStatusModel == null
@@ -50,7 +55,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (paymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
-    reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
+    _reactionDisposer =
+        reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
         setState(() {
           widget.paymentStatusModel = paymentStatusModel;
@@ -63,8 +69,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _startPaymentStatusPolling() {
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       store.getPaymentStatus(id: widget.id);
+      print('Call hua issecondcall changed');
+      if (count > 2) {
+        isSecendCall = false;
+      }
+      count++;
     });
   }
 
@@ -75,6 +86,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void dispose() {
     _stopPaymentStatusPolling();
+    _reactionDisposer();
     super.dispose();
   }
 
@@ -202,9 +214,10 @@ PaymentStatus getPaymentStatus(
   if (paymentStatus == 'due' && status == 'requested') {
     return PaymentStatus.pending;
   }
-  if (paymentStatus == 'paid' && status == 'processing') {
+  if (paymentStatus == 'paid' ) {
     return PaymentStatus.success;
-  } else {
+  }
+  else {
     return PaymentStatus.failure;
   }
 }
