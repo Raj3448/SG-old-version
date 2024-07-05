@@ -23,10 +23,10 @@ class BookingListTileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage,
-        //     pathParameters: {
-        //       'bookingServiceStatus': bookingServiceStatus.toString()
-        //     });
+        context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage,
+            pathParameters: {
+              'bookingServiceStatus': bookingServiceStatus.toString()
+            });
       },
       child: Container(
         width: double.infinity,

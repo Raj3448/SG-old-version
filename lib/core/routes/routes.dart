@@ -14,6 +14,7 @@ import 'package:silver_genie/feature/book_services/screens/all_services_screen.d
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
@@ -412,6 +413,20 @@ final GoRouter routes = GoRouter(
         return MaterialPage(
           child: BookingSeviceStatusPage(
             bookingServiceStatus: bookingServiceStatus,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/paymentStatusTrackingPage/:id',
+      name: RoutesConstants.paymentStatusTrackingPage,
+      pageBuilder: (context, state) {
+        final id =
+            state.pathParameters['id'] ?? '';
+        return MaterialPage(
+          child: PaymentStatusTrackingPage(
+            id: id,
           ),
         );
       },

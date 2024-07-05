@@ -11,19 +11,19 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
+import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-import 'booking_payment_detail_screen.dart';
-
 class PaymentScreen extends StatefulWidget {
   PaymentStatusModel? paymentStatusModel;
   final PriceDetails? priceDetails;
-  String id;
+  final String id;
 
   PaymentScreen(
       {required this.paymentStatusModel,
@@ -44,7 +44,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     paymentStatus = widget.paymentStatusModel == null
         ? PaymentStatus.failure
-        : _getPaymentStatus();
+        : getPaymentStatus(
+            paymentStatus: widget.paymentStatusModel!.paymentStatus,
+            status: widget.paymentStatusModel!.status);
     if (paymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
@@ -82,7 +84,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
       builder: (_) {
         return Scaffold(
           backgroundColor: AppColors.white,
-          appBar: const PageAppbar(title: 'Book Service'),
+          appBar: PageAppbar(
+            title: 'Book Service',
+            onTap: paymentStatus == PaymentStatus.failure
+                ? () {
+                    context.pop();
+                  }
+                : () {
+                    context
+                      ..pop()
+                      ..pop();
+                  },
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
@@ -90,9 +103,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               if (widget.paymentStatusModel != null) {
                 GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
                     null;
-                context
-                  ..pop()
-                  ..pop();
+                context.pushNamed(RoutesConstants.paymentStatusTrackingPage,
+                    pathParameters: {'id': widget.id});
               } else {
                 context.pop();
               }
@@ -183,17 +195,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
         return 'Payment Failure';
     }
   }
+}
 
-  PaymentStatus _getPaymentStatus() {
-    if (widget.paymentStatusModel!.paymentStatus == 'due' &&
-        widget.paymentStatusModel!.status == 'requested') {
-      return PaymentStatus.pending;
-    }
-    if (widget.paymentStatusModel!.paymentStatus == 'paid' &&
-        widget.paymentStatusModel!.status == 'processing') {
-      return PaymentStatus.success;
-    } else {
-      return PaymentStatus.failure;
-    }
+PaymentStatus getPaymentStatus(
+    {required String paymentStatus, required String status}) {
+  if (paymentStatus == 'due' && status == 'requested') {
+    return PaymentStatus.pending;
+  }
+  if (paymentStatus == 'paid' && status == 'processing') {
+    return PaymentStatus.success;
+  } else {
+    return PaymentStatus.failure;
   }
 }
