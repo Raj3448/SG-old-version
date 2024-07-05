@@ -457,3 +457,49 @@ class Details with _$Details {
   factory Details.fromJson(Map<String, dynamic> json) =>
       _$DetailsFromJson(json);
 }
+
+@freezed
+class SubscriptionModel with _$SubscriptionModel {
+  const factory SubscriptionModel({
+    required List<SubscriptionDetails> data,
+  }) = _SubscriptionModel;
+
+  factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionModelFromJson(json);
+}
+
+@freezed
+class SubscriptionDetails with _$SubscriptionDetails {
+  const factory SubscriptionDetails({
+    required int id,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required bool isExpired,
+    required DateTime expireDate,
+    required DateTime startDate,
+    required String productName,
+    required int productPrice,
+    required String interval,
+    required int intervalCount,
+    required FamilyMember user,
+    @Default([]) List<FamilyMember>? familyMember,
+  }) = _SubscriptionDetails;
+
+  factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionDetailsFromJson(json);
+}
+
+@freezed
+class FamilyMember with _$FamilyMember {
+  const factory FamilyMember({
+    required int id,
+    required String relation,
+    required String firstName,
+    required String lastName,
+    required int age,
+    @JsonKey(name: 'image') required IconImgMetaData? icon,
+  }) = _FamilyMember;
+
+  factory FamilyMember.fromJson(Map<String, dynamic> json) =>
+      _$FamilyMemberFromJson(json);
+}

@@ -1,11 +1,13 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/customize_tabview_component.dart';
@@ -14,7 +16,7 @@ import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
-import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
@@ -64,13 +66,21 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
 
                       if (eitherData != null) {
                         return eitherData.fold(
-                          (failure) => const Center(
-                            child: ErrorStateComponent(
-                              errorType: ErrorType.somethinWentWrong,
-                            ),
-                          ),
+                          (failure) {
+                            return const Center(
+                              child: ErrorStateComponent(
+                                errorType: ErrorType.somethinWentWrong,
+                              ),
+                            );
+                          },
                           (list) {
-                            if (list.isEmpty) {
+                            final activePlanList = list.data
+                                .where((member) => member.isExpired == false)
+                                .toList();
+                            final expiredPlanList = list.data
+                                .where((member) => member.isExpired == true)
+                                .toList();
+                            if (list.data.isEmpty) {
                               return NoServiceFound(
                                 title: 'Subscriptions',
                                 ontap: () {},
@@ -94,14 +104,32 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                                     child: TabBarView(
                                       controller: controller,
                                       children: [
-                                        _SubscriptionList(
-                                          members: list,
-                                          isPrevious: false,
-                                        ),
-                                        _SubscriptionList(
-                                          members: list,
-                                          isPrevious: true,
-                                        ),
+                                        if (activePlanList.isEmpty)
+                                          NoServiceFound(
+                                            title: 'Subscriptions',
+                                            ontap: () {},
+                                            showTitle: false,
+                                            isService: false,
+                                            name: 'subscriptions',
+                                          )
+                                        else
+                                          _SubscriptionList(
+                                            members: activePlanList,
+                                            isPrevious: false,
+                                          ),
+                                        if (expiredPlanList.isEmpty)
+                                          NoServiceFound(
+                                            title: 'Subscriptions',
+                                            ontap: () {},
+                                            showTitle: false,
+                                            isService: false,
+                                            name: 'subscriptions',
+                                          )
+                                        else
+                                          _SubscriptionList(
+                                            members: expiredPlanList,
+                                            isPrevious: true,
+                                          ),
                                       ],
                                     ),
                                   ),
@@ -134,32 +162,26 @@ class _SubscriptionList extends StatelessWidget {
     required this.members,
     required this.isPrevious,
   });
-  final List<SubscriptionMemberModel> members;
+  final List<SubscriptionDetails> members;
   final bool isPrevious;
 
   @override
   Widget build(BuildContext context) {
-    final filteredMembers =
-        members.where((member) => member.status == 'Active').toList();
-
-    if (filteredMembers.isEmpty) {
-      return NoServiceFound(
-        title: 'Subscriptions',
-        ontap: () {},
-        showTitle: false,
-        isService: false,
-        name: 'subscriptions',
-      );
-    }
+    final activePlanList =
+        members.where((member) => !member.isExpired).toList();
+    final expiredPlanList =
+        members.where((member) => member.isExpired).toList();
 
     return ListView.builder(
-      itemCount: filteredMembers.length,
+      itemCount: isPrevious ? expiredPlanList.length : activePlanList.length,
       physics: const BouncingScrollPhysics(
         decelerationRate: ScrollDecelerationRate.fast,
       ),
       itemBuilder: (context, index) {
+        final plan =
+            isPrevious ? expiredPlanList[index] : activePlanList[index];
         return _UserDetailsComponent(
-          memberDetails: filteredMembers[index],
+          memberDetails: plan,
           isPrevious: isPrevious,
         );
       },
@@ -173,18 +195,20 @@ class _UserDetailsComponent extends StatelessWidget {
     required this.isPrevious,
   });
 
-  final SubscriptionMemberModel memberDetails;
+  final SubscriptionDetails memberDetails;
   final bool isPrevious;
 
   @override
   Widget build(BuildContext context) {
+    final familyMembers = memberDetails.familyMember;
+    final hasMultipleMembers = familyMembers!.length > 1;
+
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-      height: 248,
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.line),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -193,58 +217,97 @@ class _UserDetailsComponent extends StatelessWidget {
           children: [
             Row(
               children: [
-                Avatar.fromSize(
-                  imgPath: '',
-                  size: AvatarSize.size24,
-                ),
+                if (hasMultipleMembers)
+                  Stack(
+                    children: [
+                      Avatar.fromSize(
+                        imgPath:
+                            '${Env.serverUrl}${familyMembers[0].icon?.url ?? ''}',
+                        size: AvatarSize.size24,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: Avatar.fromSize(
+                          imgPath:
+                              '${Env.serverUrl}${familyMembers[1].icon?.url ?? ''}',
+                          size: AvatarSize.size24,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Avatar.fromSize(
+                    imgPath:
+                        '${Env.serverUrl}${memberDetails.user.icon?.url ?? ''}',
+                    size: AvatarSize.size24,
+                  ),
                 const SizedBox(width: Dimension.d3),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      memberDetails.name,
-                      style: AppTextStyle.bodyLargeMedium.copyWith(
-                        color: AppColors.grayscale900,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    if (hasMultipleMembers)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${familyMembers[0].firstName} & ${familyMembers[1].firstName}',
+                            style: AppTextStyle.bodyLargeBold
+                                .copyWith(color: AppColors.grayscale900),
+                          ),
+                          Text(
+                            'Relation: ${familyMembers[0].relation} & ${familyMembers[1].relation}',
+                            style: AppTextStyle.bodyMediumMedium.copyWith(
+                              color: AppColors.grayscale800,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${memberDetails.user.firstName} ${memberDetails.user.lastName}',
+                            style: AppTextStyle.bodyLargeBold
+                                .copyWith(color: AppColors.grayscale900),
+                          ),
+                          Text(
+                            'Relation: ${memberDetails.user.relation}  Age: ${memberDetails.user.age}',
+                            style: AppTextStyle.bodyMediumMedium
+                                .copyWith(color: AppColors.grayscale800),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      'Relation: ${memberDetails.relation}  Age: ${memberDetails.age}',
-                      style: AppTextStyle.bodyMediumMedium.copyWith(
-                        color: AppColors.grayscale800,
-                        height: 1.5,
-                      ),
-                    ),
                   ],
                 ),
               ],
             ),
-            const SizedBox(width: Dimension.d4),
-            SizedBox(
-              height: 110,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconTitleDetailsComponent(
-                    icon: AppIcons.elderly_person,
-                    title: 'Plan',
-                    details: memberDetails.plan,
-                  ),
-                  IconTitleDetailsComponent(
-                    icon: AppIcons.medical_services,
-                    title: 'Status',
-                    details: isPrevious ? 'Expired' : memberDetails.status,
-                  ),
-                  IconTitleDetailsComponent(
-                    icon: AppIcons.calendar,
-                    title: 'Plan ends on',
-                    details:
-                        isPrevious ? '10/2/2024' : memberDetails.planEndsDate,
-                  ),
-                ],
-              ),
+            const SizedBox(height: Dimension.d4),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconTitleDetailsComponent(
+                  icon: AppIcons.elderly_person,
+                  title: 'Plan',
+                  details:
+                      '${memberDetails.productName} ${memberDetails.intervalCount} ${memberDetails.interval}',
+                ),
+                const SizedBox(height: Dimension.d5),
+                IconTitleDetailsComponent(
+                  icon: AppIcons.medical_services,
+                  title: 'Status',
+                  details: memberDetails.isExpired ? 'Expired' : 'Active',
+                ),
+                const SizedBox(height: Dimension.d5),
+                IconTitleDetailsComponent(
+                  icon: AppIcons.calendar,
+                  title: isPrevious ? 'Plan ended on' : 'Plan ends on',
+                  details: formatDate(memberDetails.expireDate),
+                ),
+              ],
             ),
+            const SizedBox(height: Dimension.d4),
             Row(
               children: [
                 Expanded(
