@@ -192,9 +192,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         type: ButtonType.primary,
                         expanded: true,
                         ontap: () async {
-                          setState(() {
-                            autoValidate = true;
-                          });
+                          autoValidate = true;
                           if (otpController.text.isNotEmpty) {
                             if (widget.isFromLoginPage) {
                               store.verifyOtp(
