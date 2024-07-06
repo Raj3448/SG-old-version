@@ -52,6 +52,7 @@ final homeStore = GetIt.I<HomeStore>();
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
+String? updateBotNavPageName;
 
 final GoRouter routes = GoRouter(
   navigatorKey: rootNavigatorKey,
@@ -84,7 +85,7 @@ final GoRouter routes = GoRouter(
       final route = '/?redirectRouteName=${state.fullPath}';
       return route;
     }
-
+    updateBotNavPageName = state.uri.path;
     return null;
   },
   routes: [
@@ -126,8 +127,6 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
         return MaterialPage(
-          child: MainScreen(path: state.fullPath ?? '', child: child),
-        );
       },
       routes: <RouteBase>[
         GoRoute(
@@ -170,7 +169,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '${RoutesConstants.loginRoute}',
+      path: RoutesConstants.loginRoute,
       name: RoutesConstants.loginRoute,
       pageBuilder: (context, state) {
         final redirectRouteName =
