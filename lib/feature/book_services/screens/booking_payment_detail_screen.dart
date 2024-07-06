@@ -158,7 +158,7 @@ class _BookingPaymentDetailScreenState
                       ),
                       ElementSpaceBetween(
                         title:
-                            '${widget.paymentDetails.priceDetails.products.first.displayName} x ${widget.paymentDetails.priceDetails.products.first.quantity} days',
+                            '${widget.paymentDetails.priceDetails.products.first.displayName}  x  ${widget.paymentDetails.priceDetails.products.first.quantity}',
                         description:
                             '₹ ${formatNumberWithCommas(widget.paymentDetails.amount.toInt())}',
                       ),

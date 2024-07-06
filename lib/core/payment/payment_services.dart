@@ -27,8 +27,6 @@ class PaymentService {
     required String razorpayApiKey}) async {
     var options = {
       'key': razorpayApiKey,
-      'amount': amount * 100,
-      'currency': 'INR',
       'description': 'Payment for the order',
       'order_id': orderId,
       'external': {
