@@ -56,7 +56,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       if (paymentStatusModel != null) {
           widget.paymentStatusModel = paymentStatusModel;
           store.servicePaymentStatus = PaymentStatus.success;
-          print('Payment status model updated: ${store.servicePaymentStatus}');
         _stopPaymentStatusPolling();
       }
       store.paymentStatusModel = null;
