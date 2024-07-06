@@ -219,18 +219,24 @@ class ElementSpaceBetween extends StatelessWidget {
   final String description;
   bool isTitleBold;
 
-  final style = AppTextStyle.bodyLargeMedium.copyWith(height: 2.4);
+  final style = AppTextStyle.bodyLargeMedium.copyWith(height: 2);
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: isTitleBold
-              ? AppTextStyle.bodyXLMedium
-                  .copyWith(fontWeight: FontWeight.w500, fontSize: 18)
-              : style,
+        Expanded(
+          child: Text(
+            title,
+            style: isTitleBold
+                ? AppTextStyle.bodyXLMedium
+                    .copyWith(fontWeight: FontWeight.w500, fontSize: 18)
+                : style,
+          ),
+        ),
+        const SizedBox(
+          width: Dimension.d2,
         ),
         Text(
           description,

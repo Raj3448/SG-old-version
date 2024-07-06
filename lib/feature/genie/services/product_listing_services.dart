@@ -1,13 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, lines_longer_than_80_chars
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, lines_longer_than_80_chars, avoid_dynamic_calls
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
+import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 abstract class IProductListingService {
@@ -17,9 +18,9 @@ abstract class IProductListingService {
     required String id,
   });
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
-    required String id,
+    required String productCode,
   });
-  Future<Either<Failure, String>> buyService({
+  Future<Either<Failure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   });
   Future<Either<Failure, bool>> bookService({
@@ -28,11 +29,19 @@ abstract class IProductListingService {
     required String phoneNumber,
     required String careType,
   });
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({
+    required String id,
+  });
+  Future<Either<Failure, SubscriptionData>> createSubscription({
+    required int priceId,
+    required int productId,
+    required List<int> familyMemberIds,
+  });
 }
 
-class ProductLisitingServices extends IProductListingService {
+class ProductListingServices extends IProductListingService {
   HttpClient httpClient;
-  ProductLisitingServices({
+  ProductListingServices({
     required this.httpClient,
   });
 
@@ -68,7 +77,7 @@ class ProductLisitingServices extends IProductListingService {
         default:
           return const Left(Failure.badResponse());
       }
-} on DioException catch (dioError) {
+    } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());
       }
@@ -137,15 +146,15 @@ class ProductLisitingServices extends IProductListingService {
 
   @override
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
-    required String id,
+    required String productCode,
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/products/$id?populate[form][populate][0]=formDetails&populate[form][populate][1]=validations.valueMsg&populate[form][populate][2]=options',
+        '/api/products?filters[code][\$eq]=$productCode&populate[1]=product_form.form.formDetails&populate[2]=product_form.form.options&populate[3]=product_form.form.validations.valueMsg',
       );
       if (response.statusCode == 200) {
-        if (response.data['data'] != null) {
-          final data = response.data['data'];
+        final data = response.data['data'][0];
+        if (data != null) {
           return Right(
             FormDetailModel.fromJson(data as Map<String, dynamic>),
           );
@@ -165,11 +174,25 @@ class ProductLisitingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, String>> buyService({
+  Future<Either<Failure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   }) async {
     try {
-      return const Right('Response received successfully');
+      final response = await httpClient.post(
+        '/api/service-tracker/request-new',
+        data: formData.toJson(),
+      );
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        if (data != null) {
+          return Right(
+            ServiceTrackerResponse.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());
@@ -188,19 +211,24 @@ class ProductLisitingServices extends IProductListingService {
     required String careType,
   }) async {
     final data = {
-      'fields': {
-        'name': name,
-        'phone': phoneNumber,
-        'email': email,
-        'course': 'Silvergenie mobile application',
+      'data': {
+        'fields': {
+          'name': name,
+          'phone': phoneNumber,
+          'email': email,
+          'course': 'Silvergenie mobile application',
+        },
+        'actions': [
+          {'type': 'SYSTEM_NOTE', 'text': 'Lead type : Allied care'},
+          {
+            'type': 'SYSTEM_NOTE',
+            'text': 'Allied care type: $careType',
+          }
+        ],
       },
-      'actions': [
-        {'type': 'SYSTEM_NOTE', 'text': 'Lead type : Allied care'},
-        {'type': 'SYSTEM_NOTE', 'text': 'Allied care type: $careType'},
-      ],
     };
     final response = await httpClient.post(
-      Env.telecrmUrl,
+      '/api/telecrm/leads',
       data: data,
     );
     if (response.statusCode == 200) {
@@ -209,5 +237,71 @@ class ProductLisitingServices extends IProductListingService {
       return Left(Failure.validationError('${response.statusMessage}'));
     }
     return const Left(Failure.badResponse());
+  }
+
+  @override
+  Future<Either<Failure, SubscriptionData>> createSubscription({
+    required int priceId,
+    required int productId,
+    required List<int> familyMemberIds,
+  }) async {
+    try {
+      final data = {
+        'priceId': priceId,
+        'productId': productId,
+        'familyMemberIds': familyMemberIds,
+      };
+      final response = await httpClient.post(
+        '/api/create-subscription',
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        if (response.data['data'] != null) {
+          final data = response.data['data'];
+          return Right(
+            SubscriptionData.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({
+    required String id,
+  }) async {
+    try {
+      final response = await httpClient.get(
+        '/api/service-trackers/$id',
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data != null) {
+          return Right(
+            PaymentStatusModel.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
   }
 }

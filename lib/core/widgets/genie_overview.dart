@@ -2,12 +2,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
-import 'package:silver_genie/core/constants/fonts.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
@@ -37,56 +35,33 @@ class GenieOverviewComponent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: Dimension.d4),
         Text(
           title,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale900,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.46,
-          ),
+          style:
+              AppTextStyle.heading4Bold.copyWith(color: AppColors.grayscale900),
         ),
-        const SizedBox(
-          height: Dimension.d1,
-        ),
+        const SizedBox(height: Dimension.d2),
         Text(
           headline,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale700,
-            fontSize: 14,
-            height: 1.46,
-          ),
+          style: AppTextStyle.bodyMediumMedium
+              .copyWith(color: AppColors.grayscale700),
         ),
-        const SizedBox(
-          height: Dimension.d5,
-        ),
+        const SizedBox(height: Dimension.d5),
         Center(child: BannerImageComponent(imageUrl: imageUrl)),
-        const SizedBox(
-          height: Dimension.d3,
-        ),
+        const SizedBox(height: Dimension.d3),
         Text(
-          'What is ${subHeading.toLowerCase()}?',
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale900,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.46,
-          ),
+          subHeading,
+          style:
+              AppTextStyle.bodyXLBold.copyWith(color: AppColors.grayscale900),
         ),
-        const SizedBox(
-          height: Dimension.d1,
-        ),
+        const SizedBox(height: Dimension.d1),
         Text(
           defination,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale700,
-            fontSize: 14,
-            height: 1.46,
-          ),
+          style: AppTextStyle.bodyMediumMedium
+              .copyWith(color: AppColors.grayscale700),
         ),
-        const SizedBox(
-          height: Dimension.d4,
-        ),
+        const SizedBox(height: Dimension.d5),
       ],
     );
   }
@@ -112,61 +87,53 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.heading,
-              style: AppTextStyle.bodyMediumMedium.copyWith(
-                color: AppColors.grayscale900,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                height: 1.46,
-              ),
-            ),
-            const SizedBox(height: Dimension.d2),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 400),
-              height: isExpanded ? widget.serviceList.length * 30 : 280,
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.serviceList.length,
-                itemBuilder: (context, index) {
-                  return _ServiceCheckBox(
-                    servicename: widget.serviceList[index].attributes.label,
-                    isProvide: widget.serviceList[index].attributes.isActive,
-                  );
-                },
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.white,
-                      blurRadius: 20,
-                      spreadRadius: 20,
-                    ),
-                  ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.heading,
+          style:
+              AppTextStyle.heading5Bold.copyWith(color: AppColors.grayscale900),
+        ),
+        const SizedBox(height: Dimension.d2),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          height: isExpanded ? widget.serviceList.length * 30 : 280,
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: widget.serviceList.length,
+            itemBuilder: (context, index) {
+              return _ServiceCheckBox(
+                servicename: widget.serviceList[index].attributes.label,
+                isProvide: widget.serviceList[index].attributes.isActive,
+              );
+            },
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isExpanded = !isExpanded;
+            });
+          },
+          child: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.white,
+                  blurRadius: 20,
+                  spreadRadius: 20,
                 ),
-                child: Icon(
-                  isExpanded ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
-                  size: 10,
-                ),
-              ),
+              ],
             ),
-          ],
-        );
-      },
+            child: Icon(
+              isExpanded ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
+              size: 10,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -181,7 +148,7 @@ class PlanPricingDetailsComponent extends StatefulWidget {
 
   final String planName;
   final List<Price> pricingDetailsList;
-  final void Function(Price) onSelect;
+  final void Function(Price?) onSelect;
 
   @override
   State<PlanPricingDetailsComponent> createState() =>
@@ -199,17 +166,11 @@ class _PlanPricingDetailsComponentState
       children: [
         Text(
           '${widget.planName.split(' ').first} plans for ${widget.pricingDetailsList.first.benefitApplicableToMembersLimit == 2 ? 'couple' : 'single'}',
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            fontFamily: FontFamily.plusJakarta,
+          style: AppTextStyle.heading5Bold.copyWith(
             color: AppColors.grayscale900,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            height: 1.46,
           ),
         ),
-        const SizedBox(
-          height: Dimension.d4,
-        ),
+        const SizedBox(height: Dimension.d4),
         Column(
           children: List.generate(
             widget.pricingDetailsList.length,
@@ -218,6 +179,7 @@ class _PlanPricingDetailsComponentState
                 setState(() {
                   if (selectedIndex == index) {
                     selectedIndex = null;
+                    widget.onSelect(null);
                   } else {
                     selectedIndex = index;
                     widget.onSelect(widget.pricingDetailsList[index]);
@@ -238,6 +200,7 @@ class _PlanPricingDetailsComponentState
 
 class ExploreNowComponent extends StatelessWidget {
   const ExploreNowComponent({
+    required this.id,
     required this.pageTitle,
     required this.btnLabel,
     required this.planHeading,
@@ -249,6 +212,7 @@ class ExploreNowComponent extends StatelessWidget {
     super.key,
   });
 
+  final String id;
   final String pageTitle;
   final String btnLabel;
   final String planHeading;
@@ -281,7 +245,7 @@ class ExploreNowComponent extends StatelessWidget {
                   jsonEncode(plansList.map((plan) => plan.toJson()).toList());
               context.pushNamed(
                 RoutesConstants.couplePlanPage,
-                pathParameters: {'pageTitle': pageTitle},
+                pathParameters: {'id': id, 'pageTitle': pageTitle},
                 extra: {
                   'plansList': plansListJson,
                   'isUpgradable': isUpgradable.toString(),
@@ -349,13 +313,10 @@ class FAQComponent extends StatelessWidget {
       children: [
         Text(
           heading,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            fontSize: 20,
-            fontFamily: FontFamily.inter,
-            fontWeight: FontWeight.w600,
-            height: 2.514,
-          ),
+          style:
+              AppTextStyle.bodyXLBold.copyWith(color: AppColors.grayscale900),
         ),
+        const SizedBox(height: Dimension.d2),
         Column(
           children: List.generate(
             faqList.length,
@@ -387,9 +348,7 @@ class _ServiceCheckBox extends StatelessWidget {
           height: 20,
           color: isProvide ? AppColors.primary : AppColors.grayscale600,
         ),
-        const SizedBox(
-          width: Dimension.d2,
-        ),
+        const SizedBox(width: Dimension.d2),
         Text(
           servicename,
           style: AppTextStyle.bodyMediumMedium.copyWith(
@@ -440,12 +399,8 @@ class _ExpandingQuestionComponentState
                     isExpanding
                         ? '${widget.question}\n${widget.temp}'
                         : widget.question,
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      fontSize: 16,
-                      fontFamily: FontFamily.inter,
-                      fontWeight: FontWeight.w400,
-                      height: 2,
-                    ),
+                    style: AppTextStyle.bodyLargeMedium
+                        .copyWith(color: AppColors.grayscale900),
                   ),
                 ),
                 const Spacer(),

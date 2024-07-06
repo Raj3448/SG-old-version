@@ -22,19 +22,13 @@ class PaymentService {
       ..on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  void openCheckout({required double amount, required String receipt}) async {
-    //final orderId = await _createOrder(amount, receipt);
+  void openCheckout({required double amount,
+    required String orderId,
+    required String razorpayApiKey}) async {
     var options = {
-      'key': 'rzp_test_iSQwvN7ULfCVtv',
-      'amount': amount * 100,
-      'currency': 'INR',
-      'name': 'Rajkumar Chavan',
+      'key': razorpayApiKey,
       'description': 'Payment for the order',
-      //'order_id': orderId,
-      'prefill': {
-        'contact': '+91 9156313158',
-        'email': 'example@example.com',
-      },
+      'order_id': orderId,
       'external': {
         'wallets': ['paytm']
       }
@@ -44,23 +38,6 @@ class PaymentService {
       _razorpay.open(options);
     } catch (e) {
       print(e.toString());
-    }
-  }
-
-  Future<String> _createOrder(double amount, String receipt) async {
-    final response = await httpClient.post(
-      'api/payment',
-      data: {'amount': amount, 'currency': 'INR', 'receipt': receipt},
-      options: Options(headers: {
-        'Content-Type': 'application/json',
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final orderData = response.data;
-      return orderData['id'].toString();
-    } else {
-      throw Exception('Failed to create order');
     }
   }
 

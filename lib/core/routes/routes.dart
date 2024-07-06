@@ -3,16 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
+import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
@@ -68,7 +70,8 @@ final GoRouter routes = GoRouter(
       return null;
     }
     final skipRedirect = bool.tryParse(
-            state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false') ??
+          state.uri.queryParameters['skipRootRedirectCheck'] ?? 'false',
+        ) ??
         false;
 
     if (skipRedirect) {
@@ -124,7 +127,6 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
         return MaterialPage(
-            child: MainScreen(path: updateBotNavPageName ?? '', child: child));
       },
       routes: <RouteBase>[
         GoRoute(
@@ -173,9 +175,10 @@ final GoRouter routes = GoRouter(
         final redirectRouteName =
             state.uri.queryParameters['redirectRouteName'];
         return MaterialPage(
-            child: LoginPage(
-          redirectRouteName: redirectRouteName,
-        ));
+          child: LoginPage(
+            redirectRouteName: redirectRouteName,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -197,10 +200,11 @@ final GoRouter routes = GoRouter(
         final redirectRouteName = extraData?['redirectRouteName'] as String?;
         return MaterialPage(
           child: OTPScreen(
-              isFromLoginPage: isFromLoginPage,
-              email: email,
-              phoneNumber: phoneNumber,
-              redirectRouteName: redirectRouteName),
+            isFromLoginPage: isFromLoginPage,
+            email: email,
+            phoneNumber: phoneNumber,
+            redirectRouteName: redirectRouteName,
+          ),
         );
       },
     ),
@@ -311,9 +315,10 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/couplePlanPage/:pageTitle',
+      path: '/couplePlanPage/:id/:pageTitle',
       name: RoutesConstants.couplePlanPage,
       pageBuilder: (context, state) {
+        final id = state.pathParameters['id'] ?? '';
         final pageTitle = state.pathParameters['pageTitle'] ?? 'Genie';
         final extraData = state.extra as Map<String, dynamic>?;
         final plansListJson = extraData?['plansList'] as String;
@@ -325,9 +330,11 @@ final GoRouter routes = GoRouter(
             .toList();
         return MaterialPage(
           child: CouplePlanPage(
-              pageTitle: pageTitle,
-              planList: planList,
-              isUpgradable: isUpgradable),
+            id: id,
+            pageTitle: pageTitle,
+            planList: planList,
+            isUpgradable: isUpgradable,
+          ),
         );
       },
     ),
@@ -365,7 +372,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/serviceDetailsScreen/:id/:title',
+      path: '/serviceDetailsScreen/:id/:title/:productCode',
       name: RoutesConstants.serviceDetailsScreen,
       pageBuilder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
@@ -373,19 +380,22 @@ final GoRouter routes = GoRouter(
           child: ServiceDetailsScreen(
             id: id,
             title: state.pathParameters['title'] ?? '',
+            productCode: state.pathParameters['productCode'] ?? '',
           ),
         );
       },
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookServiceScreen/:id',
+      path: '/bookServiceScreen/:id/:productCode',
       name: RoutesConstants.bookServiceScreen,
       pageBuilder: (context, state) {
         final serviceId = state.pathParameters['id'].toString();
+        final productCode = state.pathParameters['productCode'].toString();
         return MaterialPage(
           child: BookServiceScreen(
             id: serviceId,
+            productCode: productCode,
           ),
         );
       },
@@ -408,23 +418,50 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
+      path: '/paymentStatusTrackingPage/:id',
+      name: RoutesConstants.paymentStatusTrackingPage,
+      pageBuilder: (context, state) {
+        final id =
+            state.pathParameters['id'] ?? '';
+        return MaterialPage(
+          child: PaymentStatusTrackingPage(
+            id: id,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
       path: '/paymentScreen',
       name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
         final extraData = state.extra as Map<String, dynamic>?;
-        final PaymentStatus paymentStatus =
-            extraData?['paymentStatus'] as PaymentStatus;
+        final paymentStatusModel =
+            extraData?['paymentStatusModel'] as PaymentStatusModel?;
+        final priceDetails =
+            extraData?['priceDetails'] as PriceDetails?;
+        final id =
+            extraData?['id'] as String;
         return MaterialPage(
             child: PaymentScreen(
-          paymentStatus: paymentStatus,
+          paymentStatusModel: paymentStatusModel,
+          priceDetails: priceDetails,
+          id: id,
         ));
       },
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.bookingDetailsScreen,
+      path: '/bookingPaymentDetailScreen',
+      name: RoutesConstants.bookingPaymentDetailScreen,
       pageBuilder: (context, state) {
-        return const MaterialPage(child: BookingDetailsScreen());
+        final extraData = state.extra as Map<String, dynamic>?;
+        final paymentDetails =
+            extraData?['paymentDetails'] as ServiceTrackerResponse;
+        return MaterialPage(
+            child: BookingPaymentDetailScreen(
+          paymentDetails: paymentDetails,
+        ));
       },
     ),
     GoRoute(
@@ -436,12 +473,22 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/subscriDetailsScreen/:price',
+      path: '/subscriDetailsScreen/:price/:subscriptionData/:isCouple',
+      // path: '/subscriDetailsScreen/:price/:isCouple',
       name: RoutesConstants.subscriptionDetailsScreen,
       pageBuilder: (context, state) {
+        final isCoupleString = state.pathParameters['isCouple'] ?? 'false';
+        final isCouple = isCoupleString.toLowerCase() == 'true';
+        final subscriptionDataString =
+            state.pathParameters['subscriptionData'] ?? '{}';
+        final subscriptionDataMap =
+            json.decode(subscriptionDataString) as Map<String, dynamic>;
+
         return MaterialPage(
           child: SubscriptionDetailsScreen(
             price: state.pathParameters['price'] ?? '',
+            subscriptionData: SubscriptionData.fromJson(subscriptionDataMap),
+            isCouple: isCouple,
           ),
         );
       },

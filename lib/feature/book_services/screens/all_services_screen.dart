@@ -111,6 +111,7 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                           pathParameters: {
                             'id': '${displayedServices[index].id}',
                             'title': displayedServices[index].attributes.name,
+                            'productCode' : displayedServices[index].attributes.code
                           },
                         );
                       },

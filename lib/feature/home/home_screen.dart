@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : const _MemberInfo(),
                       ),
                       if (memberStore.members.isNotEmpty)
-                        _EmergencyActivation(),
+                        _EmergencyActivation(memberStore: memberStore),
                       if (bookingServiceStore.isAllServiceLoaded)
                         _ActiveBookingComponent(store: bookingServiceStore),
                       Text(
@@ -547,6 +547,8 @@ class _TestmonialsCard extends StatelessWidget {
 }
 
 class _EmergencyActivation extends StatelessWidget {
+  final MembersStore memberStore;
+  const _EmergencyActivation({required this.memberStore});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -589,7 +591,8 @@ class _EmergencyActivation extends StatelessWidget {
                               Orientation.landscape
                           ? null
                           : const NeverScrollableScrollPhysics(),
-                      child: _EmergencyActivateBottomSheet(),
+                      child: _EmergencyActivateBottomSheet(
+                          memberStore: memberStore),
                     );
                   },
                   shape: const RoundedRectangleBorder(
@@ -623,6 +626,8 @@ class _EmergencyActivation extends StatelessWidget {
 }
 
 class _EmergencyActivateBottomSheet extends StatefulWidget {
+  final MembersStore memberStore;
+  const _EmergencyActivateBottomSheet({required this.memberStore});
   @override
   State<_EmergencyActivateBottomSheet> createState() =>
       _EmergencyActivateBottomSheetState();
@@ -680,22 +685,26 @@ class _EmergencyActivateBottomSheetState
                 const SizedBox(
                   height: Dimension.d2,
                 ),
-                _ActivateListileComponent(
-                  onPressed: () async {
-                    await launchDialer('+910000000000');
-                    setState(() {
-                      isActivate = true;
-                    });
-                  },
-                ),
-                _ActivateListileComponent(
-                  onPressed: () {
-                    launchDialer('+910000000000');
-                    setState(() {
-                      isActivate = true;
-                    });
-                  },
-                ),
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                      itemBuilder: (context, index) =>
+                          _ActivateListileComponent(
+                            memberName:
+                                widget.memberStore.familyMembers[index].name,
+                            relation: widget
+                                .memberStore.familyMembers[index].relation,
+                            onPressed: () async {
+                              await launchDialer('+910000000000');
+                              setState(() {
+                                isActivate = true;
+                              });
+                            },
+                            imgUrl: widget.memberStore.familyMembers[index]
+                                .profileImg?.url,
+                          ),
+                      itemCount: widget.memberStore.familyMembers.length),
+                )
               ],
             ),
     );
@@ -704,9 +713,14 @@ class _EmergencyActivateBottomSheetState
 
 class _ActivateListileComponent extends StatelessWidget {
   final VoidCallback onPressed;
-  const _ActivateListileComponent({
-    required this.onPressed,
-  });
+  final String memberName;
+  final String relation;
+  final String? imgUrl;
+  const _ActivateListileComponent(
+      {required this.onPressed,
+      required this.memberName,
+      required this.imgUrl,
+      required this.relation});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -718,12 +732,7 @@ class _ActivateListileComponent extends StatelessWidget {
       padding: const EdgeInsets.all(Dimension.d3),
       child: Row(
         children: [
-          const CircleAvatar(
-            maxRadius: 22,
-            backgroundImage: AssetImage(
-              'assets/icon/Profile.png',
-            ),
-          ),
+          Avatar.fromSize(imgPath: imgUrl ?? '', size: AvatarSize.size22),
           const SizedBox(
             width: Dimension.d2,
           ),
@@ -731,12 +740,12 @@ class _ActivateListileComponent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Shalini Nair',
+                memberName,
                 style: AppTextStyle.bodyLargeMedium
                     .copyWith(fontWeight: FontWeight.w500),
               ),
               Text(
-                'Mother',
+                relation,
                 style: AppTextStyle.bodyMediumMedium
                     .copyWith(color: AppColors.grayscale700),
               ),

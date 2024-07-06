@@ -107,6 +107,7 @@ class Avatar extends StatelessWidget {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                     value: downloadProgress.progress,
+                    color: AppColors.primary,
                   ),
                   errorWidget: (context, url, error) => Image.asset(
                     'assets/icon/default _profile.png',

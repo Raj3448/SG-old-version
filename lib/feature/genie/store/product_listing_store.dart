@@ -1,6 +1,10 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
+import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
+import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
@@ -17,10 +21,19 @@ abstract class _ProductListingStoreBase with Store {
   bool fetchProductLoading = false;
 
   @observable
+  bool pytmStatusLoading = false;
+
+  @observable
   List<ProductBasicDetailsModel>? productBasicDetailsModelList;
 
   @observable
   String? getProductFailure;
+
+  @observable
+  String? getPaymentStatusFailure;
+
+  @observable
+  PaymentStatusModel? paymentStatusModel;
 
   @observable
   bool isProductLoaded = false;
@@ -35,13 +48,33 @@ abstract class _ProductListingStoreBase with Store {
   String? buyServiceFailed;
 
   @observable
-  String? servicePaymentInfoGotSuccess;
+  ServiceTrackerResponse? servicePaymentInfoGotSuccess;
 
   @observable
   PaymentStatus? paymentStatus;
 
   @observable
   bool isLoading = false;
+
+  @observable
+  Price? _planDetails;
+
+  @observable
+  PaymentStatus? servicePaymentStatus;
+
+  @observable
+  ProductListingModel? subscriptionModel;
+
+  @observable
+  bool subscriptionLoading = false;
+
+  @computed
+  Price? get planDetails => _planDetails;
+
+  @action
+  void updatePlan(Price? plan) {
+    _planDetails = plan;
+  }
 
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
@@ -170,5 +203,56 @@ abstract class _ProductListingStoreBase with Store {
       });
       isBuyServiceLoading = false;
     });
+  }
+
+  void getPaymentStatus({required String id}) {
+    pytmStatusLoading = true;
+    productListingService.getPaymentStatus(id: id).then((response) {
+      response.fold(
+        (l) {
+          l.maybeMap(
+            socketError: (value) =>
+                getPaymentStatusFailure = 'No Internet Connection',
+            orElse: () => getPaymentStatusFailure = 'Something went wrong',
+          );
+        },
+        (r) {
+          paymentStatusModel = r;
+        },
+      );
+      pytmStatusLoading = false;
+    });
+  }
+
+  Future<Either<Failure, SubscriptionData>> createSubscription({
+    required int priceId,
+    required int productId,
+    required List<int> familyMemberIds,
+  }) async {
+    isLoading = true;
+    final response = await productListingService.createSubscription(
+      priceId: priceId,
+      productId: productId,
+      familyMemberIds: familyMemberIds,
+    );
+    isLoading = false;
+    return response;
+  }
+
+  @action
+  Future<void> getProductById({
+    required String id,
+  }) async {
+    subscriptionLoading = true;
+    final response = await productListingService.getProductById(id: id);
+    subscriptionLoading = false;
+    response.fold(
+      (failure) {
+        subscriptionModel = null;
+      },
+      (productListingModel) {
+        subscriptionModel = productListingModel;
+      },
+    );
   }
 }

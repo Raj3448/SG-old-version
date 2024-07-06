@@ -22,29 +22,34 @@ import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
-import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class BookServiceScreen extends StatefulWidget {
-  BookServiceScreen({required this.id, super.key});
+  const BookServiceScreen(
+      {required this.productCode, required this.id, super.key});
+  final String productCode;
   final String id;
 
   @override
   State<BookServiceScreen> createState() => _BookServiceScreenState();
 }
 
-class _BookServiceScreenState extends State<BookServiceScreen> {
+class _BookServiceScreenState extends State<BookServiceScreen>
+    with AutomaticKeepAliveClientMixin<BookServiceScreen> {
   final TextEditingController dobContr = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<CustomDropDownBoxState> _customDropDownBoxKey =
       GlobalKey<CustomDropDownBoxState>();
   List<FormAnswer> formAnswers = [];
   Member? selectedMember;
-  final service = GetIt.I<ProductLisitingServices>();
+  final service = GetIt.I<ProductListingServices>();
   final store = GetIt.I<ProductListingStore>();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -59,321 +64,342 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
       }
       store.buyServiceFailed = null;
     });
-    reaction((_) => store.paymentStatus, (PaymentStatus? paymentStatus) {
-      if (paymentStatus != null) {
-        context.pushReplacementNamed(RoutesConstants.paymentScreen,
-            extra: {'paymentStatus': paymentStatus});
+    reaction((_) => store.servicePaymentInfoGotSuccess,
+        (servicePaymentInfoGotSuccess) {
+      if (servicePaymentInfoGotSuccess != null) {
+        context.pushNamed(RoutesConstants.bookingPaymentDetailScreen,
+            extra: {'paymentDetails': servicePaymentInfoGotSuccess});
       }
-      store..paymentStatus = null;
+      store.servicePaymentInfoGotSuccess = null;
     });
     super.initState();
   }
 
   @override
   void dispose() {
+    store
+      ..servicePaymentInfoGotSuccess = null
+      ..paymentStatusModel = null;
     dobContr.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: const PageAppbar(title: 'Book Service'),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Observer(
-        builder: (_) {
-          return FixedButton(
-            ontap: () {
-              if (store.servicePaymentInfoGotSuccess == null) {
-                _submitAndNext(context);
-              } else {
-                _proceedToPay();
-              }
-            },
-            btnTitle: store.servicePaymentInfoGotSuccess == null
-                ? 'Submit & next'
-                : 'Proceed to pay',
-            showIcon: false,
-            iconPath: AppIcons.add,
-          );
-        },
-      ),
-      body: FutureBuilder(
-        future: service.getBookingServiceDetailsById(id: widget.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingWidget(
-              showShadow: false,
-            );
-          }
-          if (snapshot.hasError ||
-              !snapshot.hasData ||
-              snapshot.data!.isLeft()) {
-            return const ErrorStateComponent(
-                errorType: ErrorType.somethinWentWrong);
-          }
-          late FormDetailModel formDetailModel;
-          snapshot.data!.getRight().fold(
-              () => const ErrorStateComponent(
-                  errorType: ErrorType.somethinWentWrong),
-              (t) => formDetailModel = t);
-          List<Widget> widgetList = [];
-          final components = formDetailModel.attributes.form;
-          for (var i = 0; i < components.length; i++) {
-            final component = components[i];
-            switch (component.component) {
-              case 'form-field-type.reference-question':
-                if (component.controlType == 'familyDropDown') {
-                  widgetList.addAll([
-                    const SizedBox(height: Dimension.d4),
-                    if (component.formDetails.required)
-                      AsteriskLabel(
-                          label: '${i + 1}. ${component.formDetails.title}'),
-                    if (!component.formDetails.required)
-                      Text(
-                        '${i + 1}. ${component.formDetails.title}',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                    const SizedBox(height: Dimension.d2),
-                    CustomDropDownBox(
-                      key: _customDropDownBoxKey,
-                      memberName: selectedMember?.name,
-                      memberList: GetIt.I<MembersStore>().members,
-                      updateMember: (member) {
-                        selectedMember = member;
-                        _updateFormValues1(
-                            id: component.id,
-                            title: component.formDetails.title,
-                            type: component.type,
-                            controlType: component.controlType,
-                            hint: component.formDetails.hint,
-                            valueReference: [member?.id.toString() ?? ''],
-                            forDId: component.formDetails.id.toString());
-                      },
-                      isRequired: component.formDetails.required,
-                    )
-                  ]);
-                }
-                break;
-              case 'form-field-type.string-question':
-                if (component.type == 'string') {
-                  widgetList.addAll([
-                    const SizedBox(height: Dimension.d4),
-                    if (component.formDetails.required)
-                      AsteriskLabel(
-                          label: '${i + 1}. ${component.formDetails.title}'),
-                    if (!component.formDetails.required)
-                      Text(
-                        '${i + 1}. ${component.formDetails.title}',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                    const SizedBox(height: Dimension.d2),
-                    CustomTextField(
-                      controller: TextEditingController(),
-                      validationLogic: component.formDetails.required
-                          ? (value) {
-                              if (value == null) {
-                                return '${component.formDetails.title} must not be empty';
-                              }
-                              return applyValidations(
-                                value: value,
-                                validations: component.validations,
-                              );
-                            }
-                          : null,
-                      onSaved: (value) {
-                        _updateFormValues1(
-                            id: component.id,
-                            title: component.formDetails.title,
-                            type: component.type,
-                            value: value?.trim(),
-                            controlType: component.controlType,
-                            hint: component.formDetails.hint,
-                            forDId: component.formDetails.id.toString());
-                      },
-                      hintText: 'Type here',
-                      keyboardType: TextInputType.name,
-                      large: true,
-                      enabled: true,
-                    ),
-                  ]);
-                }
-                break;
-              case 'form-field-type.choice-question':
-                if (component.type == 'choice') {
-                  widgetList.addAll([
-                    const SizedBox(height: Dimension.d4),
-                    if (component.formDetails.required)
-                      AsteriskLabel(
-                          label: '${i + 1}. ${component.formDetails.title}'),
-                    if (!component.formDetails.required)
-                      Text(
-                        '${i + 1}. ${component.formDetails.title}',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                    const SizedBox(height: Dimension.d2),
-                    MultiSelectFormField(
-                      showClear: !component.formDetails.required,
-                      onSaved: (newValue) {
-                        _updateFormValues1(
-                            id: component.id,
-                            title: component.formDetails.title,
-                            type: component.type,
-                            value: newValue?.first.value.toString().trim(),
-                            controlType: component.controlType,
-                            hint: component.formDetails.hint,
-                            forDId: component.formDetails.id.toString());
-                      },
-                      validator: component.formDetails.required
-                          ? (value) {
-                              if (value == null) {
-                                return '${component.formDetails.title} must not be empty';
-                              }
-                              return applyValidations(
-                                value: value.first.value.toString(),
-                                validations: component.validations,
-                              );
-                            }
-                          : null,
-                      values: List.generate(
-                        component.options.length,
-                        (index) => ValueItem(
-                          label: component.options[index].display,
-                          value: component.options[index].value,
-                        ),
-                      ),
-                    )
-                  ]);
-                }
-                break;
-              case 'form-field-type.date-question':
-                if (component.type == 'date') {
-                  widgetList.addAll([
-                    const SizedBox(height: Dimension.d4),
-                    if (component.formDetails.required)
-                      AsteriskLabel(
-                          label: '${i + 1}. ${component.formDetails.title}'),
-                    if (!component.formDetails.required)
-                      Text(
-                        '${i + 1}. ${component.formDetails.title}',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                    const SizedBox(height: Dimension.d2),
-                    DateDropdown(
-                      controller: dobContr,
-                      dateFormat: component.dateFormat,
-                      onSaved: (value) {
-                        _updateFormValues1(
-                            id: component.id,
-                            title: component.formDetails.title,
-                            type: component.type,
-                            value: value.toString(),
-                            controlType: component.controlType,
-                            hint: component.formDetails.hint,
-                            forDId: component.formDetails.id.toString());
-                      },
-                      validator: component.formDetails.required
-                          ? (value) {
-                              if (value == null) {
-                                return '${component.formDetails.title} must not be empty';
-                              }
-                              return applyValidations(
-                                value: dobContr.text,
-                                validations: component.validations,
-                              );
-                            }
-                          : null,
-                    ),
-                  ]);
-                }
-                break;
-              case 'form-field-type.decimal-question':
-                if (component.type == 'decimal') {
-                  widgetList.addAll([
-                    const SizedBox(height: Dimension.d4),
-                    if (component.formDetails.required)
-                      AsteriskLabel(
-                          label: '${i + 1}. ${component.formDetails.title}'),
-                    if (!component.formDetails.required)
-                      Text(
-                        '${i + 1}. ${component.formDetails.title}',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale700),
-                      ),
-                    const SizedBox(height: Dimension.d2),
-                    CustomTextField(
-                      controller: TextEditingController(
-                        text: component.defaultValue.toString(),
-                      ),
-                      validationLogic: component.formDetails.required
-                          ? (value) {
-                              if (value == null) {
-                                return '${component.formDetails.title} must not be empty';
-                              }
-                              return applyValidations(
-                                  value: value,
-                                  validations: component.validations,
-                                  isNum: true);
-                            }
-                          : null,
-                      onSaved: (value) {
-                        _updateFormValues1(
-                            id: component.id,
-                            title: component.formDetails.title,
-                            type: component.type,
-                            value: value?.trim(),
-                            controlType: component.controlType,
-                            hint: component.formDetails.hint,
-                            forDId: component.formDetails.id.toString());
-                      },
-                      hintText: 'Type here',
-                      keyboardType: TextInputType.number,
-                      large: false,
-                      enabled: true,
-                    ),
-                  ]);
-                }
-            }
-          }
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Observer(
-              builder: (_) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BookingStatus(
-                          currentStep:
-                              store.servicePaymentInfoGotSuccess != null
-                                  ? BookingStep.payment
-                                  : BookingStep.serviceDetails,
-                        ),
-                        if (store.servicePaymentInfoGotSuccess == null)
-                          ...widgetList,
-                        if (store.servicePaymentInfoGotSuccess != null)
-                          _BookingPaymentDetailComp(
-                            paymentDetails: store.servicePaymentInfoGotSuccess!,
+    super.build(context);
+    return Observer(
+      builder: (_) {
+        return Stack(
+          children: [
+            Scaffold(
+              backgroundColor: AppColors.white,
+              appBar: const PageAppbar(title: 'Book Service'),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: FixedButton(
+                ontap: () {
+                  _submitAndNext(context);
+                },
+                btnTitle: 'Submit & next',
+                showIcon: false,
+                iconPath: AppIcons.add,
+              ),
+              body: FutureBuilder(
+                future: service.getBookingServiceDetailsById(
+                    productCode: widget.productCode),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      !store.isBuyServiceLoading) {
+                    return const LoadingWidget(
+                      showShadow: false,
+                    );
+                  }
+                  if (snapshot.hasError ||
+                      !snapshot.hasData ||
+                      snapshot.data!.isLeft()) {
+                    return const ErrorStateComponent(
+                        errorType: ErrorType.somethinWentWrong);
+                  }
+                  late FormDetailModel formDetailModel;
+                  snapshot.data!.getRight().fold(
+                      () => const ErrorStateComponent(
+                          errorType: ErrorType.somethinWentWrong),
+                      (t) => formDetailModel = t);
+                  final widgetList = <Widget>[];
+                  final components = formDetailModel.attributes.productForm;
+                  for (var i = 0;
+                      i < components.data.attributes.form.length;
+                      i++) {
+                    final component = components.data.attributes.form[i];
+                    switch (component.component) {
+                      case 'form-field-type.reference-question':
+                        if (component.controlType == 'familyDropDown') {
+                          widgetList.addAll([
+                            const SizedBox(height: Dimension.d4),
+                            if (component.formDetails.required)
+                              AsteriskLabel(
+                                  label:
+                                      '${i + 1}. ${component.formDetails.title}'),
+                            if (!component.formDetails.required)
+                              Text(
+                                '${i + 1}. ${component.formDetails.title}',
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.grayscale700),
+                              ),
+                            const SizedBox(height: Dimension.d2),
+                            CustomDropDownBox(
+                              key: _customDropDownBoxKey,
+                              memberName: selectedMember?.name,
+                              memberList: GetIt.I<MembersStore>().familyMembers,
+                              placeHolder: component.formDetails.placeholder,
+                              updateMember: (member) {
+                                selectedMember = member;
+                                _updateFormValues1(
+                                    id: component.id,
+                                    title: component.formDetails.title,
+                                    type: component.type,
+                                    controlType: component.controlType,
+                                    hint: component.formDetails.hint,
+                                    valueReference: [
+                                      '${member?.id.toString()}' ?? ''
+                                    ],
+                                    forDId:
+                                        component.formDetails.id.toString());
+                              },
+                              isRequired: component.formDetails.required,
+                            )
+                          ]);
+                        }
+                        break;
+                      case 'form-field-type.text-question':
+                        if (component.type == 'text') {
+                          widgetList.addAll([
+                            const SizedBox(height: Dimension.d4),
+                            if (component.formDetails.required)
+                              AsteriskLabel(
+                                  label:
+                                      '${i + 1}. ${component.formDetails.title}'),
+                            if (!component.formDetails.required)
+                              Text(
+                                '${i + 1}. ${component.formDetails.title}',
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.grayscale700),
+                              ),
+                            const SizedBox(height: Dimension.d2),
+                            CustomTextField(
+                              validationLogic: component.formDetails.required
+                                  ? (value) {
+                                      if (value == null) {
+                                        return '${component.formDetails.title} must not be empty';
+                                      }
+                                      return applyValidations(
+                                        value: value,
+                                        validations: component.validations,
+                                      );
+                                    }
+                                  : null,
+                              onSaved: (value) {
+                                _updateFormValues1(
+                                    id: component.id,
+                                    title: component.formDetails.title,
+                                    type: component.type,
+                                    valueText: value?.trim(),
+                                    controlType: component.controlType,
+                                    hint: component.formDetails.hint,
+                                    forDId:
+                                        component.formDetails.id.toString());
+                              },
+                              hintText: component.formDetails.placeholder ??
+                                  'Type here',
+                              keyboardType: TextInputType.name,
+                              large: true,
+                              enabled: true,
+                            ),
+                          ]);
+                        }
+                        break;
+                      case 'form-field-type.choice-question':
+                        if (component.type == 'choice') {
+                          widgetList.addAll([
+                            const SizedBox(height: Dimension.d4),
+                            if (component.formDetails.required)
+                              AsteriskLabel(
+                                  label:
+                                      '${i + 1}. ${component.formDetails.title}'),
+                            if (!component.formDetails.required)
+                              Text(
+                                '${i + 1}. ${component.formDetails.title}',
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.grayscale700),
+                              ),
+                            const SizedBox(height: Dimension.d2),
+                            MultiSelectFormField(
+                              showClear: !component.formDetails.required,
+                              hint: component.formDetails.placeholder,
+                              onSaved: (newValue) {
+                                _updateFormValues1(
+                                    id: component.id,
+                                    title: component.formDetails.title,
+                                    type: component.type,
+                                    valueChoice: [
+                                      '${newValue!.first.value.toString().trim()}'
+                                    ],
+                                    controlType: component.controlType,
+                                    hint: component.formDetails.hint,
+                                    forDId:
+                                        component.formDetails.id.toString());
+                              },
+                              validator: component.formDetails.required
+                                  ? (value) {
+                                      if (value == null) {
+                                        return '${component.formDetails.title} must not be empty';
+                                      }
+                                      return applyValidations(
+                                        value: value.first.value.toString(),
+                                        validations: component.validations,
+                                      );
+                                    }
+                                  : null,
+                              values: List.generate(
+                                component.options.length,
+                                (index) => ValueItem(
+                                  label: component.options[index].display,
+                                  value: component.options[index].value,
+                                ),
+                              ),
+                            )
+                          ]);
+                        }
+                        break;
+                      case 'form-field-type.date-question':
+                        if (component.type == 'date') {
+                          widgetList.addAll([
+                            const SizedBox(height: Dimension.d4),
+                            if (component.formDetails.required)
+                              AsteriskLabel(
+                                  label:
+                                      '${i + 1}. ${component.formDetails.title}'),
+                            if (!component.formDetails.required)
+                              Text(
+                                '${i + 1}. ${component.formDetails.title}',
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.grayscale700),
+                              ),
+                            const SizedBox(height: Dimension.d2),
+                            DateDropdown(
+                              controller: dobContr,
+                              dateFormat: component.dateFormat,
+                              onSaved: (value) {
+                                _updateFormValues1(
+                                    id: component.id,
+                                    title: component.formDetails.title,
+                                    type: component.type,
+                                    valueDate: value.toString(),
+                                    controlType: component.controlType,
+                                    hint: component.formDetails.hint,
+                                    forDId:
+                                        component.formDetails.id.toString());
+                              },
+                              validator: component.formDetails.required
+                                  ? (value) {
+                                      if (value == null) {
+                                        return '${component.formDetails.title} must not be empty';
+                                      }
+                                      return applyValidations(
+                                        value: dobContr.text,
+                                        validations: component.validations,
+                                      );
+                                    }
+                                  : null,
+                            ),
+                          ]);
+                        }
+                        break;
+                      case 'form-field-type.integer-question':
+                        if (component.type == 'integer') {
+                          widgetList.addAll([
+                            const SizedBox(height: Dimension.d4),
+                            if (component.formDetails.required)
+                              AsteriskLabel(
+                                  label:
+                                      '${i + 1}. ${component.formDetails.title}'),
+                            if (!component.formDetails.required)
+                              Text(
+                                '${i + 1}. ${component.formDetails.title}',
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.grayscale700),
+                              ),
+                            const SizedBox(height: Dimension.d2),
+                            CustomTextField(
+                              controller: TextEditingController(
+                                text: component.defaultValue.toString(),
+                              ),
+                              validationLogic: component.formDetails.required
+                                  ? (value) {
+                                      if (value == null) {
+                                        return '${component.formDetails.title} must not be empty';
+                                      }
+                                      if (int.tryParse(value) == null) {
+                                        return '${component.formDetails.title} must be an integer';
+                                      }
+                                      return applyValidations(
+                                          value: value,
+                                          validations: component.validations,
+                                          isNum: true);
+                                    }
+                                  : null,
+                              onSaved: (value) {
+                                _updateFormValues1(
+                                    id: component.id,
+                                    title: component.formDetails.title,
+                                    type: component.type,
+                                    valueInteger: value?.trim(),
+                                    controlType: component.controlType,
+                                    hint: component.formDetails.hint,
+                                    forDId:
+                                        component.formDetails.id.toString());
+                              },
+                              hintText: component.formDetails.placeholder ??
+                                  'Type here',
+                              keyboardType: TextInputType.number,
+                              large: false,
+                              enabled: true,
+                            ),
+                          ]);
+                        }
+                    }
+                  }
+                  return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimension.d4),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const BookingStatus(
+                                currentStep: BookingStep.serviceDetails,
+                              ),
+                              ...widgetList,
+                              const SizedBox(height: Dimension.d20),
+                              const SizedBox(height: Dimension.d4),
+                            ],
                           ),
-                        const SizedBox(height: Dimension.d20),
-                        const SizedBox(height: Dimension.d4),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                        ),
+                      ));
+                },
+              ),
             ),
-          );
-        },
-      ),
+            if (store.isBuyServiceLoading)
+              const Material(
+                color: Colors.transparent,
+                child: LoadingWidget(),
+              )
+          ],
+        );
+      },
     );
   }
 
@@ -400,7 +426,10 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     required int id,
     required String title,
     required String type,
-    String? value,
+    List<String>? valueChoice,
+    String? valueInteger,
+    String? valueDate,
+    String? valueText,
     String? controlType,
     required String? hint,
     List<String>? valueReference,
@@ -411,26 +440,30 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
 
     if (existingIndex >= 0) {
       formAnswers[existingIndex] = FormAnswer(
-        id: id,
-        questionTitle: title,
-        type: type,
-        valueChoice: value,
-        controlType: controlType,
-        hint: hint,
-        valueReference: valueReference,
-        forDId: forDId,
-      );
+          questionId: id,
+          question: title,
+          type: type,
+          valueChoice: valueChoice,
+          controlType: controlType,
+          hint: hint,
+          valueReference: valueReference,
+          forDId: forDId,
+          valueDate: valueDate,
+          valueInteger: valueInteger,
+          valueText: valueText);
     } else {
       formAnswers.add(FormAnswer(
-        id: id,
-        questionTitle: title,
-        type: type,
-        valueChoice: value,
-        controlType: controlType,
-        hint: hint,
-        valueReference: valueReference,
-        forDId: forDId,
-      ));
+          questionId: id,
+          question: title,
+          type: type,
+          valueChoice: valueChoice,
+          controlType: controlType,
+          hint: hint,
+          valueReference: valueReference,
+          forDId: forDId,
+          valueDate: valueDate,
+          valueInteger: valueInteger,
+          valueText: valueText));
     }
   }
 
@@ -444,74 +477,5 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     final formAnswerModel = FormAnswerModel(
         formAnswer: formAnswers, productId: int.parse(widget.id));
     store.buyService(formData: formAnswerModel);
-  }
-
-  void _proceedToPay() {
-    GetIt.I<PaymentService>().openCheckout(amount: 10, receipt: '');
-  }
-}
-
-class _BookingPaymentDetailComp extends StatelessWidget {
-  final String paymentDetails;
-  const _BookingPaymentDetailComp({
-    required this.paymentDetails,
-    Key? key,
-  }) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Order Summery',
-            style: AppTextStyle.bodyLargeSemiBold.copyWith(
-                fontSize: 18, color: AppColors.grayscale900, height: 2.6)),
-        const AssigningComponent(
-          name: 'Service opted for',
-          initializeElement: 'Vinita nair',
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        const AssigningComponent(
-          name: 'Duty hours',
-          initializeElement: '8 hours per day',
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        const AssigningComponent(
-          name: 'Expected duration of service',
-          initializeElement: '60 Days',
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        const AssigningComponent(
-          name: 'Expected date to start service',
-          initializeElement: '24/5/2024',
-        ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        const Divider(
-          color: AppColors.line,
-        ),
-        Text('Payment breakdown',
-            style: AppTextStyle.bodyLargeSemiBold.copyWith(
-                fontSize: 18, color: AppColors.grayscale900, height: 2.6)),
-        ElementSpaceBetween(title: 'Base rate', description: '₹ 1,200'),
-        ElementSpaceBetween(
-            title: '60 days × 12 hours rate', description: '₹ 72,000'),
-        ElementSpaceBetween(title: 'Other', description: '₹ 2,000'),
-        const Divider(
-          color: AppColors.line,
-        ),
-        ElementSpaceBetween(
-          title: 'Total to pay',
-          description: '₹ 75,400',
-          isTitleBold: true,
-        ),
-      ],
-    );
   }
 }

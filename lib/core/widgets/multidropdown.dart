@@ -20,6 +20,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
     super.validator,
     bool enabled = true,
     bool showClear = true,
+    String? hint
   }) : super(
           initialValue: selectedOptions,
           builder: (FormFieldState<List<ValueItem<dynamic>>> state) {
@@ -69,6 +70,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                         color: AppColors.primary,
                         size: 15,
                       ),
+                      hint: hint ?? 'Select',
                       clearIcon: showClear
                           ? const Icon(
                               Icons.clear_outlined,

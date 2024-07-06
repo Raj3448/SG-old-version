@@ -145,9 +145,9 @@ void main() async {
         () => NotificationStore(NotificationServices()),
       );
       GetIt.instance.registerLazySingleton(
-          () => ProductLisitingServices(httpClient: GetIt.I<HttpClient>()));
+          () => ProductListingServices(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() => ProductListingStore(
-          productListingService: GetIt.I<ProductLisitingServices>())
+          productListingService: GetIt.I<ProductListingServices>())
         ..initGetProductBasicDetails());
       GetIt.instance.registerLazySingleton(
           () => BookingService(httpClient: GetIt.I<HttpClient>()));

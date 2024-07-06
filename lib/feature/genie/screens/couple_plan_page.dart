@@ -1,4 +1,9 @@
+// ignore_for_file: lines_longer_than_80_chars
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -9,22 +14,26 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
+import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class CouplePlanPage extends StatefulWidget {
-  final String pageTitle;
-  final List<Price> planList;
-  final bool isUpgradable;
-
   const CouplePlanPage({
+    required this.id,
     required this.pageTitle,
     required this.planList,
     required this.isUpgradable,
     super.key,
   });
+
+  final String id;
+  final String pageTitle;
+  final List<Price> planList;
+  final bool isUpgradable;
 
   @override
   State<CouplePlanPage> createState() => _CouplePlanPageState();
@@ -33,8 +42,8 @@ class CouplePlanPage extends StatefulWidget {
 class _CouplePlanPageState extends State<CouplePlanPage> {
   Member? member1;
   Member? member2;
-  Price? planDetails;
-  final store = GetIt.I<MembersStore>();
+  final memberStore = GetIt.I<MembersStore>();
+  final store = GetIt.I<ProductListingStore>();
   late GlobalKey<CustomDropDownBoxState> customDropDownBox1Key;
   late GlobalKey<CustomDropDownBoxState> customDropDownBox2Key;
 
@@ -52,12 +61,6 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
       } else {
         member2 = member;
       }
-    });
-  }
-
-  void _updatePlan(Price plan) {
-    setState(() {
-      planDetails = plan;
     });
   }
 
@@ -80,62 +83,110 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: Dimension.d4),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PlanPricingDetailsComponent(
-                  planName: widget.pageTitle,
-                  pricingDetailsList: widget.planList,
-                  onSelect: _updatePlan,
-                ),
-                _buildMemberSelectionText('1. Select family member'),
-                CustomDropDownBox(
-                  key: customDropDownBox1Key,
-                  selectedMembers: _getSelectedMembers(),
-                  memberName: member1?.name,
-                  memberList: store.members,
-                  updateMember: (member) => _updateMember(member, true),
-                ),
-                const SizedBox(
-                  height: Dimension.d2,
-                ),
-                _buildMemberSelectionText('2. Select another family member'),
-                CustomDropDownBox(
-                  key: customDropDownBox2Key,
-                  selectedMembers: _getSelectedMembers(),
-                  memberName: member2?.name,
-                  memberList: store.members,
-                  updateMember: (member) => _updateMember(member, false),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Dimension.d4),
-                  child: CustomButton(
-                    ontap: (member1 == null ||
-                            member2 == null ||
-                            planDetails == null)
-                        ? null
-                        : () {
-                            context.pushNamed(
-                              RoutesConstants.subscriptionDetailsScreen,
-                              pathParameters: {
-                                'price': '${planDetails!.unitAmount}',
-                              },
-                            );
-                          },
-                    title: widget.isUpgradable ? 'Upgrade care' : 'Book care',
-                    showIcon: false,
-                    iconPath: AppIcons.add,
-                    size: ButtonSize.normal,
-                    type: (member1 == null ||
-                            member2 == null ||
-                            planDetails == null)
-                        ? ButtonType.disable
-                        : ButtonType.primary,
-                    expanded: true,
-                    iconColor: AppColors.primary,
-                  ),
-                ),
-              ],
+            child: Observer(
+              builder: (context) {
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: Dimension.d4),
+                        PlanPricingDetailsComponent(
+                          planName: widget.pageTitle,
+                          pricingDetailsList: widget.planList,
+                          onSelect: store.updatePlan,
+                        ),
+                        _buildMemberSelectionText('1. Select family member'),
+                        CustomDropDownBox(
+                          key: customDropDownBox1Key,
+                          selectedMembers: _getSelectedMembers(),
+                          memberName: member1?.name,
+                          memberList: memberStore.members,
+                          updateMember: (member) => _updateMember(member, true),
+                        ),
+                        const SizedBox(
+                          height: Dimension.d2,
+                        ),
+                        _buildMemberSelectionText(
+                          '2. Select another family member',
+                        ),
+                        CustomDropDownBox(
+                          key: customDropDownBox2Key,
+                          selectedMembers: _getSelectedMembers(),
+                          memberName: member2?.name,
+                          memberList: memberStore.members,
+                          updateMember: (member) =>
+                              _updateMember(member, false),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Dimension.d4,
+                          ),
+                          child: CustomButton(
+                            ontap: (member1 == null ||
+                                    member2 == null ||
+                                    store.planDetails == null)
+                                ? null
+                                : () {
+                                    if (store.planDetails != null) {
+                                      store.createSubscription(
+                                        priceId: store.planDetails!.id,
+                                        productId: int.parse(widget.id),
+                                        familyMemberIds: [
+                                          member1!.id,
+                                          member2!.id,
+                                        ],
+                                      ).then((result) {
+                                        result.fold(
+                                          (failure) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Subscription booking failed: $failure.',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          (right) {
+                                            context.pushNamed(
+                                              RoutesConstants
+                                                  .subscriptionDetailsScreen,
+                                              pathParameters: {
+                                                'price':
+                                                    '${store.planDetails!.unitAmount}',
+                                                'subscriptionData':
+                                                    json.encode(right.toJson()),
+                                                'isCouple': 'true',
+                                              },
+                                            );
+                                          },
+                                        );
+                                      });
+                                    }
+                                  },
+                            title: widget.isUpgradable
+                                ? 'Upgrade care'
+                                : 'Book care',
+                            showIcon: false,
+                            iconPath: AppIcons.add,
+                            size: ButtonSize.normal,
+                            type: (member1 == null ||
+                                    member2 == null ||
+                                    store.planDetails == null)
+                                ? ButtonType.disable
+                                : ButtonType.primary,
+                            expanded: true,
+                            iconColor: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (store.isLoading) const LoadingWidget(),
+                  ],
+                );
+              },
             ),
           ),
         ),
