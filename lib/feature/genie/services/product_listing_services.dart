@@ -4,7 +4,6 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
@@ -30,8 +29,9 @@ abstract class IProductListingService {
     required String phoneNumber,
     required String careType,
   });
-  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus(
-      {required String id});
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({
+    required String id,
+  });
   Future<Either<Failure, SubscriptionData>> createSubscription({
     required int priceId,
     required int productId,
@@ -178,8 +178,10 @@ class ProductListingServices extends IProductListingService {
     required FormAnswerModel formData,
   }) async {
     try {
-      final response = await httpClient.post('/api/service-tracker/request-new',
-          data: formData.toJson());
+      final response = await httpClient.post(
+        '/api/service-tracker/request-new',
+        data: formData.toJson(),
+      );
       if (response.statusCode == 200) {
         final data = response.data['data'];
         if (data != null) {
@@ -209,19 +211,24 @@ class ProductListingServices extends IProductListingService {
     required String careType,
   }) async {
     final data = {
-      'fields': {
-        'name': name,
-        'phone': phoneNumber,
-        'email': email,
-        'course': 'Silvergenie mobile application',
+      'data': {
+        'fields': {
+          'name': name,
+          'phone': phoneNumber,
+          'email': email,
+          'course': 'Silvergenie mobile application',
+        },
+        'actions': [
+          {'type': 'SYSTEM_NOTE', 'text': 'Lead type : Allied care'},
+          {
+            'type': 'SYSTEM_NOTE',
+            'text': 'Allied care type: $careType',
+          }
+        ],
       },
-      'actions': [
-        {'type': 'SYSTEM_NOTE', 'text': 'Lead type : Allied care'},
-        {'type': 'SYSTEM_NOTE', 'text': 'Allied care type: $careType'},
-      ],
     };
     final response = await httpClient.post(
-      Env.telecrmUrl,
+      '/api/telecrm/leads',
       data: data,
     );
     if (response.statusCode == 200) {
@@ -232,6 +239,7 @@ class ProductListingServices extends IProductListingService {
     return const Left(Failure.badResponse());
   }
 
+  @override
   Future<Either<Failure, SubscriptionData>> createSubscription({
     required int priceId,
     required int productId,
@@ -269,8 +277,9 @@ class ProductListingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus(
-      {required String id}) async {
+  Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({
+    required String id,
+  }) async {
     try {
       final response = await httpClient.get(
         '/api/service-trackers/$id',
