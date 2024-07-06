@@ -150,7 +150,7 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                     AssigningComponent(
                       name: 'Service opted for',
                       initializeElement:
-                          ' ${paymentStatusModel.requestedFor.first.firstName} ${paymentStatusModel.requestedFor.first.firstName}',
+                          ' ${paymentStatusModel.requestedFor.first.firstName} ${paymentStatusModel.requestedFor.first.lastName}',
                     ),
                     const SizedBox(
                       height: Dimension.d2,

@@ -20,9 +20,6 @@ import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-bool isSecendCall = true;
-int count = 0;
-
 class PaymentScreen extends StatefulWidget {
   PaymentStatusModel? paymentStatusModel;
   final PriceDetails? priceDetails;
@@ -40,27 +37,26 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  late final PaymentStatus paymentStatus;
   final store = GetIt.I<ProductListingStore>();
   Timer? _timer;
   late ReactionDisposer _reactionDisposer;
 
   @override
   void initState() {
-    paymentStatus = widget.paymentStatusModel == null
+    store.servicePaymentStatus = widget.paymentStatusModel == null
         ? PaymentStatus.failure
         : getPaymentStatus(
             paymentStatus: widget.paymentStatusModel!.paymentStatus,
             status: widget.paymentStatusModel!.status);
-    if (paymentStatus == PaymentStatus.pending) {
+    if (store.servicePaymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
     _reactionDisposer =
         reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
-        setState(() {
           widget.paymentStatusModel = paymentStatusModel;
-        });
+          store.servicePaymentStatus = PaymentStatus.success;
+          print('Payment status model updated: ${store.servicePaymentStatus}');
         _stopPaymentStatusPolling();
       }
       store.paymentStatusModel = null;
@@ -71,11 +67,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _startPaymentStatusPolling() {
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       store.getPaymentStatus(id: widget.id);
-      print('Call hua issecondcall changed');
-      if (count > 2) {
-        isSecendCall = false;
-      }
-      count++;
     });
   }
 
@@ -92,13 +83,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Observer(
-      builder: (_) {
+      builder: (context) {
         return Scaffold(
           backgroundColor: AppColors.white,
           appBar: PageAppbar(
             title: 'Book Service',
-            onTap: paymentStatus == PaymentStatus.failure
+            onTap: store.servicePaymentStatus == PaymentStatus.failure
                 ? () {
                     context.pop();
                   }
@@ -108,13 +100,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ..pop();
                   },
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () {
               if (widget.paymentStatusModel != null) {
-                GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
-                    null;
+                GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess = null;
                 context.pushNamed(RoutesConstants.paymentStatusTrackingPage,
                     pathParameters: {'id': widget.id});
               } else {
@@ -135,17 +125,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const BookingStatus(currentStep: BookingStep.bookingDetails),
                   const SizedBox(height: Dimension.d4),
                   SvgPicture.asset(
-                    paymentStatus == PaymentStatus.success
+                    store.servicePaymentStatus == PaymentStatus.success
                         ? 'assets/icon/success.svg'
-                        : paymentStatus == PaymentStatus.pending
+                        : store.servicePaymentStatus == PaymentStatus.pending
                             ? 'assets/icon/pending.svg'
                             : 'assets/icon/failure.svg',
-                    color: paymentStatus == PaymentStatus.success
+                    color: store.servicePaymentStatus == PaymentStatus.success
                         ? Colors.green
                         : null,
                   ),
                   Text(
-                    _getPaymentStatusMessage(paymentStatus),
+                    _getPaymentStatusMessage(store.servicePaymentStatus!),
                     style: AppTextStyle.bodyXLSemiBold
                         .copyWith(fontSize: 20, height: 2.8),
                   ),
@@ -155,18 +145,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     children: [
                       Text(
                         'Order Info',
-                        style: AppTextStyle.bodyXLSemiBold.copyWith(
-                            color: AppColors.grayscale900, height: 2.6),
+                        style: AppTextStyle.bodyXLSemiBold
+                            .copyWith(color: AppColors.grayscale900, height: 2.6),
                       ),
                       const Divider(
                         color: AppColors.grayscale300,
                       ),
                       ElementSpaceBetween(
-                        title: paymentStatus == PaymentStatus.failure
+                        title: store.servicePaymentStatus == PaymentStatus.failure
                             ? widget.priceDetails!.products.first.displayName
-                            : widget.paymentStatusModel!.priceDetails.products
-                                .first.displayName,
-                        description: paymentStatus == PaymentStatus.failure
+                            : widget.paymentStatusModel!.priceDetails.products.first
+                                .displayName,
+                        description: store.servicePaymentStatus == PaymentStatus.failure
                             ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
                             : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.priceDetails.products.first.price.toInt())}',
                       ),
@@ -175,7 +165,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       ElementSpaceBetween(
                         title: 'Total to pay',
-                        description: paymentStatus == PaymentStatus.failure
+                        description: store.servicePaymentStatus == PaymentStatus.failure
                             ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
                             : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.amount.toInt())}',
                         isTitleBold: true,
@@ -214,10 +204,9 @@ PaymentStatus getPaymentStatus(
   if (paymentStatus == 'due' && status == 'requested') {
     return PaymentStatus.pending;
   }
-  if (paymentStatus == 'paid' ) {
+  if (paymentStatus == 'paid') {
     return PaymentStatus.success;
-  }
-  else {
+  } else {
     return PaymentStatus.failure;
   }
 }

@@ -60,6 +60,9 @@ abstract class _ProductListingStoreBase with Store {
   Price? _planDetails;
 
   @observable
+  PaymentStatus? servicePaymentStatus;
+
+  @observable
   ProductListingModel? subscriptionModel;
 
   @observable
