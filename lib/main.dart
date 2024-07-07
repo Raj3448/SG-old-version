@@ -141,8 +141,9 @@ void main() async {
           GetIt.I<UserDetailsCache>(),
         ),
       );
+      GetIt.instance.registerLazySingleton(() => NotificationServices(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(
-        () => NotificationStore(NotificationServices()),
+        () => NotificationStore(GetIt.I<NotificationServices>()),
       );
       GetIt.instance.registerLazySingleton(
           () => ProductListingServices(httpClient: GetIt.I<HttpClient>()));

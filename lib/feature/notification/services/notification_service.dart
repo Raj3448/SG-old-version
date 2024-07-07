@@ -1,14 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: lines_longer_than_80_chars, one_member_abstracts
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/notification/model/notification_model.dart';
 
 abstract class INotificationFacade {
   Future<Either<Failure, List<NotificationModel>>> fetchNotification();
+  Future<Either<Failure, bool>> storeFcmTokenIntoServer(
+      {required String fcmToken});
 }
 
 class NotificationServices extends INotificationFacade {
+  HttpClient httpClient;
+  NotificationServices({
+    required this.httpClient,
+  });
+
   final List<NotificationModel> _notifications = [
     NotificationModel(
       title: 'Doctor Consultation Completed',
@@ -65,6 +74,29 @@ class NotificationServices extends INotificationFacade {
       //   return Left(Failure.badResponse());
       // }
       return Right(_notifications);
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> storeFcmTokenIntoServer(
+      {required String fcmToken}) async {
+    try {
+      final response = await httpClient.post(
+        '/api/auth/local/fcm',
+        data: {'token': fcmToken},
+      );
+      if (response.statusCode == 200) {
+        return const Right(true,);
+      } else {
+        return const Left(Failure.badResponse());
+      }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
         return const Left(Failure.socketError());

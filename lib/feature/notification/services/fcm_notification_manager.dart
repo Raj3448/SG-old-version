@@ -8,7 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/feature/notification/services/notification_service.dart';
 
 class FcmNotificationManager {
   FcmNotificationManager._internal();
@@ -74,8 +76,7 @@ class FcmNotificationManager {
   }
 
   Future<void> saveTokenToOurDatabase(String token) async {
-    // When the user is logged in then
-    // We have to save token to our database
+    GetIt.I<NotificationServices>().storeFcmTokenIntoServer(fcmToken: token);
   }
 
   Future<void> _setupFlutterNotifications() async {
@@ -165,7 +166,7 @@ class FcmNotificationManager {
     if (msg?.data['pageName'] != null) {
       if (isBottomNavScreen(msg?.data['pageName'] as String)) {
         context?.goNamed(msg?.data['pageName'].toString() ?? '/home');
-      }else{
+      } else {
         context?.pushNamed(msg?.data['pageName'].toString() ?? '/home');
       }
     }
