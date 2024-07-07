@@ -34,6 +34,7 @@ class Service with _$Service {
         required String paymentStatus,
         required String status,
         required ServiceProduct product,
+        required DateTime requestedAt,
         required List<RequestedFor> requestedFor,
     }) = _Service;
     factory Service.fromJson(Map<String, dynamic> json) =>

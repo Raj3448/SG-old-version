@@ -123,7 +123,7 @@ class BookingListTileComponent extends StatelessWidget {
                           width: Dimension.d2,
                         )),
                         TextSpan(
-                          text: formatDateTime(DateTime.now()),
+                          text: formatDateTime(bookingServiceModel.requestedAt),
                           style: AppTextStyle.bodyMediumMedium
                               .copyWith(color: AppColors.grayscale900),
                         )
