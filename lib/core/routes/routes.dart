@@ -13,11 +13,11 @@ import 'package:silver_genie/feature/book_services/model/service_tracking_respon
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
-import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
+import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -404,16 +404,19 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus',
+      path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus/:serviceId',
       name: RoutesConstants.bookingServiceStatusDetailsPage,
       pageBuilder: (context, state) {
         final bookingServiceStatusString =
             state.pathParameters['bookingServiceStatus'];
         final bookingServiceStatus = BookingServiceStatus.values
             .firstWhere((e) => e.toString() == bookingServiceStatusString);
+        final serviceId =
+            state.pathParameters['serviceId'] ?? '';
         return MaterialPage(
-          child: BookingSeviceStatusPage(
+          child: ServiceBookingDetailsScreen(
             bookingServiceStatus: bookingServiceStatus,
+            serviceId: serviceId,
           ),
         );
       },
@@ -445,7 +448,7 @@ final GoRouter routes = GoRouter(
         final id =
             extraData?['id'] as String;
         return MaterialPage(
-            child: PaymentScreen(
+            child: ServicePaymentScreen(
           paymentStatusModel: paymentStatusModel,
           priceDetails: priceDetails,
           id: id,

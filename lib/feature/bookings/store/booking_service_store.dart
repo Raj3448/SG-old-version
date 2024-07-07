@@ -18,33 +18,76 @@ abstract class _BookingServiceStoreBase with Store {
   bool isAllServiceLoading = false;
 
   @observable
+  bool isAllServiceRefreshing = false;
+
+  @observable
+  String? allServiceRefreshFailure;
+
+  @observable
   String? fetchServiceError;
 
   @observable
-  List<BookingServiceModel> bookingServiceList = [];
+  BookingServices? bookingServices;
 
   @computed
-  List<BookingServiceModel> get getAllRequestedServiceList =>
-      bookingServiceList.where((element) => element.status == 'requested',).toList();
+  List<Service> get getAllRequestedServiceList => bookingServices == null
+      ? []
+      : bookingServices!.services
+          .where(
+            (element) => element.paymentStatus == 'paid',
+          )
+          .toList();
 
   @computed
-  List<BookingServiceModel> get getAllActiveServiceList =>
-      bookingServiceList.where((element) => element.status == 'active',).toList();
+  List<Service> get getAllActiveServiceList => bookingServices == null
+      ? []
+      : bookingServices!.services
+          .where(
+            (element) => element.paymentStatus == 'due',
+          )
+          .toList();
 
   @computed
-  List<BookingServiceModel> get getAllCompletedServiceList =>
-      bookingServiceList.where((element) => element.status == 'completed',).toList();
+  List<Service> get getAllCompletedServiceList => bookingServices == null
+      ? []
+      : bookingServices!.services
+          .where(
+            (element) => element.paymentStatus == 'completed',
+          )
+          .toList();
 
+  @action
   void initGetAllServices() {
+    if (isAllServiceLoaded) {
+      return;
+    }
     isAllServiceLoading = true;
     bookingService.getBookingServiceBasicDetails().then((value) {
       value.fold((l) {
         fetchServiceError = 'Something went wrong';
       }, (r) {
         isAllServiceLoaded = true;
-        bookingServiceList = r;
+        bookingServices = r;
       });
       isAllServiceLoading = false;
     });
+  }
+
+  @action
+  void refresh() {
+    isAllServiceRefreshing = true;
+    bookingService.getBookingServiceBasicDetails().then(
+      (value) {
+        value.fold(
+          (l) {
+            allServiceRefreshFailure = 'Unable to load updated booking services';
+          },
+          (r) {
+            bookingServices = r;
+          },
+        );
+        isAllServiceRefreshing = false;
+      },
+    );
   }
 }

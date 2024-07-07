@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
+import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 part 'payment_status_model.freezed.dart';
 part 'payment_status_model.g.dart';
@@ -55,7 +56,7 @@ class RequestedFor with _$RequestedFor {
     required String lastName,
     required String gender,
     required String relation,
-    required dynamic profileImg,
+    @Default(null) ProfileImg? profileImg,
   }) = _RequestedFor;
   factory RequestedFor.fromJson(Map<String, dynamic> json) =>
       _$RequestedForFromJson(json);
