@@ -247,7 +247,6 @@ class _HomeScreenComponents extends StatelessWidget {
         widgetList.add(
           GestureDetector(
             onTap: () async {
-              debugPrint(component.bannerImage.data.attributes.url);
               final url = component.cta?.href;
               if (url != null && await canLaunchUrl(Uri.parse(url))) {
                 await launchUrl(Uri.parse(url));
@@ -256,7 +255,7 @@ class _HomeScreenComponents extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
               child: BannerImageComponent(
-                imageUrl: component.bannerImage.data.attributes.url,
+                imageUrl: component.bannerImage.data!.attributes.url,
               ),
             ),
           ),
@@ -329,7 +328,7 @@ class _TestmonialsComponent extends StatelessWidget {
                       content: testimonialsModel
                           .testimonials.data[index].attributes.content,
                       imgUrl: testimonialsModel.testimonials.data[index]
-                          .attributes.testifierImage?.data.attributes.url,
+                          .attributes.testifierImage?.data!.attributes.url,
                     ),
                   ),
                 ),

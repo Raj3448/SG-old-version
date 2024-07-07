@@ -97,7 +97,7 @@ class Attributes with _$Attributes {
 class BannerImage with _$BannerImage {
   @JsonSerializable(explicitToJson: true)
   const factory BannerImage({
-    @HiveField(19) required Data data,
+    @HiveField(19) required Data? data,
   }) = _BannerImage;
 
   factory BannerImage.fromJson(Map<String, dynamic> json) =>

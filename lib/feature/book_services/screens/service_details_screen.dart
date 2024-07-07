@@ -374,7 +374,7 @@ class _HeaderPicTitle extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: CachedNetworkImage(
                 imageUrl:
-                    '${Env.serverUrl}${headerModel.serviceImage.data.attributes.url}',
+                    '${Env.serverUrl}${headerModel.serviceImage.data?.attributes.url}',
                 fit: BoxFit.cover,
               ),
             ),
