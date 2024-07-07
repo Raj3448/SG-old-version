@@ -68,5 +68,6 @@ Future<void> initializeBoxForToken() async {
     existingKey = base64UrlEncode(newKey);
   }
   var key = base64Url.decode(existingKey);
+  // ignore: inference_failure_on_function_invocation
   await Hive.openBox(TOKEN_BOX_NAME, encryptionCipher: HiveAesCipher(key));
 }

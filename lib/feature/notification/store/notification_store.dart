@@ -16,15 +16,34 @@ abstract class _NotificationStoreBase with Store {
   final INotificationFacade notificationsServices;
 
   @observable
-  Either<Failure, List<NotificationModel>>? notifications;
+  NotificationModel? notifications;
 
   @observable
-  bool isLoading = false;
+  String? notificationfailure;
+
+  @observable
+  bool isNotificationLoading = false;
+
+  @observable
+  bool notificationsLoaded = false;
 
   @action
-  Future<void> fetchNotifications() async {
-    isLoading = true;
-    notifications = await notificationsServices.fetchNotification();
-    isLoading = false;
+  void fetchNotifications() {
+    if (notificationsLoaded) {
+      return;
+    }
+    isNotificationLoading = true;
+    notificationsServices.fetchNotification().then((response) {
+      response.fold((l) {
+        l.maybeMap(
+          socketError: (value) => notificationfailure = 'No Internet',
+          orElse: () => notificationfailure = 'Something went wrong',
+        );
+      }, (r) {
+        notifications = r;
+        notificationsLoaded = true;
+      });
+      isNotificationLoading = false;
+    });
   }
 }

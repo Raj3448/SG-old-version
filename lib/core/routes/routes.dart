@@ -426,8 +426,7 @@ final GoRouter routes = GoRouter(
       path: '/paymentStatusTrackingPage/:id',
       name: RoutesConstants.paymentStatusTrackingPage,
       pageBuilder: (context, state) {
-        final id =
-            state.pathParameters['id'] ?? '';
+        final id = state.pathParameters['id'] ?? '';
         return MaterialPage(
           child: PaymentStatusTrackingPage(
             id: id,
@@ -443,10 +442,8 @@ final GoRouter routes = GoRouter(
         final extraData = state.extra as Map<String, dynamic>?;
         final paymentStatusModel =
             extraData?['paymentStatusModel'] as PaymentStatusModel?;
-        final priceDetails =
-            extraData?['priceDetails'] as PriceDetails?;
-        final id =
-            extraData?['id'] as String;
+        final priceDetails = extraData?['priceDetails'] as PriceDetails?;
+        final id = extraData?['id'] as String;
         return MaterialPage(
             child: ServicePaymentScreen(
           paymentStatusModel: paymentStatusModel,
