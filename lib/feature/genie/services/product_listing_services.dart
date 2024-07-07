@@ -32,6 +32,9 @@ abstract class IProductListingService {
   Future<Either<Failure, PaymentStatusModel>> getPaymentStatus({
     required String id,
   });
+  Future<Either<Failure, SubscriptionDetails>> getSubscriptionPaymentStatus({
+    required String id,
+  });
   Future<Either<Failure, SubscriptionData>> createSubscription({
     required int priceId,
     required int productId,
@@ -289,6 +292,35 @@ class ProductListingServices extends IProductListingService {
         if (data != null) {
           return Right(
             PaymentStatusModel.fromJson(data as Map<String, dynamic>),
+          );
+        }
+        return const Left(Failure.badResponse());
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
+  }
+
+  @override
+  Future<Either<Failure, SubscriptionDetails>> getSubscriptionPaymentStatus({
+    required String id,
+  }) async {
+    try {
+      final response = await httpClient.get(
+        '/api/subscription-trackers/$id',
+      );
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        if (data != null) {
+          return Right(
+            SubscriptionDetails.fromJson(data as Map<String, dynamic>),
           );
         }
         return const Left(Failure.badResponse());

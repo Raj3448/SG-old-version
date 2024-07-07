@@ -23,10 +23,12 @@ class BookingListTileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage,
-            pathParameters: {
-              'bookingServiceStatus': bookingServiceStatus.toString()
-            });
+        context.pushNamed(
+          RoutesConstants.bookingDetailsScreen,
+          pathParameters: {
+            'subscriptionDetails': bookingServiceStatus.toString(),
+          },
+        );
       },
       child: Container(
         width: double.infinity,
@@ -73,32 +75,32 @@ class BookingListTileComponent extends StatelessWidget {
                         const Spacer(),
                         if (!(bookingServiceStatus ==
                             BookingServiceStatus.requested))
-                        if (!(bookingServiceStatus ==
-                            BookingServiceStatus.requested))
-                          Container(
-                            height: 24,
-                            width: 105,
-                            alignment: const Alignment(0, 0),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: Dimension.d1),
-                            decoration: BoxDecoration(
-                              color: AppColors.lightBlue,
-                              borderRadius: BorderRadius.circular(5),
+                          if (!(bookingServiceStatus ==
+                              BookingServiceStatus.requested))
+                            Container(
+                              height: 24,
+                              width: 105,
+                              alignment: const Alignment(0, 0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimension.d1),
+                              decoration: BoxDecoration(
+                                color: AppColors.lightBlue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                bookingServiceStatus ==
+                                        BookingServiceStatus.completed
+                                    ? formatDateTime(
+                                        bookingServiceModel.completedDate ??
+                                            DateTime.now())
+                                    : formatDateTime(
+                                        bookingServiceModel.requestedDate),
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.primary),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            child: Text(
-                              bookingServiceStatus ==
-                                      BookingServiceStatus.completed
-                                  ? formatDateTime(
-                                      bookingServiceModel.completedDate ??
-                                          DateTime.now())
-                                  : formatDateTime(
-                                      bookingServiceModel.requestedDate),
-                              style: AppTextStyle.bodyMediumMedium
-                                  .copyWith(color: AppColors.primary),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
                         const SizedBox(
                           width: Dimension.d2,
                         ),
@@ -142,7 +144,7 @@ class BookingListTileComponent extends StatelessWidget {
 String formatDateTime(DateTime dateTime) {
   final DateFormat dayFormat = DateFormat('d MMM');
   final DateFormat timeFormat = DateFormat('h a');
-  
+
   String formattedDay = dayFormat.format(dateTime);
   String formattedTime = timeFormat.format(dateTime).toUpperCase();
 

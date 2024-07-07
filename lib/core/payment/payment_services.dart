@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
@@ -6,14 +5,15 @@ import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 enum PaymentStatus { success, failure, pending }
 
 class PaymentService {
-  final Razorpay _razorpay = Razorpay();
-  final ProductListingStore productListingStore;
-  final HttpClient httpClient;
-  PaymentService({required this.productListingStore,
+  PaymentService({
+    required this.productListingStore,
     required this.httpClient,
   }) {
     initRazorpay();
   }
+  final Razorpay _razorpay = Razorpay();
+  final ProductListingStore productListingStore;
+  final HttpClient httpClient;
 
   void initRazorpay() {
     _razorpay
@@ -22,22 +22,37 @@ class PaymentService {
       ..on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  void openCheckout({required double amount,
+  void openCheckout({
     required String orderId,
-    required String razorpayApiKey}) async {
-    var options = {
-      'key': razorpayApiKey,
-      'description': 'Payment for the order',
-      'order_id': orderId,
-      'external': {
-        'wallets': ['paytm']
-      }
-    };
+    required String razorpayApiKey,
+    bool isSubscription = false,
+  }) async {
+    late Map<String, dynamic> options;
+
+    if (isSubscription) {
+      options = {
+        'key': razorpayApiKey,
+        'description': 'Payment for the order',
+        'subscription_id': orderId,
+        'external': {
+          'wallets': ['paytm'],
+        },
+      };
+    } else {
+      options = {
+        'key': razorpayApiKey,
+        'description': 'Payment for the order',
+        'order_id': orderId,
+        'external': {
+          'wallets': ['paytm'],
+        },
+      };
+    }
 
     try {
       _razorpay.open(options);
     } catch (e) {
-      print(e.toString());
+      print('Error: $e');
     }
   }
 

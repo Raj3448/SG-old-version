@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,7 +7,6 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
-import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
@@ -17,13 +18,14 @@ import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
-import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
+import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/genie/screens/subscription_details_screen.dart';
+import 'package:silver_genie/feature/genie/screens/subscription_payment_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
@@ -403,16 +405,17 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus',
-      name: RoutesConstants.bookingServiceStatusDetailsPage,
+      path: '/bookingDetailsScreen/:subscriptionDetails',
+      name: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
-        final bookingServiceStatusString =
-            state.pathParameters['bookingServiceStatus'];
-        final bookingServiceStatus = BookingServiceStatus.values
-            .firstWhere((e) => e.toString() == bookingServiceStatusString);
+        final subscriptionDetailsString =
+            state.pathParameters['subscriptionDetails'];
+        final subscriptionDetails =
+            jsonDecode(subscriptionDetailsString!) as Map<String, dynamic>;
         return MaterialPage(
-          child: BookingSeviceStatusPage(
-            bookingServiceStatus: bookingServiceStatus,
+          child: BookingDetailsScreen(
+            subscriptionDetails:
+                SubscriptionDetails.fromJson(subscriptionDetails),
           ),
         );
       },
@@ -422,8 +425,7 @@ final GoRouter routes = GoRouter(
       path: '/paymentStatusTrackingPage/:id',
       name: RoutesConstants.paymentStatusTrackingPage,
       pageBuilder: (context, state) {
-        final id =
-            state.pathParameters['id'] ?? '';
+        final id = state.pathParameters['id'] ?? '';
         return MaterialPage(
           child: PaymentStatusTrackingPage(
             id: id,
@@ -439,16 +441,34 @@ final GoRouter routes = GoRouter(
         final extraData = state.extra as Map<String, dynamic>?;
         final paymentStatusModel =
             extraData?['paymentStatusModel'] as PaymentStatusModel?;
-        final priceDetails =
-            extraData?['priceDetails'] as PriceDetails?;
-        final id =
-            extraData?['id'] as String;
+        final priceDetails = extraData?['priceDetails'] as PriceDetails?;
+        final id = extraData?['id'] as String;
         return MaterialPage(
-            child: PaymentScreen(
-          paymentStatusModel: paymentStatusModel,
-          priceDetails: priceDetails,
-          id: id,
-        ));
+          child: PaymentScreen(
+            paymentStatusModel: paymentStatusModel,
+            priceDetails: priceDetails,
+            id: id,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/subscriptionPaymentScreen',
+      name: RoutesConstants.subscriptionPaymentScreen,
+      pageBuilder: (context, state) {
+        final extraData = state.extra as Map<String, dynamic>?;
+        final subscriptionDetails =
+            extraData?['subscriptionDetails'] as SubscriptionDetails?;
+        final priceId = extraData?['priceId'] as String;
+        final price = extraData?['price'] as String;
+        return MaterialPage(
+          child: SubscriptionPaymentScreen(
+            subscriptionDetails: subscriptionDetails,
+            priceId: priceId,
+            price: price,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -460,9 +480,10 @@ final GoRouter routes = GoRouter(
         final paymentDetails =
             extraData?['paymentDetails'] as ServiceTrackerResponse;
         return MaterialPage(
-            child: BookingPaymentDetailScreen(
-          paymentDetails: paymentDetails,
-        ));
+          child: BookingPaymentDetailScreen(
+            paymentDetails: paymentDetails,
+          ),
+        );
       },
     ),
     GoRoute(

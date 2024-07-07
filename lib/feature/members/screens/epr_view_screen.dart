@@ -8,7 +8,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
-import 'package:silver_genie/core/widgets/assigning_component.dart';
+import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
@@ -407,21 +407,21 @@ class _UserInsuranceComponent extends StatelessWidget {
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
-          AssigningComponent(
-            name: 'Policy No',
-            initializeElement: assignedElements.policyNumber!,
+          ExpandedAnalogComponent(
+            label: 'Policy No',
+            value: assignedElements.policyNumber!,
           ),
-          AssigningComponent(
-            name: 'Contact Person',
-            initializeElement: assignedElements.contactPerson!,
+          ExpandedAnalogComponent(
+            label: 'Contact Person',
+            value: assignedElements.contactPerson!,
           ),
-          AssigningComponent(
-            name: 'Contact Of Ambulance',
-            initializeElement: assignedElements.contactNumber!,
+          ExpandedAnalogComponent(
+            label: 'Contact Of Ambulance',
+            value: assignedElements.contactNumber!,
           ),
-          AssigningComponent(
-            name: 'Contact Of Address',
-            initializeElement: assignedElements.insuranceProvider!,
+          ExpandedAnalogComponent(
+            label: 'Contact Of Address',
+            value: assignedElements.insuranceProvider!,
           ),
           if (!isLast)
             const Divider(
@@ -457,21 +457,21 @@ class _EmergencyContactComponent extends StatelessWidget {
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
-          AssigningComponent(
-            name: 'Contact No.',
-            initializeElement: assignedElements.contactNumber!,
+          ExpandedAnalogComponent(
+            label: 'Contact No.',
+            value: assignedElements.contactNumber!,
           ),
-          AssigningComponent(
-            name: 'Relation',
-            initializeElement: assignedElements.relation as String,
+          ExpandedAnalogComponent(
+            label: 'Relation',
+            value: assignedElements.relation as String,
           ),
-          AssigningComponent(
-            name: 'Email',
-            initializeElement: assignedElements.email!,
+          ExpandedAnalogComponent(
+            label: 'Email',
+            value: assignedElements.email!,
           ),
-          AssigningComponent(
-            name: 'Contact Of Address',
-            initializeElement: assignedElements.country!,
+          ExpandedAnalogComponent(
+            label: 'Contact Of Address',
+            value: assignedElements.country!,
           ),
           if (!isLast)
             const Divider(
@@ -507,17 +507,17 @@ class _PreferredServiceComponent extends StatelessWidget {
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
-          AssigningComponent(
-            name: 'Contact Person',
-            initializeElement: assignedElements.contactPerson!,
+          ExpandedAnalogComponent(
+            label: 'Contact Person',
+            value: assignedElements.contactPerson!,
           ),
-          AssigningComponent(
-            name: 'Contact No.',
-            initializeElement: assignedElements.contactNumber!,
+          ExpandedAnalogComponent(
+            label: 'Contact No.',
+            value: assignedElements.contactNumber!,
           ),
-          AssigningComponent(
-            name: 'Contact Of Ambulance',
-            initializeElement: assignedElements.ambulanceContact != null
+          ExpandedAnalogComponent(
+            label: 'Contact Of Ambulance',
+            value: assignedElements.ambulanceContact != null
                 ? assignedElements.ambulanceContact as String
                 : 'N/A',
           ),

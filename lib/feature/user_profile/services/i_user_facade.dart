@@ -16,4 +16,7 @@ abstract class IUserFacades {
     required User userInfo,
   });
   Future<Either<Failure, SubscriptionModel>> fetchSubscriptions();
+  Future<Either<Failure, SubscriptionDetails>> getSubscriptionById({
+    required int id,
+  });
 }

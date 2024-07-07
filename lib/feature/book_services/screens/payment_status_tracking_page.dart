@@ -8,7 +8,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
-import 'package:silver_genie/core/widgets/assigning_component.dart';
+import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -147,9 +147,9 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                     const SizedBox(
                       height: Dimension.d2,
                     ),
-                    AssigningComponent(
-                      name: 'Service opted for',
-                      initializeElement:
+                    ExpandedAnalogComponent(
+                      label: 'Service opted for',
+                      value:
                           ' ${paymentStatusModel.requestedFor.first.firstName} ${paymentStatusModel.requestedFor.first.lastName}',
                     ),
                     const SizedBox(
@@ -160,10 +160,9 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (context, index) => !paymentStatusModel
                                 .metadata[index].private
-                            ? AssigningComponent(
-                                name: paymentStatusModel.metadata[index].key,
-                                initializeElement:
-                                    paymentStatusModel.metadata[index].value,
+                            ? ExpandedAnalogComponent(
+                                label: paymentStatusModel.metadata[index].key,
+                                value: paymentStatusModel.metadata[index].value,
                               )
                             : const SizedBox(),
                         separatorBuilder: (context, index) =>

@@ -9,9 +9,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/widgets/assigning_component.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
@@ -28,8 +26,11 @@ import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class BookServiceScreen extends StatefulWidget {
-  const BookServiceScreen(
-      {required this.productCode, required this.id, super.key});
+  const BookServiceScreen({
+    required this.productCode,
+    required this.id,
+    super.key,
+  });
   final String productCode;
   final String id;
 
@@ -67,8 +68,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     reaction((_) => store.servicePaymentInfoGotSuccess,
         (servicePaymentInfoGotSuccess) {
       if (servicePaymentInfoGotSuccess != null) {
-        context.pushNamed(RoutesConstants.bookingPaymentDetailScreen,
-            extra: {'paymentDetails': servicePaymentInfoGotSuccess});
+        context.pushNamed(
+          RoutesConstants.bookingPaymentDetailScreen,
+          extra: {'paymentDetails': servicePaymentInfoGotSuccess},
+        );
       }
       store.servicePaymentInfoGotSuccess = null;
     });
@@ -106,7 +109,8 @@ class _BookServiceScreenState extends State<BookServiceScreen>
               ),
               body: FutureBuilder(
                 future: service.getBookingServiceDetailsById(
-                    productCode: widget.productCode),
+                  productCode: widget.productCode,
+                ),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       !store.isBuyServiceLoading) {
@@ -118,13 +122,16 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                       !snapshot.hasData ||
                       snapshot.data!.isLeft()) {
                     return const ErrorStateComponent(
-                        errorType: ErrorType.somethinWentWrong);
+                      errorType: ErrorType.somethinWentWrong,
+                    );
                   }
                   late FormDetailModel formDetailModel;
                   snapshot.data!.getRight().fold(
-                      () => const ErrorStateComponent(
-                          errorType: ErrorType.somethinWentWrong),
-                      (t) => formDetailModel = t);
+                        () => const ErrorStateComponent(
+                          errorType: ErrorType.somethinWentWrong,
+                        ),
+                        (t) => formDetailModel = t,
+                      );
                   final widgetList = <Widget>[];
                   final components = formDetailModel.attributes.productForm;
                   for (var i = 0;
@@ -138,8 +145,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                  label:
-                                      '${i + 1}. ${component.formDetails.title}'),
+                                label:
+                                    '${i + 1}. ${component.formDetails.title}',
+                              ),
                             if (!component.formDetails.required)
                               Text(
                                 '${i + 1}. ${component.formDetails.title}',
@@ -155,19 +163,19 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               updateMember: (member) {
                                 selectedMember = member;
                                 _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    valueReference: [
-                                      '${member?.id.toString()}' ?? ''
-                                    ],
-                                    forDId:
-                                        component.formDetails.id.toString());
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  valueReference: [
+                                    '${member?.id.toString()}' ?? '',
+                                  ],
+                                  forDId: component.formDetails.id.toString(),
+                                );
                               },
                               isRequired: component.formDetails.required,
-                            )
+                            ),
                           ]);
                         }
                         break;
@@ -177,8 +185,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                  label:
-                                      '${i + 1}. ${component.formDetails.title}'),
+                                label:
+                                    '${i + 1}. ${component.formDetails.title}',
+                              ),
                             if (!component.formDetails.required)
                               Text(
                                 '${i + 1}. ${component.formDetails.title}',
@@ -200,14 +209,14 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                   : null,
                               onSaved: (value) {
                                 _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    valueText: value?.trim(),
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    forDId:
-                                        component.formDetails.id.toString());
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  valueText: value?.trim(),
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  forDId: component.formDetails.id.toString(),
+                                );
                               },
                               hintText: component.formDetails.placeholder ??
                                   'Type here',
@@ -224,8 +233,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                  label:
-                                      '${i + 1}. ${component.formDetails.title}'),
+                                label:
+                                    '${i + 1}. ${component.formDetails.title}',
+                              ),
                             if (!component.formDetails.required)
                               Text(
                                 '${i + 1}. ${component.formDetails.title}',
@@ -238,16 +248,16 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               hint: component.formDetails.placeholder,
                               onSaved: (newValue) {
                                 _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    valueChoice: [
-                                      '${newValue!.first.value.toString().trim()}'
-                                    ],
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    forDId:
-                                        component.formDetails.id.toString());
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  valueChoice: [
+                                    '${newValue!.first.value.toString().trim()}',
+                                  ],
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  forDId: component.formDetails.id.toString(),
+                                );
                               },
                               validator: component.formDetails.required
                                   ? (value) {
@@ -267,7 +277,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                   value: component.options[index].value,
                                 ),
                               ),
-                            )
+                            ),
                           ]);
                         }
                         break;
@@ -277,8 +287,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                  label:
-                                      '${i + 1}. ${component.formDetails.title}'),
+                                label:
+                                    '${i + 1}. ${component.formDetails.title}',
+                              ),
                             if (!component.formDetails.required)
                               Text(
                                 '${i + 1}. ${component.formDetails.title}',
@@ -291,14 +302,14 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               dateFormat: component.dateFormat,
                               onSaved: (value) {
                                 _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    valueDate: value.toString(),
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    forDId:
-                                        component.formDetails.id.toString());
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  valueDate: value.toString(),
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  forDId: component.formDetails.id.toString(),
+                                );
                               },
                               validator: component.formDetails.required
                                   ? (value) {
@@ -321,8 +332,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                  label:
-                                      '${i + 1}. ${component.formDetails.title}'),
+                                label:
+                                    '${i + 1}. ${component.formDetails.title}',
+                              ),
                             if (!component.formDetails.required)
                               Text(
                                 '${i + 1}. ${component.formDetails.title}',
@@ -343,21 +355,22 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                         return '${component.formDetails.title} must be an integer';
                                       }
                                       return applyValidations(
-                                          value: value,
-                                          validations: component.validations,
-                                          isNum: true);
+                                        value: value,
+                                        validations: component.validations,
+                                        isNum: true,
+                                      );
                                     }
                                   : null,
                               onSaved: (value) {
                                 _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    valueInteger: value?.trim(),
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    forDId:
-                                        component.formDetails.id.toString());
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  valueInteger: value?.trim(),
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  forDId: component.formDetails.id.toString(),
+                                );
                               },
                               hintText: component.formDetails.placeholder ??
                                   'Type here',
@@ -370,25 +383,27 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                     }
                   }
                   return SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: Dimension.d4),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const BookingStatus(
-                                currentStep: BookingStep.serviceDetails,
-                              ),
-                              ...widgetList,
-                              const SizedBox(height: Dimension.d20),
-                              const SizedBox(height: Dimension.d4),
-                            ],
-                          ),
+                    physics: const BouncingScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimension.d4,
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const BookingStatus(
+                              currentStep: BookingStep.serviceDetails,
+                            ),
+                            ...widgetList,
+                            const SizedBox(height: Dimension.d20),
+                            const SizedBox(height: Dimension.d4),
+                          ],
                         ),
-                      ));
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
@@ -396,17 +411,18 @@ class _BookServiceScreenState extends State<BookServiceScreen>
               const Material(
                 color: Colors.transparent,
                 child: LoadingWidget(),
-              )
+              ),
           ],
         );
       },
     );
   }
 
-  String? applyValidations(
-      {String? value,
-      required List<Validations> validations,
-      bool isNum = false}) {
+  String? applyValidations({
+    String? value,
+    required List<Validations> validations,
+    bool isNum = false,
+  }) {
     for (var validation in validations) {
       if (validation.type == 'minValue' &&
           (isNum ? int.tryParse(value!) ?? 1 : value!.length) <
@@ -440,19 +456,21 @@ class _BookServiceScreenState extends State<BookServiceScreen>
 
     if (existingIndex >= 0) {
       formAnswers[existingIndex] = FormAnswer(
-          questionId: id,
-          question: title,
-          type: type,
-          valueChoice: valueChoice,
-          controlType: controlType,
-          hint: hint,
-          valueReference: valueReference,
-          forDId: forDId,
-          valueDate: valueDate,
-          valueInteger: valueInteger,
-          valueText: valueText);
+        questionId: id,
+        question: title,
+        type: type,
+        valueChoice: valueChoice,
+        controlType: controlType,
+        hint: hint,
+        valueReference: valueReference,
+        forDId: forDId,
+        valueDate: valueDate,
+        valueInteger: valueInteger,
+        valueText: valueText,
+      );
     } else {
-      formAnswers.add(FormAnswer(
+      formAnswers.add(
+        FormAnswer(
           questionId: id,
           question: title,
           type: type,
@@ -463,7 +481,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
           forDId: forDId,
           valueDate: valueDate,
           valueInteger: valueInteger,
-          valueText: valueText));
+          valueText: valueText,
+        ),
+      );
     }
   }
 
@@ -475,7 +495,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     }
     _formKey.currentState!.save();
     final formAnswerModel = FormAnswerModel(
-        formAnswer: formAnswers, productId: int.parse(widget.id));
+      formAnswer: formAnswers,
+      productId: int.parse(widget.id),
+    );
     store.buyService(formData: formAnswerModel);
   }
 }
