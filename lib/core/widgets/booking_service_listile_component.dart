@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
@@ -12,7 +13,7 @@ enum BookingServiceStatus { requested, active, completed }
 
 class BookingListTileComponent extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
-  final BookingServiceModel bookingServiceModel;
+  final Service bookingServiceModel;
   const BookingListTileComponent(
       {required this.bookingServiceStatus,
       required this.bookingServiceModel,
@@ -25,7 +26,8 @@ class BookingListTileComponent extends StatelessWidget {
       onTap: () {
         context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage,
             pathParameters: {
-              'bookingServiceStatus': bookingServiceStatus.toString()
+              'bookingServiceStatus': bookingServiceStatus.toString(),
+              'serviceId' : bookingServiceModel.id.toString()
             });
       },
       child: Container(
@@ -59,53 +61,52 @@ class BookingListTileComponent extends StatelessWidget {
                     Row(
                       children: [
                         Avatar.fromSize(
-                          imgPath: '',
+                          imgPath: bookingServiceModel
+                                      .requestedFor.first.profileImg ==
+                                  null
+                              ? ''
+                              : '${Env.serverUrl}${bookingServiceModel.requestedFor.first.profileImg!.url}',
                           size: AvatarSize.size16,
                         ),
                         const SizedBox(
                           width: Dimension.d2,
                         ),
                         Text(
-                          bookingServiceModel.memberName,
+                          '${bookingServiceModel.requestedFor.first.firstName} ${bookingServiceModel.requestedFor.first.lastName}',
                           style: AppTextStyle.bodyMediumMedium
                               .copyWith(color: AppColors.grayscale700),
                         ),
                         const Spacer(),
-                        if (!(bookingServiceStatus ==
-                            BookingServiceStatus.requested))
-                        if (!(bookingServiceStatus ==
-                            BookingServiceStatus.requested))
-                          Container(
-                            height: 24,
-                            width: 105,
-                            alignment: const Alignment(0, 0),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: Dimension.d1),
-                            decoration: BoxDecoration(
-                              color: AppColors.lightBlue,
-                              borderRadius: BorderRadius.circular(5),
+                          if (!(bookingServiceStatus ==
+                              BookingServiceStatus.requested))
+                            Container(
+                              height: 24,
+                              width: 105,
+                              alignment: const Alignment(0, 0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimension.d1),
+                              decoration: BoxDecoration(
+                                color: AppColors.lightBlue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                bookingServiceStatus ==
+                                        BookingServiceStatus.completed
+                                    ? formatDateTime(DateTime.now())
+                                    : formatDateTime(DateTime.now()),
+                                style: AppTextStyle.bodyMediumMedium
+                                    .copyWith(color: AppColors.primary),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            child: Text(
-                              bookingServiceStatus ==
-                                      BookingServiceStatus.completed
-                                  ? formatDateTime(
-                                      bookingServiceModel.completedDate ??
-                                          DateTime.now())
-                                  : formatDateTime(
-                                      bookingServiceModel.requestedDate),
-                              style: AppTextStyle.bodyMediumMedium
-                                  .copyWith(color: AppColors.primary),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
                         const SizedBox(
                           width: Dimension.d2,
                         ),
                       ],
                     ),
                     Text(
-                      bookingServiceModel.serviceName,
+                      bookingServiceModel.product.name,
                       style: AppTextStyle.bodyLargeMedium.copyWith(
                         color: AppColors.grayscale900,
                       ),
@@ -122,8 +123,7 @@ class BookingListTileComponent extends StatelessWidget {
                           width: Dimension.d2,
                         )),
                         TextSpan(
-                          text:
-                              formatDateTime(bookingServiceModel.requestedDate),
+                          text: formatDateTime(DateTime.now()),
                           style: AppTextStyle.bodyMediumMedium
                               .copyWith(color: AppColors.grayscale900),
                         )
@@ -142,7 +142,7 @@ class BookingListTileComponent extends StatelessWidget {
 String formatDateTime(DateTime dateTime) {
   final DateFormat dayFormat = DateFormat('d MMM');
   final DateFormat timeFormat = DateFormat('h a');
-  
+
   String formattedDay = dayFormat.format(dateTime);
   String formattedTime = timeFormat.format(dateTime).toUpperCase();
 
