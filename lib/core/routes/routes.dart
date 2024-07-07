@@ -127,6 +127,8 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
         return MaterialPage(
+          child: MainScreen(path: updateBotNavPageName ?? '', child: child,),
+        );
       },
       routes: <RouteBase>[
         GoRoute(
