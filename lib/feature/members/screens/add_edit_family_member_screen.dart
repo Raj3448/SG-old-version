@@ -20,6 +20,7 @@ import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
@@ -143,6 +144,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       );
       GetIt.I<MembersStore>().refresh();
       GetIt.I<UserDetailStore>().refresh();
+      GetIt.I<BookingServiceStore>().refresh();
       context
         ..pop()
         ..pop();

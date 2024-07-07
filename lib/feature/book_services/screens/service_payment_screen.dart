@@ -17,15 +17,15 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
-import 'package:silver_genie/feature/bookings/booking_sevice_status_page.dart';
+import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-class PaymentScreen extends StatefulWidget {
+class ServicePaymentScreen extends StatefulWidget {
   PaymentStatusModel? paymentStatusModel;
   final PriceDetails? priceDetails;
   final String id;
 
-  PaymentScreen(
+  ServicePaymentScreen(
       {required this.paymentStatusModel,
       required this.priceDetails,
       required this.id,
@@ -33,10 +33,10 @@ class PaymentScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<ServicePaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentScreenState extends State<ServicePaymentScreen> {
   final store = GetIt.I<ProductListingStore>();
   Timer? _timer;
   late ReactionDisposer _reactionDisposer;
