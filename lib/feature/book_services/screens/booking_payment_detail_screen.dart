@@ -18,7 +18,8 @@ import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
-import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
+import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
+import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class BookingPaymentDetailScreen extends StatefulWidget {
@@ -36,6 +37,7 @@ class BookingPaymentDetailScreen extends StatefulWidget {
 class _BookingPaymentDetailScreenState
     extends State<BookingPaymentDetailScreen> {
   final store = GetIt.I<ProductListingStore>();
+  final bookingServiceStore = GetIt.I<BookingServiceStore>();
   bool pytmStatusLoading = false;
   late ReactionDisposer _reactionDisposer1;
   late ReactionDisposer _reactionDisposer2;
@@ -57,6 +59,7 @@ class _BookingPaymentDetailScreenState
           store.getPaymentStatus(id: widget.paymentDetails.id.toString());
         }
         store.paymentStatus = null;
+        bookingServiceStore.refresh();
       }
     });
     _reactionDisposer2 =

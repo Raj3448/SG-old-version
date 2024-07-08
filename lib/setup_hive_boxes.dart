@@ -60,24 +60,6 @@ Future<void> initializeBoxForUserDetails() async {
   );
 }
 
-// Future<void> initializeBoxForUserDetails() async {
-//   Hive..registerAdapter(UserAdapter())..registerAdapter(AddressAdapter());
-//   String? userDetailsKeyEncoded = await storage.read(key: USER_DETAILS_BOX_KEY);
-//   if (userDetailsKeyEncoded == null) {
-//     var userDetailsKey = Hive.generateSecureKey();
-//     await storage.write(key: USER_DETAILS_BOX_KEY, value: base64UrlEncode(userDetailsKey));
-//     userDetailsKeyEncoded = base64UrlEncode(userDetailsKey);
-//   } else {
-//     userDetailsKeyEncoded = await storage.read(key: USER_DETAILS_BOX_KEY);
-//   }
-//   var userDetailsKey = base64Url.decode(userDetailsKeyEncoded!);
-//   await Hive.openBox<User>(
-//     USER_DETAILS_BOX_NAME,
-//     encryptionCipher: HiveAesCipher(userDetailsKey),
-//     compactionStrategy: (int total, int deleted) => deleted > 20,
-//   );
-// }
-
 Future<void> initializeBoxForToken() async {
   String? existingKey = await storage.read(key: 'hive_key');
   if (existingKey == null) {
@@ -86,5 +68,6 @@ Future<void> initializeBoxForToken() async {
     existingKey = base64UrlEncode(newKey);
   }
   var key = base64Url.decode(existingKey);
+  // ignore: inference_failure_on_function_invocation
   await Hive.openBox(TOKEN_BOX_NAME, encryptionCipher: HiveAesCipher(key));
 }

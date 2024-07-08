@@ -7,21 +7,22 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/payment/payment_services.dart';
-import 'package:silver_genie/core/widgets/active_plan.dart';
+import 'package:silver_genie/core/widgets/assigning_component.dart';
+import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
-class PaymentStatusTrackingPage extends StatelessWidget {
-  final String id;
-  PaymentStatusTrackingPage({
+class ServiceBookingDetailsScreen extends StatelessWidget {
+  final BookingServiceStatus bookingServiceStatus;
+  final String serviceId;
+  ServiceBookingDetailsScreen({
+    required this.bookingServiceStatus,
+    required this.serviceId,
     Key? key,
-    required this.id,
   }) : super(key: key);
   final service = GetIt.I<ProductListingServices>();
   @override
@@ -33,7 +34,7 @@ class PaymentStatusTrackingPage extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
           child: FutureBuilder(
-            future: service.getPaymentStatus(id: id),
+            future: service.getPaymentStatus(id: serviceId),
             builder: (context, snapShot) {
               if (snapShot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -62,9 +63,9 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
-              final paymentStatus = getPaymentStatus(
-                  paymentStatus: paymentStatusModel.paymentStatus,
-                  status: paymentStatusModel.status);
+              // final paymentStatus = getPaymentStatus(
+              //     paymentStatus: paymentStatusModel.paymentStatus,
+              //     status: paymentStatusModel.status);
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,8 +74,7 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                       height: Dimension.d4,
                     ),
                     Text(
-                      paymentStatusModel
-                          .priceDetails.products.first.productName,
+                      paymentStatusModel.product.name,
                       style: AppTextStyle.bodyXLMedium.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
@@ -108,13 +108,19 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                paymentStatus == PaymentStatus.pending
-                                    ? Icons.error_outline_outlined
-                                    : AppIcons.check,
-                                size: paymentStatus == PaymentStatus.pending
+                                bookingServiceStatus ==
+                                        BookingServiceStatus.active
+                                    ? AppIcons.medical_services
+                                    : bookingServiceStatus ==
+                                            BookingServiceStatus.requested
+                                        ? Icons.error_outline_outlined
+                                        : AppIcons.check,
+                                size: bookingServiceStatus ==
+                                        BookingServiceStatus.requested
                                     ? 16
                                     : 14,
-                                color: paymentStatus == PaymentStatus.pending
+                                color: bookingServiceStatus ==
+                                        BookingServiceStatus.requested
                                     ? AppColors.warning2
                                     : AppColors.grayscale800,
                               ),
@@ -122,14 +128,18 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                                 width: Dimension.d2,
                               ),
                               Text(
-                                paymentStatus == PaymentStatus.pending
-                                    ? 'Payment Pending'
-                                    : 'Payment Completed',
+                                bookingServiceStatus ==
+                                        BookingServiceStatus.active
+                                    ? 'Service In progress'
+                                    : bookingServiceStatus ==
+                                            BookingServiceStatus.requested
+                                        ? 'Payment Pending'
+                                        : 'Service Completed',
                                 style: AppTextStyle.bodyMediumBold.copyWith(
-                                    color:
-                                        paymentStatus == PaymentStatus.pending
-                                            ? AppColors.warning2
-                                            : AppColors.grayscale800),
+                                    color: bookingServiceStatus ==
+                                            BookingServiceStatus.requested
+                                        ? AppColors.warning2
+                                        : AppColors.grayscale800),
                               ),
                             ],
                           )
@@ -147,9 +157,9 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                     const SizedBox(
                       height: Dimension.d2,
                     ),
-                    ExpandedAnalogComponent(
-                      label: 'Service opted for',
-                      value:
+                    AssigningComponent(
+                      name: 'Service opted for',
+                      initializeElement:
                           ' ${paymentStatusModel.requestedFor.first.firstName} ${paymentStatusModel.requestedFor.first.lastName}',
                     ),
                     const SizedBox(
@@ -160,9 +170,10 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (context, index) => !paymentStatusModel
                                 .metadata[index].private
-                            ? ExpandedAnalogComponent(
-                                label: paymentStatusModel.metadata[index].key,
-                                value: paymentStatusModel.metadata[index].value,
+                            ? AssigningComponent(
+                                name: paymentStatusModel.metadata[index].key,
+                                initializeElement:
+                                    paymentStatusModel.metadata[index].value,
                               )
                             : const SizedBox(),
                         separatorBuilder: (context, index) =>
@@ -178,25 +189,16 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                     const Divider(
                       color: AppColors.line,
                     ),
-                    Text('Payment breakdown',
-                        style: AppTextStyle.bodyLargeSemiBold.copyWith(
-                            fontSize: 18,
-                            color: AppColors.grayscale900,
-                            height: 2.6)),
+                    Text(
+                      'Order Info',
+                      style: AppTextStyle.bodyXLMedium
+                          .copyWith(fontWeight: FontWeight.w500, height: 2.4),
+                    ),
                     ElementSpaceBetween(
                       title: paymentStatusModel
                           .priceDetails.products.first.displayName,
                       description:
                           '₹ ${formatNumberWithCommas(paymentStatusModel.priceDetails.products.first.price.toInt())}',
-                    ),
-                    const Divider(
-                      color: AppColors.line,
-                    ),
-                    ElementSpaceBetween(
-                      title:
-                          '${paymentStatusModel.priceDetails.products.first.displayName} x ${paymentStatusModel.priceDetails.products.first.quantity} days',
-                      description:
-                          '₹ ${formatNumberWithCommas(paymentStatusModel.amount.toInt())}',
                     ),
                     const Divider(
                       color: AppColors.line,
@@ -207,7 +209,7 @@ class PaymentStatusTrackingPage extends StatelessWidget {
                     ElementSpaceBetween(
                       title: 'Total to pay',
                       description:
-                          '₹ ${formatNumberWithCommas(paymentStatusModel.amount.toInt())}',
+                          '₹ ${formatNumberWithCommas(paymentStatusModel.priceDetails.products.first.price.toInt())}',
                       isTitleBold: true,
                     ),
                     const SizedBox(

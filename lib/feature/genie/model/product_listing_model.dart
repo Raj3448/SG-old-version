@@ -303,6 +303,23 @@ class ServiceOfferingModel with _$ServiceOfferingModel {
 }
 
 @freezed
+class ServicePriceModel with _$ServicePriceModel {
+    const factory ServicePriceModel({
+        required int id,
+        @JsonKey(name: '__component') required String component,
+        required String label,
+        required int startPrice,
+        @Default(null) String? priceSuperscript,
+        @Default(null) String? priceDescription,
+        @Default(null) int? endPrice,
+    }) = _ServicePriceModel;
+  
+    factory ServicePriceModel.fromJson(Map<String, dynamic> json) =>
+      _$ServicePriceModelFromJson(json);
+}
+
+
+@freezed
 class OfferingList with _$OfferingList {
   const factory OfferingList({
     required int id,

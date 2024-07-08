@@ -21,6 +21,7 @@ import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
@@ -30,7 +31,8 @@ class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({
     required this.id,
     required this.title,
-    required this.productCode, super.key,
+    required this.productCode,
+    super.key,
   });
 
   final String id;
@@ -95,6 +97,14 @@ class ServiceDetailsScreen extends StatelessWidget {
                         ),
                       );
                     }
+                    if (component['__component'] ==
+                        'service-components.service-price') {
+                      allServiceList.add(
+                        ServicePriceModel.fromJson(
+                          component as Map<String, dynamic>,
+                        ),
+                      );
+                    }
                   }
 
                   final widgetList = <Widget>[];
@@ -118,8 +128,16 @@ class ServiceDetailsScreen extends StatelessWidget {
                       );
                       continue;
                     }
+                    if (component is ServicePriceModel) {
+                      widgetList.add(_PriceTile(
+                        price:
+                            '₹ ${formatNumberWithCommas(component.startPrice)}${component.endPrice == null ? '' : ' - ${formatNumberWithCommas(component.endPrice!)}'}',
+                        subscript: component.priceSuperscript,
+                        desc: component.priceDescription,
+                        label: component.label,
+                      ));
+                    }
                   }
-
                   return Column(
                     children: [
                       Expanded(
@@ -356,7 +374,7 @@ class _HeaderPicTitle extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: CachedNetworkImage(
                 imageUrl:
-                    '${Env.serverUrl}${headerModel.serviceImage.data.attributes.url}',
+                    '${Env.serverUrl}${headerModel.serviceImage.data?.attributes.url}',
                 fit: BoxFit.cover,
               ),
             ),
@@ -450,50 +468,66 @@ class _PriceTile extends StatelessWidget {
     required this.price,
     required this.subscript,
     required this.desc,
+    required this.label,
   });
 
   final String price;
-  final String subscript;
-  final String desc;
+  final String? subscript;
+  final String? desc;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.secondary,
-        border: Border.all(color: AppColors.primary),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTextStyle.bodyXLBold
+              .copyWith(color: AppColors.grayscale900, height: 2),
+        ),
+        const SizedBox(
+          height: Dimension.d2,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.secondary,
+            border: Border.all(color: AppColors.primary),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          margin: const EdgeInsets.only(bottom: Dimension.d2),
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                price,
-                style: AppTextStyle.heading4SemiBold.copyWith(
-                  color: AppColors.grayscale900,
-                ),
+              Row(
+                children: [
+                  Text(
+                    price,
+                    style: AppTextStyle.heading4SemiBold.copyWith(
+                      color: AppColors.grayscale900,
+                    ),
+                  ),
+                  const SizedBox(width: 7),
+                  Text(
+                    subscript ?? '',
+                    style: AppTextStyle.bodyMediumMedium.copyWith(
+                      color: AppColors.grayscale700,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 7),
+              const SizedBox(height: Dimension.d2),
               Text(
-                subscript,
-                style: AppTextStyle.bodyMediumMedium.copyWith(
+                desc ?? '',
+                style: AppTextStyle.bodyLargeMedium.copyWith(
                   color: AppColors.grayscale700,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: Dimension.d2),
-          Text(
-            desc,
-            style: AppTextStyle.bodyLargeMedium.copyWith(
-              color: AppColors.grayscale700,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
+import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
@@ -51,10 +53,9 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-
+      FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
       await Hive.initFlutter();
       await setupHiveBox();
-
       // Initialize SharedPreferences asynchronously
       GetIt.instance.registerSingletonAsync<SharedPreferences>(
         () => SharedPreferences.getInstance(),
@@ -140,8 +141,9 @@ void main() async {
           GetIt.I<UserDetailsCache>(),
         ),
       );
+      GetIt.instance.registerLazySingleton(() => NotificationServices(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(
-        () => NotificationStore(NotificationServices()),
+        () => NotificationStore(GetIt.I<NotificationServices>()),
       );
       GetIt.instance.registerLazySingleton(
           () => ProductListingServices(httpClient: GetIt.I<HttpClient>()));
@@ -152,7 +154,7 @@ void main() async {
           () => BookingService(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() =>
           BookingServiceStore(bookingService: GetIt.I<BookingService>())
-            ..initGetAllServices());
+            );
       GetIt.instance.registerLazySingleton(() => PaymentService(
             httpClient: GetIt.I<HttpClient>(),
             productListingStore: GetIt.I<ProductListingStore>(),

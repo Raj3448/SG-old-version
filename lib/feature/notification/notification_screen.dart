@@ -4,96 +4,85 @@ import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
+import 'package:silver_genie/core/widgets/error_state_component.dart';
+import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/notification/model/notification_model.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final store = GetIt.I<NotificationStore>();
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  final store = GetIt.I<NotificationStore>();
+
+  @override
+  void initState() {
     store.fetchNotifications();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
-      child: Observer(
-        builder: (context) {
-          return Scaffold(
-            appBar: const PageAppbar(title: 'Notification'),
-            backgroundColor: AppColors.white,
-            body: store.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(Dimension.d3),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Today',
-                            style: AppTextStyle.bodyMediumMedium.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          Column(
-                            children: List.generate(
-                                store.notifications!.fold(
-                                    (l) => null!, (r) => r.length), (index) {
-                              if (index == 3) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Earlier',
-                                      style: AppTextStyle.bodyMediumMedium
-                                          .copyWith(
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary),
-                                    ),
-                                    NotificationComponent(
-                                        notificationModel: store.notifications!
-                                            .fold(
-                                                (l) => NotificationModel(
-                                                    title: '',
-                                                    description: '',
-                                                    datetime: DateTime.now()),
-                                                (r) {
-                                      return r[index];
-                                    }))
-                                  ],
-                                );
-                              }
-                              return NotificationComponent(
-                                  notificationModel: store.notifications!.fold(
-                                      (l) => NotificationModel(
-                                          title: '',
-                                          description: '',
-                                          datetime: DateTime.now()), (r) {
-                                return r[index];
-                              }));
-                            }),
-                          ),
-                          const SizedBox(
-                            height: Dimension.d3,
-                          )
-                        ],
+      child: Scaffold(
+        appBar: const PageAppbar(title: 'Notification'),
+        backgroundColor: AppColors.white,
+        body: Observer(
+          builder: (context) {
+            if (store.isNotificationLoading) {
+              return const Center(
+                child: LoadingWidget(
+                  showShadow: false,
+                ),
+              );
+            }
+            if (store.notificationfailure != null ||
+                !store.notificationsLoaded) {
+              store.notificationfailure = null;
+              return const ErrorStateComponent(
+                  errorType: ErrorType.somethinWentWrong);
+            }
+            return Padding(
+              padding: const EdgeInsets.all(Dimension.d3),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Today',
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
                       ),
                     ),
-                  ),
-          );
-        },
+                    ...List.generate(store.notifications!.data.length, (index) {
+                      return NotificationComponent(
+                          notifications: store.notifications!.data[index]);
+                    }),
+                    const SizedBox(
+                      height: Dimension.d3,
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 }
 
 class NotificationComponent extends StatelessWidget {
-  const NotificationComponent({required this.notificationModel, super.key});
+  const NotificationComponent({required this.notifications, super.key});
 
-  final NotificationModel notificationModel;
+  final AppNotifications notifications;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -105,11 +94,12 @@ class NotificationComponent extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimension.d2),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Text(
-                notificationModel.title,
+                notifications.notificationMetaData.title,
                 style: AppTextStyle.bodyMediumMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AppColors.grayscale900,
@@ -127,11 +117,11 @@ class NotificationComponent extends StatelessWidget {
             height: Dimension.d2,
           ),
           Text(
-            notificationModel.description,
+            notifications.notificationMetaData.message,
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale700),
           ),
-          if (notificationModel.imageUrl != null)
+          if (notifications.notificationMetaData.image.data != null)
             Column(
               children: [
                 const SizedBox(
@@ -139,11 +129,9 @@ class NotificationComponent extends StatelessWidget {
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(Dimension.d2),
-                  child: Image.asset(
-                    notificationModel.imageUrl!,
-                    height: 170,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  child: BannerImageComponent(
+                    imageUrl: notifications
+                        .notificationMetaData.image.data!.attributes.url,
                   ),
                 ),
               ],

@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use, lines_longer_than_80_chars, must_be_immutable
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -19,25 +17,26 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
-import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
+import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-class PaymentScreen extends StatefulWidget {
-  PaymentScreen({
-    required this.paymentStatusModel,
-    required this.priceDetails,
-    required this.id,
-    super.key,
-  });
+class ServicePaymentScreen extends StatefulWidget {
   PaymentStatusModel? paymentStatusModel;
   final PriceDetails? priceDetails;
   final String id;
 
+  ServicePaymentScreen(
+      {required this.paymentStatusModel,
+      required this.priceDetails,
+      required this.id,
+      Key? key})
+      : super(key: key);
+
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<ServicePaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentScreenState extends State<ServicePaymentScreen> {
   final store = GetIt.I<ProductListingStore>();
   Timer? _timer;
   late ReactionDisposer _reactionDisposer;
@@ -48,16 +47,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ? PaymentStatus.failure
         : getPaymentStatus(
             paymentStatus: widget.paymentStatusModel!.paymentStatus,
-            status: widget.paymentStatusModel!.status,
-          );
+            status: widget.paymentStatusModel!.status);
     if (store.servicePaymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
     _reactionDisposer =
         reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
-        widget.paymentStatusModel = paymentStatusModel;
-        store.servicePaymentStatus = PaymentStatus.success;
         widget.paymentStatusModel = paymentStatusModel;
         store.servicePaymentStatus = PaymentStatus.success;
         _stopPaymentStatusPolling();
@@ -109,10 +105,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               if (widget.paymentStatusModel != null) {
                 GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
                     null;
-                context.pushNamed(
-                  RoutesConstants.paymentStatusTrackingPage,
-                  pathParameters: {'id': widget.id},
-                );
+                context.pushNamed(RoutesConstants.paymentStatusTrackingPage,
+                    pathParameters: {'id': widget.id});
               } else {
                 context.pop();
               }
@@ -152,9 +146,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       Text(
                         'Order Info',
                         style: AppTextStyle.bodyXLSemiBold.copyWith(
-                          color: AppColors.grayscale900,
-                          height: 2.6,
-                        ),
+                            color: AppColors.grayscale900, height: 2.6),
                       ),
                       const Divider(
                         color: AppColors.grayscale300,
@@ -167,8 +159,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 .first.displayName,
                         description: store.servicePaymentStatus ==
                                 PaymentStatus.failure
-                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price)}'
-                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.priceDetails.products.first.price)}',
+                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
+                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.priceDetails.products.first.price.toInt())}',
                       ),
                       const Divider(
                         color: AppColors.grayscale300,
@@ -177,8 +169,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         title: 'Total to pay',
                         description: store.servicePaymentStatus ==
                                 PaymentStatus.failure
-                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount)}'
-                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.amount)}',
+                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
+                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.amount.toInt())}',
                         isTitleBold: true,
                       ),
                       const Divider(
@@ -188,7 +180,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   const SizedBox(
                     height: Dimension.d20,
-                  ),
+                  )
                 ],
               ),
             ),
@@ -210,10 +202,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 }
 
-PaymentStatus getPaymentStatus({
-  required String paymentStatus,
-  required String status,
-}) {
+PaymentStatus getPaymentStatus(
+    {required String paymentStatus, required String status}) {
   if (paymentStatus == 'due' && status == 'requested') {
     return PaymentStatus.pending;
   }

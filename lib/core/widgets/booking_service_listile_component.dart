@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
@@ -12,7 +13,7 @@ enum BookingServiceStatus { requested, active, completed }
 
 class BookingListTileComponent extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
-  final BookingServiceModel bookingServiceModel;
+  final Service bookingServiceModel;
   const BookingListTileComponent(
       {required this.bookingServiceStatus,
       required this.bookingServiceModel,
@@ -23,12 +24,11 @@ class BookingListTileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(
-          RoutesConstants.bookingDetailsScreen,
-          pathParameters: {
-            'subscriptionDetails': bookingServiceStatus.toString(),
-          },
-        );
+        context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage,
+            pathParameters: {
+              'bookingServiceStatus': bookingServiceStatus.toString(),
+              'serviceId': bookingServiceModel.id.toString()
+            });
       },
       child: Container(
         width: double.infinity,
@@ -61,14 +61,18 @@ class BookingListTileComponent extends StatelessWidget {
                     Row(
                       children: [
                         Avatar.fromSize(
-                          imgPath: '',
+                          imgPath: bookingServiceModel
+                                      .requestedFor.first.profileImg ==
+                                  null
+                              ? ''
+                              : '${Env.serverUrl}${bookingServiceModel.requestedFor.first.profileImg!.url}',
                           size: AvatarSize.size16,
                         ),
                         const SizedBox(
                           width: Dimension.d2,
                         ),
                         Text(
-                          bookingServiceModel.memberName,
+                          '${bookingServiceModel.requestedFor.first.firstName} ${bookingServiceModel.requestedFor.first.lastName}',
                           style: AppTextStyle.bodyMediumMedium
                               .copyWith(color: AppColors.grayscale700),
                         ),
@@ -107,7 +111,7 @@ class BookingListTileComponent extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      bookingServiceModel.serviceName,
+                      bookingServiceModel.product.name,
                       style: AppTextStyle.bodyLargeMedium.copyWith(
                         color: AppColors.grayscale900,
                       ),
@@ -124,8 +128,7 @@ class BookingListTileComponent extends StatelessWidget {
                           width: Dimension.d2,
                         )),
                         TextSpan(
-                          text:
-                              formatDateTime(bookingServiceModel.requestedDate),
+                          text: formatDateTime(bookingServiceModel.requestedAt),
                           style: AppTextStyle.bodyMediumMedium
                               .copyWith(color: AppColors.grayscale900),
                         )
