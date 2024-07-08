@@ -27,7 +27,6 @@ import 'package:silver_genie/feature/book_services/screens/booking_payment_detai
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
-import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
@@ -149,9 +148,17 @@ class ServiceDetailsScreen extends StatelessWidget {
                         const SizedBox(
                           height: Dimension.d2,
                         ),
-                        BannerImageComponent(
-                            imageUrl:
-                                component.bannerImage.data.first.attributes.url)
+                        ListView.separated(
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) =>
+                                BannerImageComponent(
+                                    imageUrl: component.bannerImage.data[index]
+                                        .attributes.url),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                                  height: Dimension.d2,
+                                ),
+                            itemCount: component.bannerImage.data.length)
                       ]);
                       continue;
                     }
