@@ -168,7 +168,7 @@ class FcmNotificationManager {
       if (isBottomNavScreen(msg?.data['actionUrl'] as String)) {
         context?.goNamed(msg?.data['actionUrl'].toString() ?? '/home');
       } else {
-        context?.pushNamed(msg?.data['actionUrl'].toString() ?? '/home');
+        await context?.pushNamed(msg?.data['actionUrl'].toString() ?? '/home');
       }
     }
   }
