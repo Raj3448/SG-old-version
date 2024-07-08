@@ -116,8 +116,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                 context.pushNamed(
                   RoutesConstants.bookingDetailsScreen,
                   pathParameters: {
-                    'subscriptionDetails':
-                        jsonEncode(widget.subscriptionDetails),
+                    'id': '${widget.subscriptionDetails!.id}',
                   },
                 );
               } else {

@@ -1,7 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars, library_private_types_in_public_api
 
-import 'dart:convert';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -262,7 +261,7 @@ class _UserDetailsComponent extends StatelessWidget {
                 else
                   Avatar.fromSize(
                     imgPath:
-                        '${Env.serverUrl}${memberDetails.user.profileImg?.url ?? ''}',
+                        '${Env.serverUrl}${memberDetails.belongsTo.map((member) => member.profileImg?.url ?? '')}',
                     size: AvatarSize.size24,
                   ),
                 const SizedBox(width: Dimension.d3),
@@ -292,12 +291,12 @@ class _UserDetailsComponent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${memberDetails.user.firstName} ${memberDetails.user.lastName}',
+                            '${memberDetails.belongsTo.map((member) => member.firstName).join(' ')} ${memberDetails.belongsTo.map((member) => member.lastName).join(' ')}',
                             style: AppTextStyle.bodyLargeBold
                                 .copyWith(color: AppColors.grayscale900),
                           ),
                           Text(
-                            'Relation: ${memberDetails.user.relation}  Age: ${memberDetails.user.age ?? '0'}',
+                            'Relation: ${memberDetails.belongsTo.map((member) => member.relation).join(' ')}  Age: ${calculateAgeFromString(memberDetails.belongsTo.map((member) => member.dateOfBirth).join(' '))}',
                             style: AppTextStyle.bodyMediumMedium
                                 .copyWith(color: AppColors.grayscale800),
                           ),
@@ -321,7 +320,7 @@ class _UserDetailsComponent extends StatelessWidget {
                 IconTitleDetailsComponent(
                   icon: AppIcons.medical_services,
                   title: 'Status',
-                  details: capitalize(memberDetails.status),
+                  details: memberDetails.subscriptionStatus.toString(),
                 ),
                 const SizedBox(height: Dimension.d5),
                 IconTitleDetailsComponent(
@@ -349,12 +348,10 @@ class _UserDetailsComponent extends StatelessWidget {
                             );
                           },
                           (success) {
-                            final subscriptionData = success.toJson();
                             context.pushNamed(
                               RoutesConstants.bookingDetailsScreen,
                               pathParameters: {
-                                'subscriptionDetails':
-                                    jsonEncode(subscriptionData),
+                                'id': '${memberDetails.id}',
                               },
                             );
                           },
@@ -402,13 +399,12 @@ class _UserDetailsComponent extends StatelessWidget {
   }
 }
 
-String capitalize(String input) {
-  if (input.isEmpty) return input;
-  return input.toLowerCase().split(' ').map((word) {
-    if (word.isNotEmpty) {
-      return word[0].toUpperCase() + word.substring(1);
-    } else {
-      return '';
-    }
-  }).join(' ');
+int calculateAgeFromString(String dobString) {
+  final dob = DateFormat('yyyy-MM-dd').parse(dobString);
+  final now = DateTime.now();
+  var age = now.year - dob.year;
+  if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+    age--;
+  }
+  return age;
 }
