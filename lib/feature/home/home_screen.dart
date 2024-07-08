@@ -591,7 +591,8 @@ class _EmergencyActivation extends StatelessWidget {
                           ? null
                           : const NeverScrollableScrollPhysics(),
                       child: _EmergencyActivateBottomSheet(
-                          memberStore: memberStore),
+                        memberStore: memberStore,
+                      ),
                     );
                   },
                   shape: const RoundedRectangleBorder(
@@ -687,23 +688,22 @@ class _EmergencyActivateBottomSheetState
                 SizedBox(
                   height: 180,
                   child: ListView.builder(
-                      itemBuilder: (context, index) =>
-                          _ActivateListileComponent(
-                            memberName:
-                                widget.memberStore.familyMembers[index].name,
-                            relation: widget
-                                .memberStore.familyMembers[index].relation,
-                            onPressed: () async {
-                              await launchDialer('+910000000000');
-                              setState(() {
-                                isActivate = true;
-                              });
-                            },
-                            imgUrl: widget.memberStore.familyMembers[index]
-                                .profileImg?.url,
-                          ),
-                      itemCount: widget.memberStore.familyMembers.length),
-                )
+                    itemBuilder: (context, index) => _ActivateListileComponent(
+                      memberName: widget.memberStore.familyMembers[index].name,
+                      relation:
+                          widget.memberStore.familyMembers[index].relation,
+                      onPressed: () async {
+                        await launchDialer('+910000000000');
+                        setState(() {
+                          isActivate = true;
+                        });
+                      },
+                      imgUrl: widget
+                          .memberStore.familyMembers[index].profileImg?.url,
+                    ),
+                    itemCount: widget.memberStore.familyMembers.length,
+                  ),
+                ),
               ],
             ),
     );
@@ -715,11 +715,12 @@ class _ActivateListileComponent extends StatelessWidget {
   final String memberName;
   final String relation;
   final String? imgUrl;
-  const _ActivateListileComponent(
-      {required this.onPressed,
-      required this.memberName,
-      required this.imgUrl,
-      required this.relation});
+  const _ActivateListileComponent({
+    required this.onPressed,
+    required this.memberName,
+    required this.imgUrl,
+    required this.relation,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1076,32 +1077,44 @@ class _NewsletterComponent extends StatelessWidget {
                 : MainAxisAlignment.center,
             children: List.generate(
               newsletterModel.newsletters.length > 1 ? 2 : 1,
-              (index) => CustomButton(
-                ontap: () {
-                  if (newsletterModel.newsletters[index].link.downloadLink ==
-                      true) {
-                    downloadAndSavePDF(
-                      newsletterModel.newsletters[index].link.href,
-                      '${newsletterModel.newsletters[index].link.label}',
-                      context,
-                    );
-                  } else {
-                    launchUrl(
-                      Uri.parse(newsletterModel.newsletters[index].link.href),
-                    );
-                  }
-                },
-                title: newsletterModel.newsletters[index].label,
-                showIcon: false,
-                iconPath: AppIcons.add,
-                size: ButtonSize.normal,
-                type: newsletterModel.newsletters[index].theme == 'secondary'
-                    ? ButtonType.secondary
-                    : newsletterModel.newsletters[index].theme == 'primary'
-                        ? ButtonType.primary
-                        : ButtonType.tertiary,
-                expanded: false,
-                iconColor: AppColors.primary,
+              (index) => Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomButton(
+                      ontap: () {
+                        if (newsletterModel
+                                .newsletters[index].link.downloadLink ==
+                            true) {
+                          downloadAndSavePDF(
+                            newsletterModel.newsletters[index].link.href,
+                            '${newsletterModel.newsletters[index].link.label}',
+                            context,
+                          );
+                        } else {
+                          launchUrl(
+                            Uri.parse(
+                              newsletterModel.newsletters[index].link.href,
+                            ),
+                          );
+                        }
+                      },
+                      title: newsletterModel.newsletters[index].label,
+                      showIcon: false,
+                      iconPath: AppIcons.add,
+                      size: ButtonSize.normal,
+                      type: newsletterModel.newsletters[index].theme ==
+                              'secondary'
+                          ? ButtonType.secondary
+                          : newsletterModel.newsletters[index].theme ==
+                                  'primary'
+                              ? ButtonType.primary
+                              : ButtonType.tertiary,
+                      expanded: true,
+                      iconColor: AppColors.primary,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -1141,14 +1154,20 @@ Future<void> downloadAndSavePDF(
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
-            'Error downloading file: ${response.statusCode}',
+            'Error downloading file!',
           ),
         ),
       );
     }
   } catch (e) {
-    print('Error: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Something went wrong!',
+        ),
+      ),
+    );
   }
 }
