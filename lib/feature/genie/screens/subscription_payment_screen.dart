@@ -18,7 +18,7 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
