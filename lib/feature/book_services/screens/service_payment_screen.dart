@@ -19,6 +19,7 @@ import 'package:silver_genie/feature/book_services/screens/booking_payment_detai
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/notification/store/notification_store.dart';
 
 class ServicePaymentScreen extends StatefulWidget {
   PaymentStatusModel? paymentStatusModel;
@@ -204,6 +205,7 @@ PaymentStatus getPaymentStatus(
     return PaymentStatus.pending;
   }
   if (paymentStatus == 'paid') {
+    GetIt.I<NotificationStore>().refresh();
     return PaymentStatus.success;
   } else {
     return PaymentStatus.failure;

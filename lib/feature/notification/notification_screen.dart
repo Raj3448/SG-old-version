@@ -116,7 +116,7 @@ class NotificationComponent extends StatelessWidget {
           });
         }
         final cnd1 = notification.notificationMetaData.actionType == 'openPage';
-        final cnd2 = notification.notificationMetaData.actionUrl != '/';
+        final cnd2 = notification.notificationMetaData.actionUrl != '/' && notification.notificationMetaData.actionUrl != '/notificationScreen';
         if (cnd1 && cnd2) {
           if (notification.notificationMetaData.additionalData.isEmpty) {
             context.pushNamed(
