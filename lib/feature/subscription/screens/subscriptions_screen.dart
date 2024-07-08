@@ -1,12 +1,16 @@
 // ignore_for_file: lines_longer_than_80_chars, library_private_types_in_public_api
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -15,9 +19,11 @@ import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/icon_title_details_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
+import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({super.key});
@@ -47,7 +53,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(Dimension.d4),
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.d4)
+                    .copyWith(top: Dimension.d4),
                 child: FutureBuilder(
                   future: subService.fetchSubscriptions(),
                   builder: (context, snapshot) {
@@ -75,10 +82,16 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                           },
                           (list) {
                             final activePlanList = list.data
-                                .where((member) => member.isExpired == false)
+                                .where(
+                                  (member) =>
+                                      member.subscriptionStatus == 'Active',
+                                )
                                 .toList();
                             final expiredPlanList = list.data
-                                .where((member) => member.isExpired == true)
+                                .where(
+                                  (member) =>
+                                      member.subscriptionStatus == 'Expired',
+                                )
                                 .toList();
                             if (list.data.isEmpty) {
                               return NoServiceFound(
@@ -167,10 +180,12 @@ class _SubscriptionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activePlanList =
-        members.where((member) => !member.isExpired).toList();
-    final expiredPlanList =
-        members.where((member) => member.isExpired).toList();
+    final activePlanList = members
+        .where((member) => member.subscriptionStatus == 'Active')
+        .toList();
+    final expiredPlanList = members
+        .where((member) => member.subscriptionStatus == 'Expired')
+        .toList();
 
     return ListView.builder(
       itemCount: isPrevious ? expiredPlanList.length : activePlanList.length,
@@ -200,8 +215,17 @@ class _UserDetailsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final familyMembers = memberDetails.familyMember;
-    final hasMultipleMembers = familyMembers!.length > 1;
+    final store = GetIt.I<UserDetailStore>();
+    final familyMembers = memberDetails.belongsTo;
+    final hasMultipleMembers = familyMembers.length > 1;
+    final interval = memberDetails.product.prices
+        .where((price) => price.id == memberDetails.priceId)
+        .map((price) => price.recurringInterval)
+        .join(' ');
+    final intervalCount = memberDetails.product.prices
+        .where((price) => price.id == memberDetails.priceId)
+        .map((price) => price.recurringIntervalCount)
+        .join(' ');
 
     return Container(
       width: double.infinity,
@@ -222,14 +246,14 @@ class _UserDetailsComponent extends StatelessWidget {
                     children: [
                       Avatar.fromSize(
                         imgPath:
-                            '${Env.serverUrl}${familyMembers[0].icon?.url ?? ''}',
+                            '${Env.serverUrl}${familyMembers[0].profileImg?.url ?? ''}',
                         size: AvatarSize.size24,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 25),
                         child: Avatar.fromSize(
                           imgPath:
-                              '${Env.serverUrl}${familyMembers[1].icon?.url ?? ''}',
+                              '${Env.serverUrl}${familyMembers[1].profileImg?.url ?? ''}',
                           size: AvatarSize.size24,
                         ),
                       ),
@@ -238,7 +262,7 @@ class _UserDetailsComponent extends StatelessWidget {
                 else
                   Avatar.fromSize(
                     imgPath:
-                        '${Env.serverUrl}${memberDetails.user.icon?.url ?? ''}',
+                        '${Env.serverUrl}${memberDetails.user.profileImg?.url ?? ''}',
                     size: AvatarSize.size24,
                   ),
                 const SizedBox(width: Dimension.d3),
@@ -273,7 +297,7 @@ class _UserDetailsComponent extends StatelessWidget {
                                 .copyWith(color: AppColors.grayscale900),
                           ),
                           Text(
-                            'Relation: ${memberDetails.user.relation}  Age: ${memberDetails.user.age}',
+                            'Relation: ${memberDetails.user.relation}  Age: ${memberDetails.user.age ?? '0'}',
                             style: AppTextStyle.bodyMediumMedium
                                 .copyWith(color: AppColors.grayscale800),
                           ),
@@ -291,19 +315,19 @@ class _UserDetailsComponent extends StatelessWidget {
                   icon: AppIcons.elderly_person,
                   title: 'Plan',
                   details:
-                      '${memberDetails.productName} ${memberDetails.intervalCount} ${memberDetails.interval}',
+                      '${memberDetails.product.name} $intervalCount ${removeLastLy(interval)}',
                 ),
                 const SizedBox(height: Dimension.d5),
                 IconTitleDetailsComponent(
                   icon: AppIcons.medical_services,
                   title: 'Status',
-                  details: memberDetails.isExpired ? 'Expired' : 'Active',
+                  details: capitalize(memberDetails.status),
                 ),
                 const SizedBox(height: Dimension.d5),
                 IconTitleDetailsComponent(
                   icon: AppIcons.calendar,
                   title: isPrevious ? 'Plan ended on' : 'Plan ends on',
-                  details: formatDate(memberDetails.expireDate),
+                  details: formatDate(memberDetails.expiresOn),
                 ),
               ],
             ),
@@ -312,7 +336,31 @@ class _UserDetailsComponent extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    ontap: () {},
+                    ontap: () {
+                      store
+                          .getSubscriptionById(id: memberDetails.id)
+                          .then((result) {
+                        result.fold(
+                          (failure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Something went wrong!'),
+                              ),
+                            );
+                          },
+                          (success) {
+                            final subscriptionData = success.toJson();
+                            context.pushNamed(
+                              RoutesConstants.bookingDetailsScreen,
+                              pathParameters: {
+                                'subscriptionDetails':
+                                    jsonEncode(subscriptionData),
+                              },
+                            );
+                          },
+                        );
+                      });
+                    },
                     title: 'View Details',
                     showIcon: false,
                     iconPath: AppIcons.add,
@@ -326,7 +374,16 @@ class _UserDetailsComponent extends StatelessWidget {
                 if (isPrevious)
                   Expanded(
                     child: CustomButton(
-                      ontap: () {},
+                      ontap: () {
+                        context.pushNamed(
+                          RoutesConstants.geniePage,
+                          pathParameters: {
+                            'pageTitle': memberDetails.product.name,
+                            'id': '${memberDetails.product.id}',
+                            'isUpgradeable': 'false',
+                          },
+                        );
+                      },
                       title: 'Buy again',
                       showIcon: false,
                       iconPath: AppIcons.add,
@@ -343,4 +400,15 @@ class _UserDetailsComponent extends StatelessWidget {
       ),
     );
   }
+}
+
+String capitalize(String input) {
+  if (input.isEmpty) return input;
+  return input.toLowerCase().split(' ').map((word) {
+    if (word.isNotEmpty) {
+      return word[0].toUpperCase() + word.substring(1);
+    } else {
+      return '';
+    }
+  }).join(' ');
 }

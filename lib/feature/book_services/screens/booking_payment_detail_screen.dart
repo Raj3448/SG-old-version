@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -10,7 +12,7 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/widgets/assigning_component.dart';
+import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -44,11 +46,14 @@ class _BookingPaymentDetailScreenState
     _reactionDisposer1 = reaction((_) => store.paymentStatus, (paymentStatus) {
       if (paymentStatus != null) {
         if (paymentStatus == PaymentStatus.failure) {
-          context.pushNamed(RoutesConstants.paymentScreen, extra: {
-            'paymentStatusModel': null,
-            'priceDetails': widget.paymentDetails.priceDetails,
-            'id': widget.paymentDetails.id.toString()
-          });
+          context.pushNamed(
+            RoutesConstants.paymentScreen,
+            extra: {
+              'paymentStatusModel': null,
+              'priceDetails': widget.paymentDetails.priceDetails,
+              'id': widget.paymentDetails.id.toString(),
+            },
+          );
         }
         if (paymentStatus == PaymentStatus.success) {
           store.getPaymentStatus(id: widget.paymentDetails.id.toString());
@@ -60,11 +65,14 @@ class _BookingPaymentDetailScreenState
     _reactionDisposer2 =
         reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
-        context.pushReplacementNamed(RoutesConstants.paymentScreen, extra: {
-          'paymentStatusModel': paymentStatusModel,
-          'priceDetails': null,
-          'id': widget.paymentDetails.id.toString()
-        });
+        context.pushReplacementNamed(
+          RoutesConstants.paymentScreen,
+          extra: {
+            'paymentStatusModel': paymentStatusModel,
+            'priceDetails': null,
+            'id': widget.paymentDetails.id.toString(),
+          },
+        );
         store.paymentStatusModel = null;
       }
     });
@@ -105,51 +113,58 @@ class _BookingPaymentDetailScreenState
                       const BookingStatus(
                         currentStep: BookingStep.payment,
                       ),
-                      Text('Order Summery',
-                          style: AppTextStyle.bodyLargeSemiBold.copyWith(
-                              fontSize: 18,
-                              color: AppColors.grayscale900,
-                              height: 2.6)),
+                      Text(
+                        'Order Summery',
+                        style: AppTextStyle.bodyLargeSemiBold.copyWith(
+                          fontSize: 18,
+                          color: AppColors.grayscale900,
+                          height: 2.6,
+                        ),
+                      ),
                       const SizedBox(
                         height: Dimension.d2,
                       ),
-                      AssigningComponent(
-                        name: 'Service opted for',
-                        initializeElement: widget.paymentDetails.memberName,
+                      ExpandedAnalogComponent(
+                        label: 'Service opted for',
+                        value: widget.paymentDetails.memberName,
                       ),
                       const SizedBox(
                         height: Dimension.d2,
                       ),
                       ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) =>
-                              !widget.paymentDetails.metaData[index].private
-                                  ? AssigningComponent(
-                                      name: widget
-                                          .paymentDetails.metaData[index].key,
-                                      initializeElement: widget
-                                          .paymentDetails.metaData[index].value,
-                                    )
-                                  : const SizedBox(),
-                          separatorBuilder: (context, index) =>
-                              !widget.paymentDetails.metaData[index].private
-                                  ? const SizedBox(
-                                      height: Dimension.d3,
-                                    )
-                                  : const SizedBox(),
-                          itemCount: widget.paymentDetails.metaData.length),
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => !widget
+                                .paymentDetails.metaData[index].private
+                            ? ExpandedAnalogComponent(
+                                label:
+                                    widget.paymentDetails.metaData[index].key,
+                                value:
+                                    widget.paymentDetails.metaData[index].value,
+                              )
+                            : const SizedBox(),
+                        separatorBuilder: (context, index) =>
+                            !widget.paymentDetails.metaData[index].private
+                                ? const SizedBox(
+                                    height: Dimension.d3,
+                                  )
+                                : const SizedBox(),
+                        itemCount: widget.paymentDetails.metaData.length,
+                      ),
                       const SizedBox(
                         height: Dimension.d4,
                       ),
                       const Divider(
                         color: AppColors.line,
                       ),
-                      Text('Payment breakdown',
-                          style: AppTextStyle.bodyLargeSemiBold.copyWith(
-                              fontSize: 18,
-                              color: AppColors.grayscale900,
-                              height: 2.6)),
+                      Text(
+                        'Payment breakdown',
+                        style: AppTextStyle.bodyLargeSemiBold.copyWith(
+                          fontSize: 18,
+                          color: AppColors.grayscale900,
+                          height: 2.6,
+                        ),
+                      ),
                       ElementSpaceBetween(
                         title: widget.paymentDetails.priceDetails.products.first
                             .displayName,
@@ -189,7 +204,7 @@ class _BookingPaymentDetailScreenState
               ),
             ),
             if (store.pytmStatusLoading)
-              const Material(color: Colors.transparent, child: LoadingWidget())
+              const Material(color: Colors.transparent, child: LoadingWidget()),
           ],
         );
       },
@@ -197,11 +212,10 @@ class _BookingPaymentDetailScreenState
   }
 
   void _proceedToPay() {
-    print(widget.paymentDetails.id);
     GetIt.I<PaymentService>().openCheckout(
-        amount: widget.paymentDetails.amount,
-        orderId: widget.paymentDetails.orderId,
-        razorpayApiKey: widget.paymentDetails.razorpayApiKey);
+      orderId: widget.paymentDetails.orderId,
+      razorpayApiKey: widget.paymentDetails.razorpayApiKey,
+    );
   }
 }
 

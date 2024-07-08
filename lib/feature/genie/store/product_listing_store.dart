@@ -33,7 +33,13 @@ abstract class _ProductListingStoreBase with Store {
   String? getPaymentStatusFailure;
 
   @observable
+  String? getSubscrPaymentStatusFailure;
+
+  @observable
   PaymentStatusModel? paymentStatusModel;
+
+  @observable
+  SubscriptionDetails? subscrpaymentStatusModel;
 
   @observable
   bool isProductLoaded = false;
@@ -218,6 +224,26 @@ abstract class _ProductListingStoreBase with Store {
         },
         (r) {
           paymentStatusModel = r;
+        },
+      );
+      pytmStatusLoading = false;
+    });
+  }
+
+  void getSubscriptionPaymentStatus({required String id}) {
+    pytmStatusLoading = true;
+    productListingService.getSubscriptionPaymentStatus(id: id).then((response) {
+      response.fold(
+        (l) {
+          l.maybeMap(
+            socketError: (value) =>
+                getSubscrPaymentStatusFailure = 'No Internet Connection',
+            orElse: () =>
+                getSubscrPaymentStatusFailure = 'Something went wrong',
+          );
+        },
+        (r) {
+          subscrpaymentStatusModel = r;
         },
       );
       pytmStatusLoading = false;

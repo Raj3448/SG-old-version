@@ -100,7 +100,7 @@ class _GeniePageState extends State<GeniePage> {
                                     heading: productListingModel.product
                                         .subscriptionContent!.benefitsHeading,
                                     serviceList: productListingModel
-                                        .product.benefits.data,
+                                        .product.benefits!.data,
                                   ),
                                   const SizedBox(height: Dimension.d4),
                                   PlanPricingDetailsComponent(
@@ -184,9 +184,9 @@ class _GeniePageState extends State<GeniePage> {
                                           .subscriptionContent!
                                           .exploreCouplePlansHeading!,
                                       imgPath: productListingModel
-                                          .product.icon.data.attributes.url,
+                                          .product.icon!.data.attributes.url,
                                       backgroundColor:
-                                          productListingModel.product.metadata
+                                          productListingModel.product.metadata!
                                               .firstWhere(
                                                 (element) =>
                                                     element.key ==
@@ -199,7 +199,7 @@ class _GeniePageState extends State<GeniePage> {
                                               )
                                               .value,
                                       iconColorCode:
-                                          productListingModel.product.metadata
+                                          productListingModel.product.metadata!
                                               .firstWhere(
                                                 (element) =>
                                                     element.key ==

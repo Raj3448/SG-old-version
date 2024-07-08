@@ -21,18 +21,19 @@ class ProductListingModel with _$ProductListingModel {
 @freezed
 class Product with _$Product {
   const factory Product({
+    required int? id,
     required String name,
     required String type,
-    required String code,
-    required bool isActive,
+    required String? code,
+    required bool? isActive,
     required String category,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
     required List<Price> prices,
     required SubscriptionContent? subscriptionContent,
-    @JsonKey(name: 'icon') required IconImage icon,
-    required Benefits benefits,
-    required List<Metadatum> metadata,
+    @JsonKey(name: 'icon') required IconImage? icon,
+    required Benefits? benefits,
+    required List<Metadatum>? metadata,
     @Default([]) List<dynamic>? serviceContent,
   }) = _Product;
 
@@ -368,6 +369,7 @@ class SubscriptionData with _$SubscriptionData {
     required List<int> familyMemberIds,
     required int amount,
     required String razorpaySubscriptionId,
+    @JsonKey(name: 'razorpay_api_key') required String razorpayApiKey,
     @JsonKey(name: 'Subscription') required Subscription subscription,
   }) = _SubscriptionData;
 
@@ -379,23 +381,10 @@ class SubscriptionData with _$SubscriptionData {
 class SubscriptionProduct with _$SubscriptionProduct {
   const factory SubscriptionProduct({
     required int id,
+    required String category,
     required String name,
     required String type,
-    required String code,
-    required bool isActive,
-    required String category,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    required List<Metadatum> metadata,
-    required List<DatumAttributes> benefits,
     required List<Price> prices,
-    required SubscriptionContent? subscriptionContent,
-    @Default([]) List<dynamic>? form,
-    @Default([]) List<dynamic>? serviceContent,
-    @Default([]) List<dynamic>? upgradeableProducts,
-    @JsonKey(name: 'icon') required IconImgMetaData icon,
-    @JsonKey(name: 'subscription_trackers')
-    required List<SubscriptionTracker> subscriptionTrackers,
   }) = _SubscriptionProduct;
 
   factory SubscriptionProduct.fromJson(Map<String, dynamic> json) =>
@@ -413,7 +402,7 @@ class Subscription with _$Subscription {
     @JsonKey(name: 'current_end') required dynamic currentEnd,
     @JsonKey(name: 'ended_at') required dynamic endedAt,
     required int quantity,
-    required Notes notes,
+    required Notes? notes,
     @JsonKey(name: 'charge_at') required dynamic chargeAt,
     @JsonKey(name: 'start_at') required dynamic startAt,
     @JsonKey(name: 'end_at') required dynamic endAt,
@@ -456,7 +445,6 @@ class SubscriptionTracker with _$SubscriptionTracker {
 @freezed
 class Notes with _$Notes {
   const factory Notes({
-    required String userId,
     required String subscriptionTrackerId,
   }) = _Notes;
 
@@ -489,17 +477,21 @@ class SubscriptionModel with _$SubscriptionModel {
 class SubscriptionDetails with _$SubscriptionDetails {
   const factory SubscriptionDetails({
     required int id,
+    required String paymentStatus,
+    required String status,
+    required DateTime expiresOn,
+    required DateTime startDate,
+    required int amount,
+    required int priceId,
+    required String? razorpaySubscriptionId,
     required DateTime createdAt,
     required DateTime updatedAt,
-    required bool isExpired,
-    required DateTime expireDate,
-    required DateTime startDate,
-    required String productName,
-    required int productPrice,
-    required String interval,
-    required int intervalCount,
+    required String? subscriptionStatus,
+    required List<dynamic>? metadata,
+    required Product product,
     required FamilyMember user,
-    @Default([]) List<FamilyMember>? familyMember,
+    required List<FamilyMember> belongsTo,
+    @Default([]) List<dynamic>? paymentTransactions,
   }) = _SubscriptionDetails;
 
   factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>
@@ -510,11 +502,12 @@ class SubscriptionDetails with _$SubscriptionDetails {
 class FamilyMember with _$FamilyMember {
   const factory FamilyMember({
     required int id,
-    required String relation,
     required String firstName,
     required String lastName,
-    required int age,
-    @JsonKey(name: 'image') required IconImgMetaData? icon,
+    required String gender,
+    required String relation,
+    required int? age,
+    required IconImgMetaData? profileImg,
   }) = _FamilyMember;
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) =>

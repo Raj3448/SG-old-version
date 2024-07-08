@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
@@ -34,6 +37,12 @@ abstract class _UserDetailStoreBase with Store {
 
   @observable
   String? updateFailureMessage;
+
+  @observable
+  SubscriptionModel? subscriptionModel;
+
+  @observable
+  bool isLoading = false;
 
   @computed
   String get name => userDetails == null
@@ -134,6 +143,16 @@ abstract class _UserDetailStoreBase with Store {
     isLoadingUserInfo = false;
     isUpdatingUserInfo = false;
     updateFailureMessage = null;
+  }
+
+  @action
+  Future<Either<Failure, SubscriptionDetails>> getSubscriptionById({
+    required int id,
+  }) async {
+    isLoading = true;
+    final response = await userDetailServices.getSubscriptionById(id: id);
+    isLoading = false;
+    return response;
   }
 }
 

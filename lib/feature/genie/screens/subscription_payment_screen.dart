@@ -1,8 +1,11 @@
+// ignore_for_file: must_be_immutable, lines_longer_than_80_chars
+
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
@@ -14,47 +17,50 @@ import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
-import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
-import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/payment_screen.dart';
+import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-class ServicePaymentScreen extends StatefulWidget {
-  PaymentStatusModel? paymentStatusModel;
-  final PriceDetails? priceDetails;
-  final String id;
-
-  ServicePaymentScreen(
-      {required this.paymentStatusModel,
-      required this.priceDetails,
-      required this.id,
-      Key? key})
-      : super(key: key);
+class SubscriptionPaymentScreen extends StatefulWidget {
+  SubscriptionPaymentScreen({
+    required this.subscriptionDetails,
+    required this.priceId,
+    required this.price,
+    super.key,
+  });
+  SubscriptionDetails? subscriptionDetails;
+  final String priceId;
+  final String price;
 
   @override
-  State<ServicePaymentScreen> createState() => _PaymentScreenState();
+  State<SubscriptionPaymentScreen> createState() =>
+      _SubscriptionPaymentScreenState();
 }
 
-class _PaymentScreenState extends State<ServicePaymentScreen> {
+class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
   final store = GetIt.I<ProductListingStore>();
   Timer? _timer;
   late ReactionDisposer _reactionDisposer;
 
   @override
   void initState() {
-    store.servicePaymentStatus = widget.paymentStatusModel == null
+    store.servicePaymentStatus = widget.subscriptionDetails == null
         ? PaymentStatus.failure
         : getPaymentStatus(
-            paymentStatus: widget.paymentStatusModel!.paymentStatus,
-            status: widget.paymentStatusModel!.status);
+            paymentStatus: widget.subscriptionDetails!.paymentStatus,
+            status: widget.subscriptionDetails!.status,
+          );
     if (store.servicePaymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
-    _reactionDisposer =
-        reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
-      if (paymentStatusModel != null) {
-        widget.paymentStatusModel = paymentStatusModel;
+    _reactionDisposer = reaction((_) => store.subscrpaymentStatusModel,
+        (subscrpaymentStatusModel) {
+      if (subscrpaymentStatusModel != null) {
+        widget.subscriptionDetails = subscrpaymentStatusModel;
+        store.servicePaymentStatus = PaymentStatus.success;
+        widget.subscriptionDetails = subscrpaymentStatusModel;
         store.servicePaymentStatus = PaymentStatus.success;
         _stopPaymentStatusPolling();
       }
@@ -64,8 +70,10 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
   }
 
   void _startPaymentStatusPolling() {
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      store.getPaymentStatus(id: widget.id);
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      store.getSubscriptionPaymentStatus(
+        id: widget.subscriptionDetails!.id.toString(),
+      );
     });
   }
 
@@ -87,7 +95,7 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
         return Scaffold(
           backgroundColor: AppColors.white,
           appBar: PageAppbar(
-            title: 'Book Service',
+            title: 'Book subscription',
             onTap: store.servicePaymentStatus == PaymentStatus.failure
                 ? () {
                     context.pop();
@@ -102,28 +110,34 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () {
-              if (widget.paymentStatusModel != null) {
+              if (widget.subscriptionDetails != null) {
                 GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
                     null;
-                context.pushNamed(RoutesConstants.paymentStatusTrackingPage,
-                    pathParameters: {'id': widget.id});
+                context.pushNamed(
+                  RoutesConstants.bookingDetailsScreen,
+                  pathParameters: {
+                    'subscriptionDetails':
+                        jsonEncode(widget.subscriptionDetails),
+                  },
+                );
               } else {
                 context.pop();
               }
             },
-            btnTitle: widget.paymentStatusModel != null
+            btnTitle: widget.subscriptionDetails != null
                 ? 'Track Booking status'
                 : 'Retry Payment',
             showIcon: false,
             iconPath: AppIcons.add,
           ),
           body: Padding(
-            padding: const EdgeInsets.all(Dimension.d3),
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimension.d4,
+              vertical: Dimension.d6,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const BookingStatus(currentStep: BookingStep.bookingDetails),
-                  const SizedBox(height: Dimension.d4),
                   SvgPicture.asset(
                     store.servicePaymentStatus == PaymentStatus.success
                         ? 'assets/icon/success.svg'
@@ -134,53 +148,48 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                         ? Colors.green
                         : null,
                   ),
+                  const SizedBox(height: Dimension.d4),
                   Text(
                     _getPaymentStatusMessage(store.servicePaymentStatus!),
-                    style: AppTextStyle.bodyXLSemiBold
-                        .copyWith(fontSize: 20, height: 2.8),
+                    style: AppTextStyle.heading5Bold
+                        .copyWith(color: AppColors.grayscale900),
                   ),
-                  const SizedBox(height: Dimension.d2),
+                  const SizedBox(height: Dimension.d5),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Order Info',
-                        style: AppTextStyle.bodyXLSemiBold.copyWith(
-                            color: AppColors.grayscale900, height: 2.6),
+                        style: AppTextStyle.bodyXLBold
+                            .copyWith(color: AppColors.grayscale900),
                       ),
-                      const Divider(
-                        color: AppColors.grayscale300,
-                      ),
+                      const SizedBox(height: Dimension.d4),
                       ElementSpaceBetween(
-                        title: store.servicePaymentStatus ==
-                                PaymentStatus.failure
-                            ? widget.priceDetails!.products.first.displayName
-                            : widget.paymentStatusModel!.priceDetails.products
-                                .first.displayName,
-                        description: store.servicePaymentStatus ==
-                                PaymentStatus.failure
-                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
-                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.priceDetails.products.first.price.toInt())}',
+                        title: 'Subsription cost',
+                        description:
+                            '₹ ${formatNumberWithCommas(int.parse(widget.price))}',
                       ),
-                      const Divider(
-                        color: AppColors.grayscale300,
-                      ),
+                      const SizedBox(height: Dimension.d3),
                       ElementSpaceBetween(
-                        title: 'Total to pay',
-                        description: store.servicePaymentStatus ==
-                                PaymentStatus.failure
-                            ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
-                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.amount.toInt())}',
+                        title: 'Others',
+                        description: '-',
+                      ),
+                      const SizedBox(height: Dimension.d3),
+                      const Divider(color: AppColors.grayscale300),
+                      const SizedBox(height: Dimension.d3),
+                      ElementSpaceBetween(
+                        title: 'Total Amount',
+                        description:
+                            '₹ ${formatNumberWithCommas(int.parse(widget.price))}',
                         isTitleBold: true,
                       ),
-                      const Divider(
-                        color: AppColors.grayscale300,
-                      ),
+                      const SizedBox(height: Dimension.d3),
+                      const Divider(color: AppColors.grayscale300),
                     ],
                   ),
                   const SizedBox(
                     height: Dimension.d20,
-                  )
+                  ),
                 ],
               ),
             ),
@@ -199,17 +208,5 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
       case PaymentStatus.failure:
         return 'Payment Failure';
     }
-  }
-}
-
-PaymentStatus getPaymentStatus(
-    {required String paymentStatus, required String status}) {
-  if (paymentStatus == 'due' && status == 'requested') {
-    return PaymentStatus.pending;
-  }
-  if (paymentStatus == 'paid') {
-    return PaymentStatus.success;
-  } else {
-    return PaymentStatus.failure;
   }
 }

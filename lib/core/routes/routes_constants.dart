@@ -24,17 +24,18 @@ class RoutesConstants {
   static const serviceDetailsScreen = '/serviceDetailsScreen';
   static const bookServiceScreen = '/bookServiceScreen';
   static const paymentScreen = '/paymentScreen';
+  static const subscriptionPaymentScreen = '/subscriptionPaymentScreen';
   static const bookingPaymentDetailScreen = '/bookingPaymentDetailScreen';
   static const bookingDetailsScreen = '/bookingDetailsScreen';
   static const subscriptionsScreen = '/subscriptionsScreen';
   static const subscriptionDetailsScreen = '/subscriptionDetailsScreen';
   static const notificationScreen = '/notificationScreen';
   static const phrPdfViewPage = '/eprPhrPdfViewPage';
-  static const bookingServiceStatusDetailsPage =
-      '/bookingServiceStatusDetailsPage';
   static const geniePage = '/geniePage';
   static const couplePlanPage = '/couplePlanPage';
   static const sgSubscriptionPage = '/sgSubscriptionPage';
   static const profileDetails = '/profileDetails';
+  static const bookingServiceStatusDetailsPage =
+      '/bookingServiceStatusDetailsPage';
   static const paymentStatusTrackingPage = '/paymentStatusTrackingPage';
 }

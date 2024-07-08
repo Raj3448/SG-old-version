@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -13,12 +15,13 @@ import 'package:silver_genie/feature/book_services/model/service_tracking_respon
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
-import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
+import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
+import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
@@ -33,8 +36,8 @@ import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
 import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
-import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/family_screen.dart';
+import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
 import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
@@ -127,7 +130,10 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
         return MaterialPage(
-          child: MainScreen(path: updateBotNavPageName ?? '', child: child,),
+          child: MainScreen(
+            path: updateBotNavPageName ?? '',
+            child: child,
+          ),
         );
       },
       routes: <RouteBase>[
@@ -411,8 +417,7 @@ final GoRouter routes = GoRouter(
             state.pathParameters['bookingServiceStatus'];
         final bookingServiceStatus = BookingServiceStatus.values
             .firstWhere((e) => e.toString() == bookingServiceStatusString);
-        final serviceId =
-            state.pathParameters['serviceId'] ?? '';
+        final serviceId = state.pathParameters['serviceId'] ?? '';
         return MaterialPage(
           child: ServiceBookingDetailsScreen(
             bookingServiceStatus: bookingServiceStatus,
@@ -430,6 +435,40 @@ final GoRouter routes = GoRouter(
         return MaterialPage(
           child: PaymentStatusTrackingPage(
             id: id,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/bookingDetailsScreen/:subscriptionDetails',
+      name: RoutesConstants.bookingDetailsScreen,
+      pageBuilder: (context, state) {
+        final subscriptionDetailsString =
+            state.pathParameters['subscriptionDetails'];
+        final subscriptionDetails =
+            jsonDecode(subscriptionDetailsString!) as Map<String, dynamic>;
+        return MaterialPage(
+          child: BookingDetailsScreen(
+            subscriptionDetails:
+                SubscriptionDetails.fromJson(subscriptionDetails),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/bookingDetailsScreen/:subscriptionDetails',
+      name: RoutesConstants.bookingDetailsScreen,
+      pageBuilder: (context, state) {
+        final subscriptionDetailsString =
+            state.pathParameters['subscriptionDetails'];
+        final subscriptionDetails =
+            jsonDecode(subscriptionDetailsString!) as Map<String, dynamic>;
+        return MaterialPage(
+          child: BookingDetailsScreen(
+            subscriptionDetails:
+                SubscriptionDetails.fromJson(subscriptionDetails),
           ),
         );
       },
@@ -461,9 +500,10 @@ final GoRouter routes = GoRouter(
         final paymentDetails =
             extraData?['paymentDetails'] as ServiceTrackerResponse;
         return MaterialPage(
-            child: BookingPaymentDetailScreen(
-          paymentDetails: paymentDetails,
-        ));
+          child: BookingPaymentDetailScreen(
+            paymentDetails: paymentDetails,
+          ),
+        );
       },
     ),
     GoRoute(

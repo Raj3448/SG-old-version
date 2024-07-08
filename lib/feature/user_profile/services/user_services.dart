@@ -147,7 +147,6 @@ class UserDetailServices implements IUserFacades {
       if (response.statusCode == 200) {
         if (response.data != null) {
           final data = response.data;
-          print(data);
           return Right(
             SubscriptionModel.fromJson(data as Map<String, dynamic>),
           );
@@ -159,7 +158,31 @@ class UserDetailServices implements IUserFacades {
     } on SocketException {
       return const Left(Failure.socketError());
     } catch (error) {
-      print(error);
+      return const Left(Failure.badResponse());
+    }
+  }
+
+  @override
+  Future<Either<Failure, SubscriptionDetails>> getSubscriptionById({
+    required int id,
+  }) async {
+    try {
+      final response = await httpClient.get('/api/subscription-trackers/$id');
+
+      if (response.statusCode == 200) {
+        if (response.data != null) {
+          final data = response.data['data'];
+          return Right(
+            SubscriptionDetails.fromJson(data as Map<String, dynamic>),
+          );
+        } else {
+          return const Left(Failure.badResponse());
+        }
+      }
+      return const Left(Failure.someThingWentWrong());
+    } on SocketException {
+      return const Left(Failure.socketError());
+    } catch (error) {
       return const Left(Failure.badResponse());
     }
   }
