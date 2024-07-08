@@ -14,21 +14,23 @@ enum BookingServiceStatus { requested, active, completed }
 class BookingListTileComponent extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
   final Service bookingServiceModel;
-  const BookingListTileComponent(
-      {required this.bookingServiceStatus,
-      required this.bookingServiceModel,
-      Key? key})
-      : super(key: key);
+  const BookingListTileComponent({
+    required this.bookingServiceStatus,
+    required this.bookingServiceModel,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(RoutesConstants.bookingServiceStatusDetailsPage,
-            pathParameters: {
-              'bookingServiceStatus': bookingServiceStatus.toString(),
-              'serviceId': bookingServiceModel.id.toString()
-            });
+        context.pushNamed(
+          RoutesConstants.bookingServiceStatusDetailsPage,
+          pathParameters: {
+            'bookingServiceStatus': bookingServiceStatus.toString(),
+            'serviceId': bookingServiceModel.id.toString(),
+          },
+        );
       },
       child: Container(
         width: double.infinity,
@@ -86,7 +88,8 @@ class BookingListTileComponent extends StatelessWidget {
                               width: 105,
                               alignment: const Alignment(0, 0),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimension.d1),
+                                horizontal: Dimension.d1,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.lightBlue,
                                 borderRadius: BorderRadius.circular(5),
@@ -95,10 +98,11 @@ class BookingListTileComponent extends StatelessWidget {
                                 bookingServiceStatus ==
                                         BookingServiceStatus.completed
                                     ? formatDateTime(
-                                        bookingServiceModel.completedDate ??
-                                            DateTime.now())
+                                        bookingServiceModel.requestedAt,
+                                      )
                                     : formatDateTime(
-                                        bookingServiceModel.requestedDate),
+                                        bookingServiceModel.requestedAt,
+                                      ),
                                 style: AppTextStyle.bodyMediumMedium
                                     .copyWith(color: AppColors.primary),
                                 textAlign: TextAlign.center,
@@ -117,22 +121,28 @@ class BookingListTileComponent extends StatelessWidget {
                       ),
                     ),
                     if (!(bookingServiceStatus == BookingServiceStatus.active))
-                      Text.rich(TextSpan(children: [
+                      Text.rich(
                         TextSpan(
-                          text: 'Requested on:',
-                          style: AppTextStyle.bodyMediumMedium
-                              .copyWith(color: AppColors.grayscale700),
+                          children: [
+                            TextSpan(
+                              text: 'Requested on:',
+                              style: AppTextStyle.bodyMediumMedium
+                                  .copyWith(color: AppColors.grayscale700),
+                            ),
+                            const WidgetSpan(
+                              child: SizedBox(
+                                width: Dimension.d2,
+                              ),
+                            ),
+                            TextSpan(
+                              text: formatDateTime(
+                                  bookingServiceModel.requestedAt),
+                              style: AppTextStyle.bodyMediumMedium
+                                  .copyWith(color: AppColors.grayscale900),
+                            ),
+                          ],
                         ),
-                        const WidgetSpan(
-                            child: SizedBox(
-                          width: Dimension.d2,
-                        )),
-                        TextSpan(
-                          text: formatDateTime(bookingServiceModel.requestedAt),
-                          style: AppTextStyle.bodyMediumMedium
-                              .copyWith(color: AppColors.grayscale900),
-                        )
-                      ])),
+                      ),
                   ],
                 ),
               ),

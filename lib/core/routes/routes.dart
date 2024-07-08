@@ -15,19 +15,18 @@ import 'package:silver_genie/feature/book_services/model/service_tracking_respon
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
-import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
+import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/genie/screens/subscription_details_screen.dart';
-import 'package:silver_genie/feature/genie/screens/subscription_payment_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
@@ -37,8 +36,8 @@ import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
 import 'package:silver_genie/feature/main/main_screen.dart';
 import 'package:silver_genie/feature/members/screens/add_edit_family_member_screen.dart';
 import 'package:silver_genie/feature/members/screens/epr_view_screen.dart';
-import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/family_screen.dart';
+import 'package:silver_genie/feature/members/screens/member_details_screen.dart';
 import 'package:silver_genie/feature/members/screens/phr_pdf_view_page.dart';
 import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
@@ -413,24 +412,6 @@ final GoRouter routes = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus/:serviceId',
       name: RoutesConstants.bookingServiceStatusDetailsPage,
-      pageBuilder: (context, state) {
-        final bookingServiceStatusString =
-            state.pathParameters['bookingServiceStatus'];
-        final bookingServiceStatus = BookingServiceStatus.values
-            .firstWhere((e) => e.toString() == bookingServiceStatusString);
-        final serviceId = state.pathParameters['serviceId'] ?? '';
-        return MaterialPage(
-          child: ServiceBookingDetailsScreen(
-            bookingServiceStatus: bookingServiceStatus,
-            serviceId: serviceId,
-          ),
-        );
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus/:serviceId',
-      name: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
         final bookingServiceStatusString =
             state.pathParameters['bookingServiceStatus'];

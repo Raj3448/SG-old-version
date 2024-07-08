@@ -35,5 +35,7 @@ class RoutesConstants {
   static const couplePlanPage = '/couplePlanPage';
   static const sgSubscriptionPage = '/sgSubscriptionPage';
   static const profileDetails = '/profileDetails';
+  static const bookingServiceStatusDetailsPage =
+      '/bookingServiceStatusDetailsPage';
   static const paymentStatusTrackingPage = '/paymentStatusTrackingPage';
 }
