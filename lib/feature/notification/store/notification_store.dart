@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
-import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/notification/model/notification_model.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 

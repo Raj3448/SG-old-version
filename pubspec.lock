@@ -614,6 +614,62 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_avif:
+    dependency: "direct main"
+    description:
+      name: flutter_avif
+      sha256: "61832f24bc41f2a5cb55f0ff35fbd001261e18b6529f49f55761d50e1102aebd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_avif_android:
+    dependency: "direct main"
+    description:
+      name: flutter_avif_android
+      sha256: "89e7b9f9e3f2a1872491c97fca01cbec20a193fae8a6a0c1a866b392cfcd132e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_avif_ios:
+    dependency: transitive
+    description:
+      name: flutter_avif_ios
+      sha256: "7e083d5b880aca40d954f3344413220a2d473126d07ea8ac0051e1c3f19c69ed"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_avif_linux:
+    dependency: transitive
+    description:
+      name: flutter_avif_linux
+      sha256: ac511d62dee19484fb8822c80a2bbc92ce96893b7d53b831ac67af23df107aed
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_avif_macos:
+    dependency: transitive
+    description:
+      name: flutter_avif_macos
+      sha256: eee0d16ec8e427e0f51c2e8cbba33f29661e474a11ff1997df8cf85b535c49b9
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_avif_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_avif_platform_interface
+      sha256: "4762d0dbbc5474110d362a26447c579a863af47b4cec465271c5ed31057a1dbf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_avif_windows:
+    dependency: transitive
+    description:
+      name: flutter_avif_windows
+      sha256: "927681fa9b13e0e782f57bc21ca014537308df64ecd15f68682c65ac619b2cd0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -683,6 +739,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.20"
+  flutter_rust_bridge:
+    dependency: transitive
+    description:
+      name: flutter_rust_bridge
+      sha256: "2b2979113501a5ec84e7379f78432307ae587d6a180bdfb3b8de136a309d94a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.44.0"
   flutter_secure_storage:
     dependency: "direct main"
     description:

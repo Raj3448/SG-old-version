@@ -446,7 +446,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
                 await launchUrl(Uri.parse(url));
               }
             },
-            title: aboutUsOfferModel.cta.label,
+            title: aboutUsOfferModel.cta.label??'',
             showIcon: false,
             iconColor: AppColors.error,
             iconPath: Icons.not_interested,
