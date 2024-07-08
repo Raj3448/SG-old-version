@@ -163,11 +163,12 @@ class FcmNotificationManager {
   Future<void> _handleMessage(RemoteMessage? msg) async {
     // Handle the message when the app is opened from a notification
     // You can navigate to a specific screen here
-    if (msg?.data['pageName'] != null) {
-      if (isBottomNavScreen(msg?.data['pageName'] as String)) {
-        context?.goNamed(msg?.data['pageName'].toString() ?? '/home');
+    print(msg?.data);
+    if (msg?.data['actionType'] == 'openPage' && msg?.data['actionUrl'] != null) {
+      if (isBottomNavScreen(msg?.data['actionUrl'] as String)) {
+        context?.goNamed(msg?.data['actionUrl'].toString() ?? '/home');
       } else {
-        context?.pushNamed(msg?.data['pageName'].toString() ?? '/home');
+        await context?.pushNamed(msg?.data['actionUrl'].toString() ?? '/home');
       }
     }
   }

@@ -33,6 +33,7 @@ import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
+import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     FcmNotificationManager(context).init();
     memberStore = GetIt.I<MembersStore>()..init();
+    bookingServiceStore.initGetAllServices();
+    GetIt.I<NotificationStore>().fetchNotifications();
     reaction((_) => memberStore.errorMessage, (loaded) {
       if (memberStore.errorMessage == null) {
         return;

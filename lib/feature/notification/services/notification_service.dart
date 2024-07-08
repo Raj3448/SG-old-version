@@ -10,6 +10,8 @@ abstract class INotificationFacade {
   Future<Either<Failure, NotificationModel>> fetchNotification();
   Future<Either<Failure, bool>> storeFcmTokenIntoServer(
       {required String fcmToken});
+  Future<Either<Failure, bool>> markToReadById(
+      {required String notificationId});
 }
 
 class NotificationServices extends INotificationFacade {
@@ -48,6 +50,29 @@ class NotificationServices extends INotificationFacade {
       final response = await httpClient.post(
         '/api/auth/local/fcm',
         data: {'token': fcmToken},
+      );
+      if (response.statusCode == 200) {
+        return const Right(
+          true,
+        );
+      } else {
+        return const Left(Failure.badResponse());
+      }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionError) {
+        return const Left(Failure.socketError());
+      }
+      return const Left(Failure.someThingWentWrong());
+    } catch (error) {
+      return const Left(Failure.someThingWentWrong());
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> markToReadById({required String notificationId}) async {
+    try {
+      final response = await httpClient.post(
+        '/api/user-notifications/$notificationId/mark-as-read',
       );
       if (response.statusCode == 200) {
         return const Right(
