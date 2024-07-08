@@ -27,6 +27,7 @@ import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
 import 'package:silver_genie/feature/genie/screens/subscription_details_screen.dart';
+import 'package:silver_genie/feature/genie/screens/subscription_payment_screen.dart';
 import 'package:silver_genie/feature/home/home_screen.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/login_page.dart';
@@ -458,23 +459,6 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookingDetailsScreen/:subscriptionDetails',
-      name: RoutesConstants.bookingDetailsScreen,
-      pageBuilder: (context, state) {
-        final subscriptionDetailsString =
-            state.pathParameters['subscriptionDetails'];
-        final subscriptionDetails =
-            jsonDecode(subscriptionDetailsString!) as Map<String, dynamic>;
-        return MaterialPage(
-          child: BookingDetailsScreen(
-            subscriptionDetails:
-                SubscriptionDetails.fromJson(subscriptionDetails),
-          ),
-        );
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
       path: '/paymentScreen',
       name: RoutesConstants.paymentScreen,
       pageBuilder: (context, state) {
@@ -484,11 +468,12 @@ final GoRouter routes = GoRouter(
         final priceDetails = extraData?['priceDetails'] as PriceDetails?;
         final id = extraData?['id'] as String;
         return MaterialPage(
-            child: ServicePaymentScreen(
-          paymentStatusModel: paymentStatusModel,
-          priceDetails: priceDetails,
-          id: id,
-        ));
+          child: ServicePaymentScreen(
+            paymentStatusModel: paymentStatusModel,
+            priceDetails: priceDetails,
+            id: id,
+          ),
+        );
       },
     ),
     GoRoute(
@@ -516,7 +501,6 @@ final GoRouter routes = GoRouter(
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       path: '/subscriDetailsScreen/:price/:subscriptionData/:isCouple',
-      // path: '/subscriDetailsScreen/:price/:isCouple',
       name: RoutesConstants.subscriptionDetailsScreen,
       pageBuilder: (context, state) {
         final isCoupleString = state.pathParameters['isCouple'] ?? 'false';
@@ -531,6 +515,25 @@ final GoRouter routes = GoRouter(
             price: state.pathParameters['price'] ?? '',
             subscriptionData: SubscriptionData.fromJson(subscriptionDataMap),
             isCouple: isCouple,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: '/subscriptionPaymentScreen',
+      name: RoutesConstants.subscriptionPaymentScreen,
+      pageBuilder: (context, state) {
+        final extraData = state.extra as Map<String, dynamic>?;
+        final subscriptionDetails =
+            extraData?['subscriptionDetails'] as SubscriptionDetails?;
+        final priceId = extraData?['priceId'] as String;
+        final price = extraData?['price'] as String;
+        return MaterialPage(
+          child: SubscriptionPaymentScreen(
+            subscriptionDetails: subscriptionDetails,
+            priceId: priceId,
+            price: price,
           ),
         );
       },
