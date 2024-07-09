@@ -13,7 +13,7 @@ import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
 class ServiceBookingDetailsScreen extends StatelessWidget {
@@ -54,9 +54,9 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
-              late final PaymentStatusModel paymentStatusModel;
+              late final ServicePaymentStatusModel servicePaymentStatusModel;
               try {
-                paymentStatusModel = snapShot.data!.getOrElse(
+                servicePaymentStatusModel = snapShot.data!.getOrElse(
                   (l) => throw 'Error',
                 );
               } catch (e) {
@@ -64,8 +64,8 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                     errorType: ErrorType.somethinWentWrong);
               }
               // final paymentStatus = getPaymentStatus(
-              //     paymentStatus: paymentStatusModel.paymentStatus,
-              //     status: paymentStatusModel.status);
+              //     paymentStatus: servicePaymentStatusModel.paymentStatus,
+              //     status: servicePaymentStatusModel.status);
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,13 +74,13 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                       height: Dimension.d4,
                     ),
                     Text(
-                      paymentStatusModel.product.name,
+                      servicePaymentStatusModel.product.name,
                       style: AppTextStyle.bodyXLMedium.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      'Service type: ${paymentStatusModel.product.category} ${paymentStatusModel.product.type}',
+                      'Service type: ${servicePaymentStatusModel.product.category} ${servicePaymentStatusModel.product.type}',
                       style: AppTextStyle.bodyLargeMedium
                           .copyWith(color: AppColors.grayscale600),
                     ),
@@ -160,7 +160,7 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                     AssigningComponent(
                       name: 'Service opted for',
                       initializeElement:
-                          ' ${paymentStatusModel.requestedFor.first.firstName} ${paymentStatusModel.requestedFor.first.lastName}',
+                          ' ${servicePaymentStatusModel.requestedFor.first.firstName} ${servicePaymentStatusModel.requestedFor.first.lastName}',
                     ),
                     const SizedBox(
                       height: Dimension.d2,
@@ -168,21 +168,21 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                     ListView.separated(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemBuilder: (context, index) => !paymentStatusModel
+                        itemBuilder: (context, index) => !servicePaymentStatusModel
                                 .metadata[index].private
                             ? AssigningComponent(
-                                name: paymentStatusModel.metadata[index].key,
+                                name: servicePaymentStatusModel.metadata[index].key,
                                 initializeElement:
-                                    paymentStatusModel.metadata[index].value,
+                                    servicePaymentStatusModel.metadata[index].value,
                               )
                             : const SizedBox(),
                         separatorBuilder: (context, index) =>
-                            !paymentStatusModel.metadata[index].private
+                            !servicePaymentStatusModel.metadata[index].private
                                 ? const SizedBox(
                                     height: Dimension.d3,
                                   )
                                 : const SizedBox(),
-                        itemCount: paymentStatusModel.metadata.length),
+                        itemCount: servicePaymentStatusModel.metadata.length),
                     const SizedBox(
                       height: Dimension.d4,
                     ),
@@ -195,10 +195,10 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w500, height: 2.4),
                     ),
                     ElementSpaceBetween(
-                      title: paymentStatusModel
+                      title: servicePaymentStatusModel
                           .priceDetails.products.first.displayName,
                       description:
-                          '₹ ${formatNumberWithCommas(paymentStatusModel.priceDetails.products.first.price.toInt())}',
+                          '₹ ${formatNumberWithCommas(servicePaymentStatusModel.priceDetails.products.first.price.toInt())}',
                     ),
                     const Divider(
                       color: AppColors.line,
@@ -209,7 +209,7 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                     ElementSpaceBetween(
                       title: 'Total to pay',
                       description:
-                          '₹ ${formatNumberWithCommas(paymentStatusModel.priceDetails.products.first.price.toInt())}',
+                          '₹ ${formatNumberWithCommas(servicePaymentStatusModel.priceDetails.products.first.price.toInt())}',
                       isTitleBold: true,
                     ),
                     const SizedBox(

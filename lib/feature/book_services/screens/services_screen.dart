@@ -145,8 +145,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 RoutesConstants.allServicesScreen,
                                 pathParameters: {
                                   'isConvenience': 'false',
-                                  'isHealthCare': 'false',
-                                  'isHomeCare': 'true',
+                                  'isHealthCare': 'true',
+                                  'isHomeCare': 'false',
                                 },
                               );
                             },
@@ -175,9 +175,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,
                                 pathParameters: {
-                                  'isConvenience': 'false',
+                                  'isConvenience': 'true',
                                   'isHealthCare': 'false',
-                                  'isHomeCare': 'true',
+                                  'isHomeCare': 'false',
                                 },
                               );
                             },

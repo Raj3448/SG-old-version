@@ -15,19 +15,19 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 
 class ServicePaymentScreen extends StatefulWidget {
-  PaymentStatusModel? paymentStatusModel;
+  ServicePaymentStatusModel? servicePaymentStatusModel;
   final PriceDetails? priceDetails;
   final String id;
 
   ServicePaymentScreen(
-      {required this.paymentStatusModel,
+      {required this.servicePaymentStatusModel,
       required this.priceDetails,
       required this.id,
       Key? key})
@@ -44,22 +44,22 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
 
   @override
   void initState() {
-    store.servicePaymentStatus = widget.paymentStatusModel == null
+    store.servicePaymentStatus = widget.servicePaymentStatusModel == null
         ? PaymentStatus.failure
         : getPaymentStatus(
-            paymentStatus: widget.paymentStatusModel!.paymentStatus,
-            status: widget.paymentStatusModel!.status);
+            paymentStatus: widget.servicePaymentStatusModel!.paymentStatus,
+            status: widget.servicePaymentStatusModel!.status);
     if (store.servicePaymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
     _reactionDisposer =
-        reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
-      if (paymentStatusModel != null) {
-        widget.paymentStatusModel = paymentStatusModel;
+        reaction((_) => store.servicePaymentStatusModel, (servicePaymentStatusModel) {
+      if (servicePaymentStatusModel != null) {
+        widget.servicePaymentStatusModel = servicePaymentStatusModel;
         store.servicePaymentStatus = PaymentStatus.success;
         _stopPaymentStatusPolling();
       }
-      store.paymentStatusModel = null;
+      store.servicePaymentStatusModel = null;
     });
     super.initState();
   }
@@ -103,16 +103,16 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FixedButton(
             ontap: () {
-              if (widget.paymentStatusModel != null) {
+              if (widget.servicePaymentStatusModel != null) {
                 GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
                     null;
-                context.pushNamed(RoutesConstants.paymentStatusTrackingPage,
+                context.pushNamed(RoutesConstants.servicePaymentStatusTrackingPage,
                     pathParameters: {'id': widget.id});
               } else {
                 context.pop();
               }
             },
-            btnTitle: widget.paymentStatusModel != null
+            btnTitle: widget.servicePaymentStatusModel != null
                 ? 'Track Booking status'
                 : 'Retry Payment',
             showIcon: false,
@@ -156,12 +156,12 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                         title: store.servicePaymentStatus ==
                                 PaymentStatus.failure
                             ? widget.priceDetails!.products.first.displayName
-                            : widget.paymentStatusModel!.priceDetails.products
+                            : widget.servicePaymentStatusModel!.priceDetails.products
                                 .first.displayName,
                         description: store.servicePaymentStatus ==
                                 PaymentStatus.failure
                             ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
-                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.priceDetails.products.first.price.toInt())}',
+                            : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.priceDetails.products.first.price.toInt())}',
                       ),
                       const Divider(
                         color: AppColors.grayscale300,
@@ -171,7 +171,7 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                         description: store.servicePaymentStatus ==
                                 PaymentStatus.failure
                             ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
-                            : '₹ ${formatNumberWithCommas(widget.paymentStatusModel!.amount.toInt())}',
+                            : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.amount.toInt())}',
                         isTitleBold: true,
                       ),
                       const Divider(

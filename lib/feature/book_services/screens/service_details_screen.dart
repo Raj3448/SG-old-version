@@ -23,11 +23,12 @@ import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/service_banner_image.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({
@@ -139,27 +140,41 @@ class ServiceDetailsScreen extends StatelessWidget {
                       continue;
                     }
                     if (component is ServiceBannerImage) {
-                      widgetList.addAll([
-                        Text(
-                          component.label,
-                          style: AppTextStyle.bodyXLBold.copyWith(
-                              color: AppColors.grayscale900, height: 2),
-                        ),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
-                        ListView.separated(
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) =>
-                                BannerImageComponent(
-                                    imageUrl: component.bannerImage.data[index]
-                                        .attributes.url),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                                  height: Dimension.d2,
-                                ),
-                            itemCount: component.bannerImage.data.length)
-                      ]);
+                      if (component.isActive) {
+                        widgetList.addAll([
+                          Text(
+                            component.label,
+                            style: AppTextStyle.bodyXLBold.copyWith(
+                                color: AppColors.grayscale900, height: 2),
+                          ),
+                          const SizedBox(
+                            height: Dimension.d2,
+                          ),
+                          ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) => GestureDetector(
+                                    onTap: () async {
+                                      if (component.cta != null) {
+                                        if (component.cta!.isExternal &&
+                                            await canLaunchUrl(Uri.parse(
+                                                component.cta!.href))) {
+                                          await launchUrl(
+                                              Uri.parse(component.cta!.href));
+                                        }
+                                      }
+                                    },
+                                    child: BannerImageComponent(
+                                        imageUrl: component.bannerImage
+                                            .data[index].attributes.url),
+                                  ),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                    height: Dimension.d2,
+                                  ),
+                              itemCount: component.bannerImage.data.length)
+                        ]);
+                      }
                       continue;
                     }
                     if (component is ServicePriceModel) {
