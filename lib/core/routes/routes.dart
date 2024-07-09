@@ -130,12 +130,22 @@ final GoRouter routes = GoRouter(
       navigatorKey: shellNavigatorKey,
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state, child) {
+        if (updateBotNavPageName != null) {
+          final redirectByNotifyPageName = updateBotNavPageName;
+          updateBotNavPageName = null;
+          return MaterialPage(
+            child: MainScreen(
+              path: redirectByNotifyPageName!,
+              child: child,
+            ),
+          );
+        }
         return MaterialPage(
-          child: MainScreen(
-            path: updateBotNavPageName ?? '',
-            child: child,
-          ),
-        );
+            child: MainScreen(
+              path: state.fullPath ?? '',
+              child: child,
+            ),
+          );
       },
       routes: <RouteBase>[
         GoRoute(
