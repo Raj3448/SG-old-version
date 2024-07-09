@@ -47,7 +47,7 @@ class _UserProfileState extends State<UserProfile> {
         reaction((_) => authStore.logoutSuccess, (logoutSuccess) {
       if (logoutSuccess) {
         GetIt.I<VerityOtpStore>().resetTimer();
-        GoRouter.of(context).go(RoutesConstants.loginRoute);
+        GoRouter.of(context).goNamed(RoutesConstants.loginRoute);
       }
       authStore.logoutSuccess = false;
     });
@@ -59,6 +59,7 @@ class _UserProfileState extends State<UserProfile> {
           duration: const Duration(seconds: 3),
         ));
       }
+      authStore.logoutFailure = null;
     });
     super.initState();
   }
@@ -327,6 +328,7 @@ class _LogOutComponent extends StatelessWidget {
                     child: CustomButton(
                       ontap: () {
                         GetIt.I<AuthStore>().logout();
+                        context.pop();
                       },
                       title: 'Yes, logout',
                       showIcon: false,

@@ -60,13 +60,6 @@ abstract class _AuthStoreBase with Store {
   @action
   void logout() {
     isLogoutLoading = true;
-    userCache.clearUserDetails().then((value) {
-      tokenManager.deleteToken().then((value) => {authTokenExits = false});
-    });
-    GetIt.I<MembersStore>().clear();
-    GetIt.I<UserDetailStore>().clear();
-    GetIt.I<BookingServiceStore>().clear();
-    GetIt.I<NotificationStore>().clear();
     GetIt.I<NotificationServices>()
         .storeFcmTokenIntoServer(fcmToken: null)
         .then((value) {
@@ -80,5 +73,15 @@ abstract class _AuthStoreBase with Store {
       });
       isLogoutLoading = false;
     });
+    Future.delayed(const Duration(seconds: 3), () {
+      userCache.clearUserDetails().then((value) {
+      tokenManager.deleteToken().then((value) => {authTokenExits = false});
+      });
+      GetIt.I<MembersStore>().clear();
+      GetIt.I<UserDetailStore>().clear();
+      GetIt.I<BookingServiceStore>().clear();
+      GetIt.I<NotificationStore>().clear();
+    });
+    
   }
 }
