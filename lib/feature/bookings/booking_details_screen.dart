@@ -130,7 +130,7 @@ class BookingDetailsScreen extends StatelessWidget {
                 ExpandedAnalogComponent(
                   label: 'Service opted for',
                   value: getFormattedFamilyMembers(
-                    subscriptionDetails.belongsTo
+                    subscriptionDetails.belongsTo!
                         .map((member) => member.id)
                         .toList(),
                   ),

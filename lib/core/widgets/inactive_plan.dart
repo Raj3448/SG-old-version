@@ -121,11 +121,13 @@ class ProductListingCareComponent extends StatelessWidget {
   final List<ProductBasicDetailsModel> productBasicDetailsList;
   final bool isUpgradeable;
 
-  const ProductListingCareComponent({
+  ProductListingCareComponent({
     required this.productBasicDetailsList,
     required this.isUpgradeable,
     super.key,
   });
+
+  final memberStore = GetIt.I<MembersStore>();
 
   SubscriptionsType _getSubscriptionType(String name) {
     switch (name) {
@@ -169,6 +171,7 @@ class ProductListingCareComponent extends StatelessWidget {
                 'pageTitle': product.attributes.name,
                 'id': product.id.toString(),
                 'isUpgradeable': isUpgradeable.toString(),
+                'activeMemberId': '${memberStore.activeMemberId}',
               },
             );
           },

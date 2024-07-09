@@ -349,7 +349,7 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/geniePage/:pageTitle/:id/:isUpgradeable',
+      path: '/geniePage/:pageTitle/:id/:isUpgradeable/:activeMemberId',
       name: RoutesConstants.geniePage,
       pageBuilder: (context, state) {
         final pageTitle = state.pathParameters['pageTitle'] ?? '';
@@ -357,12 +357,14 @@ final GoRouter routes = GoRouter(
         final isUpgradeableString =
             state.pathParameters['isUpgradeable'] ?? 'false';
         final isUpgradable = isUpgradeableString.toLowerCase() == 'true';
+        final activeMemberId = state.pathParameters['activeMemberId'] ?? '';
 
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,
             id: id,
             isUpgradable: isUpgradable,
+            activeMemberId: activeMemberId,
           ),
         );
       },

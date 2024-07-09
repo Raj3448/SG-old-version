@@ -878,44 +878,64 @@ class _MemberInfo extends StatelessWidget {
                     ),
                   ),
                   if (memberStore.selectedIndex != -1)
+                    // Observer(
+                    //   builder: (context) {
+                    //     final activeMember = memberStore.activeMember;
+                    //     if (activeMember != null &&
+                    //         memberStore.isActive &&
+                    //         activeMember.relation != 'Brother') {
+                    //       return ActivePlanComponent(
+                    //         activeMember: activeMember,
+                    //       );
+                    //     } else if (memberStore.isActive == false ||
+                    //         activeMember != null ||
+                    //         activeMember?.relation == 'Brother') {
+                    //       return InactivePlanComponent(
+                    //         member: activeMember!,
+                    //       );
+                    //     } else {
+                    //       return const SizedBox();
+                    //     }
+                    //   },
+                    // ),
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
                         if (activeMember != null &&
-                            memberStore.isActive &&
-                            activeMember.relation != 'Brother') {
+                            activeMember.subscriptions!.isNotEmpty) {
                           return ActivePlanComponent(
                             activeMember: activeMember,
                           );
-                        } else if (memberStore.isActive == false ||
-                            activeMember != null ||
-                            activeMember?.relation == 'Brother') {
-                          return InactivePlanComponent(
-                            member: activeMember!,
-                          );
+                        }
+                        if (activeMember != null &&
+                            activeMember.subscriptions!.isEmpty) {
+                          return InactivePlanComponent(member: activeMember);
                         } else {
                           return const SizedBox();
                         }
                       },
                     ),
-                  if (store.selectedIndex != -1)
-                    Observer(
-                      builder: (_) {
-                        final selectedMember =
-                            memberStore.members[memberStore.selectedIndex];
-                        return selectedMember != null && memberStore.isActive
-                            ? const Column(
-                                children: [
-                                  SizedBox(height: Dimension.d4),
-                                  CoachContact(
-                                    imgpath: '',
-                                    name: 'Suma Latha',
-                                  ),
-                                ],
-                              )
-                            : const SizedBox();
-                      },
-                    ),
+                  Observer(
+                    builder: (context) {
+                      final activeMember = memberStore.activeMember;
+                      if (activeMember!.careCoach != null) {
+                        return Column(
+                          children: [
+                            const SizedBox(height: Dimension.d4),
+                            CoachContact(
+                              imgpath:
+                                  '${Env.serverUrl}${activeMember.careCoach?.profileImg?.url ?? ''}',
+                              name:
+                                  '${activeMember.careCoach?.firstName ?? ''} ${activeMember.careCoach?.lastName ?? ''}',
+                              phoneNo: activeMember.careCoach?.contactNo ?? '',
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                 ],
               );
             },

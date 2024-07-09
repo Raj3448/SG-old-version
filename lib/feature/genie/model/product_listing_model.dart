@@ -304,20 +304,19 @@ class ServiceOfferingModel with _$ServiceOfferingModel {
 
 @freezed
 class ServicePriceModel with _$ServicePriceModel {
-    const factory ServicePriceModel({
-        required int id,
-        @JsonKey(name: '__component') required String component,
-        required String label,
-        required int startPrice,
-        @Default(null) String? priceSuperscript,
-        @Default(null) String? priceDescription,
-        @Default(null) int? endPrice,
-    }) = _ServicePriceModel;
-  
-    factory ServicePriceModel.fromJson(Map<String, dynamic> json) =>
+  const factory ServicePriceModel({
+    required int id,
+    @JsonKey(name: '__component') required String component,
+    required String label,
+    required int startPrice,
+    @Default(null) String? priceSuperscript,
+    @Default(null) String? priceDescription,
+    @Default(null) int? endPrice,
+  }) = _ServicePriceModel;
+
+  factory ServicePriceModel.fromJson(Map<String, dynamic> json) =>
       _$ServicePriceModelFromJson(json);
 }
-
 
 @freezed
 class OfferingList with _$OfferingList {
@@ -489,9 +488,9 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required String? subscriptionStatus,
     required List<dynamic>? metadata,
     required Product product,
-    required FamilyMember user,
-    required List<FamilyMember> belongsTo,
-    @Default([]) List<dynamic>? paymentTransactions,
+    required FamilyMember? user,
+    required List<FamilyMember>? belongsTo,
+    @Default([]) List<dynamic>? payment_transactions,
   }) = _SubscriptionDetails;
 
   factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>
