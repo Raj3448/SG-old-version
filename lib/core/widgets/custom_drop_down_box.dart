@@ -79,7 +79,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.memberName ?? widget.placeHolder ??'Select',
+                  widget.memberName ?? widget.placeHolder ?? 'Select',
                   style: AppTextStyle.bodyLargeMedium.copyWith(
                     height: 2.4,
                     color: widget.memberName == null
@@ -212,18 +212,10 @@ class _MemeberListTileComponent extends StatelessWidget {
             imgPath: '${Env.serverUrl}$imgPath',
             size: AvatarSize.size14,
           ),
-          const SizedBox(
-            width: Dimension.d2,
-          ),
+          const SizedBox(width: Dimension.d2),
           Text(
             name,
             style: AppTextStyle.bodyLargeMedium,
-          ),
-          const Spacer(),
-          const Icon(
-            AppIcons.elderly_person,
-            size: 18,
-            color: AppColors.primary,
           ),
         ],
       ),
