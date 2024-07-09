@@ -6,16 +6,16 @@ import 'package:silver_genie/core/widgets/booking_service_listile_component.dart
 
 class EmptyStateComponent extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
-  String? text;
-  EmptyStateComponent({
-    Key? key,
-    this.bookingServiceStatus = BookingServiceStatus.requested,
-    this.text
-  }) : super(key: key);
+  String? emptyDescription;
+  EmptyStateComponent(
+      {Key? key,
+      this.bookingServiceStatus = BookingServiceStatus.requested,
+      this.emptyDescription})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    text ??= bookingServiceStatus == BookingServiceStatus.requested
+    final text = bookingServiceStatus == BookingServiceStatus.requested
         ? 'requested bookings'
         : bookingServiceStatus == BookingServiceStatus.active
             ? 'active bookings'
@@ -33,9 +33,11 @@ class EmptyStateComponent extends StatelessWidget {
             style: AppTextStyle.bodyXLBold.copyWith(fontSize: 20, height: 2.4),
           ),
           Text(
-            bookingServiceStatus == BookingServiceStatus.completed
-                ? text!
-                : 'You don’t have any $text',
+            emptyDescription != null
+                ? emptyDescription!
+                : bookingServiceStatus == BookingServiceStatus.completed
+                    ? text
+                    : 'You don’t have any $text',
             style: AppTextStyle.bodyLargeMedium.copyWith(height: 2),
           )
         ],

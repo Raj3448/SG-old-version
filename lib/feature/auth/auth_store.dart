@@ -28,15 +28,6 @@ abstract class _AuthStoreBase with Store {
   @observable
   bool userDetailsCacheExists = false;
 
-  @observable
-  bool isLogoutLoading = false;
-
-  @observable
-  String? logoutFailure;
-
-  @observable
-  bool logoutSuccess = false;
-
   @computed
   bool get isAuthenticated => authTokenExits && userDetailsCacheExists;
 
@@ -59,29 +50,12 @@ abstract class _AuthStoreBase with Store {
 
   @action
   void logout() {
-    isLogoutLoading = true;
-    GetIt.I<NotificationServices>()
-        .storeFcmTokenIntoServer(fcmToken: null)
-        .then((value) {
-      value.fold((l) {
-        l.maybeMap(
-          socketError: (value) => logoutFailure = 'No Internet',
-          orElse: () => logoutFailure = 'Something went wrong',
-        );
-      }, (r) {
-        logoutSuccess = true;
-      });
-      isLogoutLoading = false;
-    });
-    Future.delayed(const Duration(seconds: 3), () {
-      userCache.clearUserDetails().then((value) {
+    userCache.clearUserDetails().then((value) {
       tokenManager.deleteToken().then((value) => {authTokenExits = false});
-      });
       GetIt.I<MembersStore>().clear();
       GetIt.I<UserDetailStore>().clear();
       GetIt.I<BookingServiceStore>().clear();
       GetIt.I<NotificationStore>().clear();
     });
-    
   }
 }

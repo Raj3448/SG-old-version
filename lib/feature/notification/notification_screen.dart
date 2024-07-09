@@ -55,7 +55,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
             if (store.getTodayNotifications.isEmpty &&
                 store.getEarlierNotifications.isEmpty) {
-              return EmptyStateComponent(text: 'You haven\'t any notification yet.',);
+              return Center(
+                  child: EmptyStateComponent(
+                emptyDescription: "You haven't any notification yet.",
+              ));
             }
 
             return Padding(
