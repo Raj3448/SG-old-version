@@ -489,7 +489,7 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required List<dynamic>? metadata,
     required Product product,
     required FamilyMember? subscribedBy,
-    required List<FamilyMember> belongsTo,
+    required List<FamilyMember>? belongsTo,
     @Default([]) List<dynamic>? payment_transactions,
   }) = _SubscriptionDetails;
 

@@ -165,8 +165,9 @@ class BookingDetailsScreen extends StatelessWidget {
                       label: 'Service opted for',
                       value: getFormattedFamilyMembers(
                         subscriptionDetails.belongsTo
-                            .map((member) => member.id)
-                            .toList(),
+                                ?.map((member) => member.id)
+                                .toList() ??
+                            [],
                       ),
                     ),
                     const SizedBox(height: Dimension.d3),

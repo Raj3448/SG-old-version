@@ -449,7 +449,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
                 await launchUrl(Uri.parse(url));
               }
             },
-            title: aboutUsOfferModel.cta.label??'',
+            title: aboutUsOfferModel.cta.label ?? '',
             showIcon: false,
             iconColor: AppColors.error,
             iconPath: Icons.not_interested,
@@ -878,26 +878,6 @@ class _MemberInfo extends StatelessWidget {
                     ),
                   ),
                   if (memberStore.selectedIndex != -1)
-                    // Observer(
-                    //   builder: (context) {
-                    //     final activeMember = memberStore.activeMember;
-                    //     if (activeMember != null &&
-                    //         memberStore.isActive &&
-                    //         activeMember.relation != 'Brother') {
-                    //       return ActivePlanComponent(
-                    //         activeMember: activeMember,
-                    //       );
-                    //     } else if (memberStore.isActive == false ||
-                    //         activeMember != null ||
-                    //         activeMember?.relation == 'Brother') {
-                    //       return InactivePlanComponent(
-                    //         member: activeMember!,
-                    //       );
-                    //     } else {
-                    //       return const SizedBox();
-                    //     }
-                    //   },
-                    // ),
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;

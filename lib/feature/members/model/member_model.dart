@@ -34,6 +34,8 @@
 //   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
 // }
 
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -63,29 +65,14 @@ class Member with _$Member {
     required DateTime createdAt,
     required DateTime updatedAt,
     required String? fcm,
-    @Default([]) List<SubscriptionDetails>? subscriptions,
     @JsonKey(name: 'care_coach') required CareCoach? careCoach,
     @JsonKey(name: 'user_detail') required UserDetail? userDetail,
     ProfileImg? profileImg,
     Address? address,
+    @Default([]) List<SubscriptionDetails>? subscriptions,
     @Default('Self') String relation,
     @Default(false) bool? isFamilyMember,
     @JsonKey(name: 'phr') PhrModel? phrModel,
-    // required int id,
-    // required String username,
-    // required String email,
-    // required String gender,
-    // required String phoneNumber,
-    // required DateTime dateOfBirth,
-    // required String firstName,
-    // required String lastName,
-    // required DateTime createdAt,
-    // required DateTime updatedAt,
-    // @Default(false) bool? isFamilyMember,
-    // ProfileImg? profileImg,
-    // @Default('Self') String relation,
-    // Address? address,
-    // @JsonKey(name: 'phr') PhrModel? phrModel,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
