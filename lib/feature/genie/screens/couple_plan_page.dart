@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation
 
 import 'dart:convert';
 
@@ -14,6 +14,7 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
+import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -102,12 +103,19 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                           key: customDropDownBox1Key,
                           selectedMembers: _getSelectedMembers(),
                           memberName: member1?.name,
-                          memberList: memberStore.members,
+                          memberList: memberStore.familyMembers.where((member) {
+                            if (member.subscriptions == null ||
+                                member.subscriptions!.isEmpty) {
+                              return true;
+                            }
+
+                            return !member.subscriptions!.any(
+                              (sub) => sub.subscriptionStatus == 'Active',
+                            );
+                          }).toList(),
                           updateMember: (member) => _updateMember(member, true),
                         ),
-                        const SizedBox(
-                          height: Dimension.d2,
-                        ),
+                        const SizedBox(height: Dimension.d2),
                         _buildMemberSelectionText(
                           '2. Select another family member',
                         ),
@@ -115,7 +123,16 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                           key: customDropDownBox2Key,
                           selectedMembers: _getSelectedMembers(),
                           memberName: member2?.name,
-                          memberList: memberStore.members,
+                          memberList: memberStore.familyMembers.where((member) {
+                            if (member.subscriptions == null ||
+                                member.subscriptions!.isEmpty) {
+                              return true;
+                            }
+
+                            return !member.subscriptions!.any(
+                              (sub) => sub.subscriptionStatus == 'Active',
+                            );
+                          }).toList(),
                           updateMember: (member) =>
                               _updateMember(member, false),
                         ),
@@ -124,48 +141,65 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                             vertical: Dimension.d4,
                           ),
                           child: CustomButton(
-                            ontap: (member1 == null ||
-                                    member2 == null ||
-                                    store.planDetails == null)
-                                ? null
-                                : () {
-                                    if (store.planDetails != null) {
-                                      store.createSubscription(
-                                        priceId: store.planDetails!.id,
-                                        productId: int.parse(widget.id),
-                                        familyMemberIds: [
-                                          member1!.id,
-                                          member2!.id,
-                                        ],
-                                      ).then((result) {
-                                        result.fold(
-                                          (failure) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'Subscription booking failed: $failure.',
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          (right) {
-                                            context.pushNamed(
-                                              RoutesConstants
-                                                  .subscriptionDetailsScreen,
-                                              pathParameters: {
-                                                'price':
-                                                    '${store.planDetails!.unitAmount}',
-                                                'subscriptionData':
-                                                    json.encode(right.toJson()),
-                                                'isCouple': 'true',
+                            ontap: widget.isUpgradable
+                                ? () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const InfoDialog(
+                                          showIcon: false,
+                                          title: 'Hi there!!',
+                                          desc:
+                                              'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                                          btnTitle: 'Contact Genie',
+                                          showBtnIcon: true,
+                                          btnIconPath: AppIcons.phone,
+                                        );
+                                      },
+                                    );
+                                  }
+                                : (member1 == null ||
+                                        member2 == null ||
+                                        store.planDetails == null)
+                                    ? null
+                                    : () {
+                                        if (store.planDetails != null) {
+                                          store.createSubscription(
+                                            priceId: store.planDetails!.id,
+                                            productId: int.parse(widget.id),
+                                            familyMemberIds: [
+                                              member1!.id,
+                                              member2!.id,
+                                            ],
+                                          ).then((result) {
+                                            result.fold(
+                                              (failure) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Subscription booking failed: $failure.',
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              (right) {
+                                                context.pushNamed(
+                                                  RoutesConstants
+                                                      .subscriptionDetailsScreen,
+                                                  pathParameters: {
+                                                    'price':
+                                                        '${store.planDetails!.unitAmount}',
+                                                    'subscriptionData': json
+                                                        .encode(right.toJson()),
+                                                    'isCouple': 'true',
+                                                  },
+                                                );
                                               },
                                             );
-                                          },
-                                        );
-                                      });
-                                    }
-                                  },
+                                          });
+                                        }
+                                      },
                             title: widget.isUpgradable
                                 ? 'Upgrade care'
                                 : 'Book care',

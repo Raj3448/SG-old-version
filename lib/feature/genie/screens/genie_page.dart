@@ -19,6 +19,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class GeniePage extends StatefulWidget {
@@ -43,6 +44,7 @@ class _GeniePageState extends State<GeniePage> {
   final services = GetIt.I<ProductListingServices>();
   final store = GetIt.I<ProductListingStore>();
   final userStore = GetIt.I<UserDetailStore>();
+  final membersStore = GetIt.I<MembersStore>();
 
   late ProductListingModel? productListingModel;
 
@@ -144,7 +146,8 @@ class _GeniePageState extends State<GeniePage> {
                                                 productId: int.parse(widget.id),
                                                 familyMemberIds: [
                                                   int.parse(
-                                                      widget.activeMemberId),
+                                                    widget.activeMemberId,
+                                                  ),
                                                 ],
                                               ).then((result) {
                                                 setState(() {
@@ -153,8 +156,8 @@ class _GeniePageState extends State<GeniePage> {
                                                 result.fold(
                                                   (failure) {
                                                     ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
+                                                      context,
+                                                    ).showSnackBar(
                                                       const SnackBar(
                                                         content: Text(
                                                           'Something went wrong!',
@@ -171,7 +174,8 @@ class _GeniePageState extends State<GeniePage> {
                                                             '${store.planDetails!.unitAmount}',
                                                         'subscriptionData':
                                                             json.encode(
-                                                                right.toJson()),
+                                                          right.toJson(),
+                                                        ),
                                                         'isCouple': 'false',
                                                       },
                                                     );
@@ -192,24 +196,30 @@ class _GeniePageState extends State<GeniePage> {
                                     expanded: true,
                                     iconColor: AppColors.white,
                                   ),
-                                  if (productListingModel.product
-                                      .subscriptionContent!.showCouplePlans)
-                                    ExploreNowComponent(
-                                      id: widget.id,
-                                      isUpgradable: widget.isUpgradable,
-                                      pageTitle: widget.pageTitle,
-                                      btnLabel: productListingModel
+                                  if (productListingModel
                                           .product
                                           .subscriptionContent!
-                                          .exploreNowCtaLabel,
-                                      planHeading: productListingModel
-                                          .product
-                                          .subscriptionContent!
-                                          .exploreCouplePlansHeading!,
-                                      imgPath: productListingModel
-                                          .product.icon!.data.attributes.url,
-                                      backgroundColor:
-                                          productListingModel.product.metadata!
+                                          .showCouplePlans &&
+                                      membersStore.familyMembers.length > 1)
+                                    Column(
+                                      children: [
+                                        const SizedBox(height: Dimension.d5),
+                                        ExploreNowComponent(
+                                          id: widget.id,
+                                          isUpgradable: widget.isUpgradable,
+                                          pageTitle: widget.pageTitle,
+                                          btnLabel: productListingModel
+                                              .product
+                                              .subscriptionContent!
+                                              .exploreNowCtaLabel,
+                                          planHeading: productListingModel
+                                              .product
+                                              .subscriptionContent!
+                                              .exploreCouplePlansHeading!,
+                                          imgPath: productListingModel.product
+                                              .icon!.data.attributes.url,
+                                          backgroundColor: productListingModel
+                                              .product.metadata!
                                               .firstWhere(
                                                 (element) =>
                                                     element.key ==
@@ -221,8 +231,8 @@ class _GeniePageState extends State<GeniePage> {
                                                 ),
                                               )
                                               .value,
-                                      iconColorCode:
-                                          productListingModel.product.metadata!
+                                          iconColorCode: productListingModel
+                                              .product.metadata!
                                               .firstWhere(
                                                 (element) =>
                                                     element.key ==
@@ -234,10 +244,13 @@ class _GeniePageState extends State<GeniePage> {
                                                 ),
                                               )
                                               .value,
-                                      plansList: services.getPlansforCouple(
-                                        productListingModel.product.prices,
-                                      ),
+                                          plansList: services.getPlansforCouple(
+                                            productListingModel.product.prices,
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  const SizedBox(height: Dimension.d5),
                                   FAQComponent(
                                     heading: productListingModel.product
                                         .subscriptionContent!.faqHeading,

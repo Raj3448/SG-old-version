@@ -226,9 +226,8 @@ class ExploreNowComponent extends StatelessWidget {
     return Container(
       height: 116,
       padding: const EdgeInsets.all(Dimension.d2),
-      margin: const EdgeInsets.symmetric(vertical: Dimension.d6),
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: AppColors.grayscale300),
+        border: Border.all(color: AppColors.grayscale300),
         borderRadius: BorderRadius.circular(Dimension.d2),
       ),
       child: Column(
@@ -259,7 +258,6 @@ class ExploreNowComponent extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(int.parse(backgroundColor, radix: 16)),
                 border: Border.all(
-                  width: 1,
                   color: Color(int.parse(iconColorCode, radix: 16)),
                 ),
                 borderRadius: BorderRadius.circular(Dimension.d2),
