@@ -103,11 +103,16 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                           key: customDropDownBox1Key,
                           selectedMembers: _getSelectedMembers(),
                           memberName: member1?.name,
-                          memberList: memberStore.familyMembers
-                              .where(
-                                (member) => member.subscriptions!.isEmpty,
-                              )
-                              .toList(),
+                          memberList: memberStore.familyMembers.where((member) {
+                            if (member.subscriptions == null ||
+                                member.subscriptions!.isEmpty) {
+                              return true;
+                            }
+
+                            return !member.subscriptions!.any(
+                              (sub) => sub.subscriptionStatus == 'Active',
+                            );
+                          }).toList(),
                           updateMember: (member) => _updateMember(member, true),
                         ),
                         const SizedBox(height: Dimension.d2),
@@ -118,11 +123,16 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                           key: customDropDownBox2Key,
                           selectedMembers: _getSelectedMembers(),
                           memberName: member2?.name,
-                          memberList: memberStore.familyMembers
-                              .where(
-                                (member) => member.subscriptions!.isEmpty,
-                              )
-                              .toList(),
+                          memberList: memberStore.familyMembers.where((member) {
+                            if (member.subscriptions == null ||
+                                member.subscriptions!.isEmpty) {
+                              return true;
+                            }
+
+                            return !member.subscriptions!.any(
+                              (sub) => sub.subscriptionStatus == 'Active',
+                            );
+                          }).toList(),
                           updateMember: (member) =>
                               _updateMember(member, false),
                         ),
