@@ -442,17 +442,13 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookingDetailsScreen/:subscriptionDetails',
+      path: '/bookingDetailsScreen/:id',
       name: RoutesConstants.bookingDetailsScreen,
       pageBuilder: (context, state) {
-        final subscriptionDetailsString =
-            state.pathParameters['subscriptionDetails'];
-        final subscriptionDetails =
-            jsonDecode(subscriptionDetailsString!) as Map<String, dynamic>;
+        final id = state.pathParameters['id'].toString();
         return MaterialPage(
           child: BookingDetailsScreen(
-            subscriptionDetails:
-                SubscriptionDetails.fromJson(subscriptionDetails),
+            id: id,
           ),
         );
       },

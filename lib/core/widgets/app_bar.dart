@@ -8,6 +8,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/feature/notification/store/notification_store.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,7 +17,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final userStore = GetIt.I<UserDetailStore>();
-
+    final notificationStore = GetIt.I<NotificationStore>();
     return Observer(
       builder: (context) {
         return Padding(
@@ -65,10 +66,17 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                    _IconContainer(
-                      iconPath: 'assets/icon/bell-Unread.svg',
-                      onPressed: () {
-                        context.pushNamed(RoutesConstants.notificationScreen);
+                    Observer(
+                      builder: (context) {
+                        return _IconContainer(
+                          iconPath: notificationStore.isAnyNotifyRemainToRead
+                              ? 'assets/icon/bell-Unread.svg'
+                              : 'assets/icon/notify-read-bell.svg',
+                          onPressed: () {
+                            context
+                                .pushNamed(RoutesConstants.notificationScreen);
+                          },
+                        );
                       },
                     ),
                   ],
