@@ -153,7 +153,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(
           () => BookingService(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() =>
-          BookingServiceStore(bookingService: GetIt.I<BookingService>())
+          BookingServiceStore(ibookingService: GetIt.I<BookingService>())
             );
       GetIt.instance.registerLazySingleton(() => PaymentService(
             httpClient: GetIt.I<HttpClient>(),

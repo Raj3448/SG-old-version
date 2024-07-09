@@ -8,7 +8,6 @@ part 'notification_store.g.dart';
 class NotificationStore = _NotificationStoreBase with _$NotificationStore;
 
 abstract class _NotificationStoreBase with Store {
-
   _NotificationStoreBase(
     this.notificationsServices,
   );
@@ -16,7 +15,7 @@ abstract class _NotificationStoreBase with Store {
 
   @observable
   bool isNotificationRefreshLoading = false;
-  
+
   @observable
   String? notificationRefreshFailure;
 
@@ -45,7 +44,8 @@ abstract class _NotificationStoreBase with Store {
   @computed
   bool get isAnyNotifyRemainToRead {
     if (notifications != null) {
-      return notifications!.data.any((element) => !element.notificationMetaData.read);
+      return notifications!.data
+          .any((element) => !element.notificationMetaData.read);
     }
     return false;
   }
@@ -101,5 +101,9 @@ abstract class _NotificationStoreBase with Store {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
     return difference.inHours >= 24;
+  }
+
+  void clear() {
+    notifications = null;
   }
 }

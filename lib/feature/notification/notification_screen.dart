@@ -7,6 +7,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/widgets/banner_network_img_component.dart';
+import 'package:silver_genie/core/widgets/empty_state_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -51,6 +52,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
               return const ErrorStateComponent(
                   errorType: ErrorType.somethinWentWrong);
             }
+
+            if (store.getTodayNotifications.isEmpty &&
+                store.getEarlierNotifications.isEmpty) {
+              return Center(
+                  child: EmptyStateComponent(
+                emptyDescription: "You haven't any notification yet.",
+              ));
+            }
+
             return Padding(
               padding: const EdgeInsets.all(Dimension.d3),
               child: SingleChildScrollView(
@@ -116,7 +126,9 @@ class NotificationComponent extends StatelessWidget {
           });
         }
         final cnd1 = notification.notificationMetaData.actionType == 'openPage';
-        final cnd2 = notification.notificationMetaData.actionUrl != '/' && notification.notificationMetaData.actionUrl != '/notificationScreen';
+        final cnd2 = notification.notificationMetaData.actionUrl != '/' &&
+            notification.notificationMetaData.actionUrl !=
+                '/notificationScreen';
         if (cnd1 && cnd2) {
           if (notification.notificationMetaData.additionalData.isEmpty) {
             context.pushNamed(

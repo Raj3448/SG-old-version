@@ -19,17 +19,23 @@ import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
+import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   final UserDetailStore userDetailStore;
   const UserProfile({
     required this.userDetailStore,
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,7 +44,7 @@ class UserProfile extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.white,
             appBar: const PageAppbar(title: 'User Profile'),
-            body: userDetailStore.isLoadingUserInfo
+            body: widget.userDetailStore.isLoadingUserInfo
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
                     child: Padding(
@@ -60,13 +66,14 @@ class UserProfile extends StatelessWidget {
                                   Row(
                                     children: [
                                       Avatar(
-                                        imgPath: userDetailStore
+                                        imgPath: widget.userDetailStore
                                                     .userDetails!.profileImg ==
                                                 null
                                             ? ''
-                                            : '${Env.serverUrl}${userDetailStore.userDetails!.profileImg!.url}',
+                                            : '${Env.serverUrl}${widget.userDetailStore.userDetails!.profileImg!.url}',
                                         maxRadius: 44,
-                                        isNetworkImage: userDetailStore
+                                        isNetworkImage: widget
+                                                    .userDetailStore
                                                     .userDetails!
                                                     .profileImgUrl ==
                                                 null
@@ -82,8 +89,8 @@ class UserProfile extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              userDetailStore
-                                                      .userDetails?.name ??
+                                              widget.userDetailStore.userDetails
+                                                      ?.name ??
                                                   '',
                                               style: AppTextStyle.bodyXLSemiBold
                                                   .copyWith(
@@ -95,7 +102,7 @@ class UserProfile extends StatelessWidget {
                                                 children: [
                                                   TextSpan(
                                                     text:
-                                                        'Age: ${calculateAge(userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
+                                                        'Age: ${calculateAge(widget.userDetailStore.userDetails?.dateOfBirth ?? DateTime.now())}',
                                                     style: AppTextStyle
                                                         .bodyMediumMedium
                                                         .copyWith(
@@ -105,7 +112,7 @@ class UserProfile extends StatelessWidget {
                                                   ),
                                                   TextSpan(
                                                     text:
-                                                        ' Relationship: ${userDetailStore.userDetails!.relation}',
+                                                        ' Relationship: ${widget.userDetailStore.userDetails!.relation}',
                                                     style: AppTextStyle
                                                         .bodyMediumMedium
                                                         .copyWith(
@@ -126,20 +133,20 @@ class UserProfile extends StatelessWidget {
                                   ),
                                   CustomTextIcon(
                                     iconpath: AppIcons.phone,
-                                    title: userDetailStore
-                                        .userDetails!.phoneNumber,
+                                    title: widget.userDetailStore.userDetails!
+                                        .phoneNumber,
                                   ),
                                   const SizedBox(
                                     height: Dimension.d4,
                                   ),
                                   CustomTextIcon(
                                     iconpath: AppIcons.home,
-                                    title:
-                                        userDetailStore.userDetails!.address ==
-                                                null
-                                            ? 'N/A'
-                                            : userDetailStore.userDetails!
-                                                .address!.fullAddress,
+                                    title: widget.userDetailStore.userDetails!
+                                                .address ==
+                                            null
+                                        ? 'N/A'
+                                        : widget.userDetailStore.userDetails!
+                                            .address!.fullAddress,
                                   ),
                                   const SizedBox(
                                     height: Dimension.d4,
@@ -268,9 +275,28 @@ class _LogOutComponent extends StatelessWidget {
                     height: 48,
                     child: CustomButton(
                       ontap: () {
-                        GetIt.I<AuthStore>().logout();
-                        GetIt.I<VerityOtpStore>().resetTimer();
-                        GoRouter.of(context).go(RoutesConstants.loginRoute);
+                        GetIt.I<NotificationServices>()
+                            .storeFcmTokenIntoServer(fcmToken: null)
+                            .then(
+                          (value) {
+                            value.fold(
+                              (l) {
+                                late final String failure;
+                                l.maybeMap(
+                                  socketError:
+                                    (value) => failure = 'No Internet Connection',
+                                    orElse: () => failure = 'Something went wrong');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(failure),duration: const Duration(seconds: 3),));
+                              },
+                              (r) {
+                                GetIt.I<AuthStore>().logout();
+                                GetIt.I<VerityOtpStore>().resetTimer();
+                                context.goNamed(RoutesConstants.loginRoute);
+                              },
+                            );
+                          },
+                        );
                       },
                       title: 'Yes, logout',
                       showIcon: false,

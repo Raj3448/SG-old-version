@@ -6,10 +6,12 @@ import 'package:silver_genie/core/widgets/booking_service_listile_component.dart
 
 class EmptyStateComponent extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
-  const EmptyStateComponent({
-    Key? key,
-    required this.bookingServiceStatus,
-  }) : super(key: key);
+  String? emptyDescription;
+  EmptyStateComponent(
+      {Key? key,
+      this.bookingServiceStatus = BookingServiceStatus.requested,
+      this.emptyDescription})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class EmptyStateComponent extends StatelessWidget {
         ? 'requested bookings'
         : bookingServiceStatus == BookingServiceStatus.active
             ? 'active bookings'
-            : 'You haven\'t completed any bookings yet.';
+            : "You haven't completed any bookings yet.";
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
       child: Column(
@@ -31,9 +33,11 @@ class EmptyStateComponent extends StatelessWidget {
             style: AppTextStyle.bodyXLBold.copyWith(fontSize: 20, height: 2.4),
           ),
           Text(
-            bookingServiceStatus == BookingServiceStatus.completed
-                ? text
-                : 'You don’t have any $text',
+            emptyDescription != null
+                ? emptyDescription!
+                : bookingServiceStatus == BookingServiceStatus.completed
+                    ? text
+                    : 'You don’t have any $text',
             style: AppTextStyle.bodyLargeMedium.copyWith(height: 2),
           )
         ],
