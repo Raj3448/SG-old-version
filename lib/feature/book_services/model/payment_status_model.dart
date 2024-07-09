@@ -6,8 +6,8 @@ part 'payment_status_model.freezed.dart';
 part 'payment_status_model.g.dart';
 
 @freezed
-class PaymentStatusModel with _$PaymentStatusModel {
-  const factory PaymentStatusModel({
+class ServicePaymentStatusModel with _$ServicePaymentStatusModel {
+  const factory ServicePaymentStatusModel({
     required int id,
     required String paymentStatus,
     required String status,
@@ -22,9 +22,9 @@ class PaymentStatusModel with _$PaymentStatusModel {
     required RequestedBy requestedBy,
     required List<RequestedFor> requestedFor,
     required PriceDetails priceDetails,
-  }) = _PaymentStatusModel;
-  factory PaymentStatusModel.fromJson(Map<String, dynamic> json) =>
-      _$PaymentStatusModelFromJson(json);
+  }) = _ServicePaymentStatusModel;
+  factory ServicePaymentStatusModel.fromJson(Map<String, dynamic> json) =>
+      _$ServicePaymentStatusModelFromJson(json);
 }
 
 @freezed

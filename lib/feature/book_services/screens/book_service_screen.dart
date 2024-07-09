@@ -69,7 +69,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
         (servicePaymentInfoGotSuccess) {
       if (servicePaymentInfoGotSuccess != null) {
         context.pushNamed(
-          RoutesConstants.bookingPaymentDetailScreen,
+          RoutesConstants.serviceBookingPaymentDetailScreen,
           extra: {'paymentDetails': servicePaymentInfoGotSuccess},
         );
       }
@@ -82,7 +82,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   void dispose() {
     store
       ..servicePaymentInfoGotSuccess = null
-      ..paymentStatusModel = null;
+      ..servicePaymentStatusModel = null;
     dobContr.dispose();
     super.dispose();
   }

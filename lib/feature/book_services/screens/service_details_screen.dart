@@ -23,7 +23,7 @@ import 'package:silver_genie/core/widgets/genie_overview.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/service_banner_image.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';

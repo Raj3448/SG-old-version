@@ -25,7 +25,7 @@ class RoutesConstants {
   static const bookServiceScreen = '/bookServiceScreen';
   static const paymentScreen = '/paymentScreen';
   static const subscriptionPaymentScreen = '/subscriptionPaymentScreen';
-  static const bookingPaymentDetailScreen = '/bookingPaymentDetailScreen';
+  static const serviceBookingPaymentDetailScreen = '/serviceBookingPaymentDetailScreen';
   static const bookingDetailsScreen = '/bookingDetailsScreen';
   static const subscriptionsScreen = '/subscriptionsScreen';
   static const subscriptionDetailsScreen = '/subscriptionDetailsScreen';
@@ -37,5 +37,5 @@ class RoutesConstants {
   static const profileDetails = '/profileDetails';
   static const bookingServiceStatusDetailsPage =
       '/bookingServiceStatusDetailsPage';
-  static const paymentStatusTrackingPage = '/paymentStatusTrackingPage';
+  static const servicePaymentStatusTrackingPage = '/servicePaymentStatusTrackingPage';
 }

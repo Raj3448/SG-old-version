@@ -22,20 +22,20 @@ import 'package:silver_genie/feature/bookings/service_booking_details_screen.dar
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
-class BookingPaymentDetailScreen extends StatefulWidget {
+class ServiceBookingPaymentDetailScreen extends StatefulWidget {
   final ServiceTrackerResponse paymentDetails;
-  const BookingPaymentDetailScreen({
+  const ServiceBookingPaymentDetailScreen({
     required this.paymentDetails,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<BookingPaymentDetailScreen> createState() =>
-      _BookingPaymentDetailScreenState();
+  State<ServiceBookingPaymentDetailScreen> createState() =>
+      _ServiceBookingPaymentDetailScreenState();
 }
 
-class _BookingPaymentDetailScreenState
-    extends State<BookingPaymentDetailScreen> {
+class _ServiceBookingPaymentDetailScreenState
+    extends State<ServiceBookingPaymentDetailScreen> {
   final store = GetIt.I<ProductListingStore>();
   final bookingServiceStore = GetIt.I<BookingServiceStore>();
   bool pytmStatusLoading = false;
@@ -63,7 +63,7 @@ class _BookingPaymentDetailScreenState
       }
     });
     _reactionDisposer2 =
-        reaction((_) => store.paymentStatusModel, (paymentStatusModel) {
+        reaction((_) => store.servicePaymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
         context.pushReplacementNamed(
           RoutesConstants.paymentScreen,
@@ -73,7 +73,7 @@ class _BookingPaymentDetailScreenState
             'id': widget.paymentDetails.id.toString(),
           },
         );
-        store.paymentStatusModel = null;
+        store.servicePaymentStatusModel = null;
       }
     });
     super.initState();
@@ -81,7 +81,7 @@ class _BookingPaymentDetailScreenState
 
   @override
   void dispose() {
-    store.paymentStatusModel = null;
+    store.servicePaymentStatusModel = null;
     _reactionDisposer1();
     _reactionDisposer2();
     super.dispose();

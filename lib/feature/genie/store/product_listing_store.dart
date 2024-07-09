@@ -36,7 +36,7 @@ abstract class _ProductListingStoreBase with Store {
   String? getSubscrPaymentStatusFailure;
 
   @observable
-  PaymentStatusModel? paymentStatusModel;
+  ServicePaymentStatusModel? servicePaymentStatusModel;
 
   @observable
   SubscriptionDetails? subscrpaymentStatusModel;
@@ -223,7 +223,7 @@ abstract class _ProductListingStoreBase with Store {
           );
         },
         (r) {
-          paymentStatusModel = r;
+          servicePaymentStatusModel = r;
         },
       );
       pytmStatusLoading = false;
