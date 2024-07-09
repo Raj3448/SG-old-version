@@ -112,7 +112,7 @@ class ProductListingServices extends IProductListingService {
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent.offerings&populate[7]=serviceContent.serviceImage&populate[8]=serviceContent.faq&populate[9]=serviceContent.servicePrice',
+        '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent.offerings&populate[7]=serviceContent.serviceImage&populate[8]=serviceContent.faq&populate[9]=serviceContent.servicePrice&populate[10]=serviceContent.cta&populate[11]=serviceContent.bannerImage',
       );
       if (response.statusCode == 200) {
         if (response.data['data'] != null) {

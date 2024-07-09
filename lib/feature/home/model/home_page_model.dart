@@ -136,7 +136,7 @@ class ImageDataModel with _$ImageDataModel {
 class Cta with _$Cta {
   @JsonSerializable(explicitToJson: true)
   const factory Cta({
-    @HiveField(24) required String label,
+    @HiveField(24) required String? label,
     @HiveField(15) String? href,
     @HiveField(26) Link? link,
   }) = _Cta;
