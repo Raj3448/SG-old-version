@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -89,10 +88,11 @@ class BookingDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Container(
-                      height: 58,
                       width: double.infinity,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: Dimension.d2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimension.d2,
+                        vertical: Dimension.d2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.grayscale200,
                         borderRadius: BorderRadius.circular(Dimension.d2),
@@ -107,46 +107,33 @@ class BookingDetailsScreen extends StatelessWidget {
                             style: AppTextStyle.bodyMediumMedium
                                 .copyWith(color: AppColors.grayscale700),
                           ),
+                          const SizedBox(height: Dimension.d1),
                           Row(
                             children: [
-                              Icon(
-                                subscriptionDetails.paymentStatus == 'paid'
-                                    ? AppIcons.medical_services
-                                    : subscriptionDetails.paymentStatus ==
-                                                'due' ||
-                                            subscriptionDetails.paymentStatus ==
-                                                'partiallyPaid'
-                                        ? Icons.error_outline_outlined
-                                        : AppIcons.check,
-                                size: subscriptionDetails.paymentStatus == 'due'
-                                    ? 16
-                                    : 14,
-                                color: subscriptionDetails.paymentStatus ==
-                                            'due' ||
-                                        subscriptionDetails.paymentStatus ==
-                                            'partiallyPaid'
-                                    ? AppColors.warning2
-                                    : AppColors.grayscale800,
-                              ),
-                              const SizedBox(width: Dimension.d2),
-                              Text(
-                                subscriptionDetails.paymentStatus == 'paid'
-                                    ? 'Service In progress'
-                                    : subscriptionDetails.paymentStatus ==
-                                                'due' ||
-                                            subscriptionDetails.paymentStatus ==
-                                                'partiallyPaid'
-                                        ? 'Payment Pending'
-                                        : 'Service Completed',
-                                style: AppTextStyle.bodyMediumBold.copyWith(
-                                  color: subscriptionDetails.paymentStatus ==
-                                              'due' ||
-                                          subscriptionDetails.paymentStatus ==
-                                              'partiallyPaid'
-                                      ? AppColors.warning2
-                                      : AppColors.grayscale800,
+                              if (subscriptionDetails.paymentStatus == 'paid' &&
+                                  subscriptionDetails.subscriptionStatus ==
+                                      'Expired')
+                                const _PaymentStatus(
+                                  icon: Icons.error_outline_rounded,
+                                  label: 'Payment Expired',
+                                  isBlack: false,
+                                )
+                              else if (subscriptionDetails.paymentStatus ==
+                                      'paid' ||
+                                  subscriptionDetails.paymentStatus ==
+                                      'partiallyPaid')
+                                const _PaymentStatus(
+                                  icon: Icons.check,
+                                  label: 'Payment Done',
+                                  isBlack: true,
+                                )
+                              else if (subscriptionDetails.paymentStatus ==
+                                  'due')
+                                const _PaymentStatus(
+                                  icon: Icons.watch_later_outlined,
+                                  label: 'In Progress',
+                                  isBlack: true,
                                 ),
-                              ),
                             ],
                           ),
                         ],
@@ -211,7 +198,9 @@ class BookingDetailsScreen extends StatelessWidget {
                     const Divider(color: AppColors.grayscale300),
                     const SizedBox(height: Dimension.d2),
                     ElementSpaceBetween(
-                      title: 'Total Paid',
+                      title: subscriptionDetails.paymentStatus == 'due'
+                          ? 'Total to Pay'
+                          : 'Total Paid',
                       description:
                           '₹ ${formatNumberWithCommas(subscriptionDetails.amount)}',
                       isTitleBold: true,
@@ -292,6 +281,38 @@ class ElementSpaceBetween extends StatelessWidget {
         Text(
           description,
           style: style,
+        ),
+      ],
+    );
+  }
+}
+
+class _PaymentStatus extends StatelessWidget {
+  const _PaymentStatus({
+    required this.icon,
+    required this.label,
+    required this.isBlack,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool isBlack;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: isBlack ? AppColors.grayscale900 : AppColors.warning2,
+          size: icon == Icons.check ? 24 : 18,
+        ),
+        const SizedBox(width: Dimension.d2),
+        Text(
+          label,
+          style: AppTextStyle.bodyMediumBold.copyWith(
+            color: isBlack ? AppColors.grayscale900 : AppColors.warning2,
+          ),
         ),
       ],
     );
