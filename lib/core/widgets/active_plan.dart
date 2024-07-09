@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -15,6 +16,7 @@ import 'package:silver_genie/core/widgets/subscription_pkg.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class ExpandedAnalogComponent extends StatelessWidget {
   const ExpandedAnalogComponent({
@@ -148,6 +150,7 @@ class ActivePlanComponent extends StatefulWidget {
 
 class _ActivePlanComponentState extends State<ActivePlanComponent> {
   final store = GetIt.I<ProductListingStore>();
+  final memberStore = GetIt.I<MembersStore>();
   late List<GlobalKey> _tooltipKeys;
 
   @override
@@ -212,10 +215,22 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
                   style: AppTextStyle.bodyLargeBold,
                 ),
-                SubscriptionPkg(
-                  expanded: false,
-                  type: SubscriptionsType.wellness,
-                ),
+                if (widget.activeMember.subscriptions!.isEmpty)
+                  SubscriptionPkg(
+                    expanded: false,
+                    type: SubscriptionsType.inActive,
+                  )
+                else
+                  SubscriptionPkg(
+                    expanded: false,
+                    type: widget.activeMember.subscriptions![0].product.name ==
+                            'Companion Genie'
+                        ? SubscriptionsType.companion
+                        : widget.activeMember.subscriptions![0].product.name ==
+                                'Wellness Genie'
+                            ? SubscriptionsType.wellness
+                            : SubscriptionsType.emergency,
+                  ),
               ],
             ),
             const SizedBox(height: Dimension.d1),
@@ -324,9 +339,17 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 ),
               ],
             ),
-            _UpgradeProdLisComponent(
-              productBasicDetailsList: store.getUpgradeProdListById('2'),
-            ),
+            if (memberStore.activeMember != null &&
+                memberStore.activeMember!.subscriptions != null)
+              Observer(
+                builder: (context) {
+                  return _UpgradeProdLisComponent(
+                    productBasicDetailsList: store.getUpgradeProdListById(
+                      '${memberStore.activeMember!.subscriptions![0].product.id}',
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -401,9 +424,7 @@ class _UpgradeProdLisComponent extends StatelessWidget {
                 'Upgrade to Companion genie to benefit more',
                 style: AppTextStyle.bodySmallMedium,
               ),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
+              const SizedBox(height: Dimension.d2),
               ProductListingCareComponent(
                 isUpgradeable: true,
                 productBasicDetailsList:

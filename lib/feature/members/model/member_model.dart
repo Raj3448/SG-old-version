@@ -34,7 +34,10 @@
 //   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
 // }
 
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 part 'member_model.freezed.dart';
@@ -46,21 +49,62 @@ class Member with _$Member {
     required int id,
     required String username,
     required String email,
+    required dynamic provider,
+    required dynamic password,
+    required dynamic resetPasswordToken,
+    required dynamic confirmationToken,
+    required bool confirmed,
+    required bool blocked,
     required String gender,
     required String phoneNumber,
     required DateTime dateOfBirth,
+    required String uniqueKey,
     required String firstName,
     required String lastName,
+    required dynamic userTags,
     required DateTime createdAt,
     required DateTime updatedAt,
-    @Default(false) bool? isFamilyMember,
+    required String? fcm,
+    @JsonKey(name: 'care_coach') required CareCoach? careCoach,
+    @JsonKey(name: 'user_detail') required UserDetail? userDetail,
     ProfileImg? profileImg,
-    @Default('Self') String relation,
     Address? address,
+    @Default([]) List<SubscriptionDetails>? subscriptions,
+    @Default('Self') String relation,
+    @Default(false) bool? isFamilyMember,
     @JsonKey(name: 'phr') PhrModel? phrModel,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
+}
+
+@freezed
+class UserDetail with _$UserDetail {
+  const factory UserDetail({
+    required int id,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _UserDetail;
+
+  factory UserDetail.fromJson(Map<String, dynamic> json) =>
+      _$UserDetailFromJson(json);
+}
+
+@freezed
+class CareCoach with _$CareCoach {
+  const factory CareCoach({
+    required int id,
+    required String firstName,
+    required String? lastName,
+    required String contactNo,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required DateTime publishedAt,
+    ProfileImg? profileImg,
+  }) = _CareCoach;
+
+  factory CareCoach.fromJson(Map<String, dynamic> json) =>
+      _$CareCoachFromJson(json);
 }
 
 @freezed

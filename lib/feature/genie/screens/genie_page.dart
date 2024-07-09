@@ -13,6 +13,7 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
+import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -26,11 +27,13 @@ class GeniePage extends StatefulWidget {
     required this.pageTitle,
     required this.id,
     required this.isUpgradable,
+    required this.activeMemberId,
   });
 
   final String pageTitle;
   final String id;
   final bool isUpgradable;
+  final String activeMemberId;
 
   @override
   _GeniePageState createState() => _GeniePageState();
@@ -114,49 +117,69 @@ class _GeniePageState extends State<GeniePage> {
                                   ),
                                   const SizedBox(height: Dimension.d4),
                                   CustomButton(
-                                    ontap: () {
-                                      if (store.planDetails != null) {
-                                        setState(() {
-                                          store.isLoading = true;
-                                        });
-                                        store.createSubscription(
-                                          priceId: store.planDetails!.id,
-                                          productId: int.parse(widget.id),
-                                          familyMemberIds: [
-                                            userStore.userDetails!.id,
-                                          ],
-                                        ).then((result) {
-                                          setState(() {
-                                            store.isLoading = false;
-                                          });
-                                          result.fold(
-                                            (failure) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'Something went wrong!',
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            (right) {
-                                              context.pushNamed(
-                                                RoutesConstants
-                                                    .subscriptionDetailsScreen,
-                                                pathParameters: {
-                                                  'price':
-                                                      '${store.planDetails!.unitAmount}',
-                                                  'subscriptionData': json
-                                                      .encode(right.toJson()),
-                                                  'isCouple': 'false',
-                                                },
-                                              );
-                                            },
-                                          );
-                                        });
-                                      }
-                                    },
+                                    ontap: widget.isUpgradable
+                                        ? () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return const InfoDialog(
+                                                  showIcon: false,
+                                                  title: 'Hi there!!',
+                                                  desc:
+                                                      'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                                                  btnTitle: 'Contact Genie',
+                                                  showBtnIcon: true,
+                                                  btnIconPath: AppIcons.phone,
+                                                );
+                                              },
+                                            );
+                                          }
+                                        : () {
+                                            if (store.planDetails != null) {
+                                              setState(() {
+                                                store.isLoading = true;
+                                              });
+                                              store.createSubscription(
+                                                priceId: store.planDetails!.id,
+                                                productId: int.parse(widget.id),
+                                                familyMemberIds: [
+                                                  int.parse(
+                                                      widget.activeMemberId),
+                                                ],
+                                              ).then((result) {
+                                                setState(() {
+                                                  store.isLoading = false;
+                                                });
+                                                result.fold(
+                                                  (failure) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                          'Something went wrong!',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  (right) {
+                                                    context.pushNamed(
+                                                      RoutesConstants
+                                                          .subscriptionDetailsScreen,
+                                                      pathParameters: {
+                                                        'price':
+                                                            '${store.planDetails!.unitAmount}',
+                                                        'subscriptionData':
+                                                            json.encode(
+                                                                right.toJson()),
+                                                        'isCouple': 'false',
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              });
+                                            }
+                                          },
                                     title: widget.isUpgradable
                                         ? 'Upgrade care'
                                         : 'Book Care',

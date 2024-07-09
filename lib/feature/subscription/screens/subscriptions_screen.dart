@@ -216,7 +216,7 @@ class _UserDetailsComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final store = GetIt.I<UserDetailStore>();
     final familyMembers = memberDetails.belongsTo;
-    final hasMultipleMembers = familyMembers.length > 1;
+    final hasMultipleMembers = familyMembers!.length > 1;
     final interval = memberDetails.product.prices
         .where((price) => price.id == memberDetails.priceId)
         .map((price) => price.recurringInterval)
@@ -261,7 +261,7 @@ class _UserDetailsComponent extends StatelessWidget {
                 else
                   Avatar.fromSize(
                     imgPath:
-                        '${Env.serverUrl}${memberDetails.belongsTo.map((member) => member.profileImg?.url ?? '')}',
+                        '${Env.serverUrl}${memberDetails.belongsTo?.map((member) => member.profileImg?.url ?? '')}',
                     size: AvatarSize.size24,
                   ),
                 const SizedBox(width: Dimension.d3),
@@ -291,12 +291,12 @@ class _UserDetailsComponent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${memberDetails.belongsTo.map((member) => member.firstName).join(' ')} ${memberDetails.belongsTo.map((member) => member.lastName).join(' ')}',
+                            '${memberDetails.belongsTo?.map((member) => member.firstName).join(' ') ?? []} ${memberDetails.belongsTo?.map((member) => member.lastName).join(' ') ?? []}',
                             style: AppTextStyle.bodyLargeBold
                                 .copyWith(color: AppColors.grayscale900),
                           ),
                           Text(
-                            'Relation: ${memberDetails.belongsTo.map((member) => member.relation).join(' ')}  Age: ${calculateAgeFromString(memberDetails.belongsTo.map((member) => member.dateOfBirth).join(' '))}',
+                            'Relation: ${memberDetails.belongsTo?.map((member) => member.relation).join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth).join(' ') ?? '')}',
                             style: AppTextStyle.bodyMediumMedium
                                 .copyWith(color: AppColors.grayscale800),
                           ),

@@ -10,11 +10,13 @@ class CoachContact extends StatelessWidget {
   const CoachContact({
     required this.imgpath,
     required this.name,
+    required this.phoneNo,
     super.key,
   });
 
   final String imgpath;
   final String name;
+  final String phoneNo;
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +38,7 @@ class CoachContact extends StatelessWidget {
                   imgPath: imgpath,
                   maxRadius: 24,
                 ),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
+                const SizedBox(width: Dimension.d2),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -60,23 +60,22 @@ class CoachContact extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () async {
-                await launchDialer('+91000000000');
+                await launchDialer('+91$phoneNo');
               },
               child: Row(
                 children: [
                   const Icon(
                     AppIcons.phone,
                     color: AppColors.primary,
-                    size: Dimension.d4,
+                    size: Dimension.d5,
                   ),
-                  const SizedBox(
-                    width: Dimension.d1,
-                  ),
+                  const SizedBox(width: Dimension.d2),
                   Text(
                     'Call',
                     style: AppTextStyle.bodyLargeSemiBold
                         .copyWith(color: AppColors.primary),
                   ),
+                  const SizedBox(width: Dimension.d3),
                 ],
               ),
             ),
