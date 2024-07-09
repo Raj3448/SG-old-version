@@ -7,9 +7,9 @@ part 'booking_service_store.g.dart';
 class BookingServiceStore = _BookingServiceStoreBase with _$BookingServiceStore;
 
 abstract class _BookingServiceStoreBase with Store {
-  _BookingServiceStoreBase({required this.bookingService});
+  _BookingServiceStoreBase({required this.ibookingService});
 
-  final IBookingService bookingService;
+  final IBookingService ibookingService;
 
   @observable
   bool isAllServiceLoaded = false;
@@ -62,7 +62,7 @@ abstract class _BookingServiceStoreBase with Store {
       return;
     }
     isAllServiceLoading = true;
-    bookingService.getBookingServiceBasicDetails().then((value) {
+    ibookingService.getBookingServiceBasicDetails().then((value) {
       value.fold((l) {
         fetchServiceError = 'Something went wrong';
       }, (r) {
@@ -76,11 +76,12 @@ abstract class _BookingServiceStoreBase with Store {
   @action
   void refresh() {
     isAllServiceRefreshing = true;
-    bookingService.getBookingServiceBasicDetails().then(
+    ibookingService.getBookingServiceBasicDetails().then(
       (value) {
         value.fold(
           (l) {
-            allServiceRefreshFailure = 'Unable to load updated booking services';
+            allServiceRefreshFailure =
+                'Unable to load updated booking services';
           },
           (r) {
             bookingServices = r;
@@ -89,5 +90,9 @@ abstract class _BookingServiceStoreBase with Store {
         isAllServiceRefreshing = false;
       },
     );
+  }
+
+  void clear() {
+    bookingServices = null;
   }
 }

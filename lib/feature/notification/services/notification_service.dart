@@ -9,7 +9,7 @@ import 'package:silver_genie/feature/notification/model/notification_model.dart'
 abstract class INotificationFacade {
   Future<Either<Failure, NotificationModel>> fetchNotification();
   Future<Either<Failure, bool>> storeFcmTokenIntoServer(
-      {required String fcmToken});
+      {required String? fcmToken});
   Future<Either<Failure, bool>> markToReadById(
       {required String notificationId});
 }
@@ -45,7 +45,7 @@ class NotificationServices extends INotificationFacade {
 
   @override
   Future<Either<Failure, bool>> storeFcmTokenIntoServer(
-      {required String fcmToken}) async {
+      {required String? fcmToken}) async {
     try {
       final response = await httpClient.post(
         '/api/auth/local/fcm',

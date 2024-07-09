@@ -52,8 +52,8 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
     if (store.servicePaymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
-    _reactionDisposer =
-        reaction((_) => store.servicePaymentStatusModel, (servicePaymentStatusModel) {
+    _reactionDisposer = reaction((_) => store.servicePaymentStatusModel,
+        (servicePaymentStatusModel) {
       if (servicePaymentStatusModel != null) {
         widget.servicePaymentStatusModel = servicePaymentStatusModel;
         store.servicePaymentStatus = PaymentStatus.success;
@@ -106,7 +106,8 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
               if (widget.servicePaymentStatusModel != null) {
                 GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
                     null;
-                context.pushNamed(RoutesConstants.servicePaymentStatusTrackingPage,
+                context.pushNamed(
+                    RoutesConstants.servicePaymentStatusTrackingPage,
                     pathParameters: {'id': widget.id});
               } else {
                 context.pop();
@@ -156,8 +157,8 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                         title: store.servicePaymentStatus ==
                                 PaymentStatus.failure
                             ? widget.priceDetails!.products.first.displayName
-                            : widget.servicePaymentStatusModel!.priceDetails.products
-                                .first.displayName,
+                            : widget.servicePaymentStatusModel!.priceDetails
+                                .products.first.displayName,
                         description: store.servicePaymentStatus ==
                                 PaymentStatus.failure
                             ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
@@ -167,7 +168,7 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                         color: AppColors.grayscale300,
                       ),
                       ElementSpaceBetween(
-                        title: 'Total to pay',
+                        title: store.servicePaymentStatus == PaymentStatus.failure ? 'Total to pay' : 'Total paid',
                         description: store.servicePaymentStatus ==
                                 PaymentStatus.failure
                             ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
