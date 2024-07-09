@@ -7,20 +7,21 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/relationship.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class MemberCard extends StatelessWidget {
   const MemberCard({
     required this.onTap,
     required this.name,
     required this.relation,
-    required this.hasCareSub,
+    required this.memberDetails,
     required this.imgPath,
     super.key,
   });
 
   final String name;
   final String relation;
-  final bool hasCareSub;
+  final Member memberDetails;
   final VoidCallback onTap;
   final String imgPath;
 
@@ -60,17 +61,28 @@ class MemberCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (hasCareSub)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  SubscriptionPkg(
-                    expanded: false,
-                    type: SubscriptionsType.wellness,
-                  ),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                SubscriptionPkg(
+                  expanded: false,
+                  type: (memberDetails.subscriptions != null &&
+                          memberDetails.subscriptions!.isNotEmpty)
+                      ? memberDetails.subscriptions![0].product.name ==
+                              'Companion Genie'
+                          ? SubscriptionsType.companion
+                          : memberDetails.subscriptions![0].product.name ==
+                                  'Wellness Genie'
+                              ? SubscriptionsType.wellness
+                              : memberDetails.subscriptions![0].product.name ==
+                                      'Emergency Genie'
+                                  ? SubscriptionsType.emergency
+                                  : SubscriptionsType.inActive
+                      : SubscriptionsType.inActive,
+                ),
+              ],
+            ),
           ],
         ),
       ),
