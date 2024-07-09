@@ -89,7 +89,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                             final expiredPlanList = list.data
                                 .where(
                                   (member) =>
-                                      member.subscriptionStatus == 'Expired',
+                                      member.subscriptionStatus == 'Expired' &&
+                                      member.paymentStatus == 'paid',
                                 )
                                 .toList();
                             if (list.data.isEmpty) {
@@ -183,7 +184,11 @@ class _SubscriptionList extends StatelessWidget {
         .where((member) => member.subscriptionStatus == 'Active')
         .toList();
     final expiredPlanList = members
-        .where((member) => member.subscriptionStatus == 'Expired')
+        .where(
+          (member) =>
+              member.subscriptionStatus == 'Expired' &&
+              member.paymentStatus == 'paid',
+        )
         .toList();
 
     return ListView.builder(
@@ -320,7 +325,13 @@ class _UserDetailsComponent extends StatelessWidget {
                 IconTitleDetailsComponent(
                   icon: AppIcons.medical_services,
                   title: 'Status',
-                  details: memberDetails.subscriptionStatus.toString(),
+                  details: memberDetails.subscriptionStatus == 'Active' &&
+                          memberDetails.paymentStatus == 'due'
+                      ? 'Payment due'
+                      : memberDetails.subscriptionStatus == 'Expired' &&
+                              memberDetails.paymentStatus == 'paid'
+                          ? 'Expired'
+                          : 'Active',
                 ),
                 const SizedBox(height: Dimension.d5),
                 IconTitleDetailsComponent(
