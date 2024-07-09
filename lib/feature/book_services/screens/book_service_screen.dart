@@ -69,7 +69,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
         (servicePaymentInfoGotSuccess) {
       if (servicePaymentInfoGotSuccess != null) {
         context.pushNamed(
-          RoutesConstants.bookingPaymentDetailScreen,
+          RoutesConstants.serviceBookingPaymentDetailScreen,
           extra: {'paymentDetails': servicePaymentInfoGotSuccess},
         );
       }
@@ -82,7 +82,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   void dispose() {
     store
       ..servicePaymentInfoGotSuccess = null
-      ..paymentStatusModel = null;
+      ..servicePaymentStatusModel = null;
     dobContr.dispose();
     super.dispose();
   }
@@ -300,6 +300,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             DateDropdown(
                               controller: dobContr,
                               dateFormat: component.dateFormat,
+                              futureDates: true,
                               onSaved: (value) {
                                 _updateFormValues1(
                                   id: component.id,
@@ -399,6 +400,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             ...widgetList,
                             const SizedBox(height: Dimension.d20),
                             const SizedBox(height: Dimension.d4),
+                            const SizedBox(height: Dimension.d15),
                           ],
                         ),
                       ),

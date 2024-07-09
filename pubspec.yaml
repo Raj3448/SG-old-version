@@ -28,6 +28,8 @@ dependencies:
 
   flutter:
     sdk: flutter
+  flutter_avif: ^1.0.1
+  flutter_avif_android: ^1.0.1
   flutter_local_notifications: ^17.1.2
   flutter_mobx: ^2.2.0+2
   flutter_native_splash: ^2.3.5

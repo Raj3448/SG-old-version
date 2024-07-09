@@ -135,7 +135,7 @@ class BookingListTileComponent extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: formatDateTime(
+                              text: formatDateTimeWithMin(
                                   bookingServiceModel.requestedAt),
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.grayscale900),
@@ -157,6 +157,16 @@ class BookingListTileComponent extends StatelessWidget {
 String formatDateTime(DateTime dateTime) {
   final DateFormat dayFormat = DateFormat('d MMM');
   final DateFormat timeFormat = DateFormat('h a');
+
+  String formattedDay = dayFormat.format(dateTime);
+  String formattedTime = timeFormat.format(dateTime).toUpperCase();
+
+  return '$formattedDay, $formattedTime';
+}
+
+String formatDateTimeWithMin(DateTime dateTime) {
+  final DateFormat dayFormat = DateFormat('d MMM');
+  final DateFormat timeFormat = DateFormat('h:mm a');
 
   String formattedDay = dayFormat.format(dateTime);
   String formattedTime = timeFormat.format(dateTime).toUpperCase();

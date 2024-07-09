@@ -139,6 +139,7 @@ class DateDropdown extends FormField<DateTime> {
     String dateFormat = 'yyyy-MM-dd',
     void Function(String?)? onSaved,
     void Function(DateTime)? onChanged,
+    bool futureDates = false,
     super.validator,
   }) : super(
           initialValue: controller.text.isEmpty
@@ -183,8 +184,8 @@ class DateDropdown extends FormField<DateTime> {
                                   : () async {
                                       final pickedDate = await showDatePicker(
                                         context: state.context,
-                                        firstDate: DateTime(1950),
-                                        lastDate: DateTime.now(),
+                                        firstDate: futureDates ? DateTime.now() : DateTime(1950),
+                                        lastDate: futureDates ? DateTime(3000) :DateTime.now(),
                                         initialDate:
                                             state.value ?? DateTime.now(),
                                       );

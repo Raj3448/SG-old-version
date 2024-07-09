@@ -488,8 +488,8 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required String? subscriptionStatus,
     required List<dynamic>? metadata,
     required Product product,
-    required FamilyMember? user,
-    required List<FamilyMember>? belongsTo,
+    required FamilyMember? subscribedBy,
+    required List<FamilyMember> belongsTo,
     @Default([]) List<dynamic>? payment_transactions,
   }) = _SubscriptionDetails;
 
@@ -505,7 +505,7 @@ class FamilyMember with _$FamilyMember {
     required String lastName,
     required String gender,
     required String relation,
-    required int? age,
+    required String dateOfBirth,
     required IconImgMetaData? profileImg,
   }) = _FamilyMember;
 

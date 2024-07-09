@@ -17,7 +17,7 @@ import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
-import 'package:silver_genie/feature/book_services/screens/booking_payment_detail_screen.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
@@ -64,7 +64,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
         store.servicePaymentStatus = PaymentStatus.success;
         _stopPaymentStatusPolling();
       }
-      store.paymentStatusModel = null;
+      store.subscrpaymentStatusModel = null;
     });
     super.initState();
   }
@@ -116,8 +116,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                 context.pushNamed(
                   RoutesConstants.bookingDetailsScreen,
                   pathParameters: {
-                    'subscriptionDetails':
-                        jsonEncode(widget.subscriptionDetails),
+                    'id': '${widget.subscriptionDetails!.id}',
                   },
                 );
               } else {
