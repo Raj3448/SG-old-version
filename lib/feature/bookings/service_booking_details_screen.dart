@@ -16,15 +16,19 @@ import 'package:silver_genie/feature/book_services/model/payment_status_model.da
 import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 
+// Main screen for displaying service booking details
 class ServiceBookingDetailsScreen extends StatelessWidget {
   final BookingServiceStatus bookingServiceStatus;
   final String serviceId;
+
   ServiceBookingDetailsScreen({
     required this.bookingServiceStatus,
     required this.serviceId,
     Key? key,
   }) : super(key: key);
+
   final service = GetIt.I<ProductListingServices>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,9 +42,7 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
             builder: (context, snapShot) {
               if (snapShot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: LoadingWidget(
-                    showShadow: false,
-                  ),
+                  child: LoadingWidget(showShadow: false),
                 );
               }
               if (snapShot.hasError) {
@@ -54,6 +56,7 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
+
               late final ServicePaymentStatusModel servicePaymentStatusModel;
               try {
                 servicePaymentStatusModel = snapShot.data!.getOrElse(
@@ -63,16 +66,12 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                 return const ErrorStateComponent(
                     errorType: ErrorType.somethinWentWrong);
               }
-              // final paymentStatus = getPaymentStatus(
-              //     paymentStatus: servicePaymentStatusModel.paymentStatus,
-              //     status: servicePaymentStatusModel.status);
+
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: Dimension.d4,
-                    ),
+                    const SizedBox(height: Dimension.d4),
                     Text(
                       servicePaymentStatusModel.product.name,
                       style: AppTextStyle.bodyXLMedium.copyWith(
@@ -84,9 +83,7 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                       style: AppTextStyle.bodyLargeMedium
                           .copyWith(color: AppColors.grayscale600),
                     ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
+                    const SizedBox(height: Dimension.d2),
                     Container(
                       height: 58,
                       width: double.infinity,
@@ -108,91 +105,69 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                bookingServiceStatus ==
-                                        BookingServiceStatus.active
-                                    ? AppIcons.medical_services
-                                    : bookingServiceStatus ==
-                                            BookingServiceStatus.requested
-                                        ? Icons.error_outline_outlined
-                                        : AppIcons.check,
-                                size: bookingServiceStatus ==
-                                        BookingServiceStatus.requested
-                                    ? 16
-                                    : 14,
-                                color: bookingServiceStatus ==
-                                        BookingServiceStatus.requested
-                                    ? AppColors.warning2
-                                    : AppColors.grayscale800,
+                                _getStatusIcon(),
+                                size: _getStatusIconSize(),
+                                color: _getStatusIconColor(
+                                    servicePaymentStatusModel.paymentStatus,
+                                    servicePaymentStatusModel.status),
                               ),
-                              const SizedBox(
-                                width: Dimension.d2,
-                              ),
+                              const SizedBox(width: Dimension.d2),
                               Text(
-                                bookingServiceStatus ==
-                                        BookingServiceStatus.active
-                                    ? 'Service In progress'
-                                    : bookingServiceStatus ==
-                                            BookingServiceStatus.requested
-                                        ? 'Payment Pending'
-                                        : 'Service Completed',
+                                _getStatusText(
+                                    servicePaymentStatusModel.paymentStatus,
+                                    servicePaymentStatusModel.status),
                                 style: AppTextStyle.bodyMediumBold.copyWith(
-                                    color: bookingServiceStatus ==
-                                            BookingServiceStatus.requested
-                                        ? AppColors.warning2
-                                        : AppColors.grayscale800),
+                                  color: _getStatusTextColor(
+                                      servicePaymentStatusModel.paymentStatus,
+                                      servicePaymentStatusModel.status),
+                                ),
                               ),
                             ],
                           )
                         ],
                       ),
                     ),
-                    const Divider(
-                      color: AppColors.grayscale300,
-                    ),
+                    const Divider(color: AppColors.grayscale300),
                     Text(
                       'Details',
-                      style: AppTextStyle.bodyXLMedium
-                          .copyWith(fontWeight: FontWeight.w500, height: 2.6),
+                      style: AppTextStyle.bodyXLMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                        height: 2.6,
+                      ),
                     ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
+                    const SizedBox(height: Dimension.d2),
                     AssigningComponent(
                       name: 'Service opted for',
                       initializeElement:
                           ' ${servicePaymentStatusModel.requestedFor.first.firstName} ${servicePaymentStatusModel.requestedFor.first.lastName}',
                     ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
+                    const SizedBox(height: Dimension.d2),
                     ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => !servicePaymentStatusModel
-                                .metadata[index].private
-                            ? AssigningComponent(
-                                name: servicePaymentStatusModel.metadata[index].key,
-                                initializeElement:
-                                    servicePaymentStatusModel.metadata[index].value,
-                              )
-                            : const SizedBox(),
-                        separatorBuilder: (context, index) =>
-                            !servicePaymentStatusModel.metadata[index].private
-                                ? const SizedBox(
-                                    height: Dimension.d3,
-                                  )
-                                : const SizedBox(),
-                        itemCount: servicePaymentStatusModel.metadata.length),
-                    const SizedBox(
-                      height: Dimension.d4,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) =>
+                          !servicePaymentStatusModel.metadata[index].private
+                              ? AssigningComponent(
+                                  name: servicePaymentStatusModel
+                                      .metadata[index].key,
+                                  initializeElement: servicePaymentStatusModel
+                                      .metadata[index].value,
+                                )
+                              : const SizedBox(),
+                      separatorBuilder: (context, index) =>
+                          !servicePaymentStatusModel.metadata[index].private
+                              ? const SizedBox(height: Dimension.d3)
+                              : const SizedBox(),
+                      itemCount: servicePaymentStatusModel.metadata.length,
                     ),
-                    const Divider(
-                      color: AppColors.line,
-                    ),
+                    const SizedBox(height: Dimension.d4),
+                    const Divider(color: AppColors.line),
                     Text(
                       'Order Info',
-                      style: AppTextStyle.bodyXLMedium
-                          .copyWith(fontWeight: FontWeight.w500, height: 2.4),
+                      style: AppTextStyle.bodyXLMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                        height: 2.4,
+                      ),
                     ),
                     ElementSpaceBetween(
                       title: servicePaymentStatusModel
@@ -200,21 +175,17 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                       description:
                           '₹ ${formatNumberWithCommas(servicePaymentStatusModel.priceDetails.products.first.price.toInt())}',
                     ),
-                    const Divider(
-                      color: AppColors.line,
-                    ),
-                    const SizedBox(
-                      height: Dimension.d2,
-                    ),
+                    const Divider(color: AppColors.line),
+                    const SizedBox(height: Dimension.d2),
                     ElementSpaceBetween(
-                      title: 'Total to pay',
+                      title: _getPaymentTextTitle(
+                          servicePaymentStatusModel.paymentStatus,
+                          servicePaymentStatusModel.status),
                       description:
                           '₹ ${formatNumberWithCommas(servicePaymentStatusModel.priceDetails.products.first.price.toInt())}',
                       isTitleBold: true,
                     ),
-                    const SizedBox(
-                      height: Dimension.d15,
-                    ),
+                    const SizedBox(height: Dimension.d15),
                   ],
                 ),
               );
@@ -224,6 +195,91 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+  IconData _getStatusIcon() {
+    switch (bookingServiceStatus) {
+      case BookingServiceStatus.active:
+        return AppIcons.medical_services;
+      case BookingServiceStatus.requested:
+        return Icons.error_outline_outlined;
+      default:
+        return AppIcons.check;
+    }
+  }
+
+  double _getStatusIconSize() {
+    return bookingServiceStatus == BookingServiceStatus.requested ? 16 : 14;
+  }
+
+  Color _getStatusIconColor(String paymentStatus, String status) {
+    switch (bookingServiceStatus) {
+      case BookingServiceStatus.active:
+        return AppColors.grayscale800;
+      case BookingServiceStatus.requested:
+        if (paymentStatus == 'due' || paymentStatus == 'expired') {
+          return AppColors.warning2;
+        }
+        return AppColors.grayscale800;
+      default:
+        return AppColors.grayscale800;
+    }
+  }
+
+  String _getStatusText(String paymentStatus, String status) {
+    switch (bookingServiceStatus) {
+      case BookingServiceStatus.active:
+        if (status == 'active' || status == 'processed') {
+          return 'Service scheduled';
+        } else if (status == 'requested' || status == 'processing') {
+          return 'Service in progress';
+        }
+        return 'Service In progress';
+      case BookingServiceStatus.requested:
+        if (paymentStatus == 'due') {
+          return 'Payment pending';
+        } else if (paymentStatus == 'expired') {
+          return 'Payment failure';
+        } else if (status == 'requested' || status == 'processing') {
+          return 'Service in progress';
+        } else if (status == 'active' || status == 'processed') {
+          return 'Service scheduled';
+        }
+        return '--';
+      // ignore: no_default_cases
+      default:
+        if (status == 'rejected') {
+          return 'Service rejected';
+        } else if (status == 'completed') {
+          return 'Service completed';
+        } else if (status == 'requested' || status == 'processing') {
+          return 'Service in progress';
+        } else if (status == 'active' || status == 'processed') {
+          return 'Service scheduled';
+        }
+        return '';
+    }
+  }
+
+  Color _getStatusTextColor(String paymentStatus, String status) {
+    switch (bookingServiceStatus) {
+      case BookingServiceStatus.active:
+        return AppColors.grayscale800;
+      case BookingServiceStatus.requested:
+        if (paymentStatus == 'due' || paymentStatus == 'expired') {
+          return AppColors.warning2;
+        }
+        return AppColors.grayscale800;
+      default:
+        return AppColors.grayscale800;
+    }
+  }
+
+  String _getPaymentTextTitle(String paymentStatus, String status) {
+    if (paymentStatus == 'due' || paymentStatus == 'expired') {
+      return 'Total to pay';
+    }
+    return 'Total paid';
+  }
 }
 
 class ElementSpaceBetween extends StatelessWidget {
@@ -232,11 +288,13 @@ class ElementSpaceBetween extends StatelessWidget {
     required this.description,
     this.isTitleBold = false,
   });
+
   final String title;
   final String description;
   bool isTitleBold;
 
   final style = AppTextStyle.bodyLargeMedium.copyWith(height: 2);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -252,9 +310,7 @@ class ElementSpaceBetween extends StatelessWidget {
                 : style,
           ),
         ),
-        const SizedBox(
-          width: Dimension.d2,
-        ),
+        const SizedBox(width: Dimension.d2),
         Text(
           description,
           style: style,
