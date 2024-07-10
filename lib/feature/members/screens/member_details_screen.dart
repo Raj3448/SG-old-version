@@ -49,27 +49,29 @@ class MemberDetailsScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         appBar: const PageAppbar(title: 'Member details'),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FixedButton(
-          ontap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return const InfoDialog(
-                  showIcon: false,
-                  title: 'Hi there!!',
-                  desc:
-                      'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                  btnTitle: 'Contact Genie',
-                  showBtnIcon: true,
-                  btnIconPath: AppIcons.phone,
-                );
-              },
-            );
-          },
-          btnTitle: 'Update Health record',
-          showIcon: false,
-          iconPath: AppIcons.clinical_notes,
-        ),
+        floatingActionButton: activeMember!.subscriptions!.isEmpty
+            ? const SizedBox()
+            : FixedButton(
+                ontap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const InfoDialog(
+                        showIcon: false,
+                        title: 'Hi there!!',
+                        desc:
+                            'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: true,
+                        btnIconPath: AppIcons.phone,
+                      );
+                    },
+                  );
+                },
+                btnTitle: 'Update Health record',
+                showIcon: false,
+                iconPath: AppIcons.clinical_notes,
+              ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(
             decelerationRate: ScrollDecelerationRate.fast,
