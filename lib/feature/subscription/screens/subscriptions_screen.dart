@@ -389,6 +389,7 @@ class _UserDetailsComponent extends StatelessWidget {
                             'pageTitle': memberDetails.product.name,
                             'id': '${memberDetails.product.id}',
                             'isUpgradeable': 'false',
+                            'activeMemberId': '${memberDetails.id}',
                           },
                         );
                       },
