@@ -34,7 +34,8 @@ abstract class _BookingServiceStoreBase with Store {
       ? []
       : bookingServices!.services
           .where(
-            (element) => element.paymentStatus == 'paid',
+            (element) =>  element.status == 'requested' ||
+                          element.status == 'processing',
           )
           .toList();
 
@@ -43,7 +44,8 @@ abstract class _BookingServiceStoreBase with Store {
       ? []
       : bookingServices!.services
           .where(
-            (element) => element.paymentStatus == 'due',
+            (element) => element.status == 'processed' ||
+                          element.status == 'active',
           )
           .toList();
 
@@ -52,7 +54,8 @@ abstract class _BookingServiceStoreBase with Store {
       ? []
       : bookingServices!.services
           .where(
-            (element) => element.paymentStatus == 'completed',
+            (element) => element.status == 'completed' ||
+                        element.status == 'rejected',
           )
           .toList();
 

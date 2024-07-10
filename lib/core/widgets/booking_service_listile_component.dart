@@ -27,7 +27,6 @@ class BookingListTileComponent extends StatelessWidget {
         context.pushNamed(
           RoutesConstants.bookingServiceStatusDetailsPage,
           pathParameters: {
-            'bookingServiceStatus': bookingServiceStatus.toString(),
             'serviceId': bookingServiceModel.id.toString(),
           },
         );
@@ -79,36 +78,35 @@ class BookingListTileComponent extends StatelessWidget {
                               .copyWith(color: AppColors.grayscale700),
                         ),
                         const Spacer(),
-                        if (!(bookingServiceStatus ==
-                            BookingServiceStatus.requested))
-                          if (!(bookingServiceStatus ==
-                              BookingServiceStatus.requested))
-                            Container(
-                              height: 24,
-                              width: 105,
-                              alignment: const Alignment(0, 0),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: Dimension.d1,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.lightBlue,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                bookingServiceStatus ==
-                                        BookingServiceStatus.completed
-                                    ? formatDateTime(
-                                        bookingServiceModel.requestedAt,
-                                      )
-                                    : formatDateTime(
-                                        bookingServiceModel.requestedAt,
-                                      ),
-                                style: AppTextStyle.bodyMediumMedium
-                                    .copyWith(color: AppColors.primary),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                        if (bookingServiceModel.status != 'completed' ||
+                            bookingServiceModel.paymentStatus != 'paid')
+                          Container(
+                            height: 24,
+                            width: 105,
+                            alignment: const Alignment(0, 0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimension.d1,
                             ),
+                            decoration: BoxDecoration(
+                              color: AppColors.lightBlue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              (bookingServiceStatus ==
+                                          BookingServiceStatus.requested) &&
+                                      bookingServiceModel.paymentStatus == 'due'
+                                  ? 'Due'
+                                  : (bookingServiceModel.status == 'rejected')
+                                      ? 'Rejected'
+                                      : formatDateTime(
+                                          bookingServiceModel.requestedAt,
+                                        ),
+                              style: AppTextStyle.bodyMediumMedium
+                                  .copyWith(color: AppColors.primary),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         const SizedBox(
                           width: Dimension.d2,
                         ),
