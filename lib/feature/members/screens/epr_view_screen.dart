@@ -114,6 +114,7 @@ class EPRViewScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(height: Dimension.d3),
                               _PersonalDetailsComponent(
                                 name: userInfo.name,
                                 email: userInfo.email,
@@ -186,7 +187,6 @@ class _PersonalDetailsComponent extends StatelessWidget {
     required this.dateOfBirth,
     this.relation,
     this.streetAddress,
-    super.key,
   });
   final String email;
   final String phoneNumber;
@@ -201,7 +201,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
       children: [
         Text(
           'Personal Details',
-          style: AppTextStyle.bodyXLSemiBold.copyWith(
+          style: AppTextStyle.bodyXLBold.copyWith(
             color: AppColors.grayscale900,
           ),
         ),
@@ -390,7 +390,6 @@ class _UserInsuranceComponent extends StatelessWidget {
     required this.titleName,
     required this.assignedElements,
     required this.isLast,
-    super.key,
   });
 
   final UserInsurance assignedElements;
@@ -440,7 +439,6 @@ class _EmergencyContactComponent extends StatelessWidget {
     required this.titleName,
     required this.assignedElements,
     required this.isLast,
-    super.key,
   });
 
   final EmergencyContact assignedElements;
@@ -490,7 +488,6 @@ class _PreferredServiceComponent extends StatelessWidget {
     required this.titleName,
     required this.assignedElements,
     required this.isLast,
-    super.key,
   });
 
   final PreferredService assignedElements;
