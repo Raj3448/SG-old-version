@@ -115,15 +115,11 @@ class FcmNotificationManager {
     var notification = _message.notification;
     message = _message;
     if (_message.data.isNotEmpty) {
+      GetIt.I<NotificationStore>().refresh();
       if (_message.data['actionType'] == 'openPage' &&
           _message.data['actionUrl'].contains('/bookingDetailsScreen')
               as bool) {
         GetIt.I<MembersStore>().refresh();
-      }
-      if (_message.data['actionType'] == 'openPage' &&
-          _message.data['actionUrl'].contains('/bookingServiceStatusDetailsPage')
-              as bool) {
-        GetIt.I<NotificationStore>().refresh();
       }
     }
     if (kDebugMode) {
