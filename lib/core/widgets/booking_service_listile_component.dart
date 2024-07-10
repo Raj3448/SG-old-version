@@ -27,7 +27,6 @@ class BookingListTileComponent extends StatelessWidget {
         context.pushNamed(
           RoutesConstants.bookingServiceStatusDetailsPage,
           pathParameters: {
-            'bookingServiceStatus': bookingServiceStatus.toString(),
             'serviceId': bookingServiceModel.id.toString(),
           },
         );
@@ -79,9 +78,8 @@ class BookingListTileComponent extends StatelessWidget {
                               .copyWith(color: AppColors.grayscale700),
                         ),
                         const Spacer(),
-                        if ((bookingServiceStatus ==
-                                BookingServiceStatus.requested) &&
-                            bookingServiceModel.paymentStatus == 'due')
+                        if (bookingServiceModel.status != 'completed' ||
+                            bookingServiceModel.paymentStatus != 'paid')
                           Container(
                             height: 24,
                             width: 105,
@@ -94,11 +92,11 @@ class BookingListTileComponent extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Text(
-                              bookingServiceStatus ==
-                                      BookingServiceStatus.requested
+                              (bookingServiceStatus ==
+                                          BookingServiceStatus.requested) &&
+                                      bookingServiceModel.paymentStatus == 'due'
                                   ? 'Due'
-                                  : (bookingServiceStatus ==
-                                          BookingServiceStatus.completed) && (bookingServiceModel.paymentStatus == 'rejected')
+                                  : (bookingServiceModel.status == 'rejected')
                                       ? 'Rejected'
                                       : formatDateTime(
                                           bookingServiceModel.requestedAt,

@@ -18,11 +18,9 @@ import 'package:silver_genie/feature/genie/services/product_listing_services.dar
 
 // Main screen for displaying service booking details
 class ServiceBookingDetailsScreen extends StatelessWidget {
-  final BookingServiceStatus bookingServiceStatus;
   final String serviceId;
 
   ServiceBookingDetailsScreen({
-    required this.bookingServiceStatus,
     required this.serviceId,
     Key? key,
   }) : super(key: key);
@@ -106,7 +104,7 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                             children: [
                               Icon(
                                 _getStatusIcon(),
-                                size: _getStatusIconSize(),
+                                size: _getStatusIconSize(servicePaymentStatusModel.paymentStatus),
                                 color: _getStatusIconColor(
                                     servicePaymentStatusModel.paymentStatus,
                                     servicePaymentStatusModel.status),
@@ -197,90 +195,56 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
   }
 
   IconData _getStatusIcon() {
-    switch (bookingServiceStatus) {
-      case BookingServiceStatus.active:
-        return AppIcons.medical_services;
-      case BookingServiceStatus.requested:
-        return Icons.error_outline_outlined;
-      default:
+    
         return AppIcons.check;
     }
   }
 
-  double _getStatusIconSize() {
-    return bookingServiceStatus == BookingServiceStatus.requested ? 16 : 14;
+  double _getStatusIconSize(String paymentStatus) {
+    return paymentStatus == 'due' || paymentStatus == 'due' ? 16 : 14;
   }
 
   Color _getStatusIconColor(String paymentStatus, String status) {
-    switch (bookingServiceStatus) {
-      case BookingServiceStatus.active:
-        return AppColors.grayscale800;
-      case BookingServiceStatus.requested:
-        if (paymentStatus == 'due' || paymentStatus == 'expired') {
+    if (paymentStatus == 'due' || paymentStatus == 'expired') {
           return AppColors.warning2;
         }
-        return AppColors.grayscale800;
-      default:
-        return AppColors.grayscale800;
-    }
+    return AppColors.grayscale800;
   }
 
   String _getStatusText(String paymentStatus, String status) {
-    switch (bookingServiceStatus) {
-      case BookingServiceStatus.active:
-        if (status == 'active' || status == 'processed') {
-          return 'Service scheduled';
-        } else if (status == 'requested' || status == 'processing') {
-          return 'Service in progress';
-        }
-        return 'Service In progress';
-      case BookingServiceStatus.requested:
+        
         if (paymentStatus == 'due') {
           return 'Payment pending';
-        } else if (paymentStatus == 'expired') {
+        } if (paymentStatus == 'expired') {
           return 'Payment failure';
-        } else if (status == 'requested' || status == 'processing') {
+        } if (status == 'requested' || status == 'processing') {
           return 'Service in progress';
-        } else if (status == 'active' || status == 'processed') {
+        }
+        if (status == 'active' || status == 'processed') {
           return 'Service scheduled';
         }
-        return '--';
-      // ignore: no_default_cases
-      default:
         if (status == 'rejected') {
           return 'Service rejected';
-        } else if (status == 'completed') {
+        } if (status == 'completed') {
           return 'Service completed';
-        } else if (status == 'requested' || status == 'processing') {
-          return 'Service in progress';
-        } else if (status == 'active' || status == 'processed') {
-          return 'Service scheduled';
         }
-        return '';
-    }
+        return 'Unknown';
   }
 
   Color _getStatusTextColor(String paymentStatus, String status) {
-    switch (bookingServiceStatus) {
-      case BookingServiceStatus.active:
-        return AppColors.grayscale800;
-      case BookingServiceStatus.requested:
         if (paymentStatus == 'due' || paymentStatus == 'expired') {
           return AppColors.warning2;
         }
         return AppColors.grayscale800;
-      default:
-        return AppColors.grayscale800;
-    }
   }
 
   String _getPaymentTextTitle(String paymentStatus, String status) {
-    if (paymentStatus == 'due' || paymentStatus == 'expired') {
-      return 'Total to pay';
-    }
-    return 'Total paid';
+      if (paymentStatus == 'due' || paymentStatus == 'expired') {
+        return 'Total to pay';
+      }
+      return 'Total paid';
   }
-}
+
 
 class ElementSpaceBetween extends StatelessWidget {
   ElementSpaceBetween({

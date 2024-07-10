@@ -423,17 +423,12 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: '/bookingServiceStatusDetailsPage/:bookingServiceStatus/:serviceId',
+      path: '/bookingServiceStatusDetailsPage/:serviceId',
       name: RoutesConstants.bookingServiceStatusDetailsPage,
       pageBuilder: (context, state) {
-        final bookingServiceStatusString =
-            state.pathParameters['bookingServiceStatus'];
-        final bookingServiceStatus = BookingServiceStatus.values
-            .firstWhere((e) => e.toString() == bookingServiceStatusString);
         final serviceId = state.pathParameters['serviceId'] ?? '';
         return MaterialPage(
           child: ServiceBookingDetailsScreen(
-            bookingServiceStatus: bookingServiceStatus,
             serviceId: serviceId,
           ),
         );
