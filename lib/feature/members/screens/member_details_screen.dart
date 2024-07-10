@@ -15,9 +15,11 @@ import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/epr_card.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
+import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -31,6 +33,8 @@ class MemberDetailsScreen extends StatelessWidget {
   final int memberId;
   final bool hasCareSub = true;
   final activeMember = GetIt.I<MembersStore>().activeMember;
+  final membersStore = GetIt.I<MembersStore>();
+  final store = GetIt.I<ProductListingStore>();
   @override
   Widget build(BuildContext context) {
     if (activeMember == null) {
@@ -102,7 +106,7 @@ class MemberDetailsScreen extends StatelessWidget {
                       .copyWith(color: AppColors.grayscale900),
                 ),
                 const SizedBox(height: 16),
-                if (hasCareSub)
+                if (activeMember!.subscriptions!.isNotEmpty)
                   Column(
                     children: [
                       HealthCard(
@@ -154,23 +158,15 @@ class MemberDetailsScreen extends StatelessWidget {
                         style: AppTextStyle.bodyXLBold
                             .copyWith(color: AppColors.grayscale900),
                       ),
-                      const SizedBox(height: Dimension.d6),
-                      SubscriptionPkg(
-                        expanded: true,
-                        type: SubscriptionsType.companion,
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      SubscriptionPkg(
-                        expanded: true,
-                        type: SubscriptionsType.wellness,
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      SubscriptionPkg(
-                        expanded: true,
-                        type: SubscriptionsType.emergency,
-                      ),
-                      const SizedBox(height: Dimension.d3),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: Dimension.d4),
+                      if (store.getSubscriptActiveProdList.isNotEmpty)
+                        ProductListingCareComponent(
+                          productBasicDetailsList: store.getProdListRankOrder(
+                            store.getSubscriptActiveProdList,
+                          ),
+                          isUpgradeable: false,
+                        ),
+                      const SizedBox(height: Dimension.d20),
                     ],
                   ),
               ],
@@ -241,20 +237,33 @@ class _BasicDetailsBox extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 18),
-          Row(
-            children: [
-              Text(
-                'Subscription: ',
-                style: AppTextStyle.bodyLargeMedium
-                    .copyWith(color: AppColors.grayscale700),
-              ),
-              const SizedBox(width: Dimension.d2),
-              SubscriptionPkg(
-                expanded: false,
-                type: SubscriptionsType.wellness,
-              ),
-            ],
-          ),
+          if (activeMember!.subscriptions!.isNotEmpty)
+            Row(
+              children: [
+                Text(
+                  'Subscription: ',
+                  style: AppTextStyle.bodyLargeMedium
+                      .copyWith(color: AppColors.grayscale700),
+                ),
+                const SizedBox(width: Dimension.d2),
+                SubscriptionPkg(
+                  expanded: false,
+                  type: (activeMember.subscriptions != null &&
+                          activeMember.subscriptions!.isNotEmpty)
+                      ? activeMember.subscriptions![0].product.name ==
+                              'Companion Genie'
+                          ? SubscriptionsType.companion
+                          : activeMember.subscriptions![0].product.name ==
+                                  'Wellness Genie'
+                              ? SubscriptionsType.wellness
+                              : activeMember.subscriptions![0].product.name ==
+                                      'Emergency Genie'
+                                  ? SubscriptionsType.emergency
+                                  : SubscriptionsType.inActive
+                      : SubscriptionsType.inActive,
+                ),
+              ],
+            ),
           const SizedBox(height: Dimension.d3),
           if (mobileNo!.isEmpty)
             const SizedBox()
@@ -311,7 +320,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
-                  'isSelf': user!.id == activeMember!.id ? 'true' : 'false',
+                  'isSelf': user!.id == activeMember.id ? 'true' : 'false',
                 },
               );
             },

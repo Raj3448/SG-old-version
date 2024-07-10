@@ -369,7 +369,7 @@ class SubscriptionData with _$SubscriptionData {
     required int amount,
     required String razorpaySubscriptionId,
     @JsonKey(name: 'razorpay_api_key') required String razorpayApiKey,
-    @JsonKey(name: 'Subscription') required Subscription subscription,
+    @JsonKey(name: 'Subscription') required Subscription? subscription,
   }) = _SubscriptionData;
 
   factory SubscriptionData.fromJson(Map<String, dynamic> json) =>

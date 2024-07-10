@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 // ignore_for_file: deprecated_member_use, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
@@ -24,8 +24,8 @@ class SubscriptionPkg extends StatelessWidget {
     this.onTap,
     this.iconUrl,
     this.backgroundColorCode,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final bool expanded;
   final SubscriptionsType type;
@@ -191,7 +191,7 @@ class SubscriptionPkg extends StatelessWidget {
           ),
         ),
       );
-    } else {
+    } else if (type != SubscriptionsType.inActive) {
       return Container(
         decoration: BoxDecoration(
           color: getContainerColor(),
@@ -212,6 +212,8 @@ class SubscriptionPkg extends StatelessWidget {
           ),
         ),
       );
+    } else {
+      return const SizedBox();
     }
   }
 }

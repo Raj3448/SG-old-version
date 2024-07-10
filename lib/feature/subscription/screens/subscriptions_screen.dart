@@ -266,7 +266,7 @@ class _UserDetailsComponent extends StatelessWidget {
                 else
                   Avatar.fromSize(
                     imgPath:
-                        '${Env.serverUrl}${memberDetails.belongsTo?.map((member) => member.profileImg?.url ?? '')}',
+                        '${Env.serverUrl}${memberDetails.belongsTo?.map((member) => member.profileImg?.url ?? '').join(' ')}',
                     size: AvatarSize.size24,
                   ),
                 const SizedBox(width: Dimension.d3),
