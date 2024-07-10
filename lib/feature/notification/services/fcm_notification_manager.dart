@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 
 class FcmNotificationManager {
@@ -112,6 +113,11 @@ class FcmNotificationManager {
   void _onMessageReceived(RemoteMessage _message) {
     var notification = _message.notification;
     message = _message;
+    if (_message.data.isNotEmpty &&
+        _message.data['actionType'] == 'openPage' &&
+        _message.data['actionUrl'].contains('/bookingDetailsScreen') as bool) {
+      GetIt.I<MembersStore>().refresh();
+    }
     if (kDebugMode) {
       print('Notification title: ${notification?.title}');
       print('Notification Body: ${notification?.body}');

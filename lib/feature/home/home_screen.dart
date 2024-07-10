@@ -775,12 +775,16 @@ class _ActivateListileComponent extends StatelessWidget {
   }
 }
 
-class _MemberInfo extends StatelessWidget {
+class _MemberInfo extends StatefulWidget {
   const _MemberInfo();
 
   @override
+  State<_MemberInfo> createState() => _MemberInfoState();
+}
+
+class _MemberInfoState extends State<_MemberInfo> {
+  @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<HomeStore>();
     final memberStore = GetIt.I<MembersStore>();
     return SingleChildScrollView(
       child: Column(
