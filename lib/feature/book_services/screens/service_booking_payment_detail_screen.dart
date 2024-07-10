@@ -21,6 +21,7 @@ import 'package:silver_genie/feature/book_services/widgets/booking_status.dart';
 import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class ServiceBookingPaymentDetailScreen extends StatefulWidget {
   final ServiceTrackerResponse paymentDetails;
@@ -37,6 +38,7 @@ class ServiceBookingPaymentDetailScreen extends StatefulWidget {
 class _ServiceBookingPaymentDetailScreenState
     extends State<ServiceBookingPaymentDetailScreen> {
   final store = GetIt.I<ProductListingStore>();
+  final memberStore = GetIt.I<MembersStore>();
   final bookingServiceStore = GetIt.I<BookingServiceStore>();
   bool pytmStatusLoading = false;
   late ReactionDisposer _reactionDisposer1;
@@ -57,6 +59,7 @@ class _ServiceBookingPaymentDetailScreenState
         }
         if (paymentStatus == PaymentStatus.success) {
           store.getPaymentStatus(id: widget.paymentDetails.id.toString());
+          memberStore.refresh();
         }
         store.paymentStatus = null;
         bookingServiceStore.refresh();

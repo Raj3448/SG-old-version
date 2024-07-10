@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable, lines_longer_than_80_chars
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
