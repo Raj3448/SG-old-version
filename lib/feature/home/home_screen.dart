@@ -782,7 +782,6 @@ class _MemberInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<HomeStore>();
     final memberStore = GetIt.I<MembersStore>();
     return SingleChildScrollView(
       child: Column(
@@ -1128,106 +1127,6 @@ class _NewsletterComponent extends StatelessWidget {
     );
   }
 }
-
-// Future<void> downloadAndSavePDF(
-//   String url,
-//   String fileName,
-//   BuildContext context,
-// ) async {
-//   try {
-//     Directory? directory;
-//     if (Platform.isAndroid) {
-//       directory = Directory('/storage/emulated/0/Download');
-//     } else if (Platform.isIOS) {
-//       directory = await getApplicationDocumentsDirectory();
-//     } else {
-//       throw UnsupportedError('Unsupported platform');
-//     }
-
-//     final filePath = '${directory.path}/$fileName.pdf';
-
-//     final dio = Dio();
-//     final response = await dio.download(url, filePath);
-
-//     if (await File(filePath).exists()) {
-//       // Delete existing file
-//       await File(filePath).delete();
-//     }
-
-//     if (response.statusCode == 200) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text(
-//             'File downloaded successfully: $filePath',
-//           ),
-//         ),
-//       );
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text(
-//             'Error downloading file!',
-//           ),
-//         ),
-//       );
-//     }
-//   } catch (e) {
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(
-//         content: Text(
-//           'Something went wrong!: $e',
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:path_provider/path_provider.dart';
-
-// Future<void> downloadAndSavePDF(
-//   String url,
-//   String fileName,
-//   BuildContext context,
-// ) async {
-//   try {
-//     Directory? directory;
-//     if (Platform.isAndroid) {
-//       if (await Permission.storage.request().isGranted) {
-//         directory = Directory('/storage/emulated/0/Download');
-//       } else {
-//         // Use the app's external storage directory as a fallback
-//         directory = await getExternalStorageDirectory();
-//       }
-//     } else if (Platform.isIOS) {
-//       directory = await getApplicationDocumentsDirectory();
-//     } else {
-//       throw UnsupportedError('Unsupported platform');
-//     }
-
-//     if (directory == null) {
-//       throw Exception('Could not access storage directory');
-//     }
-
-//     final filePath = '${directory.path}/$fileName.pdf';
-//     final dio = Dio();
-//     final response = await dio.download(url, filePath);
-
-//     if (response.statusCode == 200) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('File downloaded successfully: $filePath')),
-//       );
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text('Error downloading file!')),
-//       );
-//     }
-//   } catch (e) {
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(content: Text('Something went wrong!: $e')),
-//     );
-//   }
-// }
 
 Future<void> downloadAndSavePDF(
   String url,
