@@ -210,7 +210,6 @@ PaymentStatus getPaymentStatus(
     return PaymentStatus.pending;
   }
   if (paymentStatus == 'paid') {
-    GetIt.I<NotificationStore>().refresh();
     return PaymentStatus.success;
   } else {
     return PaymentStatus.failure;
