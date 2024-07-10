@@ -78,8 +78,10 @@ class BookingListTileComponent extends StatelessWidget {
                               .copyWith(color: AppColors.grayscale700),
                         ),
                         const Spacer(),
-                        if (bookingServiceModel.status != 'completed' ||
-                            bookingServiceModel.paymentStatus != 'paid')
+                        if (!(bookingServiceModel.paymentStatus == 'paid' &&
+                                bookingServiceStatus ==
+                                    BookingServiceStatus.requested) &&
+                            bookingServiceModel.status != 'completed')
                           Container(
                             height: 24,
                             width: 105,
