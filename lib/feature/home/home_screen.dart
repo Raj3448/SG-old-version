@@ -3,6 +3,7 @@
 
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -10,6 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -1127,50 +1129,251 @@ class _NewsletterComponent extends StatelessWidget {
   }
 }
 
+// Future<void> downloadAndSavePDF(
+//   String url,
+//   String fileName,
+//   BuildContext context,
+// ) async {
+//   try {
+//     Directory? directory;
+//     if (Platform.isAndroid) {
+//       directory = Directory('/storage/emulated/0/Download');
+//     } else if (Platform.isIOS) {
+//       directory = await getApplicationDocumentsDirectory();
+//     } else {
+//       throw UnsupportedError('Unsupported platform');
+//     }
+
+//     final filePath = '${directory.path}/$fileName.pdf';
+
+//     final dio = Dio();
+//     final response = await dio.download(url, filePath);
+
+//     if (await File(filePath).exists()) {
+//       // Delete existing file
+//       await File(filePath).delete();
+//     }
+
+//     if (response.statusCode == 200) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text(
+//             'File downloaded successfully: $filePath',
+//           ),
+//         ),
+//       );
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text(
+//             'Error downloading file!',
+//           ),
+//         ),
+//       );
+//     }
+//   } catch (e) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text(
+//           'Something went wrong!: $e',
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// import 'package:permission_handler/permission_handler.dart';
+// import 'package:path_provider/path_provider.dart';
+
+// Future<void> downloadAndSavePDF(
+//   String url,
+//   String fileName,
+//   BuildContext context,
+// ) async {
+//   try {
+//     Directory? directory;
+//     if (Platform.isAndroid) {
+//       if (await Permission.storage.request().isGranted) {
+//         directory = Directory('/storage/emulated/0/Download');
+//       } else {
+//         // Use the app's external storage directory as a fallback
+//         directory = await getExternalStorageDirectory();
+//       }
+//     } else if (Platform.isIOS) {
+//       directory = await getApplicationDocumentsDirectory();
+//     } else {
+//       throw UnsupportedError('Unsupported platform');
+//     }
+
+//     if (directory == null) {
+//       throw Exception('Could not access storage directory');
+//     }
+
+//     final filePath = '${directory.path}/$fileName.pdf';
+//     final dio = Dio();
+//     final response = await dio.download(url, filePath);
+
+//     if (response.statusCode == 200) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('File downloaded successfully: $filePath')),
+//       );
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(content: Text('Error downloading file!')),
+//       );
+//     }
+//   } catch (e) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('Something went wrong!: $e')),
+//     );
+//   }
+// }
+
 Future<void> downloadAndSavePDF(
   String url,
   String fileName,
   BuildContext context,
 ) async {
   try {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    final androidVersion = androidInfo.version.sdkInt;
+
     Directory? directory;
-    if (Platform.isAndroid) {
-      directory = Directory('/storage/emulated/0/Download');
-    } else if (Platform.isIOS) {
-      directory = await getApplicationDocumentsDirectory();
+    bool permissionGranted = false;
+
+    if (androidVersion < 30) {
+      permissionGranted = await _requestStoragePermission(context);
+      if (permissionGranted) {
+        directory = Directory('/storage/emulated/0/Download');
+      } else {
+        return;
+      }
     } else {
-      throw UnsupportedError('Unsupported platform');
+      permissionGranted =
+          await _requestManageExternalStoragePermission(context);
+      if (permissionGranted) {
+        directory = await getExternalStorageDirectory();
+      } else {
+        return;
+      }
+    }
+
+    if (directory == null) {
+      throw Exception('Could not access storage directory');
+    }
+
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
     }
 
     final filePath = '${directory.path}/$fileName.pdf';
-
     final dio = Dio();
     final response = await dio.download(url, filePath);
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'File downloaded successfully: $filePath',
-          ),
-        ),
+        SnackBar(content: Text('File downloaded successfully: $filePath')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Error downloading file!',
-          ),
-        ),
+        const SnackBar(content: Text('Error downloading file!')),
       );
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Something went wrong!',
-        ),
-      ),
+      SnackBar(content: Text('Something went wrong!: $e')),
     );
   }
+}
+
+Future<bool> _requestStoragePermission(BuildContext context) async {
+  var status = await Permission.storage.status;
+  if (status.isGranted) {
+    return true;
+  }
+
+  status = await Permission.storage.request();
+  if (status.isGranted) {
+    return true;
+  }
+
+  if (status.isPermanentlyDenied) {
+    _showPermissionDeniedDialog(context, 'storage');
+  } else {
+    _showPermissionExplanationDialog(context, 'storage');
+  }
+
+  return false;
+}
+
+Future<bool> _requestManageExternalStoragePermission(
+  BuildContext context,
+) async {
+  var status = await Permission.manageExternalStorage.status;
+  if (status.isGranted) {
+    return true;
+  }
+
+  status = await Permission.manageExternalStorage.request();
+  if (status.isGranted) {
+    return true;
+  }
+
+  if (status.isPermanentlyDenied) {
+    _showPermissionDeniedDialog(context, 'manage external storage');
+  } else {
+    _showPermissionExplanationDialog(context, 'manage external storage');
+  }
+
+  return false;
+}
+
+void _showPermissionDeniedDialog(BuildContext context, String permissionName) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      backgroundColor: AppColors.white,
+      surfaceTintColor: AppColors.white,
+      title: const Text('Permission Required'),
+      content: Text(
+        '$permissionName permission is required to download files. Please enable it in app settings.',
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        TextButton(
+          child: const Text('Open Settings'),
+          onPressed: () {
+            openAppSettings();
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+void _showPermissionExplanationDialog(
+  BuildContext context,
+  String permissionName,
+) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      backgroundColor: AppColors.white,
+      surfaceTintColor: AppColors.white,
+      title: const Text('Permission Required'),
+      content: Text(
+        '$permissionName permission is required to download files. Please grant the permission when prompted.',
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('OK'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+    ),
+  );
 }
