@@ -12,6 +12,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
+import 'package:silver_genie/feature/notification/store/notification_store.dart';
 
 class FcmNotificationManager {
   FcmNotificationManager._internal();
@@ -113,10 +114,17 @@ class FcmNotificationManager {
   void _onMessageReceived(RemoteMessage _message) {
     var notification = _message.notification;
     message = _message;
-    if (_message.data.isNotEmpty &&
-        _message.data['actionType'] == 'openPage' &&
-        _message.data['actionUrl'].contains('/bookingDetailsScreen') as bool) {
-      GetIt.I<MembersStore>().refresh();
+    if (_message.data.isNotEmpty) {
+      if (_message.data['actionType'] == 'openPage' &&
+          _message.data['actionUrl'].contains('/bookingDetailsScreen')
+              as bool) {
+        GetIt.I<MembersStore>().refresh();
+      }
+      if (_message.data['actionType'] == 'openPage' &&
+          _message.data['actionUrl'].contains('/bookingServiceStatusDetailsPage')
+              as bool) {
+        GetIt.I<NotificationStore>().refresh();
+      }
     }
     if (kDebugMode) {
       print('Notification title: ${notification?.title}');
@@ -169,14 +177,14 @@ class FcmNotificationManager {
   Future<void> _handleMessage(RemoteMessage? msg) async {
     // Handle the message when the app is opened from a notification
     // You can navigate to a specific screen here
-    if (msg != null) {
+    if (msg != null && msg.data.isNotEmpty) {
       if (msg.data['actionType'] == 'openPage' &&
           msg.data['actionUrl'] != null &&
           msg.data['actionUrl'] != '/') {
         if (isBottomNavScreen(msg.data['actionUrl'] as String)) {
-          context?.goNamed(msg.data['actionUrl'].toString());
+          context?.go(msg.data['actionUrl'].toString());
         } else {
-          await context?.pushNamed(msg.data['actionUrl'].toString());
+          context?.push(msg.data['actionUrl'].toString());
         }
       }
     }
