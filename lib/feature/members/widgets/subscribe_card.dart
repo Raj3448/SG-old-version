@@ -4,41 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
 
 class SubscribeCard extends StatelessWidget {
   const SubscribeCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: AppColors.line),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Text(
-            "Sorry, No Available health records for\nthis family member. To create EPR &\nPHR please subscribe to Silvergenie's\nElder care",
-            textAlign: TextAlign.center,
-            style: AppTextStyle.bodyLargeMedium.copyWith(
-              color: AppColors.grayscale700,
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.line),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Text(
+              "Sorry, No Available health records for\nthis family member. To create EPR &\nPHR please subscribe to Silvergenie's\nElder care",
+              textAlign: TextAlign.center,
+              style: AppTextStyle.bodyLargeMedium.copyWith(
+                color: AppColors.grayscale700,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          CustomButton(
-            ontap: () {},
-            title: 'Subscribe',
-            showIcon: false,
-            iconPath: AppIcons.add,
-            size: ButtonSize.normal,
-            type: ButtonType.primary,
-            expanded: true,
-            iconColor: AppColors.white,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
