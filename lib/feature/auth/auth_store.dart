@@ -2,8 +2,12 @@
 
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
+import 'package:silver_genie/feature/home/repository/local/home_page_details.dart';
+import 'package:silver_genie/feature/home/repository/local/master_data_cache.dart';
+import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
@@ -56,6 +60,9 @@ abstract class _AuthStoreBase with Store {
       GetIt.I<UserDetailStore>().clear();
       GetIt.I<BookingServiceStore>().clear();
       GetIt.I<NotificationStore>().clear();
+      GetIt.I<HomePageComponentDetailscache>().clear();
+      GetIt.I<MasterdDateCache>().clear();
+      homeStore.clear();
     });
   }
 }

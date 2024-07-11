@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
+import 'package:silver_genie/feature/home/model/master_data_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 const TOKEN_BOX_NAME = 'jwt_token_box';
@@ -14,12 +15,28 @@ const USER_DETAILS_BOX_KEY = 'userDetails_box_key';
 const HOMEPAGE_DETAILS_BOX_NAME = 'homePageDetails';
 const HOMEPAGE_DETAILS_BOX_Key = 'homePageBoxKey';
 
+const MASTER_DATA_BOX_NAME = 'masterdata-box';
+const MASTER_DATA_BOX_KEY = 'masterdata-box-KEY';
+
 const storage = FlutterSecureStorage();
 
 Future<void> setupHiveBox() async {
   await initializeBoxForToken();
   await initializeBoxForUserDetails();
   await initializeBoxForHomePageDetails();
+  await initializeBoxForMasterData();
+}
+
+Future<void> initializeBoxForMasterData() async {
+  Hive
+    ..registerAdapter(MasterDataModelAdapter())
+    ..registerAdapter(MasterDataAdapter())
+    ..registerAdapter(ContactUsAdapter())
+    ..registerAdapter(EmergencyHelplineAdapter());
+  await Hive.openBox<MasterDataModel>(
+    MASTER_DATA_BOX_NAME,
+    compactionStrategy: (int total, int deleted) => deleted > 2,
+  );
 }
 
 Future<void> initializeBoxForHomePageDetails() async {

@@ -9,8 +9,10 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/epr_card.dart';
@@ -56,7 +58,7 @@ class MemberDetailsScreen extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return const InfoDialog(
+                      return InfoDialog(
                         showIcon: false,
                         title: 'Hi there!!',
                         desc:
@@ -64,6 +66,14 @@ class MemberDetailsScreen extends StatelessWidget {
                         btnTitle: 'Contact Genie',
                         showBtnIcon: true,
                         btnIconPath: AppIcons.phone,
+                        onTap: () {
+                          launchDialer(homeStore
+                                                  .masterdata
+                                                  ?.masterData
+                                                  .contactUs.contactNumber ??
+                                              '')
+                                          .then((value) => GoRouter.of(context).pop(),);
+                        },
                       );
                     },
                   );

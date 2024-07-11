@@ -17,6 +17,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
@@ -31,7 +32,6 @@ import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
-import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
@@ -51,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late final MembersStore memberStore;
   late final productLStore = GetIt.I<ProductListingStore>();
   final bookingServiceStore = GetIt.I<BookingServiceStore>();
-  final homestore = GetIt.I<HomeStore>();
 
   @override
   void initState() {
@@ -143,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : const _MemberInfo(),
                       ),
                       if (memberStore.members.isNotEmpty)
-                        _EmergencyActivation(memberStore: memberStore),
+                        _EmergencyActivation(
+                          memberStore: memberStore,
+                        ),
                       if (bookingServiceStore.isAllServiceLoaded)
                         _ActiveBookingComponent(store: bookingServiceStore),
                       Text(
@@ -212,9 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      _HomeScreenComponents(
-                        homestore: homestore,
-                      ),
+                      const _HomeScreenComponents(),
                     ],
                   ),
                 );
@@ -228,16 +227,14 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _HomeScreenComponents extends StatelessWidget {
-  const _HomeScreenComponents({required this.homestore, super.key});
-
-  final HomeStore homestore;
+  const _HomeScreenComponents({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (!homestore.isHomepageDataLoaded) {
+    if (!homeStore.isHomepageDataLoaded) {
       return const SizedBox();
     }
-    final componentDetailsList = homestore.isHomepageData;
+    final componentDetailsList = homeStore.isHomepageData;
     final widgetList = <Widget>[];
     for (final component in componentDetailsList) {
       if (component is AboutUsOfferModel) {
@@ -552,7 +549,9 @@ class _TestmonialsCard extends StatelessWidget {
 
 class _EmergencyActivation extends StatelessWidget {
   final MembersStore memberStore;
-  const _EmergencyActivation({required this.memberStore});
+  const _EmergencyActivation({
+    required this.memberStore,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -632,7 +631,9 @@ class _EmergencyActivation extends StatelessWidget {
 
 class _EmergencyActivateBottomSheet extends StatefulWidget {
   final MembersStore memberStore;
-  const _EmergencyActivateBottomSheet({required this.memberStore});
+  const _EmergencyActivateBottomSheet({
+    required this.memberStore,
+  });
   @override
   State<_EmergencyActivateBottomSheet> createState() =>
       _EmergencyActivateBottomSheetState();
@@ -698,10 +699,16 @@ class _EmergencyActivateBottomSheetState
                       relation:
                           widget.memberStore.familyMembers[index].relation,
                       onPressed: () async {
-                        await launchDialer('+910000000000');
-                        setState(() {
-                          isActivate = true;
-                        });
+                        await launchDialer(homeStore.masterdata?.masterData
+                                    .emergencyHelpline.contactNumber ??
+                                '')
+                            .then(
+                          (value) {
+                            setState(() {
+                              isActivate = true;
+                            });
+                          },
+                        );
                       },
                       imgUrl: widget
                           .memberStore.familyMembers[index].profileImg?.url,

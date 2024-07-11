@@ -7,22 +7,20 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
-import 'package:silver_genie/core/widgets/booking_service_listile_component.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/book_services/screens/all_services_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/book_service_screen.dart';
-import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/payment_status_tracking_page.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/service_details_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/bookings/booking_details_screen.dart';
 import 'package:silver_genie/feature/bookings/bookings_screen.dart';
 import 'package:silver_genie/feature/bookings/service_booking_details_screen.dart';
-import 'package:silver_genie/feature/emergency_services/emergency_services.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/couple_plan_page.dart';
 import 'package:silver_genie/feature/genie/screens/genie_page.dart';
@@ -44,7 +42,6 @@ import 'package:silver_genie/feature/notification/notification_screen.dart';
 import 'package:silver_genie/feature/onboarding/onboarding_screen.dart';
 import 'package:silver_genie/feature/onboarding/store/onboarding_store.dart';
 import 'package:silver_genie/feature/screens/splashscreen.dart';
-import 'package:silver_genie/feature/subscription/screens/sg_subscription_plan_page.dart';
 import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/profile_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
@@ -241,13 +238,6 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
-      path: RoutesConstants.emergencyServiceScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: EmergencyServices());
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
       path: '/notificationScreen',
       name: RoutesConstants.notificationScreen,
       pageBuilder: (context, state) {
@@ -322,14 +312,6 @@ final GoRouter routes = GoRouter(
             memberId: memberId ?? '',
           ),
         );
-      },
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      path: '/sgSubscriptionPage',
-      name: RoutesConstants.sgSubscriptionPage,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: sgSubscriptionPage());
       },
     ),
     GoRoute(

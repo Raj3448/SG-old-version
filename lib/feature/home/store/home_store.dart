@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/home/model/family_model.dart';
+import 'package:silver_genie/feature/home/model/master_data_model.dart';
 import 'package:silver_genie/feature/home/services/home_services.dart';
 
 part 'home_store.g.dart';
@@ -31,6 +32,13 @@ abstract class _HomeScreenStore with Store {
 
   @observable
   Either<Failure, List<dynamic>>? homePageComponentDetailsList;
+
+  @observable
+  MasterDataModel? masterdata;
+
+  @observable
+  String? masterDataFailure;
+
   @computed
   bool get isHomepageDataLoaded =>
       homePageComponentDetailsList != null &&
@@ -45,23 +53,61 @@ abstract class _HomeScreenStore with Store {
   @observable
   bool isHomepageComponentRefreshing = false;
 
+  @observable
+  bool isMasterdataInitialloading = false;
+
   @action
   void initHomePageData() {
     isHomepageComponentInitialloading = true;
 
-    homeServices.getHomePageInfoCache().then((data) {
-      if (data != null) {
-        homePageComponentDetailsList = right(data);
+    final data = homeServices.getHomePageInfoCache();
+    if (data != null) {
+      homePageComponentDetailsList = right(data);
+      isHomepageComponentInitialloading = false;
+      refreshHomePageData();
+      return;
+    } else {
+      homeServices.getHomePageInfo().then((value) {
+        homePageComponentDetailsList = value;
         isHomepageComponentInitialloading = false;
-        refreshHomePageData();
-        return;
-      } else {
-        homeServices.getHomePageInfo().then((value) {
-          homePageComponentDetailsList = value;
-          isHomepageComponentInitialloading = false;
+      });
+    }
+  }
+
+  @action
+  void initMasterdata() {
+    isMasterdataInitialloading = true;
+    final data = homeServices.getMasterdataCache();
+    if (data != null) {
+      masterdata = data;
+      isMasterdataInitialloading = false;
+      refreshMasterdata();
+    } else {
+      homeServices.getMasterData().then(
+        (value) {
+          value.fold(
+            (l) {
+              l.maybeMap(
+                  socketError: (value) => masterDataFailure = 'No Internet',
+                  orElse: () => masterDataFailure = 'Something went wrong');
+            },
+            (r) => masterdata = r,
+          );
+          isMasterdataInitialloading = false;
+        },
+      );
+    }
+  }
+
+  @action
+  void refreshMasterdata() {
+    homeServices.getMasterData().then(
+      (value) {
+        value.fold((l) => null, (r) {
+          masterdata = r;
         });
-      }
-    });
+      },
+    );
   }
 
   @action
@@ -73,5 +119,10 @@ abstract class _HomeScreenStore with Store {
       (r) => {homePageComponentDetailsList = right(r)},
     );
     isHomepageComponentRefreshing = false;
+  }
+
+  void clear() {
+    homePageComponentDetailsList = null;
+    masterdata = null;
   }
 }
