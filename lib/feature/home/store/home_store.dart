@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/feature/home/model/family_model.dart';
+import 'package:silver_genie/feature/home/model/master_data_model.dart';
 import 'package:silver_genie/feature/home/services/home_services.dart';
 
 part 'home_store.g.dart';
@@ -31,10 +32,23 @@ abstract class _HomeScreenStore with Store {
 
   @observable
   Either<Failure, List<dynamic>>? homePageComponentDetailsList;
+
   @computed
   bool get isHomepageDataLoaded =>
       homePageComponentDetailsList != null &&
       homePageComponentDetailsList!.isRight();
+
+  @computed
+  MasterDataModel? get getMasterDataModel => isHomepageDataLoaded
+      ? homePageComponentDetailsList!
+          .getOrElse(
+            (l) => [],
+          )
+          .firstWhere(
+            (element) => element is MasterDataModel,
+            orElse: () => null,
+          ) as MasterDataModel?
+      : null;
 
   @computed
   List<dynamic> get isHomepageData => homePageComponentDetailsList!
@@ -49,19 +63,18 @@ abstract class _HomeScreenStore with Store {
   void initHomePageData() {
     isHomepageComponentInitialloading = true;
 
-    homeServices.getHomePageInfoCache().then((data) {
-      if (data != null) {
-        homePageComponentDetailsList = right(data);
+    final data = homeServices.getHomePageInfoCache();
+    if (data != null) {
+      homePageComponentDetailsList = right(data);
+      isHomepageComponentInitialloading = false;
+      refreshHomePageData();
+      return;
+    } else {
+      homeServices.getHomePageInfo().then((value) {
+        homePageComponentDetailsList = value;
         isHomepageComponentInitialloading = false;
-        refreshHomePageData();
-        return;
-      } else {
-        homeServices.getHomePageInfo().then((value) {
-          homePageComponentDetailsList = value;
-          isHomepageComponentInitialloading = false;
-        });
-      }
-    });
+      });
+    }
   }
 
   @action
@@ -73,5 +86,9 @@ abstract class _HomeScreenStore with Store {
       (r) => {homePageComponentDetailsList = right(r)},
     );
     isHomepageComponentRefreshing = false;
+  }
+
+  void clear() {
+    homePageComponentDetailsList = null;
   }
 }

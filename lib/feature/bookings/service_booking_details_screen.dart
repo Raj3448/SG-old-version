@@ -197,7 +197,9 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
   }
 
   IconData _getStatusIcon(String paymentStatus, String status) {
-    if (paymentStatus == 'due' || paymentStatus == 'expired') {
+    if (paymentStatus == 'due' ||
+        paymentStatus == 'expired' ||
+        status == 'rejected') {
       return AppIcons.warning;
     }
     if (status == 'requested' || status == 'processing') {

@@ -22,7 +22,6 @@ import 'package:silver_genie/core/utils/token_manager.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/bookings/services/booking_service.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
-import 'package:silver_genie/feature/emergency_services/store/emergency_service_store.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/repository/local/home_page_details.dart';
@@ -93,8 +92,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HomeService(
           httpClient: GetIt.I<HttpClient>(),
-          homePageComponentDetailscache:
-              GetIt.I<HomePageComponentDetailscache>(),
+          homePageComponentDetailscache: GetIt.I<HomePageComponentDetailscache>(),
+          
         ),
       );
       GetIt.instance.registerLazySingleton(
@@ -129,7 +128,6 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => EmergencyServiceStore());
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(
         () =>
