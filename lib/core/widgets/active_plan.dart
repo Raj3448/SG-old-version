@@ -290,55 +290,68 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: CustomButton(
-                    ontap: widget.activeMember.phrModel?.id == null
-                        ? null
-                        : () {
-                            GoRouter.of(context).pushNamed(
-                              RoutesConstants.phrPdfViewPage,
-                              pathParameters: {
-                                'memberPhrId':
-                                    '${widget.activeMember.phrModel?.id}',
-                              },
-                            );
-                          },
-                    title: 'View PHR',
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    size: ButtonSize.small,
-                    type: widget.activeMember.phrModel?.id == null
-                        ? ButtonType.disable
-                        : ButtonType.secondary,
-                    expanded: true,
-                    iconColor: AppColors.primary,
+            Observer(builder: (_) {
+              final hasPHR = widget.activeMember.subscriptions?[0].benefits
+                      ?.any((benefits) => benefits.code == 'PHR') ??
+                  false;
+              final hasEPR = widget.activeMember.subscriptions?[0].benefits
+                      ?.any((benefits) => benefits.code == 'EPR') ??
+                  false;
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      ontap: hasPHR == false
+                          ? null
+                          : () {
+                              GoRouter.of(context).pushNamed(
+                                RoutesConstants.phrPdfViewPage,
+                                pathParameters: {
+                                  'memberPhrId':
+                                      '${widget.activeMember.phrModel?.id}',
+                                },
+                              );
+                            },
+                      title: 'View PHR',
+                      showIcon: false,
+                      iconPath: Icons.not_interested,
+                      size: ButtonSize.small,
+                      type: hasPHR == false
+                          ? ButtonType.disable
+                          : ButtonType.secondary,
+                      expanded: true,
+                      iconColor: AppColors.primary,
+                    ),
                   ),
-                ),
-                const SizedBox(width: Dimension.d4),
-                Expanded(
-                  child: CustomButton(
-                    ontap: () {
-                      GoRouter.of(context).pushNamed(
-                        RoutesConstants.eprRoute,
-                        pathParameters: {
-                          'memberId': '${widget.activeMember.id}',
-                        },
-                      );
-                    },
-                    title: 'View EPR',
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    size: ButtonSize.small,
-                    type: ButtonType.secondary,
-                    expanded: true,
-                    iconColor: AppColors.primary,
+                  const SizedBox(width: Dimension.d4),
+                  Expanded(
+                    child: CustomButton(
+                      ontap: hasEPR == false
+                          ? null
+                          : () {
+                              GoRouter.of(context).pushNamed(
+                                RoutesConstants.eprRoute,
+                                pathParameters: {
+                                  'memberId': '${widget.activeMember.id}',
+                                },
+                              );
+                            },
+                      title: 'View EPR',
+                      showIcon: false,
+                      iconPath: Icons.not_interested,
+                      size: ButtonSize.small,
+                      type: hasEPR == false
+                          ? ButtonType.disable
+                          : ButtonType.secondary,
+                      expanded: true,
+                      iconColor: AppColors.primary,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
             if (memberStore.activeMember != null &&
                 memberStore.activeMember!.subscriptions != null)
               Observer(
