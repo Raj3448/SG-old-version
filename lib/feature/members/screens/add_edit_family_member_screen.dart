@@ -496,7 +496,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 controller: countryContr,
-                                searchEnabled: true,
                                 showClear: false,
                                 values: _countryItems,
                                 validator: (selectedItems) {
