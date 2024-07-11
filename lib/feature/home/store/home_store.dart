@@ -33,16 +33,22 @@ abstract class _HomeScreenStore with Store {
   @observable
   Either<Failure, List<dynamic>>? homePageComponentDetailsList;
 
-  @observable
-  MasterDataModel? masterdata;
-
-  @observable
-  String? masterDataFailure;
-
   @computed
   bool get isHomepageDataLoaded =>
       homePageComponentDetailsList != null &&
       homePageComponentDetailsList!.isRight();
+
+  @computed
+  MasterDataModel? get getMasterDataModel => isHomepageDataLoaded
+      ? homePageComponentDetailsList!
+          .getOrElse(
+            (l) => [],
+          )
+          .firstWhere(
+            (element) => element is MasterDataModel,
+            orElse: () => null,
+          ) as MasterDataModel?
+      : null;
 
   @computed
   List<dynamic> get isHomepageData => homePageComponentDetailsList!
@@ -52,9 +58,6 @@ abstract class _HomeScreenStore with Store {
   bool isHomepageComponentInitialloading = false;
   @observable
   bool isHomepageComponentRefreshing = false;
-
-  @observable
-  bool isMasterdataInitialloading = false;
 
   @action
   void initHomePageData() {
@@ -75,42 +78,6 @@ abstract class _HomeScreenStore with Store {
   }
 
   @action
-  void initMasterdata() {
-    isMasterdataInitialloading = true;
-    final data = homeServices.getMasterdataCache();
-    if (data != null) {
-      masterdata = data;
-      isMasterdataInitialloading = false;
-      refreshMasterdata();
-    } else {
-      homeServices.getMasterData().then(
-        (value) {
-          value.fold(
-            (l) {
-              l.maybeMap(
-                  socketError: (value) => masterDataFailure = 'No Internet',
-                  orElse: () => masterDataFailure = 'Something went wrong');
-            },
-            (r) => masterdata = r,
-          );
-          isMasterdataInitialloading = false;
-        },
-      );
-    }
-  }
-
-  @action
-  void refreshMasterdata() {
-    homeServices.getMasterData().then(
-      (value) {
-        value.fold((l) => null, (r) {
-          masterdata = r;
-        });
-      },
-    );
-  }
-
-  @action
   Future<void> refreshHomePageData() async {
     isHomepageComponentRefreshing = true;
     final responseData = await homeServices.getHomePageInfo();
@@ -123,6 +90,5 @@ abstract class _HomeScreenStore with Store {
 
   void clear() {
     homePageComponentDetailsList = null;
-    masterdata = null;
   }
 }

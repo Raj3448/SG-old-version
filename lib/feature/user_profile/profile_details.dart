@@ -310,7 +310,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                     btnIconPath: AppIcons.phone,
                                     onTap: () {
                                       launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')
@@ -346,7 +346,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                     btnIconPath: AppIcons.phone,
                                     onTap: () {
                                       launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')

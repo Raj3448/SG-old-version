@@ -15,28 +15,12 @@ const USER_DETAILS_BOX_KEY = 'userDetails_box_key';
 const HOMEPAGE_DETAILS_BOX_NAME = 'homePageDetails';
 const HOMEPAGE_DETAILS_BOX_Key = 'homePageBoxKey';
 
-const MASTER_DATA_BOX_NAME = 'masterdata-box';
-const MASTER_DATA_BOX_KEY = 'masterdata-box-KEY';
-
 const storage = FlutterSecureStorage();
 
 Future<void> setupHiveBox() async {
   await initializeBoxForToken();
   await initializeBoxForUserDetails();
   await initializeBoxForHomePageDetails();
-  await initializeBoxForMasterData();
-}
-
-Future<void> initializeBoxForMasterData() async {
-  Hive
-    ..registerAdapter(MasterDataModelAdapter())
-    ..registerAdapter(MasterDataAdapter())
-    ..registerAdapter(ContactUsAdapter())
-    ..registerAdapter(EmergencyHelplineAdapter());
-  await Hive.openBox<MasterDataModel>(
-    MASTER_DATA_BOX_NAME,
-    compactionStrategy: (int total, int deleted) => deleted > 2,
-  );
 }
 
 Future<void> initializeBoxForHomePageDetails() async {
@@ -56,7 +40,11 @@ Future<void> initializeBoxForHomePageDetails() async {
     ..registerAdapter(OfferAdapter())
     ..registerAdapter(ValueAdapter())
     ..registerAdapter(NewsletterAdapter())
-    ..registerAdapter(NewsletterModelAdapter());
+    ..registerAdapter(NewsletterModelAdapter())
+    ..registerAdapter(MasterDataModelAdapter())
+    ..registerAdapter(MasterDataAdapter())
+    ..registerAdapter(ContactUsAdapter())
+    ..registerAdapter(EmergencyHelplineAdapter());
   await Hive.openBox<List<dynamic>>(
     HOMEPAGE_DETAILS_BOX_NAME,
     compactionStrategy: (int total, int deleted) => deleted > 2,

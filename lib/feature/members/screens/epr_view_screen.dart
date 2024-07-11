@@ -167,7 +167,7 @@ class EPRViewScreen extends StatelessWidget {
                       showBtnIcon: true,
                       btnIconPath: AppIcons.phone,
                       onTap: () {
-                        launchDialer(homeStore.masterdata?.masterData
+                        launchDialer(homeStore.getMasterDataModel?.masterData
                                                   .contactUs.contactNumber ??
                                 '')
                             .then(

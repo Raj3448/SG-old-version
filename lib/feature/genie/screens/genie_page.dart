@@ -136,7 +136,7 @@ class _GeniePageState extends State<GeniePage> {
                                                   btnIconPath: AppIcons.phone,
                                                   onTap: () {
                                                     launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')

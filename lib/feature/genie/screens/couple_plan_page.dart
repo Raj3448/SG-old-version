@@ -158,7 +158,7 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
                                             launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')

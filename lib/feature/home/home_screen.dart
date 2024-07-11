@@ -32,6 +32,7 @@ import 'package:silver_genie/core/widgets/member_creation.dart';
 import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
+import 'package:silver_genie/feature/home/model/master_data_model.dart';
 import 'package:silver_genie/feature/home/widgets/no_member.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/notification/services/fcm_notification_manager.dart';
@@ -141,9 +142,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )
                                 : const _MemberInfo(),
                       ),
-                      if (memberStore.members.isNotEmpty)
+                      if (memberStore.members.isNotEmpty &&
+                          homeStore.getMasterDataModel != null)
                         _EmergencyActivation(
                           memberStore: memberStore,
+                          emergencyHelpline: homeStore.getMasterDataModel!.masterData.emergencyHelpline,
                         ),
                       if (bookingServiceStore.isAllServiceLoaded)
                         _ActiveBookingComponent(store: bookingServiceStore),
@@ -213,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      const _HomeScreenComponents(),
+                      _HomeScreenComponents(),
                     ],
                   ),
                 );
@@ -549,9 +552,9 @@ class _TestmonialsCard extends StatelessWidget {
 
 class _EmergencyActivation extends StatelessWidget {
   final MembersStore memberStore;
-  const _EmergencyActivation({
-    required this.memberStore,
-  });
+  final EmergencyHelpline emergencyHelpline;
+  const _EmergencyActivation(
+      {required this.memberStore, required this.emergencyHelpline});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -595,8 +598,8 @@ class _EmergencyActivation extends StatelessWidget {
                           ? null
                           : const NeverScrollableScrollPhysics(),
                       child: _EmergencyActivateBottomSheet(
-                        memberStore: memberStore,
-                      ),
+                          memberStore: memberStore,
+                          emergencyHelpline: emergencyHelpline),
                     );
                   },
                   shape: const RoundedRectangleBorder(
@@ -631,8 +634,10 @@ class _EmergencyActivation extends StatelessWidget {
 
 class _EmergencyActivateBottomSheet extends StatefulWidget {
   final MembersStore memberStore;
+  final EmergencyHelpline emergencyHelpline;
   const _EmergencyActivateBottomSheet({
     required this.memberStore,
+    required this.emergencyHelpline,
   });
   @override
   State<_EmergencyActivateBottomSheet> createState() =>
@@ -699,9 +704,8 @@ class _EmergencyActivateBottomSheetState
                       relation:
                           widget.memberStore.familyMembers[index].relation,
                       onPressed: () async {
-                        await launchDialer(homeStore.masterdata?.masterData
-                                    .emergencyHelpline.contactNumber ??
-                                '')
+                        await launchDialer(
+                                widget.emergencyHelpline.contactNumber)
                             .then(
                           (value) {
                             setState(() {

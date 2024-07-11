@@ -6,15 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
-import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
-import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/contact_sg_team_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/search_textfield_componet.dart';
+import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
-import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 
 class AllServicesScreen extends StatefulWidget {
   const AllServicesScreen({

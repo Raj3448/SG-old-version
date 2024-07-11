@@ -404,7 +404,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
                                             launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')
@@ -460,7 +460,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
                                             launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')

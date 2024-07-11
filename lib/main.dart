@@ -25,7 +25,6 @@ import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/services/product_listing_services.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/home/repository/local/home_page_details.dart';
-import 'package:silver_genie/feature/home/repository/local/master_data_cache.dart';
 import 'package:silver_genie/feature/home/services/home_services.dart';
 import 'package:silver_genie/feature/home/store/home_store.dart';
 import 'package:silver_genie/feature/login-signup/services/auth_service.dart';
@@ -72,7 +71,6 @@ void main() async {
       GetIt.instance.registerSingleton<UserDetailsCache>(UserDetailsCache());
       GetIt.instance
           .registerLazySingleton(() => HomePageComponentDetailscache());
-      GetIt.instance.registerLazySingleton(() => MasterdDateCache());
       GetIt.instance.registerSingleton<AuthStore>(
         AuthStore(
           tokenManager: GetIt.instance.get<TokenManager>(),
@@ -95,7 +93,7 @@ void main() async {
         () => HomeService(
           httpClient: GetIt.I<HttpClient>(),
           homePageComponentDetailscache: GetIt.I<HomePageComponentDetailscache>(),
-          masterdDateCache: GetIt.I<MasterdDateCache>(),
+          
         ),
       );
       GetIt.instance.registerLazySingleton(
@@ -133,7 +131,7 @@ void main() async {
       GetIt.instance.registerLazySingleton(() => SubscriptionStore());
       GetIt.instance.registerLazySingleton(
         () =>
-            HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData()..initMasterdata(),
+            HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData(),
       );
       GetIt.instance.registerLazySingleton(
         () => UserDetailStore(

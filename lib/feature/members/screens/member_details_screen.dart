@@ -68,7 +68,7 @@ class MemberDetailsScreen extends StatelessWidget {
                         btnIconPath: AppIcons.phone,
                         onTap: () {
                           launchDialer(homeStore
-                                                  .masterdata
+                                                  .getMasterDataModel
                                                   ?.masterData
                                                   .contactUs.contactNumber ??
                                               '')

@@ -7,24 +7,21 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/model/master_data_model.dart';
 import 'package:silver_genie/feature/home/repository/local/home_page_details.dart';
-import 'package:silver_genie/feature/home/repository/local/master_data_cache.dart';
 
 abstract class IHomeServices {
   List<dynamic>? getHomePageInfoCache();
   Future<Either<Failure, List<dynamic>>> getHomePageInfo();
   Future<Either<Failure, MasterDataModel>> getMasterData();
-  MasterDataModel? getMasterdataCache();
 }
 
 class HomeService implements IHomeServices {
   HomeService(
       {required this.httpClient,
       required this.homePageComponentDetailscache,
-      required this.masterdDateCache});
+      });
 
   final HttpClient httpClient;
   final HomePageComponentDetailscache homePageComponentDetailscache;
-  final MasterdDateCache masterdDateCache;
   @override
   Future<Either<Failure, List<dynamic>>> getHomePageInfo() async {
     try {
@@ -34,6 +31,17 @@ class HomeService implements IHomeServices {
       if (response.statusCode == 200) {
         if (response.data['data']['attributes']['content'] != null) {
           final componetList = <dynamic>[];
+          final masterData = await getMasterData();
+          masterData.fold((l) {
+            l.maybeMap(
+              socketError: (value) {
+                return const Failure.socketError();
+              },
+              orElse: () {
+                return const Failure.someThingWentWrong();
+              },
+            );
+          }, (r) => componetList.add(r));
           for (final component in response.data['data']['attributes']['content']
               as List<dynamic>) {
             if (component['__component'] == 'mobile-ui.banner' &&
@@ -98,7 +106,6 @@ class HomeService implements IHomeServices {
         if (data != null) {
           final masterDataModel =
               MasterDataModel.fromJson(data as Map<String, dynamic>);
-          await masterdDateCache.storeData(masterDataModel: masterDataModel);
           return Right(masterDataModel);
         }
         return const Left(Failure.badResponse());
@@ -115,8 +122,5 @@ class HomeService implements IHomeServices {
     }
   }
 
-  @override
-  MasterDataModel? getMasterdataCache() {
-    return masterdDateCache.getData();
-  }
+  
 }
