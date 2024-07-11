@@ -369,7 +369,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
                             controller: _countryController,
-                            searchEnabled: true,
                             showClear: false,
                             values: _countryItems,
                             validator: (selectedItems) {

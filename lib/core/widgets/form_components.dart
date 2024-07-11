@@ -167,7 +167,6 @@ class CustomPhoneField extends StatelessWidget {
             initialSelection: store.selectCountryDialCode ?? '+91',
             flagWidth: 25,
             favorite: const ['+91', 'IN'],
-            hideSearch: true,
             textStyle: AppTextStyle.bodyLargeMedium
                 .copyWith(color: AppColors.grayscale900),
             barrierColor: AppColors.black.withOpacity(0.25),
