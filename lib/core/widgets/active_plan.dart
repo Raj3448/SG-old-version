@@ -291,12 +291,18 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             ),
             const SizedBox(height: Dimension.d2),
             Observer(builder: (_) {
-              final hasPHR = widget.activeMember.subscriptions?[0].benefits
-                      ?.any((benefits) => benefits.code == 'PHR') ??
-                  false;
-              final hasEPR = widget.activeMember.subscriptions?[0].benefits
-                      ?.any((benefits) => benefits.code == 'EPR') ??
-                  false;
+              final hasPHR =
+                  widget.activeMember.subscriptions?[0].benefits?.any(
+                        (benefits) =>
+                            benefits.code == 'PHR' && benefits.isActive == true,
+                      ) ??
+                      false;
+              final hasEPR =
+                  widget.activeMember.subscriptions?[0].benefits?.any(
+                        (benefits) =>
+                            benefits.code == 'EPR' && benefits.isActive == true,
+                      ) ??
+                      false;
 
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
