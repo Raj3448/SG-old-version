@@ -101,7 +101,8 @@ class BookingListTileComponent extends StatelessWidget {
                                   : (bookingServiceModel.status == 'rejected')
                                       ? 'Rejected'
                                       : formatDateTime(
-                                          bookingServiceModel.requestedAt,
+                                          bookingServiceModel.requestedAt
+                                              .toLocal(),
                                         ),
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.primary),
@@ -136,7 +137,7 @@ class BookingListTileComponent extends StatelessWidget {
                             ),
                             TextSpan(
                               text: formatDateTimeWithMin(
-                                  bookingServiceModel.requestedAt),
+                                  bookingServiceModel.requestedAt.toLocal()),
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.grayscale900),
                             ),

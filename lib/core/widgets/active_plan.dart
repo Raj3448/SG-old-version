@@ -287,7 +287,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
               label: 'Last Updated',
-              value: formatDateTime(widget.activeMember.updatedAt),
+              value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
             Row(
