@@ -44,6 +44,10 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
+    final hasEPR = activeMember?.subscriptions?[0].benefits?.any(
+          (benefits) => benefits.code == 'EPR' && benefits.isActive == true,
+        ) ??
+        false;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -116,14 +120,16 @@ class MemberDetailsScreen extends StatelessWidget {
                         dateUpdated: activeMember?.updatedAt == null
                             ? 'n/a'
                             : formatDateTime(activeMember!.updatedAt),
-                        ontap: () {
-                          GoRouter.of(context).pushNamed(
-                            RoutesConstants.eprRoute,
-                            pathParameters: {
-                              'memberId': '$memberId',
-                            },
-                          );
-                        },
+                        ontap: hasEPR == false
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.eprRoute,
+                                  pathParameters: {
+                                    'memberId': '$memberId',
+                                  },
+                                );
+                              },
                       ),
                       const SizedBox(height: 16),
                       if (activeMember!.phrModel != null)
