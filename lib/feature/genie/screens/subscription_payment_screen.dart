@@ -56,9 +56,12 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
     }
     _reactionDisposer = reaction((_) => store.subscrpaymentStatusModel,
         (subscrpaymentStatusModel) {
-      if (subscrpaymentStatusModel != null) {
-        widget.subscriptionDetails = subscrpaymentStatusModel;
-        store.servicePaymentStatus = PaymentStatus.success;
+      if (subscrpaymentStatusModel != null &&
+          getPaymentStatus(
+                paymentStatus: subscrpaymentStatusModel.paymentStatus,
+                status: subscrpaymentStatusModel.status,
+              ) ==
+              PaymentStatus.success) {
         widget.subscriptionDetails = subscrpaymentStatusModel;
         store.servicePaymentStatus = PaymentStatus.success;
         _stopPaymentStatusPolling();
