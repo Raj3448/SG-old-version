@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_dynamic_calls
+// ignore_for_file: avoid_dynamic_calls, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -198,6 +198,12 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
           );
     }).toList();
 
+    final daysRemaining = calculateDaysRemaining(
+      memberStore
+              .activeMember?.subscriptions?[0].razorpay_subscription.chargeAt ??
+          DateTime.now(),
+    );
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.line),
@@ -290,75 +296,117 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
-            Observer(builder: (_) {
-              final hasPHR =
-                  widget.activeMember.subscriptions?[0].benefits?.any(
-                        (benefits) =>
-                            benefits.code == 'PHR' && benefits.isActive == true,
-                      ) ??
-                      false;
-              final hasEPR =
-                  widget.activeMember.subscriptions?[0].benefits?.any(
-                        (benefits) =>
-                            benefits.code == 'EPR' && benefits.isActive == true,
-                      ) ??
-                      false;
+            Observer(
+              builder: (_) {
+                final hasPHR = widget.activeMember.subscriptions?[0].benefits
+                        ?.any(
+                      (benefits) =>
+                          benefits.code == 'PHR' && benefits.isActive == true,
+                    ) ??
+                    false;
+                final hasEPR = widget.activeMember.subscriptions?[0].benefits
+                        ?.any(
+                      (benefits) =>
+                          benefits.code == 'EPR' && benefits.isActive == true,
+                    ) ??
+                    false;
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        ontap: hasPHR == false
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.phrPdfViewPage,
+                                  pathParameters: {
+                                    'memberPhrId':
+                                        '${widget.activeMember.phrModel?.id}',
+                                  },
+                                );
+                              },
+                        title: 'View PHR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: hasPHR == false
+                            ? ButtonType.disable
+                            : ButtonType.secondary,
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: Dimension.d4),
+                    Expanded(
+                      child: CustomButton(
+                        ontap: hasEPR == false
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.eprRoute,
+                                  pathParameters: {
+                                    'memberId': '${widget.activeMember.id}',
+                                  },
+                                );
+                              },
+                        title: 'View EPR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: hasEPR == false
+                            ? ButtonType.disable
+                            : ButtonType.secondary,
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            if (daysRemaining < 4)
+              Column(
                 children: [
-                  Expanded(
-                    child: CustomButton(
-                      ontap: hasPHR == false
-                          ? null
-                          : () {
-                              GoRouter.of(context).pushNamed(
-                                RoutesConstants.phrPdfViewPage,
-                                pathParameters: {
-                                  'memberPhrId':
-                                      '${widget.activeMember.phrModel?.id}',
-                                },
-                              );
+                  const Divider(color: AppColors.line),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        daysRemaining < 2
+                            ? 'Your plan expires in $daysRemaining day.'
+                            : 'Your plan expires in $daysRemaining days.',
+                        style: AppTextStyle.bodyMediumMedium
+                            .copyWith(color: AppColors.error),
+                      ),
+                      CustomButton(
+                        ontap: () {
+                          GoRouter.of(context).pushNamed(
+                            RoutesConstants.geniePage,
+                            pathParameters: {
+                              'pageTitle': widget
+                                  .activeMember.subscriptions![0].product.name,
+                              'id':
+                                  '${widget.activeMember.subscriptions![0].product.id}',
+                              'isUpgradeable': 'true',
+                              'activeMemberId': '${memberStore.activeMemberId}',
                             },
-                      title: 'View PHR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: hasPHR == false
-                          ? ButtonType.disable
-                          : ButtonType.secondary,
-                      expanded: true,
-                      iconColor: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(width: Dimension.d4),
-                  Expanded(
-                    child: CustomButton(
-                      ontap: hasEPR == false
-                          ? null
-                          : () {
-                              GoRouter.of(context).pushNamed(
-                                RoutesConstants.eprRoute,
-                                pathParameters: {
-                                  'memberId': '${widget.activeMember.id}',
-                                },
-                              );
-                            },
-                      title: 'View EPR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: hasEPR == false
-                          ? ButtonType.disable
-                          : ButtonType.secondary,
-                      expanded: true,
-                      iconColor: AppColors.primary,
-                    ),
+                          );
+                        },
+                        title: 'Renew',
+                        showIcon: false,
+                        iconPath: AppIcons.add,
+                        size: ButtonSize.small,
+                        type: ButtonType.primary,
+                        expanded: false,
+                        iconColor: AppColors.white,
+                      ),
+                    ],
                   ),
                 ],
-              );
-            }),
-            if (memberStore.activeMember != null &&
+              )
+            else if (memberStore.activeMember != null &&
                 memberStore.activeMember!.subscriptions != null)
               Observer(
                 builder: (context) {
@@ -452,4 +500,12 @@ class _UpgradeProdLisComponent extends StatelessWidget {
             ],
           );
   }
+}
+
+int calculateDaysRemaining(DateTime? chargeAt) {
+  final now = DateTime.now();
+
+  final differenceInDays = chargeAt!.difference(now).inDays;
+
+  return differenceInDays;
 }
