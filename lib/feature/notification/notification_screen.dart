@@ -169,7 +169,7 @@ class NotificationComponent extends StatelessWidget {
                 ),
                 Text(
                   notificationFormatDateTime(
-                      notification.notificationMetaData.createdAt),
+                      notification.notificationMetaData.createdAt.toLocal()),
                   style: AppTextStyle.bodyMediumMedium
                       .copyWith(fontSize: 12, color: AppColors.grayscale700),
                 ),
