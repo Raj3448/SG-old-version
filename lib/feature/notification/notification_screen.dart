@@ -27,7 +27,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   void initState() {
-    store.fetchNotifications();
+    store.refresh();
     super.initState();
   }
 

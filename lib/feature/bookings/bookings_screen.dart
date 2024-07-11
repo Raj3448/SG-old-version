@@ -27,7 +27,7 @@ class _BookingsScreenState extends State<BookingsScreen>
 
   @override
   void initState() {
-    store.initGetAllServices();
+    store.refresh();
     controller = TabController(length: 3, vsync: this);
 
     _reactionDisposer =
@@ -115,7 +115,7 @@ class BookingsStateComponent extends StatelessWidget {
                 : store.getAllRequestedServiceList;
     return Observer(
       builder: (context) {
-        if (store.isAllServiceLoading || store.isAllServiceRefreshing) {
+        if (store.isAllServiceLoading) {
           return const Center(
             child: LoadingWidget(
               showShadow: false,
