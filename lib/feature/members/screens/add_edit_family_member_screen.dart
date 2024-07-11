@@ -274,6 +274,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: Dimension.d6),
                         Center(
                           child: EditPic(
                             onImageSelected: _updateImageFile,
