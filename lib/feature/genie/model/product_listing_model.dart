@@ -491,6 +491,7 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required FamilyMember? subscribedBy,
     required List<FamilyMember>? belongsTo,
     @Default([]) List<dynamic>? payment_transactions,
+    @Default([]) List<DatumAttributes>? benefits,
   }) = _SubscriptionDetails;
 
   factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>
