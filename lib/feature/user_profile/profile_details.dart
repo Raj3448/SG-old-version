@@ -224,6 +224,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(height: Dimension.d6),
                           Center(
                             child: EditPic(
                               onImageSelected: _updateProfileImage,
@@ -387,7 +388,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           const SizedBox(height: Dimension.d2),
                           MultiSelectFormField(
                             controller: _countryController,
-                            searchEnabled: true,
                             showClear: false,
                             values: _countryItems,
                             validator: (selectedItems) {

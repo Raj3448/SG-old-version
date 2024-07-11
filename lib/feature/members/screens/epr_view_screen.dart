@@ -85,8 +85,7 @@ class EPRViewScreen extends StatelessWidget {
 
                   if (NoEprRecordCase ?? false) {
                     return Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: Dimension.d3),
+                      padding: const EdgeInsets.all(Dimension.d3),
                       child: _PersonalDetailsComponent(
                         name: userInfo.name,
                         email: userInfo.email,

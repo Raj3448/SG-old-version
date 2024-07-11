@@ -463,7 +463,7 @@ class _AboutUsOfferComponent extends StatelessWidget {
 }
 
 class _ActiveBookingComponent extends StatelessWidget {
-  const _ActiveBookingComponent({required this.store, super.key});
+  const _ActiveBookingComponent({required this.store});
 
   final BookingServiceStore store;
   @override
@@ -911,19 +911,35 @@ class _MemberInfoState extends State<_MemberInfo> {
                   Observer(
                     builder: (context) {
                       final activeMember = memberStore.activeMember;
-                      if (activeMember!.careCoach != null) {
-                        return Column(
-                          children: [
-                            const SizedBox(height: Dimension.d4),
-                            CoachContact(
-                              imgpath:
-                                  '${Env.serverUrl}${activeMember.careCoach?.profileImg?.url ?? ''}',
-                              name:
-                                  '${activeMember.careCoach?.firstName ?? ''} ${activeMember.careCoach?.lastName ?? ''}',
-                              phoneNo: activeMember.careCoach?.contactNo ?? '',
-                            ),
-                          ],
-                        );
+                      if (activeMember != null &&
+                          activeMember.subscriptions != null &&
+                          activeMember.subscriptions!.isNotEmpty &&
+                          activeMember.careCoach != null) {
+                        final hasCCFP =
+                            activeMember.subscriptions?[0].benefits?.any(
+                                  (benefit) =>
+                                      benefit.code == 'CCFP' &&
+                                      benefit.isActive == true,
+                                ) ??
+                                false;
+
+                        if (hasCCFP) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: Dimension.d4),
+                              CoachContact(
+                                imgpath:
+                                    '${Env.serverUrl}${activeMember.careCoach?.profileImg?.url ?? ''}',
+                                name:
+                                    '${activeMember.careCoach?.firstName ?? ''} ${activeMember.careCoach?.lastName ?? ''}',
+                                phoneNo:
+                                    activeMember.careCoach?.contactNo ?? '',
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
                       } else {
                         return const SizedBox();
                       }

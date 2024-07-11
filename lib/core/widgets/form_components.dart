@@ -182,8 +182,10 @@ class CustomPhoneField extends StatelessWidget {
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter your phone number';
-        } else if (value.length > 10 || value.length < 10) {
-          return 'Please enter 10 digits phone number';
+        } else if (value.length < 7) {
+          return 'Please enter atleast 7 digits phone number';
+        } else if (value.length > 15) {
+          return 'Please enter 15 digits phone number';
         }
         return null;
       },
