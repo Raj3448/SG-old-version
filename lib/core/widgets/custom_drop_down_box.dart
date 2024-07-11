@@ -168,6 +168,9 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                           name: widget.memberList[index].name,
                           imgPath:
                               widget.memberList[index].profileImg?.url ?? '',
+                          memberHasSubscription: widget.memberList[index]
+                                  .subscriptions?.isNotEmpty ??
+                              false,
                         ),
                       ),
                     ),
@@ -185,11 +188,13 @@ class _MemeberListTileComponent extends StatelessWidget {
     required this.name,
     required this.imgPath,
     required this.disable,
+    required this.memberHasSubscription,
   });
   final String imgPath;
 
   final String name;
   final bool disable;
+  final bool memberHasSubscription;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -213,10 +218,23 @@ class _MemeberListTileComponent extends StatelessWidget {
             size: AvatarSize.size14,
           ),
           const SizedBox(width: Dimension.d2),
-          Text(
-            name,
-            style: AppTextStyle.bodyLargeMedium,
+          Expanded(
+            child: Text(
+              name,
+              style: AppTextStyle.bodyLargeMedium.copyWith(
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
+          const SizedBox(
+            width: Dimension.d1,
+          ),
+          if (memberHasSubscription)
+            const Icon(
+              AppIcons.elderly_person,
+              size: 17,
+              color: AppColors.primary,
+            )
         ],
       ),
     );
