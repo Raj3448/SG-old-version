@@ -1,6 +1,6 @@
 name: silver_genie
 description: SilverGenie
-version: 1.0.0+1
+version: 1.0.0+3
 publish_to: "none"
 
 environment:
