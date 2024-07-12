@@ -21,6 +21,7 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -220,6 +221,7 @@ class _UserDetailsComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<UserDetailStore>();
+    final memberStore = GetIt.I<MembersStore>();
     final familyMembers = memberDetails.belongsTo;
     final hasMultipleMembers = familyMembers!.length > 1;
     final interval = memberDetails.product.prices
@@ -230,6 +232,15 @@ class _UserDetailsComponent extends StatelessWidget {
         .where((price) => price.id == memberDetails.priceId)
         .map((price) => price.recurringIntervalCount)
         .join(' ');
+    final members = memberStore.familyMembers;
+
+    final hasActiveSubscription = members.any(
+      (member) => member.subscriptions!.any(
+        (subscription) =>
+            subscription.subscriptionStatus == 'Active' &&
+            subscription.paymentStatus == 'paid',
+      ),
+    );
 
     return Container(
       width: double.infinity,
@@ -382,22 +393,26 @@ class _UserDetailsComponent extends StatelessWidget {
                 if (isPrevious)
                   Expanded(
                     child: CustomButton(
-                      ontap: () {
-                        context.pushNamed(
-                          RoutesConstants.geniePage,
-                          pathParameters: {
-                            'pageTitle': memberDetails.product.name,
-                            'id': '${memberDetails.product.id}',
-                            'isUpgradeable': 'false',
-                            'activeMemberId': '${memberDetails.id}',
-                          },
-                        );
-                      },
+                      ontap: hasActiveSubscription
+                          ? null
+                          : () {
+                              context.pushNamed(
+                                RoutesConstants.geniePage,
+                                pathParameters: {
+                                  'pageTitle': memberDetails.product.name,
+                                  'id': '${memberDetails.product.id}',
+                                  'isUpgradeable': 'false',
+                                  'activeMemberId': '${memberDetails.id}',
+                                },
+                              );
+                            },
                       title: 'Buy again',
                       showIcon: false,
                       iconPath: AppIcons.add,
                       size: ButtonSize.small,
-                      type: ButtonType.primary,
+                      type: hasActiveSubscription
+                          ? ButtonType.disable
+                          : ButtonType.primary,
                       expanded: true,
                       iconColor: AppColors.primary,
                     ),
