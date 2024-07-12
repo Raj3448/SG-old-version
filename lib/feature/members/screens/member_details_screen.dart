@@ -9,8 +9,10 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/epr_card.dart';
@@ -44,6 +46,10 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
+    final hasEPR = activeMember?.subscriptions?[0].benefits?.any(
+          (benefits) => benefits.code == 'EPR' && benefits.isActive == true,
+        ) ??
+        false;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -56,7 +62,7 @@ class MemberDetailsScreen extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return const InfoDialog(
+                      return InfoDialog(
                         showIcon: false,
                         title: 'Hi there!!',
                         desc:
@@ -64,6 +70,14 @@ class MemberDetailsScreen extends StatelessWidget {
                         btnTitle: 'Contact Genie',
                         showBtnIcon: true,
                         btnIconPath: AppIcons.phone,
+                        onTap: () {
+                          launchDialer(homeStore
+                                                  .getMasterDataModel
+                                                  ?.masterData
+                                                  .contactUs.contactNumber ??
+                                              '')
+                                          .then((value) => GoRouter.of(context).pop(),);
+                        },
                       );
                     },
                   );
@@ -116,14 +130,16 @@ class MemberDetailsScreen extends StatelessWidget {
                         dateUpdated: activeMember?.updatedAt == null
                             ? 'n/a'
                             : formatDateTime(activeMember!.updatedAt),
-                        ontap: () {
-                          GoRouter.of(context).pushNamed(
-                            RoutesConstants.eprRoute,
-                            pathParameters: {
-                              'memberId': '$memberId',
-                            },
-                          );
-                        },
+                        ontap: hasEPR == false
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.eprRoute,
+                                  pathParameters: {
+                                    'memberId': '$memberId',
+                                  },
+                                );
+                              },
                       ),
                       const SizedBox(height: 16),
                       if (activeMember!.phrModel != null)

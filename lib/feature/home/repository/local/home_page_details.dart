@@ -8,7 +8,7 @@ class HomePageComponentDetailscache {
     await box.put(HOMEPAGE_DETAILS_BOX_Key, componentDetailsList);
   }
 
-  Future<List<dynamic>?> getComponentDetails() async {
+  List<dynamic>? getComponentDetails() {
     return box.get(HOMEPAGE_DETAILS_BOX_Key);
   }
 
@@ -16,7 +16,7 @@ class HomePageComponentDetailscache {
     return box.isEmpty;
   }
 
-  Future<void> clearHomeComponentDetils() async {
+  Future<void> clear() async {
     await box.delete(HOMEPAGE_DETAILS_BOX_Key);
   }
 }

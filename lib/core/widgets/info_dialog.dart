@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -15,6 +14,7 @@ class InfoDialog extends StatelessWidget {
     required this.btnTitle,
     required this.showBtnIcon,
     required this.btnIconPath,
+    required this.onTap,
     super.key,
   });
 
@@ -24,6 +24,7 @@ class InfoDialog extends StatelessWidget {
   final String btnTitle;
   final bool showBtnIcon;
   final IconData btnIconPath;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +74,7 @@ class InfoDialog extends StatelessWidget {
                         ? 10
                         : 20),
             CustomButton(
-              ontap: () {
-                GoRouter.of(context).pop();
-              },
+              ontap: onTap,
               title: btnTitle.tr(),
               showIcon: showBtnIcon,
               iconPath: btnIconPath,

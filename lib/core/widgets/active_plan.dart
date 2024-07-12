@@ -309,7 +309,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 children: [
                   Expanded(
                     child: CustomButton(
-                      ontap: hasPHR == false
+                      ontap: hasPHR == false ||
+                              widget.activeMember.phrModel == null
                           ? null
                           : () {
                               GoRouter.of(context).pushNamed(
@@ -324,7 +325,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                       showIcon: false,
                       iconPath: Icons.not_interested,
                       size: ButtonSize.small,
-                      type: hasPHR == false
+                      type: hasPHR == false ||
+                              widget.activeMember.phrModel == null
                           ? ButtonType.disable
                           : ButtonType.secondary,
                       expanded: true,
