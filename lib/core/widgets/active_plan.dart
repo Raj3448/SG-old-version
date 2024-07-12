@@ -198,11 +198,12 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
           );
     }).toList();
 
-    final daysRemaining = calculateDaysRemaining(
-      memberStore
-              .activeMember?.subscriptions?[0].razorpay_subscription.chargeAt ??
-          DateTime.now(),
-    );
+    final member = widget.activeMember.subscriptions![0];
+
+    final renewsIn =
+        calculateDaysRemaining(member.razorpay_subscription.chargeAt);
+
+    final expiresIn = calculateDaysRemaining(member.expiresOn);
 
     return Container(
       decoration: BoxDecoration(
@@ -366,43 +367,52 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 );
               },
             ),
-            if (daysRemaining < 4)
+            if (renewsIn < 4 && member.razorpay_subscription.status == 'active')
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Divider(color: AppColors.line),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        daysRemaining < 2
-                            ? 'Your plan expires in $daysRemaining day.'
-                            : 'Your plan expires in $daysRemaining days.',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.error),
-                      ),
-                      CustomButton(
-                        ontap: () {
-                          GoRouter.of(context).pushNamed(
-                            RoutesConstants.geniePage,
-                            pathParameters: {
-                              'pageTitle': widget
-                                  .activeMember.subscriptions![0].product.name,
-                              'id':
-                                  '${widget.activeMember.subscriptions![0].product.id}',
-                              'isUpgradeable': 'true',
-                              'activeMemberId': '${memberStore.activeMemberId}',
-                            },
-                          );
-                        },
-                        title: 'Renew',
-                        showIcon: false,
-                        iconPath: AppIcons.add,
-                        size: ButtonSize.small,
-                        type: ButtonType.primary,
-                        expanded: false,
-                        iconColor: AppColors.white,
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+                    child: Text(
+                      renewsIn < 2
+                          ? 'Your plan renews in $renewsIn day.'
+                          : 'Your plan renews in $renewsIn days.',
+                      style: AppTextStyle.bodyMediumMedium
+                          .copyWith(color: AppColors.error),
+                    ),
+                  ),
+                ],
+              )
+            else if (member.razorpay_subscription.status == 'pending')
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(color: AppColors.line),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+                    child: Text(
+                      'Auto-renewal failed!',
+                      style: AppTextStyle.bodyMediumMedium
+                          .copyWith(color: AppColors.error),
+                    ),
+                  ),
+                ],
+              )
+            else if (expiresIn < 4)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(color: AppColors.line),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+                    child: Text(
+                      expiresIn < 2
+                          ? 'Your plan expires in $expiresIn day.'
+                          : 'Your plan expires in $expiresIn days.',
+                      style: AppTextStyle.bodyMediumMedium
+                          .copyWith(color: AppColors.error),
+                    ),
                   ),
                 ],
               )
