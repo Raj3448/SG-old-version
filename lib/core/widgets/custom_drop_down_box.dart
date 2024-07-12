@@ -7,7 +7,6 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
-import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
@@ -169,10 +168,11 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                           name: widget.memberList[index].name,
                           imgPath:
                               widget.memberList[index].profileImg?.url ?? '',
-                          iconUrl: widget
-                                  .memberList[index].subscriptions!.isNotEmpty
-                              ? widget.memberList[index].subscriptions![0].product.icon?.data.attributes.url
-                              : null,
+                          iconUrl:
+                              widget.memberList[index].subscriptions!.isNotEmpty
+                                  ? widget.memberList[index].subscriptions![0]
+                                      .product.icon.url
+                                  : null,
                         ),
                       ),
                     ),
@@ -199,7 +199,6 @@ class _MemeberListTileComponent extends StatelessWidget {
   final String? iconUrl;
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       height: 42,
       width: double.infinity,
@@ -234,9 +233,8 @@ class _MemeberListTileComponent extends StatelessWidget {
           ),
           if (iconUrl != null)
             Avatar.fromSize(
-              imgPath:
-                  iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
-              size: AvatarSize.size16,
+              imgPath: iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
+              size: AvatarSize.size9,
               isImageSquare: true,
             )
         ],

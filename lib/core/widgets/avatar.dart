@@ -5,6 +5,10 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 
 enum AvatarSize {
+  size8,
+  size9,
+  size10,
+  size11,
   size12,
   size14,
   size16,
@@ -61,10 +65,18 @@ class Avatar extends StatelessWidget {
         radius = 14;
       case AvatarSize.size12:
         radius = 12;
+      case AvatarSize.size11:
+        radius = 11;
+      case AvatarSize.size10:
+        radius = 10;
       case AvatarSize.size58:
         radius = 58;
       case AvatarSize.size60:
         radius = 60;
+      case AvatarSize.size8:
+        radius = 8;
+      case AvatarSize.size9:
+        radius = 9;
     }
     return Avatar(
       imgPath: imgPath,
