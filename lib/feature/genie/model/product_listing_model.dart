@@ -31,7 +31,7 @@ class Product with _$Product {
     required DateTime? updatedAt,
     required List<Price> prices,
     required SubscriptionContent? subscriptionContent,
-    @JsonKey(name: 'icon') required IconImage? icon,
+    required IconImgMetaData? icon,
     required Benefits? benefits,
     required List<Metadatum>? metadata,
     @Default([]) List<dynamic>? serviceContent,
@@ -492,6 +492,7 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required List<FamilyMember>? belongsTo,
     @Default([]) List<dynamic>? payment_transactions,
     @Default([]) List<DatumAttributes>? benefits,
+    required RazorpaySubscription razorpay_subscription,
   }) = _SubscriptionDetails;
 
   factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>
@@ -512,4 +513,28 @@ class FamilyMember with _$FamilyMember {
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) =>
       _$FamilyMemberFromJson(json);
+}
+
+@freezed
+class RazorpaySubscription with _$RazorpaySubscription {
+  const factory RazorpaySubscription({
+    required int id,
+    required String subscriptionId,
+    required String status,
+    required String planId,
+    required DateTime? chargeAt,
+    required int totalCount,
+    required int paidCount,
+    required dynamic shortUrl,
+    required bool hasScheduledChanges,
+    required int remainingCount,
+    required dynamic customerId,
+    required DateTime currentStart,
+    required DateTime currentEnd,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _RazorpaySubscription;
+
+  factory RazorpaySubscription.fromJson(Map<String, dynamic> json) =>
+      _$RazorpaySubscriptionFromJson(json);
 }
