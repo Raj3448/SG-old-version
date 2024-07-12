@@ -19,12 +19,12 @@ abstract class IMemberService {
     required File fileImage,
     required Map<String, dynamic> memberInfo,
   });
-  Future<Either<MemberServiceFailure, Member>> updateMember(
+  Future<Either<MemberServiceFailure, bool>> updateMember(
     String id,
     Map<String, dynamic> updateData,
     String? imgId,
   );
-  Future<Either<MemberServiceFailure, Member>> updateMemberDataWithProfileImg({
+  Future<Either<MemberServiceFailure, bool>> updateMemberDataWithProfileImg({
     required String id,
     required File fileImage,
     required Map<String, dynamic> memberInfo,
@@ -170,7 +170,7 @@ class MemberServices implements IMemberService {
   }
 
   @override
-  Future<Either<MemberServiceFailure, Member>> updateMember(
+  Future<Either<MemberServiceFailure, bool>> updateMember(
     String id,
     Map<String, dynamic> updateData,
     String? imgId,
@@ -186,9 +186,7 @@ class MemberServices implements IMemberService {
       );
 
       if (response.statusCode == 200) {
-        final data = response.data['data'];
-        final member = Member.fromJson(Map<String, dynamic>.from(data as Map));
-        return Right(member);
+        return const Right(true);
       } else if (response.statusCode == 400) {
         return const Left(MemberServiceFailure.badResponse());
       } else if (response.statusCode == 500) {
@@ -210,7 +208,7 @@ class MemberServices implements IMemberService {
   }
 
   @override
-  Future<Either<MemberServiceFailure, Member>> updateMemberDataWithProfileImg({
+  Future<Either<MemberServiceFailure, bool>> updateMemberDataWithProfileImg({
     required String id,
     required File fileImage,
     required Map<String, dynamic> memberInfo,

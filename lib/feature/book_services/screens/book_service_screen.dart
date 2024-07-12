@@ -87,7 +87,11 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     dobContr.dispose();
     for (final controller in _controllers) {
       for (final element in controller.values) {
-        element.clear();
+        if (element is MultiSelectController) {
+          element.dispose();
+        } else {
+          element.clear();
+        }
       }
     }
     super.dispose();
@@ -418,6 +422,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: Dimension.d4),
                             const BookingStatus(
                               currentStep: BookingStep.serviceDetails,
                             ),
