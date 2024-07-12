@@ -40,7 +40,7 @@ class _BookingsScreenState extends State<BookingsScreen>
       }
       store.allServiceRefreshFailure = null;
     });
-    
+
     super.initState();
   }
 
@@ -122,9 +122,16 @@ class BookingsStateComponent extends StatelessWidget {
             ),
           );
         }
-        if (store.fetchServiceError != null) {
-          return const ErrorStateComponent(
-              errorType: ErrorType.somethinWentWrong);
+        if (store.fetchServiceError != null ||
+            store.allServiceRefreshFailure == 'No_Internet') {
+          final error =
+              store.fetchServiceError ?? store.allServiceRefreshFailure;
+          store..fetchServiceError = null
+          ..allServiceRefreshFailure = null;
+          return ErrorStateComponent(
+              errorType: error == 'No_Internet'
+                  ? ErrorType.noInternetConnection
+                  : ErrorType.somethinWentWrong);
         }
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

@@ -54,7 +54,7 @@ class Product with _$Product {
     required DateTime? updatedAt,
     required List<Price> prices,
     required SubscriptionContent? subscriptionContent,
-    @JsonKey(name: 'icon') required IconImgMetaData icon,
+    @JsonKey(name: 'icon') required IconImgMetaData? icon,
     required Benefits? benefits,
     required List<Metadatum>? metadata,
     @Default([]) List<dynamic>? serviceContent,

@@ -59,7 +59,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(buyServiceFailed),
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
           ),
         );
       }

@@ -186,10 +186,7 @@ class ProductListingServices extends IProductListingService {
         '/api/service-tracker/request-new',
         data: formData.toJson(),
       );
-      if (response.data['error']['name'] ==
-          'SERVICE_NOT_AVAILABLE_FOR_SELECTED_MEMBER') {
-        return const Left(MemberServiceFailure.serviceNotAvailbaleForUser());
-      }
+      
       if (response.statusCode == 200) {
         final data = response.data['data'];
         if (data != null) {
@@ -198,7 +195,12 @@ class ProductListingServices extends IProductListingService {
           );
         }
         return const Left(MemberServiceFailure.badResponse());
-      } else {
+      }
+      if(response.statusCode == 404 && response.data['error']['details']['name'] ==
+          'SERVICE_NOT_AVAILABLE_FOR_SELECTED_MEMBER'){
+          return const Left(MemberServiceFailure.serviceNotAvailbaleForUser());
+      }
+      else {
         return const Left(MemberServiceFailure.badResponse());
       }
     } on DioException catch (dioError) {

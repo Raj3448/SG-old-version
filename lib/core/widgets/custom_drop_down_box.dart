@@ -171,7 +171,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                           iconUrl:
                               widget.memberList[index].subscriptions!.isNotEmpty
                                   ? widget.memberList[index].subscriptions![0]
-                                      .product.icon.url
+                                      .product.icon?.url
                                   : null,
                         ),
                       ),
