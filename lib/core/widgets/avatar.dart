@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 
 enum AvatarSize {
   size12,
@@ -87,33 +88,42 @@ class Avatar extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         shape: isImageSquare ? BoxShape.rectangle : BoxShape.circle,
-        image: imgPath == ''
+        image: imgPath == '' && !isImageSquare
             ? DecorationImage(
                 fit: fit,
                 image: const AssetImage('assets/icon/default _profile.png'),
               )
             : null,
       ),
-      child: imgPath == ''
-          ? null
-          : imgPath == 'assets/icon/44Px.png'
-              ? Image.asset(
-                  imgPath,
-                  fit: BoxFit.cover,
-                )
-              : CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: imgPath,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                    value: downloadProgress.progress,
-                    color: AppColors.primary,
-                  ),
-                  errorWidget: (context, url, error) => Image.asset(
-                    'assets/icon/default _profile.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
+      child: imgPath == '' && isImageSquare
+          ? const Icon(
+              AppIcons.warning,
+              color: AppColors.grayscale500,
+              size: 22,
+            )
+          : imgPath == ''
+              ? null
+              : imgPath == 'assets/icon/44Px.png'
+                  ? Image.asset(
+                      imgPath,
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: imgPath,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        color: AppColors.primary,
+                      ),
+                      errorWidget: (context, url, error) => Image.asset(
+                        isImageSquare
+                            ? 'assets/icon/Vector.png'
+                            : 'assets/icon/default _profile.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
     );
   }
 }
