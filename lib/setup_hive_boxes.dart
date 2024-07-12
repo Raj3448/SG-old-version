@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
+import 'package:silver_genie/feature/home/model/master_data_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 
 const TOKEN_BOX_NAME = 'jwt_token_box';
@@ -39,7 +40,11 @@ Future<void> initializeBoxForHomePageDetails() async {
     ..registerAdapter(OfferAdapter())
     ..registerAdapter(ValueAdapter())
     ..registerAdapter(NewsletterAdapter())
-    ..registerAdapter(NewsletterModelAdapter());
+    ..registerAdapter(NewsletterModelAdapter())
+    ..registerAdapter(MasterDataModelAdapter())
+    ..registerAdapter(MasterDataAdapter())
+    ..registerAdapter(ContactUsAdapter())
+    ..registerAdapter(EmergencyHelplineAdapter());
   await Hive.openBox<List<dynamic>>(
     HOMEPAGE_DETAILS_BOX_NAME,
     compactionStrategy: (int total, int deleted) => deleted > 2,

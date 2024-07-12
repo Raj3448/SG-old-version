@@ -12,7 +12,9 @@ import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/country_list.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
@@ -139,6 +141,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
             btnTitle: 'Continue',
             showBtnIcon: false,
             btnIconPath: AppIcons.check,
+            onTap: () {
+              GoRouter.of(context).pop();
+            },
           );
         },
       );
@@ -388,7 +393,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return const InfoDialog(
+                                        return InfoDialog(
                                           showIcon: true,
                                           title:
                                               'Want to Update mobile number?',
@@ -397,6 +402,14 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           btnTitle: 'Contact Genie',
                                           showBtnIcon: true,
                                           btnIconPath: AppIcons.phone,
+                                          onTap: () {
+                                            launchDialer(homeStore
+                                                  .getMasterDataModel
+                                                  ?.masterData
+                                                  .contactUs.contactNumber ??
+                                              '')
+                                          .then((value) => GoRouter.of(context).pop(),);
+                                          },
                                         );
                                       },
                                     );
@@ -437,7 +450,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return const InfoDialog(
+                                        return InfoDialog(
                                           showIcon: true,
                                           title: 'Want to Update Email ID?',
                                           desc:
@@ -445,6 +458,14 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           btnTitle: 'Contact Genie',
                                           showBtnIcon: true,
                                           btnIconPath: AppIcons.phone,
+                                          onTap: () {
+                                            launchDialer(homeStore
+                                                  .getMasterDataModel
+                                                  ?.masterData
+                                                  .contactUs.contactNumber ??
+                                              '')
+                                          .then((value) => GoRouter.of(context).pop(),);
+                                          },
                                         );
                                       },
                                     );

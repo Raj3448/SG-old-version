@@ -9,7 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/genie_overview.dart';
@@ -124,7 +126,7 @@ class _GeniePageState extends State<GeniePage> {
                                             showDialog(
                                               context: context,
                                               builder: (context) {
-                                                return const InfoDialog(
+                                                return InfoDialog(
                                                   showIcon: false,
                                                   title: 'Hi there!!',
                                                   desc:
@@ -132,6 +134,14 @@ class _GeniePageState extends State<GeniePage> {
                                                   btnTitle: 'Contact Genie',
                                                   showBtnIcon: true,
                                                   btnIconPath: AppIcons.phone,
+                                                  onTap: () {
+                                                    launchDialer(homeStore
+                                                  .getMasterDataModel
+                                                  ?.masterData
+                                                  .contactUs.contactNumber ??
+                                              '')
+                                          .then((value) => GoRouter.of(context).pop(),);
+                                                  },
                                                 );
                                               },
                                             );

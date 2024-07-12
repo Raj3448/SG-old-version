@@ -19,7 +19,6 @@ class RoutesConstants {
   static const addEditFamilyMemberRoute = '/addEditFamilyMember';
   static const eprRoute = '/eprPhr';
   static const memberDetailsRoute = '/memberDetails';
-  static const emergencyServiceScreen = '/emergencyServiceScreen';
   static const allServicesScreen = '/allServicesScreen';
   static const serviceDetailsScreen = '/serviceDetailsScreen';
   static const bookServiceScreen = '/bookServiceScreen';
