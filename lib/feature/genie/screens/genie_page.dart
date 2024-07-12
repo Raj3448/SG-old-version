@@ -135,12 +135,18 @@ class _GeniePageState extends State<GeniePage> {
                                                   showBtnIcon: true,
                                                   btnIconPath: AppIcons.phone,
                                                   onTap: () {
-                                                    launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                                                    launchDialer(
+                                                      homeStore
+                                                              .getMasterDataModel
+                                                              ?.masterData
+                                                              .contactUs
+                                                              .contactNumber ??
+                                                          '',
+                                                    ).then(
+                                                      (value) =>
+                                                          GoRouter.of(context)
+                                                              .pop(),
+                                                    );
                                                   },
                                                 );
                                               },
@@ -226,8 +232,8 @@ class _GeniePageState extends State<GeniePage> {
                                               .product
                                               .subscriptionContent!
                                               .exploreCouplePlansHeading!,
-                                          imgPath: productListingModel.product
-                                              .icon!.data.attributes.url,
+                                          imgPath: productListingModel
+                                              .product.icon.data.attributes.url,
                                           backgroundColor: productListingModel
                                               .product.metadata!
                                               .firstWhere(
