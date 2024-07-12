@@ -243,38 +243,23 @@ class ServiceDetailsScreen extends StatelessWidget {
                             horizontal: 16,
                             vertical: 14,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomButton(
-                                ontap: () {},
-                                title: 'Request call back',
-                                showIcon: false,
-                                iconPath: AppIcons.add,
-                                size: ButtonSize.normal,
-                                type: ButtonType.secondary,
-                                expanded: false,
-                                iconColor: AppColors.primary,
-                              ),
-                              CustomButton(
-                                ontap: () {
-                                  context.pushNamed(
-                                    RoutesConstants.bookServiceScreen,
-                                    pathParameters: {
-                                      'id': id,
-                                      'productCode': productCode
-                                    },
-                                  );
+                          child: CustomButton(
+                            ontap: () {
+                              context.pushNamed(
+                                RoutesConstants.bookServiceScreen,
+                                pathParameters: {
+                                  'id': id,
+                                  'productCode': productCode
                                 },
-                                title: 'Book now',
-                                showIcon: false,
-                                iconPath: AppIcons.add,
-                                size: ButtonSize.normal,
-                                type: ButtonType.primary,
-                                expanded: false,
-                                iconColor: AppColors.primary,
-                              ),
-                            ],
+                              );
+                            },
+                            title: 'Book now',
+                            showIcon: false,
+                            iconPath: AppIcons.add,
+                            size: ButtonSize.normal,
+                            type: ButtonType.primary,
+                            expanded: true,
+                            iconColor: AppColors.primary,
                           ),
                         )
                       else

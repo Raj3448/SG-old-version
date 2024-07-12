@@ -3,13 +3,15 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
 class ContactSgTeamComponent extends StatelessWidget {
   final String phoneNumber;
 
-  const ContactSgTeamComponent({required this.phoneNumber,Key? key}) : super(key: key);
+  const ContactSgTeamComponent({required this.phoneNumber, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,9 @@ class ContactSgTeamComponent extends StatelessWidget {
             height: 40,
             child: CustomButton(
               ontap: () {
-                launchDialer(phoneNumber);
+                launchDialer(homeStore.getMasterDataModel?.masterData.contactUs
+                        .contactNumber ??
+                    '');
               },
               title: 'Call now',
               showIcon: false,
