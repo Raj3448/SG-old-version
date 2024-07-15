@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: inference_failure_on_instance_creation, inference_failure_on_function_invocation, lines_longer_than_80_chars
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -43,7 +44,7 @@ class _UserProfileState extends State<UserProfile> {
         builder: (context) {
           return Scaffold(
             backgroundColor: AppColors.white,
-            appBar: const PageAppbar(title: 'User Profile'),
+            appBar: PageAppbar(title: 'User Profile'.tr()),
             body: widget.userDetailStore.isLoadingUserInfo
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
@@ -172,7 +173,7 @@ class _UserProfileState extends State<UserProfile> {
                             height: Dimension.d6,
                           ),
                           ProfileNav(
-                            title: 'Subscriptions',
+                            title: 'Subscriptions'.tr(),
                             onTap: () {
                               context.pushNamed(
                                 RoutesConstants.subscriptionsScreen,
@@ -180,7 +181,7 @@ class _UserProfileState extends State<UserProfile> {
                             },
                           ),
                           ProfileNav(
-                            title: 'About',
+                            title: 'About'.tr(),
                             onTap: () async {
                               await launchUrl(
                                 Uri.parse(
@@ -190,7 +191,7 @@ class _UserProfileState extends State<UserProfile> {
                             },
                           ),
                           ProfileNav(
-                            title: 'Logout',
+                            title: 'Logout'.tr(),
                             onTap: () {
                               showDialog(
                                 context: context,

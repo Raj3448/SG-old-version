@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -41,7 +42,7 @@ class HealthCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Last updated : ',
+                'Last updated : '.tr(),
                 style: AppTextStyle.bodyMediumMedium
                     .copyWith(color: AppColors.grayscale600),
               ),

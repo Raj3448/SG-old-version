@@ -222,7 +222,7 @@ Color _getStatusIconColor(String paymentStatus, String status) {
 
 String _getStatusText(String paymentStatus, String status) {
   if (paymentStatus == 'due') {
-    return 'Payment pending';
+    return 'Payment processing';
   }
   if (paymentStatus == 'expired') {
     return 'Payment failure';

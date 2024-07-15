@@ -205,7 +205,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
       case PaymentStatus.success:
         return 'Payment Successful';
       case PaymentStatus.pending:
-        return 'Payment Pending';
+        return 'Payment processing';
       case PaymentStatus.failure:
         return 'Payment Failure';
     }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -69,10 +70,10 @@ class _BookingsScreenState extends State<BookingsScreen>
               CustomizeTabviewComponent(
                 controller: controller,
                 tabCount: 3,
-                widgetList: const [
-                  Tab(icon: Text('Requested')),
-                  Tab(icon: Text('Active')),
-                  Tab(icon: Text('Completed')),
+                widgetList: [
+                  Tab(icon: Text('Requested'.tr())),
+                  Tab(icon: Text('Active'.tr())),
+                  Tab(icon: Text('Completed'.tr())),
                 ],
               ),
               const SizedBox(
