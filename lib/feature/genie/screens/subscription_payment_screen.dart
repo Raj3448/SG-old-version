@@ -156,6 +156,8 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                         .copyWith(color: AppColors.grayscale900),
                   ),
                   const SizedBox(height: Dimension.d5),
+                  _NoteComponent(),
+                  const SizedBox(height: Dimension.d6),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -209,5 +211,45 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
       case PaymentStatus.failure:
         return 'Payment Failure';
     }
+  }
+}
+
+class _NoteComponent extends StatelessWidget {
+  const _NoteComponent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                'Note',
+                style: AppTextStyle.bodyMediumMedium
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+              const SizedBox(width: Dimension.d1),
+              const Icon(
+                Icons.info_outline_rounded,
+                size: 16,
+                color: AppColors.grayscale900,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Please wait while the payment is being processed!',
+            style: AppTextStyle.bodyMediumMedium
+                .copyWith(color: AppColors.grayscale800),
+          ),
+        ],
+      ),
+    );
   }
 }
