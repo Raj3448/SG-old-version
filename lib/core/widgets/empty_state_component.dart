@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -18,8 +19,8 @@ class EmptyStateComponent extends StatelessWidget {
     final text = bookingServiceStatus == BookingServiceStatus.requested
         ? 'requested bookings'
         : bookingServiceStatus == BookingServiceStatus.active
-            ? 'active bookings'
-            : "You haven't completed any bookings yet.";
+            ? 'active bookings'.tr()
+            : "You haven't completed any bookings yet.".tr();
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
       child: Column(

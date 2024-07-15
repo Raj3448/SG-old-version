@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -92,7 +93,7 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
           child: Scaffold(
             backgroundColor: AppColors.white,
             appBar: PageAppbar(
-              title: 'Book Service',
+              title: 'Book Service'.tr(),
               onTap: store.servicePaymentStatus == PaymentStatus.failure
                   ? () {
                       context.pop();
@@ -204,7 +205,7 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
       case PaymentStatus.success:
         return 'Payment Successful';
       case PaymentStatus.pending:
-        return 'Payment Pending';
+        return 'Payment processing';
       case PaymentStatus.failure:
         return 'Payment Failure';
     }

@@ -106,7 +106,7 @@ class _ServiceBookingPaymentDetailScreenState
                 showIcon: false,
                 iconPath: AppIcons.add,
               ),
-              appBar: const PageAppbar(title: 'Book Service'),
+              appBar: PageAppbar(title: 'Book Service'.tr()),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
                 child: SingleChildScrollView(

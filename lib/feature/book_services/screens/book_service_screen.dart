@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -106,7 +107,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
-              appBar: const PageAppbar(title: 'Book Service'),
+              appBar: PageAppbar(title: 'Book Service'.tr()),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: FixedButton(
@@ -148,11 +149,11 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                   for (var i = 0;
                       i < components.data.attributes.form.length;
                       i++) {
-                    order++;
                     final component = components.data.attributes.form[i];
                     switch (component.component) {
                       case 'form-field-type.reference-question':
                         if (component.controlType == 'familyDropDown') {
+                          order++;
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
@@ -192,6 +193,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.text-question':
                         if (component.type == 'text') {
+                          order++;
                           final TextEditingController controller =
                               TextEditingController();
                           _controllers
@@ -248,6 +250,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.choice-question':
                         if (component.type == 'choice') {
+                          order++;
                           final controller = MultiSelectController<dynamic>();
                           _controllers
                               .add({component.formDetails.title: controller});
@@ -273,7 +276,32 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d2),
                             MultiSelectFormField(
                               controller: controller,
-                              selectedOptions: [values[0]],
+                              selectedOptions: formAnswers
+                                      .where(
+                                        (element) =>
+                                            element.question ==
+                                            component.formDetails.title,
+                                      )
+                                      .toList()
+                                      .isEmpty
+                                  ? null
+                                  : values
+                                      .where(
+                                        (element) =>
+                                            element.value ==
+                                            formAnswers
+                                                .where(
+                                                  (element) =>
+                                                      element.question ==
+                                                      component
+                                                          .formDetails.title,
+                                                )
+                                                .toList()
+                                                .first
+                                                .valueChoice
+                                                ?.first,
+                                      )
+                                      .toList(),
                               showClear: !component.formDetails.required,
                               hint: component.formDetails.placeholder,
                               onSaved: (newValue) {
@@ -307,6 +335,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.date-question':
                         if (component.type == 'date') {
+                          order++;
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
@@ -352,6 +381,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.integer-question':
                         if (component.type == 'integer') {
+                          order++;
                           final controller = TextEditingController(
                               text: component.defaultValue.toString());
                           _controllers

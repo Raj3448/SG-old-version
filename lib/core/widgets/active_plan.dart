@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_dynamic_calls
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -286,7 +287,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             ),
             const SizedBox(height: Dimension.d2),
             AnalogComponent(
-              label: 'Last Updated',
+              label: 'Last Updated'.tr(),
               value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
@@ -434,6 +435,7 @@ class _UpgradeProdLisComponent extends StatelessWidget {
   final store = GetIt.I<ProductListingStore>();
   @override
   Widget build(BuildContext context) {
+    final prodList = store.getProdListRankOrder(productBasicDetailsList);
     return productBasicDetailsList.isEmpty
         ? const SizedBox()
         : Column(
@@ -441,15 +443,15 @@ class _UpgradeProdLisComponent extends StatelessWidget {
             children: [
               const Divider(color: AppColors.line),
               const SizedBox(height: Dimension.d3),
-              const Text(
-                'Upgrade to Companion genie to benefit more',
+              Text(
+                'Upgrade to ${prodList.first.attributes.name} to benefit more',
                 style: AppTextStyle.bodySmallMedium,
               ),
               const SizedBox(height: Dimension.d2),
               ProductListingCareComponent(
                 isUpgradeable: true,
                 productBasicDetailsList:
-                    store.getProdListRankOrder(productBasicDetailsList),
+                    prodList,
               ),
             ],
           );
