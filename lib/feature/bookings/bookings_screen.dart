@@ -27,7 +27,7 @@ class _BookingsScreenState extends State<BookingsScreen>
 
   @override
   void initState() {
-    store.initGetAllServices();
+    store.refresh();
     controller = TabController(length: 3, vsync: this);
 
     _reactionDisposer =
@@ -40,7 +40,7 @@ class _BookingsScreenState extends State<BookingsScreen>
       }
       store.allServiceRefreshFailure = null;
     });
-    
+
     super.initState();
   }
 
@@ -115,16 +115,23 @@ class BookingsStateComponent extends StatelessWidget {
                 : store.getAllRequestedServiceList;
     return Observer(
       builder: (context) {
-        if (store.isAllServiceLoading || store.isAllServiceRefreshing) {
+        if (store.isAllServiceLoading) {
           return const Center(
             child: LoadingWidget(
               showShadow: false,
             ),
           );
         }
-        if (store.fetchServiceError != null) {
-          return const ErrorStateComponent(
-              errorType: ErrorType.somethinWentWrong);
+        if (store.fetchServiceError != null ||
+            store.allServiceRefreshFailure == 'No_Internet') {
+          final error =
+              store.fetchServiceError ?? store.allServiceRefreshFailure;
+          store..fetchServiceError = null
+          ..allServiceRefreshFailure = null;
+          return ErrorStateComponent(
+              errorType: error == 'No_Internet'
+                  ? ErrorType.noInternetConnection
+                  : ErrorType.somethinWentWrong);
         }
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

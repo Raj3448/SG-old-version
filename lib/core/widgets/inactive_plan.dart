@@ -140,15 +140,6 @@ class ProductListingCareComponent extends StatelessWidget {
     }
   }
 
-  String _getMetadataValue(List<Metadatum> metadata, String key) {
-    return metadata
-        .firstWhere(
-          (element) => element.key == key,
-          orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
-        )
-        .value;
-  }
-
   List<Widget> _buildBtnWidgetList(BuildContext context) {
     return productBasicDetailsList.map((product) {
       return Padding(
@@ -158,8 +149,8 @@ class ProductListingCareComponent extends StatelessWidget {
           type: _getSubscriptionType(product.attributes.name),
           buttonlabel: product.attributes.name,
           iconColorCode:
-              _getMetadataValue(product.attributes.metadata, 'icon_color_code'),
-          backgroundColorCode: _getMetadataValue(
+              getMetadataValue(product.attributes.metadata, 'icon_color_code'),
+          backgroundColorCode: getMetadataValue(
             product.attributes.metadata,
             'background_color_code',
           ),
@@ -188,3 +179,11 @@ class ProductListingCareComponent extends StatelessWidget {
     );
   }
 }
+  String getMetadataValue(List<Metadatum> metadata, String key) {
+    return metadata
+        .firstWhere(
+          (element) => element.key == key,
+          orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
+        )
+        .value;
+  }
