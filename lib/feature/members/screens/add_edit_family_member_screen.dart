@@ -206,6 +206,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             'profileImg':
                                 memberStore.activeMember!.profileImg?.id,
                           };
+                          print(updatedData);
                           if (storeImageFile != null) {
                             memberStore.updateMemberDataWithProfileImg(
                               id: _member.id.toString(),
@@ -404,11 +405,15 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
                                             launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                                                        .getMasterDataModel
+                                                        ?.masterData
+                                                        .contactUs
+                                                        .contactNumber ??
+                                                    '')
+                                                .then(
+                                              (value) =>
+                                                  GoRouter.of(context).pop(),
+                                            );
                                           },
                                         );
                                       },
@@ -460,11 +465,15 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
                                             launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                                                        .getMasterDataModel
+                                                        ?.masterData
+                                                        .contactUs
+                                                        .contactNumber ??
+                                                    '')
+                                                .then(
+                                              (value) =>
+                                                  GoRouter.of(context).pop(),
+                                            );
                                           },
                                         );
                                       },

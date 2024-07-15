@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, use_if_null_to_convert_nulls_to_bools, use_build_context_synchronously
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -147,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (bookingServiceStore.isAllServiceLoaded)
                         _ActiveBookingComponent(store: bookingServiceStore),
                       Text(
-                        'Book services',
+                        'Book service'.tr(),
                         style: AppTextStyle.bodyXLSemiBold.copyWith(
                           color: AppColors.grayscale900,
                           height: 2.6,
@@ -212,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      const _HomeScreenComponents(),
+                      _HomeScreenComponents(),
                     ],
                   ),
                 );
@@ -473,7 +474,7 @@ class _ActiveBookingComponent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Active bookings',
+                'Active bookings'.tr(),
                 style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
               ),
               ...List.generate(
@@ -572,14 +573,15 @@ class _EmergencyActivation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Emergency',
+            'Emergency'.tr(),
             style: AppTextStyle.bodyXLMedium.copyWith(
               fontWeight: FontWeight.w500,
               color: AppColors.grayscale900,
             ),
           ),
           Text(
-            'When the button is pressed, all emergency services will be activated.',
+            'When the button is pressed, all emergency services will be activated.'
+                .tr(),
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale900),
           ),
@@ -616,7 +618,7 @@ class _EmergencyActivation extends StatelessWidget {
                   backgroundColor: AppColors.white,
                 );
               },
-              title: 'Activate Emergency',
+              title: 'Activate Emergency'.tr(),
               showIcon: false,
               iconPath: Icons.not_interested,
               size: ButtonSize.large,
@@ -802,8 +804,8 @@ class _MemberInfoState extends State<_MemberInfo> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Family Members health info',
+          Text(
+            'Family Members health info'.tr(),
             style: AppTextStyle.bodyXLSemiBold,
           ),
           const SizedBox(height: Dimension.d4),

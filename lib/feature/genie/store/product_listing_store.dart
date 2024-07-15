@@ -201,7 +201,8 @@ abstract class _ProductListingStoreBase with Store {
     productListingService.buyService(formData: formData).then((value) {
       value.fold((l) {
         l.maybeMap(
-          socketError: (value) => buyServiceFailed = 'No Internet Connection',
+          serviceNotAvailbaleForUser: (value) => buyServiceFailed = 'This service is not available for selected user',
+          socketExceptionError: (value) => buyServiceFailed = 'No Internet Connection',
           orElse: () => buyServiceFailed = 'Something went wrong',
         );
       }, (r) {

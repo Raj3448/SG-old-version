@@ -123,7 +123,7 @@ class ServicePaymentStatusTrackingPage extends StatelessWidget {
                               ),
                               Text(
                                 paymentStatus == PaymentStatus.pending
-                                    ? 'Payment Pending'
+                                    ? 'Payment processing'
                                     : 'Payment Completed',
                                 style: AppTextStyle.bodyMediumBold.copyWith(
                                     color:

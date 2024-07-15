@@ -93,7 +93,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         if (homeCareServices.isNotEmpty)
                           _ServiceCategorySection(
-                            title: 'Home Care',
+                            title: 'Home Care'.tr(),
                             services: homeCareServices.take(3).toList(),
                             onTapViewAll: () {
                               context.pushNamed(
@@ -108,7 +108,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           )
                         else
                           NoServiceFound(
-                            title: 'Home Care',
+                            title: 'Home Care'.tr(),
                             ontap: () {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,
@@ -124,7 +124,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           ),
                         if (healthCareServices.isNotEmpty)
                           _ServiceCategorySection(
-                            title: 'Health Care',
+                            title: 'Health Care'.tr(),
                             services: healthCareServices.take(3).toList(),
                             onTapViewAll: () {
                               context.pushNamed(
@@ -139,7 +139,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           )
                         else
                           NoServiceFound(
-                            title: 'Health Care',
+                            title: 'Health Care'.tr(),
                             ontap: () {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,
@@ -155,7 +155,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           ),
                         if (convenienceCareServices.isNotEmpty)
                           _ServiceCategorySection(
-                            title: 'Convenience Care',
+                            title: 'Convenience Care'.tr(),
                             services: convenienceCareServices.take(3).toList(),
                             onTapViewAll: () {
                               context.pushNamed(
@@ -170,7 +170,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           )
                         else
                           NoServiceFound(
-                            title: 'Convenience Care',
+                            title: 'Convenience Care'.tr(),
                             ontap: () {
                               context.pushNamed(
                                 RoutesConstants.allServicesScreen,

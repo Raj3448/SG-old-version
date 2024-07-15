@@ -11,11 +11,34 @@ part 'product_listing_model.g.dart';
 class ProductListingModel with _$ProductListingModel {
   const factory ProductListingModel({
     required int id,
-    @JsonKey(name: 'attributes') required Product product,
+    @JsonKey(name: 'attributes') required Attributes product,
   }) = _ProductListingModel;
 
   factory ProductListingModel.fromJson(Map<String, dynamic> json) =>
       _$ProductListingModelFromJson(json);
+}
+
+@freezed
+class Attributes with _$Attributes {
+  const factory Attributes({
+    required int? id,
+    required String name,
+    required String type,
+    required String? code,
+    required bool? isActive,
+    required String category,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+    required List<Price> prices,
+    required SubscriptionContent? subscriptionContent,
+    @JsonKey(name: 'icon') required IconImage icon,
+    required Benefits? benefits,
+    required List<Metadatum>? metadata,
+    @Default([]) List<dynamic>? serviceContent,
+  }) = _Attributes;
+
+  factory Attributes.fromJson(Map<String, dynamic> json) =>
+      _$AttributesFromJson(json);
 }
 
 @freezed
@@ -31,7 +54,7 @@ class Product with _$Product {
     required DateTime? updatedAt,
     required List<Price> prices,
     required SubscriptionContent? subscriptionContent,
-    @JsonKey(name: 'icon') required IconImage? icon,
+    required IconImgMetaData? icon,
     required Benefits? benefits,
     required List<Metadatum>? metadata,
     @Default([]) List<dynamic>? serviceContent,
@@ -492,6 +515,7 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required List<FamilyMember>? belongsTo,
     @Default([]) List<dynamic>? payment_transactions,
     @Default([]) List<DatumAttributes>? benefits,
+    required RazorpaySubscription? razorpay_subscription,
   }) = _SubscriptionDetails;
 
   factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>
@@ -512,4 +536,28 @@ class FamilyMember with _$FamilyMember {
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) =>
       _$FamilyMemberFromJson(json);
+}
+
+@freezed
+class RazorpaySubscription with _$RazorpaySubscription {
+  const factory RazorpaySubscription({
+    required int id,
+    required String subscriptionId,
+    required String status,
+    required String planId,
+    required DateTime? chargeAt,
+    required int totalCount,
+    required int paidCount,
+    required dynamic shortUrl,
+    required bool hasScheduledChanges,
+    required int remainingCount,
+    required dynamic customerId,
+    required DateTime currentStart,
+    required DateTime currentEnd,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _RazorpaySubscription;
+
+  factory RazorpaySubscription.fromJson(Map<String, dynamic> json) =>
+      _$RazorpaySubscriptionFromJson(json);
 }

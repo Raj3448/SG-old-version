@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -59,7 +60,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(buyServiceFailed),
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -78,12 +79,22 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     super.initState();
   }
 
+  List<Map<String, dynamic>> _controllers = [];
   @override
   void dispose() {
     store
       ..servicePaymentInfoGotSuccess = null
       ..servicePaymentStatusModel = null;
     dobContr.dispose();
+    for (final controller in _controllers) {
+      for (final element in controller.values) {
+        if (element is MultiSelectController) {
+          element.dispose();
+        } else {
+          element.clear();
+        }
+      }
+    }
     super.dispose();
   }
 
@@ -96,7 +107,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
-              appBar: const PageAppbar(title: 'Book Service'),
+              appBar: PageAppbar(title: 'Book Service'.tr()),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: FixedButton(
@@ -134,6 +145,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                       );
                   final widgetList = <Widget>[];
                   final components = formDetailModel.attributes.productForm;
+                  int order = 0;
                   for (var i = 0;
                       i < components.data.attributes.form.length;
                       i++) {
@@ -141,16 +153,16 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                     switch (component.component) {
                       case 'form-field-type.reference-question':
                         if (component.controlType == 'familyDropDown') {
+                          order++;
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                label:
-                                    '${i + 1}. ${component.formDetails.title}',
+                                label: '$order. ${component.formDetails.title}',
                               ),
                             if (!component.formDetails.required)
                               Text(
-                                '${i + 1}. ${component.formDetails.title}',
+                                '$order. ${component.formDetails.title}',
                                 style: AppTextStyle.bodyMediumMedium
                                     .copyWith(color: AppColors.grayscale700),
                               ),
@@ -181,21 +193,30 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.text-question':
                         if (component.type == 'text') {
+                          order++;
+                          final TextEditingController controller =
+                              TextEditingController();
+                          _controllers
+                              .add({component.formDetails.title: controller});
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                label:
-                                    '${i + 1}. ${component.formDetails.title}',
+                                label: '$order. ${component.formDetails.title}',
                               ),
                             if (!component.formDetails.required)
                               Text(
-                                '${i + 1}. ${component.formDetails.title}',
+                                '$order. ${component.formDetails.title}',
                                 style: AppTextStyle.bodyMediumMedium
                                     .copyWith(color: AppColors.grayscale700),
                               ),
                             const SizedBox(height: Dimension.d2),
                             CustomTextField(
+                              controller: _controllers.firstWhere(
+                                (element) => element
+                                    .containsKey(component.formDetails.title),
+                              )[component.formDetails.title]
+                                  as TextEditingController,
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
@@ -229,21 +250,58 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.choice-question':
                         if (component.type == 'choice') {
+                          order++;
+                          final controller = MultiSelectController<dynamic>();
+                          _controllers
+                              .add({component.formDetails.title: controller});
+                          final values = List.generate(
+                            component.options.length,
+                            (index) => ValueItem(
+                              label: component.options[index].display,
+                              value: component.options[index].value,
+                            ),
+                          );
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                label:
-                                    '${i + 1}. ${component.formDetails.title}',
+                                label: '$order. ${component.formDetails.title}',
                               ),
                             if (!component.formDetails.required)
                               Text(
-                                '${i + 1}. ${component.formDetails.title}',
+                                '$order. ${component.formDetails.title}',
                                 style: AppTextStyle.bodyMediumMedium
                                     .copyWith(color: AppColors.grayscale700),
                               ),
                             const SizedBox(height: Dimension.d2),
                             MultiSelectFormField(
+                              controller: controller,
+                              selectedOptions: formAnswers
+                                      .where(
+                                        (element) =>
+                                            element.question ==
+                                            component.formDetails.title,
+                                      )
+                                      .toList()
+                                      .isEmpty
+                                  ? null
+                                  : values
+                                      .where(
+                                        (element) =>
+                                            element.value ==
+                                            formAnswers
+                                                .where(
+                                                  (element) =>
+                                                      element.question ==
+                                                      component
+                                                          .formDetails.title,
+                                                )
+                                                .toList()
+                                                .first
+                                                .valueChoice
+                                                ?.first,
+                                      )
+                                      .toList(),
                               showClear: !component.formDetails.required,
                               hint: component.formDetails.placeholder,
                               onSaved: (newValue) {
@@ -270,29 +328,23 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                       );
                                     }
                                   : null,
-                              values: List.generate(
-                                component.options.length,
-                                (index) => ValueItem(
-                                  label: component.options[index].display,
-                                  value: component.options[index].value,
-                                ),
-                              ),
+                              values: values,
                             ),
                           ]);
                         }
                         break;
                       case 'form-field-type.date-question':
                         if (component.type == 'date') {
+                          order++;
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                label:
-                                    '${i + 1}. ${component.formDetails.title}',
+                                label: '$order. ${component.formDetails.title}',
                               ),
                             if (!component.formDetails.required)
                               Text(
-                                '${i + 1}. ${component.formDetails.title}',
+                                '$order. ${component.formDetails.title}',
                                 style: AppTextStyle.bodyMediumMedium
                                     .copyWith(color: AppColors.grayscale700),
                               ),
@@ -329,24 +381,30 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         break;
                       case 'form-field-type.integer-question':
                         if (component.type == 'integer') {
+                          order++;
+                          final controller = TextEditingController(
+                              text: component.defaultValue.toString());
+                          _controllers
+                              .add({component.formDetails.title: controller});
                           widgetList.addAll([
                             const SizedBox(height: Dimension.d4),
                             if (component.formDetails.required)
                               AsteriskLabel(
-                                label:
-                                    '${i + 1}. ${component.formDetails.title}',
+                                label: '$order. ${component.formDetails.title}',
                               ),
                             if (!component.formDetails.required)
                               Text(
-                                '${i + 1}. ${component.formDetails.title}',
+                                '$order. ${component.formDetails.title}',
                                 style: AppTextStyle.bodyMediumMedium
                                     .copyWith(color: AppColors.grayscale700),
                               ),
                             const SizedBox(height: Dimension.d2),
                             CustomTextField(
-                              controller: TextEditingController(
-                                text: component.defaultValue.toString(),
-                              ),
+                              controller: _controllers.firstWhere(
+                                (element) => element
+                                    .containsKey(component.formDetails.title),
+                              )[component.formDetails.title]
+                                  as TextEditingController,
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
@@ -394,6 +452,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: Dimension.d4),
                             const BookingStatus(
                               currentStep: BookingStep.serviceDetails,
                             ),

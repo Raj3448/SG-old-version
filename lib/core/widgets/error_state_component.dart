@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:silver_genie/core/constants/colors.dart';
+import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 class ErrorStateComponent extends StatelessWidget {
@@ -42,19 +43,21 @@ class ErrorStateComponent extends StatelessWidget {
         break;
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SvgPicture.asset(imagePath),
-        const SizedBox(height: 16),
-        Text(errorMessage,
-            style: AppTextStyle.bodyXLSemiBold.copyWith(
-                height: 2.8, fontSize: 20, fontWeight: FontWeight.w600)),
-        Text(subcontent,
-            textAlign: TextAlign.center,
-            style: AppTextStyle.bodyLargeMedium
-                .copyWith(height: 1.5, color: AppColors.grayscale800))
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Dimension.d1),
+      child: Column(
+        children: [
+          SvgPicture.asset(imagePath),
+          const SizedBox(height: 16),
+          Text(errorMessage,
+              style: AppTextStyle.bodyXLSemiBold.copyWith(
+                  height: 2.8, fontSize: 20, fontWeight: FontWeight.w600)),
+          Text(subcontent,
+              textAlign: TextAlign.center,
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(height: 1.5, color: AppColors.grayscale800))
+        ],
+      ),
     );
   }
 }

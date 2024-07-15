@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -27,7 +28,7 @@ class _BookingsScreenState extends State<BookingsScreen>
 
   @override
   void initState() {
-    store.initGetAllServices();
+    store.refresh();
     controller = TabController(length: 3, vsync: this);
 
     _reactionDisposer =
@@ -40,7 +41,7 @@ class _BookingsScreenState extends State<BookingsScreen>
       }
       store.allServiceRefreshFailure = null;
     });
-    
+
     super.initState();
   }
 
@@ -69,10 +70,10 @@ class _BookingsScreenState extends State<BookingsScreen>
               CustomizeTabviewComponent(
                 controller: controller,
                 tabCount: 3,
-                widgetList: const [
-                  Tab(icon: Text('Requested')),
-                  Tab(icon: Text('Active')),
-                  Tab(icon: Text('Completed')),
+                widgetList: [
+                  Tab(icon: Text('Requested'.tr())),
+                  Tab(icon: Text('Active'.tr())),
+                  Tab(icon: Text('Completed'.tr())),
                 ],
               ),
               const SizedBox(
@@ -115,16 +116,23 @@ class BookingsStateComponent extends StatelessWidget {
                 : store.getAllRequestedServiceList;
     return Observer(
       builder: (context) {
-        if (store.isAllServiceLoading || store.isAllServiceRefreshing) {
+        if (store.isAllServiceLoading) {
           return const Center(
             child: LoadingWidget(
               showShadow: false,
             ),
           );
         }
-        if (store.fetchServiceError != null) {
-          return const ErrorStateComponent(
-              errorType: ErrorType.somethinWentWrong);
+        if (store.fetchServiceError != null ||
+            store.allServiceRefreshFailure == 'No_Internet') {
+          final error =
+              store.fetchServiceError ?? store.allServiceRefreshFailure;
+          store..fetchServiceError = null
+          ..allServiceRefreshFailure = null;
+          return ErrorStateComponent(
+              errorType: error == 'No_Internet'
+                  ? ErrorType.noInternetConnection
+                  : ErrorType.somethinWentWrong);
         }
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
