@@ -1,17 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, use_if_null_to_convert_nulls_to_bools, use_build_context_synchronously
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -146,7 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           homeStore.getMasterDataModel != null)
                         _EmergencyActivation(
                           memberStore: memberStore,
-                          emergencyHelpline: homeStore.getMasterDataModel!.masterData.emergencyHelpline,
+                          emergencyHelpline: homeStore
+                              .getMasterDataModel!.masterData.emergencyHelpline,
                         ),
                       if (bookingServiceStore.isAllServiceLoaded)
                         _ActiveBookingComponent(store: bookingServiceStore),
@@ -216,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      _HomeScreenComponents(),
+                      const _HomeScreenComponents(),
                     ],
                   ),
                 );
@@ -553,8 +549,10 @@ class _TestmonialsCard extends StatelessWidget {
 class _EmergencyActivation extends StatelessWidget {
   final MembersStore memberStore;
   final EmergencyHelpline emergencyHelpline;
-  const _EmergencyActivation(
-      {required this.memberStore, required this.emergencyHelpline});
+  const _EmergencyActivation({
+    required this.memberStore,
+    required this.emergencyHelpline,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -598,8 +596,9 @@ class _EmergencyActivation extends StatelessWidget {
                           ? null
                           : const NeverScrollableScrollPhysics(),
                       child: _EmergencyActivateBottomSheet(
-                          memberStore: memberStore,
-                          emergencyHelpline: emergencyHelpline),
+                        memberStore: memberStore,
+                        emergencyHelpline: emergencyHelpline,
+                      ),
                     );
                   },
                   shape: const RoundedRectangleBorder(
@@ -705,8 +704,8 @@ class _EmergencyActivateBottomSheetState
                           widget.memberStore.familyMembers[index].relation,
                       onPressed: () async {
                         await launchDialer(
-                                widget.emergencyHelpline.contactNumber)
-                            .then(
+                          widget.emergencyHelpline.contactNumber,
+                        ).then(
                           (value) {
                             setState(() {
                               isActivate = true;
@@ -1122,10 +1121,29 @@ class _NewsletterComponent extends StatelessWidget {
                         if (newsletterModel
                                 .newsletters[index].link.downloadLink ==
                             true) {
-                          downloadAndSavePDF(
-                            newsletterModel.newsletters[index].link.href,
-                            '${newsletterModel.newsletters[index].link.label}',
-                            context,
+                          FileDownloader.downloadFile(
+                            url: newsletterModel.newsletters[index].link.href,
+                            name:
+                                '${newsletterModel.newsletters[index].link.label}',
+                            notificationType: NotificationType.all,
+                            onDownloadCompleted: (path) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'File downloaded successfully!\nPath - $path',
+                                  ),
+                                ),
+                              );
+                            },
+                            onDownloadError: (path) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Something went wrong!',
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         } else {
                           launchUrl(
@@ -1158,153 +1176,4 @@ class _NewsletterComponent extends StatelessWidget {
       ],
     );
   }
-}
-
-Future<void> downloadAndSavePDF(
-  String url,
-  String fileName,
-  BuildContext context,
-) async {
-  try {
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    final androidVersion = androidInfo.version.sdkInt;
-
-    Directory? directory;
-    bool permissionGranted = false;
-
-    if (androidVersion < 30) {
-      permissionGranted = await _requestStoragePermission(context);
-      if (permissionGranted) {
-        directory = Directory('/storage/emulated/0/Download');
-      } else {
-        return;
-      }
-    } else {
-      permissionGranted =
-          await _requestManageExternalStoragePermission(context);
-      if (permissionGranted) {
-        directory = await getExternalStorageDirectory();
-      } else {
-        return;
-      }
-    }
-
-    if (directory == null) {
-      throw Exception('Could not access storage directory');
-    }
-
-    if (!await directory.exists()) {
-      await directory.create(recursive: true);
-    }
-
-    final filePath = '${directory.path}/$fileName.pdf';
-    final dio = Dio();
-    final response = await dio.download(url, filePath);
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('File downloaded successfully: $filePath')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error downloading file!')),
-      );
-    }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Something went wrong!: $e')),
-    );
-  }
-}
-
-Future<bool> _requestStoragePermission(BuildContext context) async {
-  var status = await Permission.storage.status;
-  if (status.isGranted) {
-    return true;
-  }
-
-  status = await Permission.storage.request();
-  if (status.isGranted) {
-    return true;
-  }
-
-  if (status.isPermanentlyDenied) {
-    _showPermissionDeniedDialog(context, 'storage');
-  } else {
-    _showPermissionExplanationDialog(context, 'storage');
-  }
-
-  return false;
-}
-
-Future<bool> _requestManageExternalStoragePermission(
-  BuildContext context,
-) async {
-  var status = await Permission.manageExternalStorage.status;
-  if (status.isGranted) {
-    return true;
-  }
-
-  status = await Permission.manageExternalStorage.request();
-  if (status.isGranted) {
-    return true;
-  }
-
-  if (status.isPermanentlyDenied) {
-    _showPermissionDeniedDialog(context, 'manage external storage');
-  } else {
-    _showPermissionExplanationDialog(context, 'manage external storage');
-  }
-
-  return false;
-}
-
-void _showPermissionDeniedDialog(BuildContext context, String permissionName) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
-      backgroundColor: AppColors.white,
-      surfaceTintColor: AppColors.white,
-      title: const Text('Permission Required'),
-      content: Text(
-        '$permissionName permission is required to download files. Please enable it in app settings.',
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Cancel'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        TextButton(
-          child: const Text('Open Settings'),
-          onPressed: () {
-            openAppSettings();
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-void _showPermissionExplanationDialog(
-  BuildContext context,
-  String permissionName,
-) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
-      backgroundColor: AppColors.white,
-      surfaceTintColor: AppColors.white,
-      title: const Text('Permission Required'),
-      content: Text(
-        '$permissionName permission is required to download files. Please grant the permission when prompted.',
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('OK'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
-    ),
-  );
 }
