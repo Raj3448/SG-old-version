@@ -21,7 +21,6 @@ import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/plan_display_component.dart';
 import 'package:silver_genie/feature/book_services/screens/services_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
-import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
@@ -70,7 +69,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                       );
                     } else {
                       final eitherData = snapshot.data;
-
                       if (eitherData != null) {
                         return eitherData.fold(
                           (failure) {
@@ -130,6 +128,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                                           _SubscriptionList(
                                             members: activePlanList,
                                             isPrevious: false,
+                                            activePlans: activePlanList,
                                           ),
                                         if (expiredPlanList.isEmpty)
                                           NoServiceFound(
@@ -143,6 +142,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                                           _SubscriptionList(
                                             members: expiredPlanList,
                                             isPrevious: true,
+                                            activePlans: activePlanList,
                                           ),
                                       ],
                                     ),
@@ -175,8 +175,10 @@ class _SubscriptionList extends StatelessWidget {
   const _SubscriptionList({
     required this.members,
     required this.isPrevious,
+    required this.activePlans,
   });
   final List<SubscriptionDetails> members;
+  final List<SubscriptionDetails> activePlans;
   final bool isPrevious;
 
   @override
@@ -203,6 +205,7 @@ class _SubscriptionList extends StatelessWidget {
         return _UserDetailsComponent(
           memberDetails: plan,
           isPrevious: isPrevious,
+          activePlans: activePlans,
         );
       },
     );
@@ -213,15 +216,16 @@ class _UserDetailsComponent extends StatelessWidget {
   const _UserDetailsComponent({
     required this.memberDetails,
     required this.isPrevious,
+    required this.activePlans,
   });
 
   final SubscriptionDetails memberDetails;
   final bool isPrevious;
+  final List<SubscriptionDetails> activePlans;
 
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<UserDetailStore>();
-    final memberStore = GetIt.I<MembersStore>();
     final familyMembers = memberDetails.belongsTo;
     final hasMultipleMembers = familyMembers!.length > 1;
     final interval = memberDetails.product.prices
@@ -232,16 +236,30 @@ class _UserDetailsComponent extends StatelessWidget {
         .where((price) => price.id == memberDetails.priceId)
         .map((price) => price.recurringIntervalCount)
         .join(' ');
-    final members = memberStore.familyMembers;
 
-    final hasActiveSubscription = members.any(
-      (member) => member.subscriptions!.any(
-        (subscription) =>
-            subscription.subscriptionStatus == 'Active' &&
-            subscription.paymentStatus == 'paid',
-      ),
-    );
+    List<FamilyMember> extractUniqueMembers(
+      List<SubscriptionDetails> subscriptionDetailList,
+    ) {
+      var memberList = <FamilyMember>[];
+      final uniqueMembersSet = <FamilyMember>{};
+      for (final subscription in subscriptionDetailList) {
+        if (subscription.belongsTo != null) {
+          uniqueMembersSet.addAll(subscription.belongsTo!);
+        }
+      }
+      memberList = uniqueMembersSet.toList();
+      return memberList;
+    }
 
+    var hasActiveSubscription = false;
+    if (isPrevious) {
+      final activePlanMemberList = extractUniqueMembers(activePlans);
+      hasActiveSubscription = memberDetails.belongsTo?.any((familyMember) {
+            return activePlanMemberList
+                .any((activeMember) => activeMember.id == familyMember.id);
+          }) ??
+          false;
+    }
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
