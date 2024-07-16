@@ -215,6 +215,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
+                      const SizedBox(
+                        height: Dimension.d2,
+                      ),
                       const _HomeScreenComponents(),
                     ],
                   ),
@@ -982,7 +985,7 @@ class BookServiceButton extends StatelessWidget {
         children: [
           Container(
             height: 64,
-            width: 64,
+            width: 98,
             decoration: BoxDecoration(
               color: AppColors.secondary,
               border: Border.all(width: 2, color: AppColors.grayscale300),
@@ -994,15 +997,16 @@ class BookServiceButton extends StatelessWidget {
             height: Dimension.d2,
           ),
           SizedBox(
-            height: 32,
+            height: 40,
             width: 87,
             child: Text(
               buttonName,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodySmallMedium.copyWith(
                 color: AppColors.grayscale700,
-                fontWeight: FontWeight.w500,
-                height: 1,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: 1.5,
               ),
             ),
           ),
