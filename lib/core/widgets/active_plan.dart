@@ -369,71 +369,132 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 );
               },
             ),
-            if (renewsIn < 4 && member.razorpay_subscription.status == 'active')
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(color: AppColors.line),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-                    child: Text(
-                      renewsIn < 2
-                          ? 'Your plan renews in $renewsIn day.'
-                          : 'Your plan renews in $renewsIn days.',
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.error),
-                    ),
-                  ),
-                ],
-              )
-            else if (member.razorpay_subscription.status == 'pending')
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(color: AppColors.line),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-                    child: Text(
-                      'Auto-renewal failed!',
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.error),
-                    ),
-                  ),
-                ],
-              )
-            else if (expiresIn < 4)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(color: AppColors.line),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-                    child: Text(
-                      expiresIn < 2
-                          ? 'Your plan expires in $expiresIn day.'
-                          : 'Your plan expires in $expiresIn days.',
-                      style: AppTextStyle.bodyMediumMedium
-                          .copyWith(color: AppColors.error),
-                    ),
-                  ),
-                ],
-              )
-            else if (memberStore.activeMember != null &&
-                memberStore.activeMember!.subscriptions != null)
-              Observer(
-                builder: (context) {
-                  return _UpgradeProdLisComponent(
-                    productBasicDetailsList: store.getUpgradeProdListById(
-                      '${memberStore.activeMember!.subscriptions![0].product.id}',
-                    ),
-                  );
-                },
-              ),
+            // if (renewsIn < 4 && member.razorpay_subscription.status == 'active')
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       const Divider(color: AppColors.line),
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+            //         child: Text(
+            //           renewsIn < 2
+            //               ? 'Your plan renews in $renewsIn day.'
+            //               : 'Your plan renews in $renewsIn days.',
+            //           style: AppTextStyle.bodyMediumMedium
+            //               .copyWith(color: AppColors.error),
+            //         ),
+            //       ),
+            //     ],
+            //   )
+            // else if (member.razorpay_subscription.status == 'pending')
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       const Divider(color: AppColors.line),
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+            //         child: Text(
+            //           'Auto-renewal failed!',
+            //           style: AppTextStyle.bodyMediumMedium
+            //               .copyWith(color: AppColors.error),
+            //         ),
+            //       ),
+            //     ],
+            //   )
+            // else if (expiresIn < 4)
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       const Divider(color: AppColors.line),
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+            //         child: Text(
+            //           expiresIn < 2
+            //               ? 'Your plan expires in $expiresIn day.'
+            //               : 'Your plan expires in $expiresIn days.',
+            //           style: AppTextStyle.bodyMediumMedium
+            //               .copyWith(color: AppColors.error),
+            //         ),
+            //       ),
+            //     ],
+            //   )
+            // else if (memberStore.activeMember != null &&
+            //     memberStore.activeMember!.subscriptions != null)
+            //   Observer(
+            //     builder: (context) {
+            //       return _UpgradeProdLisComponent(
+            //         productBasicDetailsList: store.getUpgradeProdListById(
+            //           '${memberStore.activeMember!.subscriptions![0].product.id}',
+            //         ),
+            //       );
+            //     },
+            //   ),
+            _buildRenewalAndExpirationInfo(renewsIn, expiresIn, member),
           ],
         ),
       ),
     );
   }
+}
+
+Widget _buildRenewalAndExpirationInfo(
+    int renewsIn, int expiresIn, SubscriptionDetails member) {
+  // Determine messages based on renewsIn and expiresIn
+  String renewalMessage;
+  String expirationMessage;
+
+  if (renewsIn < 0) {
+    renewalMessage = 'Your plan renewed yesterday.';
+  } else if (renewsIn == 0) {
+    renewalMessage = 'Your plan renews today.';
+  } else {
+    renewalMessage = renewsIn == 1
+        ? 'Your plan renews in $renewsIn day.'
+        : 'Your plan renews in $renewsIn days.';
+  }
+
+  if (expiresIn < 0) {
+    expirationMessage = 'Your plan expired yesterday.';
+  } else if (expiresIn == 0) {
+    expirationMessage = 'Your plan expires today.';
+  } else {
+    expirationMessage = expiresIn == 1
+        ? 'Your plan expires in $expiresIn day.'
+        : 'Your plan expires in $expiresIn days.';
+  }
+
+  // Check renewal and expiration statuses
+  if (renewsIn < 4 && member.razorpay_subscription.status == 'active') {
+    return _buildStatusInfo(
+      message: renewalMessage,
+    );
+  } else if (member.razorpay_subscription.status == 'pending') {
+    return _buildStatusInfo(
+      message: 'Auto-renewal failed!',
+    );
+  } else if (expiresIn < 4) {
+    return _buildStatusInfo(message: expirationMessage);
+  }
+
+  return const SizedBox(); // Return empty widget if no conditions met
+}
+
+Widget _buildStatusInfo({required String message}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Divider(color: AppColors.line),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+        child: Text(
+          message,
+          style: AppTextStyle.bodyMediumMedium.copyWith(
+            color: AppColors.error,
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 class _VitalInfoBox extends StatelessWidget {
