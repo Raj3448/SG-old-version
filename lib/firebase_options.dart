@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA8Y1C0KyYvrMvmOGccFeUmYrDV3arwt68',
-    appId: '1:973765976558:android:7865ebe52dc7832fa1aeff',
-    messagingSenderId: '973765976558',
-    projectId: 'silvergenie-907b7',
-    storageBucket: 'silvergenie-907b7.appspot.com',
+    apiKey: 'AIzaSyAO_580AzAJzuSFkVvkHzlmesRjqXXmGUs',
+    appId: '1:779722917769:android:51764b3903fab2ff310358',
+    messagingSenderId: '779722917769',
+    projectId: 'silvergenie-112bf',
+    storageBucket: 'silvergenie-112bf.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBVAYopHE1ZxRx-V_Qm14tEkcmw2LwynWU',
-    appId: '1:973765976558:ios:df99b65bf06ce04ea1aeff',
-    messagingSenderId: '973765976558',
-    projectId: 'silvergenie-907b7',
-    storageBucket: 'silvergenie-907b7.appspot.com',
+    apiKey: 'AIzaSyD4ng78t20-yP6_wlP1ZUuUhcG9ZZs_o-M',
+    appId: '1:779722917769:ios:0f67f376dcdd6e82310358',
+    messagingSenderId: '779722917769',
+    projectId: 'silvergenie-112bf',
+    storageBucket: 'silvergenie-112bf.appspot.com',
     iosBundleId: 'silver.genie',
   );
+
 }

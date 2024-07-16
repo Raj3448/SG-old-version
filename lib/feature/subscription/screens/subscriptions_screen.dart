@@ -69,7 +69,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                       );
                     } else {
                       final eitherData = snapshot.data;
-
                       if (eitherData != null) {
                         return eitherData.fold(
                           (failure) {
@@ -129,6 +128,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                                           _SubscriptionList(
                                             members: activePlanList,
                                             isPrevious: false,
+                                            activePlans: activePlanList,
                                           ),
                                         if (expiredPlanList.isEmpty)
                                           NoServiceFound(
@@ -142,6 +142,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                                           _SubscriptionList(
                                             members: expiredPlanList,
                                             isPrevious: true,
+                                            activePlans: activePlanList,
                                           ),
                                       ],
                                     ),
@@ -174,8 +175,10 @@ class _SubscriptionList extends StatelessWidget {
   const _SubscriptionList({
     required this.members,
     required this.isPrevious,
+    required this.activePlans,
   });
   final List<SubscriptionDetails> members;
+  final List<SubscriptionDetails> activePlans;
   final bool isPrevious;
 
   @override
@@ -202,6 +205,7 @@ class _SubscriptionList extends StatelessWidget {
         return _UserDetailsComponent(
           memberDetails: plan,
           isPrevious: isPrevious,
+          activePlans: activePlans,
         );
       },
     );
@@ -212,10 +216,12 @@ class _UserDetailsComponent extends StatelessWidget {
   const _UserDetailsComponent({
     required this.memberDetails,
     required this.isPrevious,
+    required this.activePlans,
   });
 
   final SubscriptionDetails memberDetails;
   final bool isPrevious;
+  final List<SubscriptionDetails> activePlans;
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +237,29 @@ class _UserDetailsComponent extends StatelessWidget {
         .map((price) => price.recurringIntervalCount)
         .join(' ');
 
+    List<FamilyMember> extractUniqueMembers(
+      List<SubscriptionDetails> subscriptionDetailList,
+    ) {
+      var memberList = <FamilyMember>[];
+      final uniqueMembersSet = <FamilyMember>{};
+      for (final subscription in subscriptionDetailList) {
+        if (subscription.belongsTo != null) {
+          uniqueMembersSet.addAll(subscription.belongsTo!);
+        }
+      }
+      memberList = uniqueMembersSet.toList();
+      return memberList;
+    }
+
+    var hasActiveSubscription = false;
+    if (isPrevious) {
+      final activePlanMemberList = extractUniqueMembers(activePlans);
+      hasActiveSubscription = memberDetails.belongsTo?.any((familyMember) {
+            return activePlanMemberList
+                .any((activeMember) => activeMember.id == familyMember.id);
+          }) ??
+          false;
+    }
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
@@ -382,22 +411,26 @@ class _UserDetailsComponent extends StatelessWidget {
                 if (isPrevious)
                   Expanded(
                     child: CustomButton(
-                      ontap: () {
-                        context.pushNamed(
-                          RoutesConstants.geniePage,
-                          pathParameters: {
-                            'pageTitle': memberDetails.product.name,
-                            'id': '${memberDetails.product.id}',
-                            'isUpgradeable': 'false',
-                            'activeMemberId': '${memberDetails.id}',
-                          },
-                        );
-                      },
+                      ontap: hasActiveSubscription
+                          ? null
+                          : () {
+                              context.pushNamed(
+                                RoutesConstants.geniePage,
+                                pathParameters: {
+                                  'pageTitle': memberDetails.product.name,
+                                  'id': '${memberDetails.product.id}',
+                                  'isUpgradeable': 'false',
+                                  'activeMemberId': '${memberDetails.id}',
+                                },
+                              );
+                            },
                       title: 'Buy again',
                       showIcon: false,
                       iconPath: AppIcons.add,
                       size: ButtonSize.small,
-                      type: ButtonType.primary,
+                      type: hasActiveSubscription
+                          ? ButtonType.disable
+                          : ButtonType.primary,
                       expanded: true,
                       iconColor: AppColors.primary,
                     ),

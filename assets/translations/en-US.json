@@ -39,6 +39,7 @@
     "Requested" : "Requested",
     "Active" : "Active",
     "Completed" : "Completed",
+    "'Family" : "'Family",
     "renewsIn": "Your plan Renews in {} day.",
     "renewsInDays": "Your plan Renews in {} days.",
     "expiresIn": "Your plan Expires in {} day.",
