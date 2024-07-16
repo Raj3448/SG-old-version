@@ -571,7 +571,8 @@ class _EmergencyActivation extends StatelessWidget {
             ),
           ),
           Text(
-            'When the button is pressed, all emergency services will be activated.'.tr(),
+            'When the button is pressed, all emergency services will be activated.'
+                .tr(),
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale900),
           ),
@@ -969,7 +970,7 @@ class BookServiceButton extends StatelessWidget {
         children: [
           Container(
             height: 64,
-            width: 64,
+            width: 98,
             decoration: BoxDecoration(
               color: AppColors.secondary,
               border: Border.all(width: 2, color: AppColors.grayscale300),
