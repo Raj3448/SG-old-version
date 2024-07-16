@@ -524,6 +524,7 @@ class SubscriptionDetails with _$SubscriptionDetails {
 
 @freezed
 class FamilyMember with _$FamilyMember {
+  @Freezed(equal: true, copyWith: true, toStringOverride: true, fromJson: true)
   const factory FamilyMember({
     required int id,
     required String firstName,
