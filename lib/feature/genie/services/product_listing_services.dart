@@ -5,6 +5,7 @@ import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_stor
 import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/failure/member_services_failure.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
@@ -20,7 +21,7 @@ abstract class IProductListingService {
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
     required String productCode,
   });
-  Future<Either<Failure, ServiceTrackerResponse>> buyService({
+  Future<Either<MemberServiceFailure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   });
   Future<Either<Failure, bool>> bookService({
@@ -177,7 +178,7 @@ class ProductListingServices extends IProductListingService {
   }
 
   @override
-  Future<Either<Failure, ServiceTrackerResponse>> buyService({
+  Future<Either<MemberServiceFailure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   }) async {
     try {
@@ -185,6 +186,7 @@ class ProductListingServices extends IProductListingService {
         '/api/service-tracker/request-new',
         data: formData.toJson(),
       );
+      
       if (response.statusCode == 200) {
         final data = response.data['data'];
         if (data != null) {
@@ -192,17 +194,22 @@ class ProductListingServices extends IProductListingService {
             ServiceTrackerResponse.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(Failure.badResponse());
-      } else {
-        return const Left(Failure.badResponse());
+        return const Left(MemberServiceFailure.badResponse());
+      }
+      if(response.statusCode == 404 && response.data['error']['details']['name'] ==
+          'SERVICE_NOT_AVAILABLE_FOR_SELECTED_MEMBER'){
+          return const Left(MemberServiceFailure.serviceNotAvailbaleForUser());
+      }
+      else {
+        return const Left(MemberServiceFailure.badResponse());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(MemberServiceFailure.socketExceptionError());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(MemberServiceFailure.someThingWentWrong());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(MemberServiceFailure.someThingWentWrong());
     }
   }
 

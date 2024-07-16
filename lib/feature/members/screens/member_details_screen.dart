@@ -46,10 +46,16 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
-    final hasEPR = activeMember?.subscriptions?[0].benefits?.any(
-          (benefits) => benefits.code == 'EPR' && benefits.isActive == true,
-        ) ??
-        false;
+    bool hasEPR = false;
+
+    if (activeMember!.subscriptions!.isNotEmpty) {
+      if (activeMember!.subscriptions![0].benefits!.any(
+        (benefits) => benefits.code == 'EPR' && benefits.isActive == true,
+      )) {
+        hasEPR = true;
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -71,12 +77,13 @@ class MemberDetailsScreen extends StatelessWidget {
                         showBtnIcon: true,
                         btnIconPath: AppIcons.phone,
                         onTap: () {
-                          launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                          launchDialer(
+                            homeStore.getMasterDataModel?.masterData.contactUs
+                                    .contactNumber ??
+                                '',
+                          ).then(
+                            (value) => GoRouter.of(context).pop(),
+                          );
                         },
                       );
                     },

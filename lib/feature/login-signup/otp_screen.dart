@@ -250,7 +250,11 @@ class _OTPScreenState extends State<OTPScreen> {
                                                       signupStore.lastName,
                                                       signupStore.dob,
                                                       signupStore.email,
-                                                      signupStore.phoneNumber,
+                                                      '${signupStore.selectCountryDialCode ?? '91'} ${signupStore.phoneNumber}'
+                                                          .replaceFirst(
+                                                        '+',
+                                                        '',
+                                                      ),
                                                     );
                                             },
                                       title: store.isResendLoading

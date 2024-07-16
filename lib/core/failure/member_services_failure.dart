@@ -20,4 +20,7 @@ abstract class MemberServiceFailure with _$MemberServiceFailure {
   const factory MemberServiceFailure.memberDontHaveEPRInfo() =
       MemberDontHaveEPRInfo;
   const factory MemberServiceFailure.memberPHRNotFound() = MemberPHRNotFound;
+  const factory MemberServiceFailure.serviceNotAvailbaleForUser() =
+      ServiceNotAvailbaleForUser;
+  const factory MemberServiceFailure.someThingWentWrong() = someThingWentWrong;
 }

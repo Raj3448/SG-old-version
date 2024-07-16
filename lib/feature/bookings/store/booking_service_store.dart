@@ -34,8 +34,8 @@ abstract class _BookingServiceStoreBase with Store {
       ? []
       : bookingServices!.services
           .where(
-            (element) =>  element.status == 'requested' ||
-                          element.status == 'processing',
+            (element) =>
+                element.status == 'requested' || element.status == 'processing',
           )
           .toList();
 
@@ -44,8 +44,8 @@ abstract class _BookingServiceStoreBase with Store {
       ? []
       : bookingServices!.services
           .where(
-            (element) => element.status == 'processed' ||
-                          element.status == 'active',
+            (element) =>
+                element.status == 'processed' || element.status == 'active',
           )
           .toList();
 
@@ -54,8 +54,8 @@ abstract class _BookingServiceStoreBase with Store {
       ? []
       : bookingServices!.services
           .where(
-            (element) => element.status == 'completed' ||
-                        element.status == 'rejected',
+            (element) =>
+                element.status == 'completed' || element.status == 'rejected',
           )
           .toList();
 
@@ -67,7 +67,10 @@ abstract class _BookingServiceStoreBase with Store {
     isAllServiceLoading = true;
     ibookingService.getBookingServiceBasicDetails().then((value) {
       value.fold((l) {
-        fetchServiceError = 'Something went wrong';
+        l.maybeMap(
+          socketError: (value) => fetchServiceError = 'No_Internet',
+          orElse: () => fetchServiceError = 'Something went wrong',
+        );
       }, (r) {
         isAllServiceLoaded = true;
         bookingServices = r;
@@ -83,8 +86,11 @@ abstract class _BookingServiceStoreBase with Store {
       (value) {
         value.fold(
           (l) {
-            allServiceRefreshFailure =
-                'Unable to load updated booking services';
+            l.maybeMap(
+              socketError: (e) => allServiceRefreshFailure =
+                'No_Internet',
+              orElse: () => allServiceRefreshFailure =
+                'Unable to load updated booking services',);
           },
           (r) {
             bookingServices = r;
