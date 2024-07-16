@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
@@ -163,7 +164,9 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                           desc: store.servicePaymentStatus ==
                                   PaymentStatus.failure
                               ? 'If any amount has been debited from your bank account, it will be refunded. If the problem persists, please contact Silver Genie support.'
-                              : "Your payment is being processed and your money is safe. You'll receive a confirmation shortly. If the problem persists, please contact Silver Genie support.",
+                                  .tr()
+                              : "Your payment is being processed and your money is safe. You'll receive a confirmation shortly. If the problem persists, please contact Silver Genie support."
+                                  .tr(),
                         ),
                         const SizedBox(height: Dimension.d6),
                       ],

@@ -38,5 +38,7 @@
     "Convenience Care" : "Convenience Care",
     "Requested" : "Requested",
     "Active" : "Active",
-    "Completed" : "Completed"
+    "Completed" : "Completed",
+    "If any amount has been debited from your bank account, it will be refunded. If the problem persists, please contact Silver Genie support.": "Note component desc",
+    "Your payment is being processed and your money is safe. You'll receive a confirmation shortly. If the problem persists, please contact Silver Genie support.": "Note component desc"
 }
