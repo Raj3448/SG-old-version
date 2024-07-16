@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, use_if_null_to_convert_nulls_to_bools, use_build_context_synchronously
 // ignore_for_file: unnecessary_null_comparison, lines_longer_than_80_chars
 
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_file_downloader/flutter_file_downloader.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -213,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      _HomeScreenComponents(),
+                      const _HomeScreenComponents(),
                     ],
                   ),
                 );
@@ -1084,10 +1086,60 @@ class _HomeScreenOfferCard extends StatelessWidget {
   }
 }
 
-class _NewsletterComponent extends StatelessWidget {
+class _NewsletterComponent extends StatefulWidget {
   const _NewsletterComponent({required this.newsletterModel});
 
   final NewsletterModel newsletterModel;
+
+  @override
+  State<_NewsletterComponent> createState() => _NewsletterComponentState();
+}
+
+class _NewsletterComponentState extends State<_NewsletterComponent> {
+  late Timer _timer;
+  String? _taskId;
+
+  Future<void> startDownload(int index) async {
+    _taskId = await FlutterDownloader.enqueue(
+      url: widget.newsletterModel.newsletters[index].link.href,
+      savedDir: '/storage/emulated/0/Download/',
+      fileName: '${widget.newsletterModel.newsletters[index].link.label}',
+      saveInPublicStorage: true,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Download started!'),
+      ),
+    );
+
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+      final tasks = await FlutterDownloader.loadTasksWithRawQuery(
+        query: "SELECT * FROM task WHERE task_id='$_taskId'",
+      );
+
+      if (tasks!.isNotEmpty) {
+        final status = tasks.first.status;
+        if (status == DownloadTaskStatus.complete) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download completed!')),
+          );
+          timer.cancel();
+        } else if (status == DownloadTaskStatus.failed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download failed!')),
+          );
+          timer.cancel();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1096,73 +1148,51 @@ class _NewsletterComponent extends StatelessWidget {
       children: [
         const SizedBox(height: Dimension.d6),
         Text(
-          newsletterModel.title,
+          widget.newsletterModel.title,
           style:
               AppTextStyle.bodyXLMedium.copyWith(color: AppColors.grayscale900),
         ),
         const SizedBox(height: Dimension.d3),
         Text(
-          newsletterModel.description,
+          widget.newsletterModel.description,
           style: AppTextStyle.bodyLargeMedium
               .copyWith(color: AppColors.grayscale700),
         ),
         const SizedBox(height: Dimension.d3),
-        if (newsletterModel.newsletters.isNotEmpty)
+        if (widget.newsletterModel.newsletters.isNotEmpty)
           Row(
-            mainAxisAlignment: newsletterModel.newsletters.length > 1
+            mainAxisAlignment: widget.newsletterModel.newsletters.length > 1
                 ? MainAxisAlignment.spaceBetween
                 : MainAxisAlignment.center,
             children: List.generate(
-              newsletterModel.newsletters.length > 1 ? 2 : 1,
+              widget.newsletterModel.newsletters.length > 1 ? 2 : 1,
               (index) => Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     CustomButton(
                       ontap: () {
-                        if (newsletterModel
-                                .newsletters[index].link.downloadLink ==
+                        if (widget.newsletterModel.newsletters[index].link
+                                .downloadLink ==
                             true) {
-                          FileDownloader.downloadFile(
-                            url: newsletterModel.newsletters[index].link.href,
-                            name:
-                                '${newsletterModel.newsletters[index].link.label}',
-                            notificationType: NotificationType.all,
-                            onDownloadCompleted: (path) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'File downloaded successfully!\nPath - $path',
-                                  ),
-                                ),
-                              );
-                            },
-                            onDownloadError: (path) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Something went wrong!',
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                          startDownload(index);
                         } else {
                           launchUrl(
                             Uri.parse(
-                              newsletterModel.newsletters[index].link.href,
+                              widget
+                                  .newsletterModel.newsletters[index].link.href,
                             ),
                           );
                         }
                       },
-                      title: newsletterModel.newsletters[index].label,
+                      title: widget.newsletterModel.newsletters[index].label,
                       showIcon: false,
                       iconPath: AppIcons.add,
                       size: ButtonSize.normal,
-                      type: newsletterModel.newsletters[index].theme ==
+                      type: widget.newsletterModel.newsletters[index].theme ==
                               'secondary'
                           ? ButtonType.secondary
-                          : newsletterModel.newsletters[index].theme ==
+                          : widget.newsletterModel.newsletters[index].theme ==
                                   'primary'
                               ? ButtonType.primary
                               : ButtonType.tertiary,

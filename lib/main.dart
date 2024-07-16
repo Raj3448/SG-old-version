@@ -9,6 +9,7 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -92,8 +93,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HomeService(
           httpClient: GetIt.I<HttpClient>(),
-          homePageComponentDetailscache: GetIt.I<HomePageComponentDetailscache>(),
-          
+          homePageComponentDetailscache:
+              GetIt.I<HomePageComponentDetailscache>(),
         ),
       );
       GetIt.instance.registerLazySingleton(
@@ -139,7 +140,8 @@ void main() async {
           GetIt.I<UserDetailsCache>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => NotificationServices(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(
+          () => NotificationServices(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(GetIt.I<NotificationServices>()),
       );
@@ -151,12 +153,15 @@ void main() async {
       GetIt.instance.registerLazySingleton(
           () => BookingService(httpClient: GetIt.I<HttpClient>()));
       GetIt.instance.registerLazySingleton(() =>
-          BookingServiceStore(ibookingService: GetIt.I<BookingService>())
-            );
+          BookingServiceStore(ibookingService: GetIt.I<BookingService>()));
       GetIt.instance.registerLazySingleton(() => PaymentService(
             httpClient: GetIt.I<HttpClient>(),
             productListingStore: GetIt.I<ProductListingStore>(),
           ));
+      await FlutterDownloader.initialize(
+        debug: true,
+        ignoreSsl: true,
+      );
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
