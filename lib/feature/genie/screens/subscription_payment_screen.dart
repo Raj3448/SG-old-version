@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, lines_longer_than_80_chars
+// ignore_for_file: must_be_immutable, lines_longer_than_80_chars, deprecated_member_use
 
 import 'dart:async';
 
@@ -156,8 +156,18 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                         .copyWith(color: AppColors.grayscale900),
                   ),
                   const SizedBox(height: Dimension.d5),
-                  _NoteComponent(),
-                  const SizedBox(height: Dimension.d6),
+                  if (store.servicePaymentStatus != PaymentStatus.success)
+                    Column(
+                      children: [
+                        _NoteComponent(
+                          desc: store.servicePaymentStatus ==
+                                  PaymentStatus.failure
+                              ? 'If any amount has been debited from your bank account, it will be refunded. If the problem persists, please contact Silver Genie support.'
+                              : "Your payment is being processed and your money is safe. You'll receive a confirmation shortly. If the problem persists, please contact Silver Genie support.",
+                        ),
+                        const SizedBox(height: Dimension.d6),
+                      ],
+                    ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -215,7 +225,9 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
 }
 
 class _NoteComponent extends StatelessWidget {
-  const _NoteComponent({super.key});
+  const _NoteComponent({required this.desc});
+
+  final String desc;
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +256,7 @@ class _NoteComponent extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Please wait while the payment is being processed!',
+            desc,
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale800),
           ),
