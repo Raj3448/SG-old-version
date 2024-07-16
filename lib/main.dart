@@ -52,6 +52,15 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
       FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
       await Hive.initFlutter();
       await setupHiveBox();
@@ -92,8 +101,8 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => HomeService(
           httpClient: GetIt.I<HttpClient>(),
-          homePageComponentDetailscache: GetIt.I<HomePageComponentDetailscache>(),
-          
+          homePageComponentDetailscache:
+              GetIt.I<HomePageComponentDetailscache>(),
         ),
       );
       GetIt.instance.registerLazySingleton(
@@ -139,31 +148,39 @@ void main() async {
           GetIt.I<UserDetailsCache>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => NotificationServices(httpClient: GetIt.I<HttpClient>()));
+      GetIt.instance.registerLazySingleton(
+        () => NotificationServices(httpClient: GetIt.I<HttpClient>()),
+      );
       GetIt.instance.registerLazySingleton(
         () => NotificationStore(GetIt.I<NotificationServices>()),
       );
       GetIt.instance.registerLazySingleton(
-          () => ProductListingServices(httpClient: GetIt.I<HttpClient>()));
-      GetIt.instance.registerLazySingleton(() => ProductListingStore(
-          productListingService: GetIt.I<ProductListingServices>())
-        ..initGetProductBasicDetails());
+        () => ProductListingServices(httpClient: GetIt.I<HttpClient>()),
+      );
       GetIt.instance.registerLazySingleton(
-          () => BookingService(httpClient: GetIt.I<HttpClient>()));
-      GetIt.instance.registerLazySingleton(() =>
-          BookingServiceStore(ibookingService: GetIt.I<BookingService>())
-            );
-      GetIt.instance.registerLazySingleton(() => PaymentService(
-            httpClient: GetIt.I<HttpClient>(),
-            productListingStore: GetIt.I<ProductListingStore>(),
-          ));
+        () => ProductListingStore(
+          productListingService: GetIt.I<ProductListingServices>(),
+        )..initGetProductBasicDetails(),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => BookingService(httpClient: GetIt.I<HttpClient>()),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => BookingServiceStore(ibookingService: GetIt.I<BookingService>()),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => PaymentService(
+          httpClient: GetIt.I<HttpClient>(),
+          productListingStore: GetIt.I<ProductListingStore>(),
+        ),
+      );
       // Retain native splash screen until Dart is ready
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
       if (!kIsWeb) {
         if (kDebugMode) {
           await FirebaseCrashlytics.instance
-              .setCrashlyticsCollectionEnabled(false);
+              .setCrashlyticsCollectionEnabled(true);
         } else {
           await FirebaseCrashlytics.instance
               .setCrashlyticsCollectionEnabled(true);
@@ -171,9 +188,8 @@ void main() async {
       }
       if (kDebugMode) {
         await FirebasePerformance.instance
-            .setPerformanceCollectionEnabled(false);
+            .setPerformanceCollectionEnabled(true);
       }
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
       ErrorWidget.builder = (FlutterErrorDetails error) {
         Zone.current.handleUncaughtError(error.exception, error.stack!);
@@ -181,11 +197,12 @@ void main() async {
       };
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.light,
-            statusBarColor: AppColors.grayscale100,
-            systemNavigationBarContrastEnforced: true,
-            systemStatusBarContrastEnforced: true),
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          statusBarColor: AppColors.grayscale100,
+          systemNavigationBarContrastEnforced: true,
+          systemStatusBarContrastEnforced: true,
+        ),
       );
       runApp(
         EasyLocalization(
