@@ -38,5 +38,9 @@
     "Convenience Care" : "Convenience Care",
     "Requested" : "Requested",
     "Active" : "Active",
-    "Completed" : "Completed"
+    "Completed" : "Completed",
+    "renewsIn": "Your plan Renews in {} day.",
+    "renewsInDays": "Your plan Renews in {} days.",
+    "expiresIn": "Your plan Expires in {} day.",
+    "expiresInDays": "Your plan Expires in {} days."
 }

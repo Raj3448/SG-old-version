@@ -176,6 +176,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
   Widget build(BuildContext context) {
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
+    final member = widget.activeMember.subscriptions![0];
 
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
@@ -198,13 +199,6 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             publish: false,
           );
     }).toList();
-
-    final member = widget.activeMember.subscriptions![0];
-
-    final renewsIn =
-        calculateDaysRemaining(member.razorpay_subscription.chargeAt);
-
-    final expiresIn = calculateDaysRemaining(member.expiresOn);
 
     return Container(
       decoration: BoxDecoration(
@@ -370,67 +364,18 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 );
               },
             ),
-            // if (renewsIn < 4 && member.razorpay_subscription.status == 'active')
-            //   Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       const Divider(color: AppColors.line),
-            //       Padding(
-            //         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-            //         child: Text(
-            //           renewsIn < 2
-            //               ? 'Your plan renews in $renewsIn day.'
-            //               : 'Your plan renews in $renewsIn days.',
-            //           style: AppTextStyle.bodyMediumMedium
-            //               .copyWith(color: AppColors.error),
-            //         ),
-            //       ),
-            //     ],
-            //   )
-            // else if (member.razorpay_subscription.status == 'pending')
-            //   Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       const Divider(color: AppColors.line),
-            //       Padding(
-            //         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-            //         child: Text(
-            //           'Auto-renewal failed!',
-            //           style: AppTextStyle.bodyMediumMedium
-            //               .copyWith(color: AppColors.error),
-            //         ),
-            //       ),
-            //     ],
-            //   )
-            // else if (expiresIn < 4)
-            //   Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       const Divider(color: AppColors.line),
-            //       Padding(
-            //         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-            //         child: Text(
-            //           expiresIn < 2
-            //               ? 'Your plan expires in $expiresIn day.'
-            //               : 'Your plan expires in $expiresIn days.',
-            //           style: AppTextStyle.bodyMediumMedium
-            //               .copyWith(color: AppColors.error),
-            //         ),
-            //       ),
-            //     ],
-            //   )
-            // else if (memberStore.activeMember != null &&
-            //     memberStore.activeMember!.subscriptions != null)
-            //   Observer(
-            //     builder: (context) {
-            //       return _UpgradeProdLisComponent(
-            //         productBasicDetailsList: store.getUpgradeProdListById(
-            //           '${memberStore.activeMember!.subscriptions![0].product.id}',
-            //         ),
-            //       );
-            //     },
-            //   ),
-            _buildRenewalAndExpirationInfo(renewsIn, expiresIn, member),
+            _buildRenewalAndExpirationInfo(member),
+            if (memberStore.activeMember != null &&
+                memberStore.activeMember!.subscriptions != null)
+              Observer(
+                builder: (context) {
+                  return _UpgradeProdLisComponent(
+                    productBasicDetailsList: store.getUpgradeProdListById(
+                      '${memberStore.activeMember!.subscriptions![0].product.id}',
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -439,45 +384,47 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
 }
 
 Widget _buildRenewalAndExpirationInfo(
-    int renewsIn, int expiresIn, SubscriptionDetails member) {
-  // Determine messages based on renewsIn and expiresIn
-  String renewalMessage;
-  String expirationMessage;
-
-  if (renewsIn < 0) {
-    renewalMessage = 'Your plan renewed yesterday.';
-  } else if (renewsIn == 0) {
-    renewalMessage = 'Your plan renews today.';
-  } else {
-    renewalMessage = renewsIn == 1
-        ? 'Your plan renews in $renewsIn day.'
-        : 'Your plan renews in $renewsIn days.';
+  SubscriptionDetails member,
+) {
+  final expiresIn = calculateDaysRemaining(member.expiresOn);
+  if (member.razorpay_subscription?.status == null ||
+      member.razorpay_subscription?.status == 'created' ||
+      member.razorpay_subscription?.status == 'authenticated') {
+    return const SizedBox();
   }
 
-  if (expiresIn < 0) {
-    expirationMessage = 'Your plan expired yesterday.';
-  } else if (expiresIn == 0) {
-    expirationMessage = 'Your plan expires today.';
-  } else {
-    expirationMessage = expiresIn == 1
-        ? 'Your plan expires in $expiresIn day.'
-        : 'Your plan expires in $expiresIn days.';
-  }
-
-  // Check renewal and expiration statuses
-  if (renewsIn < 4 && member.razorpay_subscription.status == 'active') {
+  if (member.razorpay_subscription?.status == 'pending') {
     return _buildStatusInfo(
-      message: renewalMessage,
+      message: 'Auto renewal failed, Reach Support team.',
     );
-  } else if (member.razorpay_subscription.status == 'pending') {
-    return _buildStatusInfo(
-      message: 'Auto-renewal failed!',
-    );
-  } else if (expiresIn < 4) {
-    return _buildStatusInfo(message: expirationMessage);
   }
 
-  return const SizedBox(); // Return empty widget if no conditions met
+  // Handle active status
+  if (member.razorpay_subscription?.status == 'active') {
+    final renewsIn = calculateDaysRemaining(
+      member.razorpay_subscription?.chargeAt ?? member.expiresOn,
+    );
+
+    if ((renewsIn >= 0 && renewsIn <= 3) ||
+        (expiresIn >= 0 && expiresIn <= 3)) {
+      if (renewsIn >= 0 && renewsIn <= 3) {
+        return _buildStatusInfo(
+          message: renewsIn == 1
+              ? 'renewsIn'.plural(renewsIn)
+              : 'renewsInDays'.plural(renewsIn),
+        );
+      } else {
+        return _buildStatusInfo(
+          message: expiresIn == 1
+              ? 'expiresIn'.plural(expiresIn)
+              : 'expiresInDays'.plural(expiresIn),
+        );
+      }
+    }
+
+    return const SizedBox();
+  }
+  return const SizedBox();
 }
 
 Widget _buildStatusInfo({required String message}) {
@@ -487,10 +434,12 @@ Widget _buildStatusInfo({required String message}) {
       const Divider(color: AppColors.line),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-        child: Text(
-          message,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.error,
+        child: Center(
+          child: Text(
+            message,
+            style: AppTextStyle.bodyMediumMedium.copyWith(
+              color: AppColors.error,
+            ),
           ),
         ),
       ),
@@ -569,18 +518,17 @@ class _UpgradeProdLisComponent extends StatelessWidget {
               const SizedBox(height: Dimension.d2),
               ProductListingCareComponent(
                 isUpgradeable: true,
-                productBasicDetailsList:
-                    prodList,
+                productBasicDetailsList: prodList,
               ),
             ],
           );
   }
 }
 
-int calculateDaysRemaining(DateTime? chargeAt) {
+int calculateDaysRemaining(DateTime date) {
   final now = DateTime.now();
 
-  final differenceInDays = chargeAt!.difference(now).inDays;
+  final differenceInDays = date.difference(now).inDays;
 
   return differenceInDays;
 }
