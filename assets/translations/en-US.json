@@ -40,8 +40,12 @@
     "Active" : "Active",
     "Completed" : "Completed",
     "'Family" : "'Family",
-    "renewsIn": "Your plan Renews in {} day.",
-    "renewsInDays": "Your plan Renews in {} days.",
-    "expiresIn": "Your plan Expires in {} day.",
-    "expiresInDays": "Your plan Expires in {} days."
+    "renewsIn": {
+        "one": "Your plan Renews in {} day.",
+        "other": "Your plan Renews in {} days."
+    },
+    "expiresIn": {
+        "one": "Your plan Expires in {} day.",
+        "other": "Your plan Expires in {} days."
+    }
 }

@@ -409,15 +409,11 @@ Widget _buildRenewalAndExpirationInfo(
         (expiresIn >= 0 && expiresIn <= 3)) {
       if (renewsIn >= 0 && renewsIn <= 3) {
         return _buildStatusInfo(
-          message: renewsIn == 1
-              ? 'renewsIn'.plural(renewsIn)
-              : 'renewsInDays'.plural(renewsIn),
+          message: 'renewsIn'.plural(renewsIn),
         );
       } else {
         return _buildStatusInfo(
-          message: expiresIn == 1
-              ? 'expiresIn'.plural(expiresIn)
-              : 'expiresInDays'.plural(expiresIn),
+          message: 'expiresIn'.plural(expiresIn),
         );
       }
     }
