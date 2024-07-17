@@ -41,11 +41,15 @@
     "Completed" : "Completed",
     "'Family" : "'Family",
     "renewsIn": {
+        "zero": "Your plan Renews today.",
         "one": "Your plan Renews in {} day.",
+        "many": "Your plan Renews in {} days.",
         "other": "Your plan Renews in {} days."
     },
     "expiresIn": {
+        "zero": "Your plan Expires today.",
         "one": "Your plan Expires in {} day.",
+        "many": "Your plan Expires in {} days.",
         "other": "Your plan Expires in {} days."
     }
 }

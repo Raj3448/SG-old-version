@@ -387,6 +387,10 @@ Widget _buildRenewalAndExpirationInfo(
   SubscriptionDetails member,
 ) {
   final expiresIn = calculateDaysRemaining(member.expiresOn);
+  if (expiresIn < 0 || expiresIn > 3) {
+    return const SizedBox();
+  }
+
   if (member.razorpay_subscription?.status == null ||
       member.razorpay_subscription?.status == 'created' ||
       member.razorpay_subscription?.status == 'authenticated') {
@@ -399,28 +403,22 @@ Widget _buildRenewalAndExpirationInfo(
     );
   }
 
-  // Handle active status
   if (member.razorpay_subscription?.status == 'active') {
     final renewsIn = calculateDaysRemaining(
       member.razorpay_subscription?.chargeAt ?? member.expiresOn,
     );
-
-    if ((renewsIn >= 0 && renewsIn <= 3) ||
-        (expiresIn >= 0 && expiresIn <= 3)) {
-      if (renewsIn >= 0 && renewsIn <= 3) {
-        return _buildStatusInfo(
-          message: 'renewsIn'.plural(renewsIn),
-        );
-      } else {
-        return _buildStatusInfo(
-          message: 'expiresIn'.plural(expiresIn),
-        );
-      }
+    if (renewsIn < 0) {
+      return const SizedBox();
     }
-
-    return const SizedBox();
+    if (renewsIn <= 3) {
+      return _buildStatusInfo(
+        message: 'renewsIn'.plural(renewsIn),
+      );
+    }
   }
-  return const SizedBox();
+  return _buildStatusInfo(
+    message: 'expiresIn'.plural(expiresIn),
+  );
 }
 
 Widget _buildStatusInfo({required String message}) {
