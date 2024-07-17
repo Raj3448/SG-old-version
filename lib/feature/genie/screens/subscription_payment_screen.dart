@@ -163,10 +163,8 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                         _NoteComponent(
                           desc: store.servicePaymentStatus ==
                                   PaymentStatus.failure
-                              ? 'If any amount has been debited from your bank account, it will be refunded. If the problem persists, please contact Silver Genie support.'
-                                  .tr()
-                              : "Your payment is being processed and your money is safe. You'll receive a confirmation shortly. If the problem persists, please contact Silver Genie support."
-                                  .tr(),
+                              ? 'PaymentFailureStatusNote'.tr()
+                              : 'PaymentPendingStatusNote'.tr(),
                         ),
                         const SizedBox(height: Dimension.d6),
                       ],
