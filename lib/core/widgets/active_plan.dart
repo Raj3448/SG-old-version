@@ -391,12 +391,6 @@ Widget _buildRenewalAndExpirationInfo(
     return const SizedBox();
   }
 
-  if (member.razorpay_subscription?.status == null ||
-      member.razorpay_subscription?.status == 'created' ||
-      member.razorpay_subscription?.status == 'authenticated') {
-    return const SizedBox();
-  }
-
   if (member.razorpay_subscription?.status == 'pending') {
     return _buildStatusInfo(
       message: 'Auto renewal failed, Reach Support team.',
@@ -407,14 +401,12 @@ Widget _buildRenewalAndExpirationInfo(
     final renewsIn = calculateDaysRemaining(
       member.razorpay_subscription?.chargeAt ?? member.expiresOn,
     );
-    if (renewsIn < 0) {
+    if (renewsIn < 0 || renewsIn > 3) {
       return const SizedBox();
     }
-    if (renewsIn <= 3) {
-      return _buildStatusInfo(
-        message: 'renewsIn'.plural(renewsIn),
-      );
-    }
+    return _buildStatusInfo(
+      message: 'renewsIn'.plural(renewsIn),
+    );
   }
   return _buildStatusInfo(
     message: 'expiresIn'.plural(expiresIn),
