@@ -1086,6 +1086,7 @@ class _NewsletterComponent extends StatefulWidget {
 class _NewsletterComponentState extends State<_NewsletterComponent> {
   late Timer _timer;
   String? _taskId;
+  bool isTimerTrigger = false;
 
   Future<void> startDownload(int index) async {
     _taskId = await FlutterDownloader.enqueue(
@@ -1094,6 +1095,8 @@ class _NewsletterComponentState extends State<_NewsletterComponent> {
       fileName: '${widget.newsletterModel.newsletters[index].link.label}',
       saveInPublicStorage: true,
     );
+
+    isTimerTrigger = true;
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -1125,7 +1128,9 @@ class _NewsletterComponentState extends State<_NewsletterComponent> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    if(isTimerTrigger){
+      _timer.cancel();
+    }
     super.dispose();
   }
 
