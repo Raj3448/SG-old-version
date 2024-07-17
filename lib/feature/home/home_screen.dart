@@ -156,64 +156,52 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 2.6,
                         ),
                       ),
-                      FittedBox(
-                        child: Row(
-                          mainAxisAlignment:
-                              MediaQuery.of(context).orientation ==
-                                      Orientation.landscape
-                                  ? MainAxisAlignment.spaceAround
-                                  : MainAxisAlignment.spaceBetween,
-                          children: [
-                            BookServiceButton(
-                              iconImagePath:
-                                  'assets/icon/volunteer_activism.png',
-                              buttonName: 'Health Care',
-                              onTap: () {
-                                context.pushNamed(
-                                  RoutesConstants.allServicesScreen,
-                                  pathParameters: {
-                                    'isHealthCare': 'true',
-                                    'isHomeCare': 'false',
-                                    'isConvenience': 'false',
-                                  },
-                                );
-                              },
-                            ),
-                            BookServiceButton(
-                              iconImagePath: 'assets/icon/home_health.png',
-                              buttonName: 'Home Care',
-                              onTap: () {
-                                context.pushNamed(
-                                  RoutesConstants.allServicesScreen,
-                                  pathParameters: {
-                                    'isHealthCare': 'false',
-                                    'isHomeCare': 'true',
-                                    'isConvenience': 'false',
-                                  },
-                                );
-                              },
-                            ),
-                            BookServiceButton(
-                              iconImagePath: 'assets/icon/prescriptions.png',
-                              buttonName: 'Wellness & Convenience',
-                              onTap: () {
-                                context.pushNamed(
-                                  RoutesConstants.allServicesScreen,
-                                  pathParameters: {
-                                    'isHealthCare': 'false',
-                                    'isHomeCare': 'false',
-                                    'isConvenience': 'true',
-                                  },
-                                );
-                              },
-                            ),
-                            BookServiceButton(
-                              iconImagePath: 'assets/icon/ambulance.png',
-                              buttonName: 'Emergency',
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/volunteer_activism.png',
+                            buttonName: 'Health Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'true',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'false',
+                                },
+                              );
+                            },
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/home_health.png',
+                            buttonName: 'Home Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                  'isConvenience': 'false',
+                                },
+                              );
+                            },
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/prescriptions.png',
+                            buttonName: 'Wellness & Convenience',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'true',
+                                },
+                              );
+                            },
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: Dimension.d2,
@@ -1002,12 +990,8 @@ class BookServiceButton extends StatelessWidget {
             child: Text(
               buttonName,
               textAlign: TextAlign.center,
-              style: AppTextStyle.bodySmallMedium.copyWith(
-                color: AppColors.grayscale700,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                height: 1.5,
-              ),
+              style: AppTextStyle.bodyMediumMedium
+                  .copyWith(color: AppColors.grayscale700),
             ),
           ),
         ],
