@@ -104,8 +104,6 @@ void main() async {
           httpClient: GetIt.I<HttpClient>(),
           homePageComponentDetailscache:
               GetIt.I<HomePageComponentDetailscache>(),
-          homePageComponentDetailscache:
-              GetIt.I<HomePageComponentDetailscache>(),
         ),
       );
       GetIt.instance.registerLazySingleton(
