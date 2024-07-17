@@ -1,7 +1,6 @@
 import UIKit
 import Flutter
 import Firebase
-import FirebaseCore
 import flutter_downloader
 
 @UIApplicationMain
