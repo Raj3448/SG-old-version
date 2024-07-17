@@ -7,7 +7,10 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/assigning_component.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -185,6 +188,22 @@ class ServiceBookingDetailsScreen extends StatelessWidget {
                           '₹ ${formatNumberWithCommas(servicePaymentStatusModel.priceDetails.products.first.price.toInt())}',
                       isTitleBold: true,
                     ),
+                    const SizedBox(
+                          height: Dimension.d5,
+                        ),
+                        CustomButton(
+                            ontap: () async{
+                              await launchDialer(homeStore.getMasterDataModel
+                                      ?.masterData.contactUs.contactNumber ??
+                                  '');
+                            },
+                            title: 'Help-Contact customer care',
+                            showIcon: true,
+                            iconPath: AppIcons.phone,
+                            size: ButtonSize.normal,
+                            type: ButtonType.secondary,
+                            expanded: true,
+                            iconColor: AppColors.primary),
                     const SizedBox(height: Dimension.d15),
                   ],
                 ),
