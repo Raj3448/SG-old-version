@@ -67,6 +67,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (store.getTodayNotifications.isNotEmpty)
                     Text(
                       'Today',
                       style: AppTextStyle.bodyMediumMedium.copyWith(

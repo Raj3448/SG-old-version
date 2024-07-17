@@ -12,7 +12,10 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
+import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
@@ -185,6 +188,22 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                         const Divider(
                           color: AppColors.grayscale300,
                         ),
+                        const SizedBox(
+                          height: Dimension.d5,
+                        ),
+                        CustomButton(
+                            ontap: () async {
+                              await launchDialer(homeStore.getMasterDataModel
+                                      ?.masterData.contactUs.contactNumber ??
+                                  '');
+                            },
+                            title: 'Help-Contact customer care',
+                            showIcon: true,
+                            iconPath: AppIcons.phone,
+                            size: ButtonSize.normal,
+                            type: ButtonType.secondary,
+                            expanded: true,
+                            iconColor: AppColors.primary)
                       ],
                     ),
                     const SizedBox(
