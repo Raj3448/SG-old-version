@@ -20,7 +20,6 @@ import 'package:silver_genie/core/widgets/profile_component.dart';
 import 'package:silver_genie/core/widgets/profile_nav.dart';
 import 'package:silver_genie/feature/auth/auth_store.dart';
 import 'package:silver_genie/feature/login-signup/store/verify_otp_store.dart';
-import 'package:silver_genie/feature/notification/services/notification_service.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,8 +28,8 @@ class UserProfile extends StatefulWidget {
   final UserDetailStore userDetailStore;
   const UserProfile({
     required this.userDetailStore,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -276,28 +275,9 @@ class _LogOutComponent extends StatelessWidget {
                     height: 48,
                     child: CustomButton(
                       ontap: () {
-                        GetIt.I<NotificationServices>()
-                            .storeFcmTokenIntoServer(fcmToken: null)
-                            .then(
-                          (value) {
-                            value.fold(
-                              (l) {
-                                late final String failure;
-                                l.maybeMap(
-                                  socketError:
-                                    (value) => failure = 'No Internet Connection',
-                                    orElse: () => failure = 'Something went wrong');
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(failure),duration: const Duration(seconds: 3),));
-                              },
-                              (r) {
-                                GetIt.I<AuthStore>().logout();
-                                GetIt.I<VerityOtpStore>().resetTimer();
-                                context.goNamed(RoutesConstants.loginRoute);
-                              },
-                            );
-                          },
-                        );
+                        GetIt.I<AuthStore>().logout();
+                        GetIt.I<VerityOtpStore>().resetTimer();
+                        context.goNamed(RoutesConstants.loginRoute);
                       },
                       title: 'Yes, logout',
                       showIcon: false,

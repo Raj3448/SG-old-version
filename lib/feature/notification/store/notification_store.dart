@@ -105,5 +105,6 @@ abstract class _NotificationStoreBase with Store {
 
   void clear() {
     notifications = null;
+    notificationsServices.storeFcmTokenIntoServer(fcmToken: null);
   }
 }
