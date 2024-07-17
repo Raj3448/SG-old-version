@@ -186,6 +186,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                   forDId: component.formDetails.id.toString(),
                                 );
                               },
+                              canBookPlan: false,
                               isRequired: component.formDetails.required,
                             ),
                           ]);

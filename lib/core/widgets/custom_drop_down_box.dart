@@ -1,14 +1,21 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
+import 'package:silver_genie/core/widgets/inactive_plan.dart';
+import 'package:silver_genie/core/widgets/member_creation.dart';
+import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
+import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class CustomDropDownBox extends StatefulWidget {
   CustomDropDownBox({
@@ -18,11 +25,13 @@ class CustomDropDownBox extends StatefulWidget {
     this.selectedMembers = const [],
     this.isRequired = false,
     this.placeHolder,
+    this.canBookPlan = true,
     super.key,
   });
   final List<Member> memberList;
   String? memberName;
   String? placeHolder;
+  bool canBookPlan;
   List<Member> selectedMembers = [];
   void Function(Member?) updateMember;
   final bool isRequired;
@@ -115,7 +124,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
           height: isExpanding
               ? ((widget.memberList.length > 4)
                   ? 210
-                  : widget.memberList.length * 54)
+                  : widget.memberList.length * 54 + 54)
               : 0,
           constraints: const BoxConstraints(minHeight: 1),
           padding: const EdgeInsets.only(bottom: Dimension.d2),
@@ -134,8 +143,8 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
               : null,
           child: isExpanding
               ? SingleChildScrollView(
-                  child: Column(
-                    children: List.generate(
+                  child: Column(children: [
+                    ...List.generate(
                       widget.memberList.length,
                       (index) => GestureDetector(
                         onTap: widget.selectedMembers.any(
@@ -160,6 +169,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                                 });
                               },
                         child: _MemeberListTileComponent(
+                          canBookPlan: widget.canBookPlan,
                           disable: widget.selectedMembers.any(
                             (selectedMember) =>
                                 selectedMember.id ==
@@ -176,7 +186,8 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                         ),
                       ),
                     ),
-                  ),
+                    _AddNewMemberComponent()
+                  ]),
                 )
               : null,
         ),
@@ -185,59 +196,195 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
   }
 }
 
+class _AddNewMemberComponent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        final user = GetIt.I<UserDetailStore>().userDetails;
+        final member = GetIt.I<MembersStore>().memberById(user!.id);
+        if (member != null) {
+          context.pushNamed(
+            RoutesConstants.addEditFamilyMemberRoute,
+            pathParameters: {
+              'edit': 'false',
+              'isSelf': 'false',
+            },
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return MemberCreation(
+                selfOnTap: () {
+                  context.pushNamed(
+                    RoutesConstants.addEditFamilyMemberRoute,
+                    pathParameters: {
+                      'edit': 'false',
+                      'isSelf': 'true',
+                    },
+                  );
+                },
+                memberOnTap: () {
+                  context.pushNamed(
+                    RoutesConstants.addEditFamilyMemberRoute,
+                    pathParameters: {
+                      'edit': 'false',
+                      'isSelf': 'false',
+                    },
+                  );
+                },
+              );
+            },
+          );
+        }
+      },
+      child: Container(
+        height: 42,
+        width: double.infinity,
+        margin: const EdgeInsets.only(
+          left: Dimension.d2,
+          right: Dimension.d2,
+          top: Dimension.d2,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
+        decoration: BoxDecoration(
+          color: AppColors.grayscale200,
+          border: Border.all(color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: Dimension.d1),
+            const Icon(
+              AppIcons.add,
+              size: 20,
+              color: AppColors.grayscale900,
+            ),
+            const SizedBox(width: Dimension.d3),
+            Expanded(
+              child: Text(
+                'Add new member',
+                style: AppTextStyle.bodyLargeMedium.copyWith(
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _MemeberListTileComponent extends StatelessWidget {
-  const _MemeberListTileComponent({
-    required this.name,
-    required this.imgPath,
-    required this.disable,
-    required this.iconUrl,
-  });
+  const _MemeberListTileComponent(
+      {required this.name,
+      required this.imgPath,
+      required this.disable,
+      required this.iconUrl,
+      required this.canBookPlan});
   final String imgPath;
 
   final String name;
   final bool disable;
   final String? iconUrl;
+  final bool canBookPlan;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 42,
-      width: double.infinity,
-      margin: const EdgeInsets.only(
-        left: Dimension.d2,
-        right: Dimension.d2,
-        top: Dimension.d2,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
-      decoration: BoxDecoration(
-        color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
-        border: Border.all(color: AppColors.grayscale300),
-        borderRadius: BorderRadius.circular(Dimension.d2),
-      ),
-      child: Row(
-        children: [
-          Avatar.fromSize(
-            imgPath: '${Env.serverUrl}$imgPath',
-            size: AvatarSize.size14,
-          ),
-          const SizedBox(width: Dimension.d2),
-          Expanded(
-            child: Text(
-              name,
-              style: AppTextStyle.bodyLargeMedium.copyWith(
-                overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      onTap: iconUrl == null && !canBookPlan
+          ? () {
+              // ignore: inference_failure_on_function_invocation
+              showDialog(
+                context: context,
+                builder: (context) => _BuyPlanComponent(),
+              );
+            }
+          : null,
+      child: Container(
+        height: 42,
+        width: double.infinity,
+        margin: const EdgeInsets.only(
+          left: Dimension.d2,
+          right: Dimension.d2,
+          top: Dimension.d2,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
+        decoration: BoxDecoration(
+          color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
+          border: Border.all(color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2),
+        ),
+        child: Row(
+          children: [
+            Avatar.fromSize(
+              imgPath: '${Env.serverUrl}$imgPath',
+              size: AvatarSize.size14,
+            ),
+            const SizedBox(width: Dimension.d2),
+            Expanded(
+              child: Text(
+                name,
+                style: AppTextStyle.bodyLargeMedium.copyWith(
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
-          ),
-          const SizedBox(
-            width: Dimension.d1,
-          ),
-          if (iconUrl != null)
-            Avatar.fromSize(
-              imgPath: iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
-              size: AvatarSize.size9,
-              isImageSquare: true,
-            )
-        ],
+            const SizedBox(
+              width: Dimension.d1,
+            ),
+            if (iconUrl != null)
+              Avatar.fromSize(
+                imgPath: iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
+                size: AvatarSize.size9,
+                isImageSquare: true,
+              )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BuyPlanComponent extends StatelessWidget {
+  final store = GetIt.I<ProductListingStore>();
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(Dimension.d2),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimension.d4,
+          vertical: Dimension.d6,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Hi there!!',
+              style: AppTextStyle.bodyXLSemiBold
+                  .copyWith(color: AppColors.grayscale900, height: 2.4),
+            ),
+            Text(
+                'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
+                textAlign: TextAlign.center,
+                style: AppTextStyle.bodyLargeMedium
+                    .copyWith(color: AppColors.grayscale900)),
+            const SizedBox(height: Dimension.d2),
+            if (store.getSubscriptActiveProdList.isNotEmpty)
+              ProductListingCareComponent(
+                productBasicDetailsList: store.getProdListRankOrder(
+                  store.getSubscriptActiveProdList,
+                ),
+                isUpgradeable: false,
+              ),
+          ],
+        ),
       ),
     );
   }
