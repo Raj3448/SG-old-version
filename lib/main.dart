@@ -42,7 +42,6 @@ import 'package:silver_genie/feature/subscription/store/subscription_store.dart'
 import 'package:silver_genie/feature/user_profile/repository/local/user_details_cache.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
-import 'package:silver_genie/firebase_options.dart';
 import 'package:silver_genie/setup_hive_boxes.dart';
 
 void main() async {
@@ -50,9 +49,7 @@ void main() async {
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      await Firebase.initializeApp();
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
       FlutterError.onError = (errorDetails) {

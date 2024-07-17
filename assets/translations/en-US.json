@@ -40,6 +40,8 @@
     "Active" : "Active",
     "Completed" : "Completed",
     "'Family" : "'Family",
+    "PaymentFailureStatusNote":"If any amount has been debited from your bank account, it will be refunded. If the problem persists, please contact Silver Genie support.",
+    "PaymentPendingStatusNote": "Your payment is being processed and your money is safe. You'll receive a confirmation shortly. If the problem persists, please contact Silver Genie support.",
     "renewsIn": {
         "zero": "Your plan Renews today.",
         "one": "Your plan Renews in {} day.",
