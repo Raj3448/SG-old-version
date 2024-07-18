@@ -16,6 +16,7 @@ import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
+import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -173,18 +174,30 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               memberList: GetIt.I<MembersStore>().familyMembers,
                               placeHolder: component.formDetails.placeholder,
                               updateMember: (member) {
-                                selectedMember = member;
-                                _updateFormValues1(
-                                  id: component.id,
-                                  title: component.formDetails.title,
-                                  type: component.type,
-                                  controlType: component.controlType,
-                                  hint: component.formDetails.hint,
-                                  valueReference: [
-                                    '${member?.id.toString()}' ?? '',
-                                  ],
-                                  forDId: component.formDetails.id.toString(),
-                                );
+                                if (member != null &&
+                                    member.subscriptions != null &&
+                                    member.subscriptions!.isEmpty) {
+                                      setState(() {
+                                        selectedMember = null;
+                                      });
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => _BuyPlanComponent(),
+                                  );
+                                } else {
+                                  selectedMember = member;
+                                  _updateFormValues1(
+                                    id: component.id,
+                                    title: component.formDetails.title,
+                                    type: component.type,
+                                    controlType: component.controlType,
+                                    hint: component.formDetails.hint,
+                                    valueReference: [
+                                      '${member?.id.toString()}',
+                                    ],
+                                    forDId: component.formDetails.id.toString(),
+                                  );
+                                }
                               },
                               isRequired: component.formDetails.required,
                             ),
@@ -560,5 +573,48 @@ class _BookServiceScreenState extends State<BookServiceScreen>
       productId: int.parse(widget.id),
     );
     store.buyService(formData: formAnswerModel);
+  }
+}
+
+class _BuyPlanComponent extends StatelessWidget {
+  final store = GetIt.I<ProductListingStore>();
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(Dimension.d2),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimension.d4,
+          vertical: Dimension.d6,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Hi there!!',
+              style: AppTextStyle.bodyXLSemiBold
+                  .copyWith(color: AppColors.grayscale900, height: 2.4),
+            ),
+            Text(
+                'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
+                textAlign: TextAlign.center,
+                style: AppTextStyle.bodyLargeMedium
+                    .copyWith(color: AppColors.grayscale900)),
+            const SizedBox(height: Dimension.d2),
+            if (store.getSubscriptActiveProdList.isNotEmpty)
+              ProductListingCareComponent(
+                productBasicDetailsList: store.getProdListRankOrder(
+                  store.getSubscriptActiveProdList,
+                ),
+                isUpgradeable: false,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
