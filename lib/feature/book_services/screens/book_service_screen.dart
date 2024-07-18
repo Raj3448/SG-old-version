@@ -177,7 +177,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                 if (member != null &&
                                     member.subscriptions != null &&
                                     member.subscriptions!.isEmpty) {
-                                  // ignore: inference_failure_on_function_invocation
+                                      setState(() {
+                                        selectedMember = null;
+                                      });
                                   showDialog(
                                     context: context,
                                     builder: (context) => _BuyPlanComponent(),
