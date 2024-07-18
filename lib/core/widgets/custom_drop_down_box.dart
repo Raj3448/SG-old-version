@@ -25,13 +25,12 @@ class CustomDropDownBox extends StatefulWidget {
     this.selectedMembers = const [],
     this.isRequired = false,
     this.placeHolder,
-    this.canBookPlan = true,
+    
     super.key,
   });
   final List<Member> memberList;
   String? memberName;
   String? placeHolder;
-  bool canBookPlan;
   List<Member> selectedMembers = [];
   void Function(Member?) updateMember;
   final bool isRequired;
@@ -169,7 +168,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                                 });
                               },
                         child: _MemeberListTileComponent(
-                          canBookPlan: widget.canBookPlan,
+                          
                           disable: widget.selectedMembers.any(
                             (selectedMember) =>
                                 selectedMember.id ==
@@ -283,109 +282,56 @@ class _MemeberListTileComponent extends StatelessWidget {
       required this.imgPath,
       required this.disable,
       required this.iconUrl,
-      required this.canBookPlan});
+      });
   final String imgPath;
 
   final String name;
   final bool disable;
   final String? iconUrl;
-  final bool canBookPlan;
+  
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: iconUrl == null && !canBookPlan
-          ? () {
-              // ignore: inference_failure_on_function_invocation
-              showDialog(
-                context: context,
-                builder: (context) => _BuyPlanComponent(),
-              );
-            }
-          : null,
-      child: Container(
-        height: 42,
-        width: double.infinity,
-        margin: const EdgeInsets.only(
-          left: Dimension.d2,
-          right: Dimension.d2,
-          top: Dimension.d2,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
-        decoration: BoxDecoration(
-          color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
-          border: Border.all(color: AppColors.grayscale300),
-          borderRadius: BorderRadius.circular(Dimension.d2),
-        ),
-        child: Row(
-          children: [
-            Avatar.fromSize(
-              imgPath: '${Env.serverUrl}$imgPath',
-              size: AvatarSize.size14,
-            ),
-            const SizedBox(width: Dimension.d2),
-            Expanded(
-              child: Text(
-                name,
-                style: AppTextStyle.bodyLargeMedium.copyWith(
-                  overflow: TextOverflow.ellipsis,
-                ),
+    return Container(
+      height: 42,
+      width: double.infinity,
+      margin: const EdgeInsets.only(
+        left: Dimension.d2,
+        right: Dimension.d2,
+        top: Dimension.d2,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
+      decoration: BoxDecoration(
+        color: disable ? AppColors.grayscale400 : AppColors.grayscale200,
+        border: Border.all(color: AppColors.grayscale300),
+        borderRadius: BorderRadius.circular(Dimension.d2),
+      ),
+      child: Row(
+        children: [
+          Avatar.fromSize(
+            imgPath: '${Env.serverUrl}$imgPath',
+            size: AvatarSize.size14,
+          ),
+          const SizedBox(width: Dimension.d2),
+          Expanded(
+            child: Text(
+              name,
+              style: AppTextStyle.bodyLargeMedium.copyWith(
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(
-              width: Dimension.d1,
-            ),
-            if (iconUrl != null)
-              Avatar.fromSize(
-                imgPath: iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
-                size: AvatarSize.size9,
-                isImageSquare: true,
-              )
-          ],
-        ),
+          ),
+          const SizedBox(
+            width: Dimension.d1,
+          ),
+          if (iconUrl != null)
+            Avatar.fromSize(
+              imgPath: iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
+              size: AvatarSize.size9,
+              isImageSquare: true,
+            )
+        ],
       ),
     );
   }
 }
 
-class _BuyPlanComponent extends StatelessWidget {
-  final store = GetIt.I<ProductListingStore>();
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(Dimension.d2),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dimension.d4,
-          vertical: Dimension.d6,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Hi there!!',
-              style: AppTextStyle.bodyXLSemiBold
-                  .copyWith(color: AppColors.grayscale900, height: 2.4),
-            ),
-            Text(
-                'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
-                textAlign: TextAlign.center,
-                style: AppTextStyle.bodyLargeMedium
-                    .copyWith(color: AppColors.grayscale900)),
-            const SizedBox(height: Dimension.d2),
-            if (store.getSubscriptActiveProdList.isNotEmpty)
-              ProductListingCareComponent(
-                productBasicDetailsList: store.getProdListRankOrder(
-                  store.getSubscriptActiveProdList,
-                ),
-                isUpgradeable: false,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
