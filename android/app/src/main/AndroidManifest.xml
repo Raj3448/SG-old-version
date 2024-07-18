@@ -11,6 +11,7 @@
         android:label="SilverGenie"
         android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true"
     >
         <activity
             android:name=".MainActivity"
