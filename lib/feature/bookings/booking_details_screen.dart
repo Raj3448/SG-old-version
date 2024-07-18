@@ -1,11 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
@@ -21,19 +25,74 @@ import 'package:silver_genie/feature/user_profile/services/user_services.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 
 
-class BookingDetailsScreen extends StatelessWidget {
+class BookingDetailsScreen extends StatefulWidget {
   final String id;
   const BookingDetailsScreen({
     required this.id,
     super.key,
   });
 
+  @override
+  State<BookingDetailsScreen> createState() => _BookingDetailsScreenState();
+}
+
+class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Price getPriceById(SubscriptionDetails subscriptionDetails, int id) {
     final price = subscriptionDetails.product.prices.firstWhere(
       (price) => price.id == id,
     );
 
     return price;
+  }
+
+  late Timer _timer;
+  String? _taskId;
+  bool isTimerTrigger = false;
+
+  Future<void> startDownload(String url, String fileName) async {
+    _taskId = await FlutterDownloader.enqueue(
+      url: url,
+      savedDir: '/storage/emulated/0/Download/',
+      fileName: fileName,
+      saveInPublicStorage: true,
+    );
+
+    isTimerTrigger = true;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Download started!'),
+      ),
+    );
+
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+      final tasks = await FlutterDownloader.loadTasksWithRawQuery(
+        query: "SELECT * FROM task WHERE task_id='$_taskId'",
+      );
+
+      if (tasks!.isNotEmpty) {
+        final status = tasks.first.status;
+        if (status == DownloadTaskStatus.complete) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download completed!')),
+          );
+          timer.cancel();
+        } else if (status == DownloadTaskStatus.failed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download failed!')),
+          );
+          timer.cancel();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    if (isTimerTrigger) {
+      _timer.cancel();
+    }
+    super.dispose();
   }
 
   @override
@@ -44,7 +103,7 @@ class BookingDetailsScreen extends StatelessWidget {
         appBar: const PageAppbar(title: 'Subscription Details'),
         backgroundColor: AppColors.white,
         body: FutureBuilder(
-          future: userService.getSubscriptionById(id: int.parse(id)),
+          future: userService.getSubscriptionById(id: int.parse(widget.id)),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -211,22 +270,35 @@ class BookingDetailsScreen extends StatelessWidget {
                     const SizedBox(height: Dimension.d2),
                     const Divider(color: AppColors.grayscale300),
                     const SizedBox(height: Dimension.d8),
-                    SizedBox(
-                      height: 48,
-                      child: CustomButton(
-                        ontap: () {},
-                        title: 'Download invoice',
-                        showIcon: true,
-                        iconPath: Icons.file_download_outlined,
-                        size: ButtonSize.normal,
-                        type: ButtonType.secondary,
-                        expanded: true,
-                        iconColor: AppColors.primary,
+                    if (subscriptionDetails.payment_transactions != null &&
+                        subscriptionDetails.payment_transactions!.isNotEmpty &&
+                        subscriptionDetails.payment_transactions![0].invoice !=
+                            null)
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 48,
+                            child: CustomButton(
+                              ontap: () {
+                                startDownload(
+                                  '${Env.serverUrl}${subscriptionDetails.payment_transactions?[0].invoice?.url ?? ''}',
+                                  subscriptionDetails.payment_transactions?[0]
+                                          .invoice?.name ??
+                                      'Invoice',
+                                );
+                              },
+                              title: 'Download invoice',
+                              showIcon: true,
+                              iconPath: Icons.file_download_outlined,
+                              size: ButtonSize.normal,
+                              type: ButtonType.secondary,
+                              expanded: true,
+                              iconColor: AppColors.primary,
+                            ),
+                          ),
+                          const SizedBox(height: Dimension.d4),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: Dimension.d4,
-                    ),
                     SizedBox(
                       height: 48,
                       child: CustomButton(
