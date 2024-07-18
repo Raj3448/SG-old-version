@@ -50,6 +50,7 @@ void main() async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
       await Firebase.initializeApp();
+      
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
       FlutterError.onError = (errorDetails) {

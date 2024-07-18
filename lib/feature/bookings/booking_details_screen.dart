@@ -10,6 +10,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
@@ -21,6 +22,8 @@ import 'package:silver_genie/feature/book_services/screens/service_booking_payme
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/subscription_details_screen.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
+import 'package:silver_genie/core/utils/launch_dialer.dart';
+
 
 class BookingDetailsScreen extends StatefulWidget {
   final String id;
@@ -299,7 +302,11 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     SizedBox(
                       height: 48,
                       child: CustomButton(
-                        ontap: () {},
+                        ontap: () async{
+                          await launchDialer(homeStore.getMasterDataModel
+                                      ?.masterData.contactUs.contactNumber ??
+                                  '');
+                        },
                         title: 'Help-Contact customer care',
                         showIcon: true,
                         iconPath: Icons.call_outlined,
