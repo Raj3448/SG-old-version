@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_dynamic_calls
+// ignore_for_file: avoid_dynamic_calls, lines_longer_than_80_chars
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -176,6 +176,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
   Widget build(BuildContext context) {
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
+    final member = widget.activeMember.subscriptions![0];
 
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
@@ -291,76 +292,79 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
-            Observer(builder: (_) {
-              final hasPHR =
-                  widget.activeMember.subscriptions?[0].benefits?.any(
-                        (benefits) =>
-                            benefits.code == 'PHR' && benefits.isActive == true,
-                      ) ??
-                      false;
-              final hasEPR =
-                  widget.activeMember.subscriptions?[0].benefits?.any(
-                        (benefits) =>
-                            benefits.code == 'EPR' && benefits.isActive == true,
-                      ) ??
-                      false;
+            Observer(
+              builder: (_) {
+                final hasPHR = widget.activeMember.subscriptions?[0].benefits
+                        ?.any(
+                      (benefits) =>
+                          benefits.code == 'PHR' && benefits.isActive == true,
+                    ) ??
+                    false;
+                final hasEPR = widget.activeMember.subscriptions?[0].benefits
+                        ?.any(
+                      (benefits) =>
+                          benefits.code == 'EPR' && benefits.isActive == true,
+                    ) ??
+                    false;
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      ontap: hasPHR == false ||
-                              widget.activeMember.phrModel == null
-                          ? null
-                          : () {
-                              GoRouter.of(context).pushNamed(
-                                RoutesConstants.phrPdfViewPage,
-                                pathParameters: {
-                                  'memberPhrId':
-                                      '${widget.activeMember.phrModel?.id}',
-                                },
-                              );
-                            },
-                      title: 'View PHR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: hasPHR == false ||
-                              widget.activeMember.phrModel == null
-                          ? ButtonType.disable
-                          : ButtonType.secondary,
-                      expanded: true,
-                      iconColor: AppColors.primary,
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        ontap: hasPHR == false ||
+                                widget.activeMember.phrModel == null
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.phrPdfViewPage,
+                                  pathParameters: {
+                                    'memberPhrId':
+                                        '${widget.activeMember.phrModel?.id}',
+                                  },
+                                );
+                              },
+                        title: 'View PHR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: hasPHR == false ||
+                                widget.activeMember.phrModel == null
+                            ? ButtonType.disable
+                            : ButtonType.secondary,
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: Dimension.d4),
-                  Expanded(
-                    child: CustomButton(
-                      ontap: hasEPR == false
-                          ? null
-                          : () {
-                              GoRouter.of(context).pushNamed(
-                                RoutesConstants.eprRoute,
-                                pathParameters: {
-                                  'memberId': '${widget.activeMember.id}',
-                                },
-                              );
-                            },
-                      title: 'View EPR',
-                      showIcon: false,
-                      iconPath: Icons.not_interested,
-                      size: ButtonSize.small,
-                      type: hasEPR == false
-                          ? ButtonType.disable
-                          : ButtonType.secondary,
-                      expanded: true,
-                      iconColor: AppColors.primary,
+                    const SizedBox(width: Dimension.d4),
+                    Expanded(
+                      child: CustomButton(
+                        ontap: hasEPR == false
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.eprRoute,
+                                  pathParameters: {
+                                    'memberId': '${widget.activeMember.id}',
+                                  },
+                                );
+                              },
+                        title: 'View EPR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: hasEPR == false
+                            ? ButtonType.disable
+                            : ButtonType.secondary,
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }),
+                  ],
+                );
+              },
+            ),
+            _buildRenewalAndExpirationInfo(member),
             if (memberStore.activeMember != null &&
                 memberStore.activeMember!.subscriptions != null)
               Observer(
@@ -377,6 +381,56 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
       ),
     );
   }
+}
+
+Widget _buildRenewalAndExpirationInfo(
+  SubscriptionDetails member,
+) {
+  final expiresIn = calculateDaysRemaining(member.expiresOn);
+  if (expiresIn < 0 || expiresIn > 3) {
+    return const SizedBox();
+  }
+
+  if (member.razorpay_subscription?.status == 'pending') {
+    return _buildStatusInfo(
+      message: 'Auto renewal failed, Reach Support team.',
+    );
+  }
+
+  if (member.razorpay_subscription?.status == 'active') {
+    final renewsIn = calculateDaysRemaining(
+      member.razorpay_subscription?.chargeAt ?? member.expiresOn,
+    );
+    if (renewsIn < 0 || renewsIn > 3) {
+      return const SizedBox();
+    }
+    return _buildStatusInfo(
+      message: 'renewsIn'.plural(renewsIn),
+    );
+  }
+  return _buildStatusInfo(
+    message: 'expiresIn'.plural(expiresIn),
+  );
+}
+
+Widget _buildStatusInfo({required String message}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Divider(color: AppColors.line),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+        child: Center(
+          child: Text(
+            message,
+            style: AppTextStyle.bodyMediumMedium.copyWith(
+              color: AppColors.error,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 class _VitalInfoBox extends StatelessWidget {
@@ -450,10 +504,17 @@ class _UpgradeProdLisComponent extends StatelessWidget {
               const SizedBox(height: Dimension.d2),
               ProductListingCareComponent(
                 isUpgradeable: true,
-                productBasicDetailsList:
-                    prodList,
+                productBasicDetailsList: prodList,
               ),
             ],
           );
   }
+}
+
+int calculateDaysRemaining(DateTime date) {
+  final now = DateTime.now();
+
+  final differenceInDays = date.difference(now).inDays;
+
+  return differenceInDays;
 }
