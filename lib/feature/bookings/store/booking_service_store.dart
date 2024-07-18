@@ -29,6 +29,9 @@ abstract class _BookingServiceStoreBase with Store {
   @observable
   BookingServices? bookingServices;
 
+  @observable
+  bool isFileInDownloadProcess = false;
+
   @computed
   List<Service> get getAllRequestedServiceList => bookingServices == null
       ? []
@@ -87,10 +90,10 @@ abstract class _BookingServiceStoreBase with Store {
         value.fold(
           (l) {
             l.maybeMap(
-              socketError: (e) => allServiceRefreshFailure =
-                'No_Internet',
+              socketError: (e) => allServiceRefreshFailure = 'No_Internet',
               orElse: () => allServiceRefreshFailure =
-                'Unable to load updated booking services',);
+                  'Unable to load updated booking services',
+            );
           },
           (r) {
             bookingServices = r;
