@@ -22,6 +22,7 @@ class FcmNotificationManager {
   }
   BuildContext? context;
   RemoteMessage? message;
+  bool isFcmStored = false;
   static final FcmNotificationManager _notificationService =
       FcmNotificationManager._internal();
 
@@ -30,6 +31,9 @@ class FcmNotificationManager {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
+    if (isFcmStored) {
+      return;
+    }
     // Initialize Firebase Messaging
     final settings = await _firebaseMessaging.requestPermission(
       alert: true,
@@ -43,6 +47,7 @@ class FcmNotificationManager {
     print('User granted permission: ${settings.authorizationStatus}');
     await _setupFlutterNotifications();
     await setupToken();
+    isFcmStored = true;
     // Handle the received notifications
     FirebaseMessaging.onMessage.listen(_onMessageReceived);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
