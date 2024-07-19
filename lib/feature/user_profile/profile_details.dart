@@ -276,7 +276,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _genderController,
                             showClear: false,
                             values: _genderItems,
-                            selectedOptions: [
+                            selectedOptions: selectedGenderIndex == -1 ? null : [
                               _genderItems[selectedGenderIndex!],
                             ],
                             validator: (selectedItems) {
