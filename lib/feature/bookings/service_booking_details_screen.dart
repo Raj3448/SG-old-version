@@ -309,8 +309,11 @@ String _getStatusText(String paymentStatus, String status) {
   if (paymentStatus == 'expired') {
     return 'Payment failure';
   }
-  if (status == 'requested' || status == 'processing') {
+  if(status == 'active' || status == 'processed'){
     return 'Service scheduled';
+  }
+  if (status == 'requested' || status == 'processing') {
+    return 'Service in progress';
   }
   if (status == 'rejected') {
     return 'Service rejected';

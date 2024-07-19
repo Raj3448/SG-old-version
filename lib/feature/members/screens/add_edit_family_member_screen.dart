@@ -337,7 +337,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 showClear: false,
-                                selectedOptions: widget.edit
+                                selectedOptions: (widget.edit || widget.isSelf) && (selectedGenderIndex != -1)
                                     ? [_genderItems[selectedGenderIndex!]]
                                     : null,
                                 controller: genderContr,

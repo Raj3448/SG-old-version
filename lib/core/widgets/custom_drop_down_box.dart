@@ -23,7 +23,6 @@ class CustomDropDownBox extends StatefulWidget {
     this.selectedMembers = const [],
     this.isRequired = false,
     this.placeHolder,
-    
     super.key,
   });
   final List<Member> memberList;
@@ -121,7 +120,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
           height: isExpanding
               ? ((widget.memberList.length > 4)
                   ? 210
-                  : widget.memberList.length * 54 + 54)
+                  : widget.memberList.length * 54 + 58)
               : 0,
           constraints: const BoxConstraints(minHeight: 1),
           padding: const EdgeInsets.only(bottom: Dimension.d2),
@@ -166,7 +165,6 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                                 });
                               },
                         child: _MemeberListTileComponent(
-                          
                           disable: widget.selectedMembers.any(
                             (selectedMember) =>
                                 selectedMember.id ==
@@ -275,18 +273,18 @@ class _AddNewMemberComponent extends StatelessWidget {
 }
 
 class _MemeberListTileComponent extends StatelessWidget {
-  const _MemeberListTileComponent(
-      {required this.name,
-      required this.imgPath,
-      required this.disable,
-      required this.iconUrl,
-      });
+  const _MemeberListTileComponent({
+    required this.name,
+    required this.imgPath,
+    required this.disable,
+    required this.iconUrl,
+  });
   final String imgPath;
 
   final String name;
   final bool disable;
   final String? iconUrl;
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -332,4 +330,3 @@ class _MemeberListTileComponent extends StatelessWidget {
     );
   }
 }
-
