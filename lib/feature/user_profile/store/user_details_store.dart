@@ -120,6 +120,7 @@ abstract class _UserDetailStoreBase with Store {
         .then((user) {
       user.fold((l) {
         updateFailureMessage = l.maybeMap(
+            entityTooLargeError: (_) => 'Image upload failed: Please upload a compressed image as the current one is too large.',
             socketError: (_) =>
                 'Failed to update, check your internet connection!',
             orElse: () => 'Failed to update the user data');

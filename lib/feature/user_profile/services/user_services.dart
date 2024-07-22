@@ -123,6 +123,8 @@ class UserDetailServices implements IUserFacades {
             user: userInfo,
             imageId: imageId.toString(),
           );
+        } if (response.statusCode == 413 && response.statusMessage == 'Request Entity Too Large'){
+          return const Left(Failure.entityTooLargeError());
         } else {
           return const Left(Failure.badResponse());
         }
