@@ -89,7 +89,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(store.updateFailureMessage!),
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
           ),
         );
 
