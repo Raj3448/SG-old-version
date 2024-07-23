@@ -57,6 +57,12 @@ class _GeniePageState extends State<GeniePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    store.setPlanNull();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
