@@ -82,6 +82,11 @@ abstract class _ProductListingStoreBase with Store {
     _planDetails = plan;
   }
 
+  @action
+  void setPlanNull() {
+    _planDetails = null;
+  }
+
   @computed
   List<ProductBasicDetailsModel> get getSubscriptActiveProdList =>
       productBasicDetailsModelList != null
