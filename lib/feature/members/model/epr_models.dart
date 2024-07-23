@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'epr_models.freezed.dart';
@@ -5,23 +7,24 @@ part 'epr_models.g.dart';
 
 @freezed
 class EprDataModel with _$EprDataModel {
-  const EprDataModel._(); // Private constructor
+  // Private constructor
 
   const factory EprDataModel({
     required int id,
     @Default([]) List<EmergencyContact> emergencyContacts,
-    @JsonKey(name:'UserInsurance')
-    @Default([]) List<UserInsurance> userInsurance,
+    @JsonKey(name: 'UserInsurance')
+    @Default([])
+    List<UserInsurance> userInsurance,
     @Default([]) List<PreferredService> preferredServices,
   }) = _EprDataModel;
+  factory EprDataModel.fromJson(Map<String, dynamic> json) =>
+      _$EprDataModelFromJson(json);
+  const EprDataModel._();
 
   List<PreferredService> get getPreferredAmbulace =>
       preferredServices.where((e) => e.serviceType == 'Ambulance').toList();
   List<PreferredService> get getPreferredHospital =>
       preferredServices.where((e) => e.serviceType == 'Hospital').toList();
-
-  factory EprDataModel.fromJson(Map<String, dynamic> json) =>
-      _$EprDataModelFromJson(json);
 }
 
 @freezed

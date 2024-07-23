@@ -69,7 +69,6 @@ class _OTPScreenState extends State<OTPScreen> {
             if (widget.redirectRouteName != null &&
                 widget.redirectRouteName!.isNotEmpty)
               {
-                print(widget.redirectRouteName),
                 GoRouter.of(context).goNamed(
                   widget.redirectRouteName!,
                   queryParameters: {'skipRootRedirectCheck': 'true'},

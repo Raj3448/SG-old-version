@@ -35,10 +35,11 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                             .pushNamed(RoutesConstants.userProfileRoute);
                       },
                       child: Avatar(
-                          imgPath: userStore.userDetails == null
-                              ? ''
-                              : userStore.userDetails!.profileImgUrl ?? '',
-                          maxRadius: 22),
+                        imgPath: userStore.userDetails == null
+                            ? ''
+                            : userStore.userDetails!.profileImgUrl ?? '',
+                        maxRadius: 22,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -49,19 +50,24 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                           Text(
                             'Hi',
                             style: AppTextStyle.bodyXLBold.copyWith(
-                                color: AppColors.grayscale900,
-                                height: 1.4,
-                                overflow: TextOverflow.ellipsis),
-                          ).tr(args: [
-                            if (userStore.userDetails == null)
-                              '----'
-                            else
-                              userStore.userDetails?.name ?? '---'
-                          ]),
+                              color: AppColors.grayscale900,
+                              height: 1.4,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ).tr(
+                            args: [
+                              if (userStore.userDetails == null)
+                                '----'
+                              else
+                                userStore.userDetails?.name ?? '---',
+                            ],
+                          ),
                           Text(
                             'How do you feel today?'.tr(),
                             style: AppTextStyle.bodyMediumMedium.copyWith(
-                                color: AppColors.grayscale600, height: 1.42),
+                              color: AppColors.grayscale600,
+                              height: 1.42,
+                            ),
                           ),
                         ],
                       ),

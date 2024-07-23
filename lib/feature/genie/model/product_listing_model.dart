@@ -212,8 +212,6 @@ class DataAttributes with _$DataAttributes {
       _$DataAttributesFromJson(json);
 }
 
-///==============================================================================
-
 @freezed
 class ProductBasicDetailsModel with _$ProductBasicDetailsModel {
   const factory ProductBasicDetailsModel({
@@ -513,9 +511,9 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required Product product,
     required FamilyMember? subscribedBy,
     required List<FamilyMember>? belongsTo,
+    required RazorpaySubscription? razorpay_subscription,
     @Default([]) List<PaymentTransaction>? payment_transactions,
     @Default([]) List<DatumAttributes>? benefits,
-    required RazorpaySubscription? razorpay_subscription,
   }) = _SubscriptionDetails;
 
   factory SubscriptionDetails.fromJson(Map<String, dynamic> json) =>

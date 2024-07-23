@@ -34,10 +34,12 @@ class _BookingsScreenState extends State<BookingsScreen>
     _reactionDisposer =
         reaction((_) => store.allServiceRefreshFailure, (refreshFailure) {
       if (refreshFailure != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(refreshFailure),
-          duration: const Duration(seconds: 5),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(refreshFailure),
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
       store.allServiceRefreshFailure = null;
     });
@@ -54,57 +56,62 @@ class _BookingsScreenState extends State<BookingsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.white,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: Dimension.d3),
-              Text(
-                'Bookings',
-                style: AppTextStyle.bodyXLBold
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-              const SizedBox(height: Dimension.d3),
-              CustomizeTabviewComponent(
+      backgroundColor: AppColors.white,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: Dimension.d3),
+            Text(
+              'Bookings',
+              style: AppTextStyle.bodyXLBold
+                  .copyWith(color: AppColors.grayscale900),
+            ),
+            const SizedBox(height: Dimension.d3),
+            CustomizeTabviewComponent(
+              controller: controller,
+              tabCount: 3,
+              widgetList: [
+                Tab(icon: Text('Requested'.tr())),
+                Tab(icon: Text('Active'.tr())),
+                Tab(icon: Text('Completed'.tr())),
+              ],
+            ),
+            const SizedBox(
+              height: Dimension.d2,
+            ),
+            Expanded(
+              child: TabBarView(
                 controller: controller,
-                tabCount: 3,
-                widgetList: [
-                  Tab(icon: Text('Requested'.tr())),
-                  Tab(icon: Text('Active'.tr())),
-                  Tab(icon: Text('Completed'.tr())),
-                ],
-              ),
-              const SizedBox(
-                height: Dimension.d2,
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: controller,
-                  children: List.generate(
-                      3,
-                      (index) => BookingsStateComponent(
-                            bookingServiceStatus: index == 0
-                                ? BookingServiceStatus.requested
-                                : index == 1
-                                    ? BookingServiceStatus.active
-                                    : BookingServiceStatus.completed,
-                            store: store,
-                          )),
+                children: List.generate(
+                  3,
+                  (index) => BookingsStateComponent(
+                    bookingServiceStatus: index == 0
+                        ? BookingServiceStatus.requested
+                        : index == 1
+                            ? BookingServiceStatus.active
+                            : BookingServiceStatus.completed,
+                    store: store,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class BookingsStateComponent extends StatelessWidget {
+  const BookingsStateComponent({
+    required this.bookingServiceStatus,
+    required this.store,
+    super.key,
+  });
   final BookingServiceStatus bookingServiceStatus;
   final BookingServiceStore store;
-  const BookingsStateComponent(
-      {required this.bookingServiceStatus, required this.store, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -127,12 +134,14 @@ class BookingsStateComponent extends StatelessWidget {
             store.allServiceRefreshFailure == 'No_Internet') {
           final error =
               store.fetchServiceError ?? store.allServiceRefreshFailure;
-          store..fetchServiceError = null
-          ..allServiceRefreshFailure = null;
+          store
+            ..fetchServiceError = null
+            ..allServiceRefreshFailure = null;
           return ErrorStateComponent(
-              errorType: error == 'No_Internet'
-                  ? ErrorType.noInternetConnection
-                  : ErrorType.somethinWentWrong);
+            errorType: error == 'No_Internet'
+                ? ErrorType.noInternetConnection
+                : ErrorType.somethinWentWrong,
+          );
         }
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -142,11 +151,12 @@ class BookingsStateComponent extends StatelessWidget {
                 )
               : Column(
                   children: List.generate(
-                      bookingModelList.length,
-                      (index) => BookingListTileComponent(
-                            bookingServiceStatus: bookingServiceStatus,
-                            bookingServiceModel: bookingModelList[index],
-                          )),
+                    bookingModelList.length,
+                    (index) => BookingListTileComponent(
+                      bookingServiceStatus: bookingServiceStatus,
+                      bookingServiceModel: bookingModelList[index],
+                    ),
+                  ),
                 ),
         );
       },

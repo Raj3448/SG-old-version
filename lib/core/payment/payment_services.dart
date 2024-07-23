@@ -22,7 +22,7 @@ class PaymentService {
       ..on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  void openCheckout({
+  Future<void> openCheckout({
     required String orderId,
     required String razorpayApiKey,
     bool isSubscription = false,
@@ -57,17 +57,14 @@ class PaymentService {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print('Payment Successful: ${response.paymentId}');
     productListingStore.paymentStatus = PaymentStatus.success;
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    print('Payment Error: ${response.message}');
     productListingStore.paymentStatus = PaymentStatus.failure;
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    print('External Wallet: ${response.walletName}');
     productListingStore.paymentStatus = PaymentStatus.pending;
   }
 

@@ -39,7 +39,9 @@ class IconTitleDetailsComponent extends StatelessWidget {
             details,
             textAlign: TextAlign.end,
             style: AppTextStyle.bodyLargeMedium.copyWith(
-                color: AppColors.grayscale900, overflow: detailsTextOverflow),
+              color: AppColors.grayscale900,
+              overflow: detailsTextOverflow,
+            ),
           ),
         ),
       ],

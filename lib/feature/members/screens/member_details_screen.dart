@@ -46,7 +46,7 @@ class MemberDetailsScreen extends StatelessWidget {
         ),
       );
     }
-    bool hasEPR = false;
+    var hasEPR = false;
 
     if (activeMember!.subscriptions!.isNotEmpty) {
       if (activeMember!.subscriptions![0].benefits!.any(

@@ -2,12 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:silver_genie/core/utils/token_manager.dart';
 
 class AuthInterceptor extends Interceptor {
-  final TokenManager _tokenStorage;
-
   AuthInterceptor(this._tokenStorage);
+  final TokenManager _tokenStorage;
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // TODO(You): Put the paths you want the interceptor to ignore
     if (!options.path.contains('/login') ||
         !options.path.contains('/register-complete') ||

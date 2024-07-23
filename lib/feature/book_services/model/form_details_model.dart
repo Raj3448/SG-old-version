@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'form_details_model.freezed.dart';
@@ -32,34 +34,33 @@ class FormData with _$FormData {
 
 @freezed
 class FormInfoModel with _$FormInfoModel {
-    const factory FormInfoModel({
-        required Data data,
-    }) = _FormInfoModel;
-    factory FormInfoModel.fromJson(Map<String, dynamic> json) =>
+  const factory FormInfoModel({
+    required Data data,
+  }) = _FormInfoModel;
+  factory FormInfoModel.fromJson(Map<String, dynamic> json) =>
       _$FormInfoModelFromJson(json);
 }
 
 @freezed
 class Data with _$Data {
-    const factory Data({
-        required int id,
-        required Attributes attributes,
-    }) = _Data;
-    factory Data.fromJson(Map<String, dynamic> json) =>
-      _$DataFromJson(json);
+  const factory Data({
+    required int id,
+    required Attributes attributes,
+  }) = _Data;
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
 
 @freezed
 class Attributes with _$Attributes {
-    const factory Attributes({
-        required String name,
-        required bool isActive,
-        required DateTime createdAt,
-        required DateTime updatedAt,
-        required DateTime publishedAt,
-        required List<FormModel> form,
-    }) = _Attributes;
-    factory Attributes.fromJson(Map<String, dynamic> json) =>
+  const factory Attributes({
+    required String name,
+    required bool isActive,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required DateTime publishedAt,
+    required List<FormModel> form,
+  }) = _Attributes;
+  factory Attributes.fromJson(Map<String, dynamic> json) =>
       _$AttributesFromJson(json);
 }
 
@@ -68,15 +69,15 @@ class FormModel with _$FormModel {
   const factory FormModel({
     required int id,
     @JsonKey(name: '__component') required String component,
-    @Default(null) String? controlType,
     required String type,
     required FormDetails formDetails,
     required dynamic initialValue,
+    required dynamic startDate,
+    required dynamic endDate,
+    @Default(null) String? controlType,
     @Default(0) int defaultValue,
     @Default([]) List<Validations> validations,
     @Default([]) List<Option> options,
-    required dynamic startDate,
-    required dynamic endDate,
     @Default('dd/MM/yyyy') String dateFormat,
   }) = _Form;
 
@@ -136,7 +137,10 @@ class ValueMsg with _$ValueMsg {
 
 @freezed
 class FormAnswerModel with _$FormAnswerModel {
-  @JsonSerializable(includeIfNull: false,explicitToJson: true,)
+  @JsonSerializable(
+    includeIfNull: false,
+    explicitToJson: true,
+  )
   const factory FormAnswerModel({
     required List<FormAnswer> formAnswer,
     required int productId,
@@ -148,8 +152,9 @@ class FormAnswerModel with _$FormAnswerModel {
 
 @freezed
 class FormAnswer with _$FormAnswer {
-  @JsonSerializable(includeIfNull: false,explicitToJson: true,
-  
+  @JsonSerializable(
+    includeIfNull: false,
+    explicitToJson: true,
   )
   const factory FormAnswer({
     @JsonKey(includeToJson: false) required String forDId,
@@ -163,7 +168,6 @@ class FormAnswer with _$FormAnswer {
     String? valueInteger,
     String? valueDate,
     String? valueText,
-
   }) = _FormAnswer;
 
   factory FormAnswer.fromJson(Map<String, dynamic> json) =>

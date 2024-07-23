@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars, library_private_types_in_public_api
+
 import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/failure.dart';
@@ -80,6 +82,11 @@ abstract class _ProductListingStoreBase with Store {
   @action
   void updatePlan(Price? plan) {
     _planDetails = plan;
+  }
+
+  @action
+  void setPlanNull() {
+    _planDetails = null;
   }
 
   @computed
@@ -201,8 +208,10 @@ abstract class _ProductListingStoreBase with Store {
     productListingService.buyService(formData: formData).then((value) {
       value.fold((l) {
         l.maybeMap(
-          serviceNotAvailbaleForUser: (value) => buyServiceFailed = 'This service is not available for selected user',
-          socketExceptionError: (value) => buyServiceFailed = 'No Internet Connection',
+          serviceNotAvailbaleForUser: (value) => buyServiceFailed =
+              'This service is not available for selected user',
+          socketExceptionError: (value) =>
+              buyServiceFailed = 'No Internet Connection',
           orElse: () => buyServiceFailed = 'Something went wrong',
         );
       }, (r) {

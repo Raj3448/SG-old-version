@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, use_build_context_synchronously
 // ignore_for_file: must_be_immutable
 
 import 'dart:async';
@@ -23,8 +23,6 @@ import 'package:silver_genie/feature/book_services/screens/service_booking_payme
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/screens/subscription_details_screen.dart';
 import 'package:silver_genie/feature/user_profile/services/user_services.dart';
-import 'package:silver_genie/core/utils/launch_dialer.dart';
-
 
 class BookingDetailsScreen extends StatefulWidget {
   final String id;
@@ -304,9 +302,11 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       height: 48,
                       child: CustomButton(
                         ontap: () async {
-                          await launchDialer(homeStore.getMasterDataModel?.masterData
-                                  .contactUs.contactNumber ??
-                              '');
+                          await launchDialer(
+                            homeStore.getMasterDataModel?.masterData.contactUs
+                                    .contactNumber ??
+                                '',
+                          );
                         },
                         title: 'Help-Contact customer care',
                         showIcon: true,

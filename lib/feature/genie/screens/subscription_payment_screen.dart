@@ -16,6 +16,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
+import 'package:silver_genie/core/widgets/note_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/book_services/screens/service_payment_screen.dart';
@@ -160,7 +161,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                   if (store.servicePaymentStatus != PaymentStatus.success)
                     Column(
                       children: [
-                        _NoteComponent(
+                        NoteComponent(
                           desc: store.servicePaymentStatus ==
                                   PaymentStatus.failure
                               ? 'PaymentFailureStatusNote'.tr()
@@ -222,47 +223,5 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
       case PaymentStatus.failure:
         return 'Payment Failure';
     }
-  }
-}
-
-class _NoteComponent extends StatelessWidget {
-  const _NoteComponent({required this.desc});
-
-  final String desc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                'Note',
-                style: AppTextStyle.bodyMediumMedium
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-              const SizedBox(width: Dimension.d1),
-              const Icon(
-                Icons.info_outline_rounded,
-                size: 16,
-                color: AppColors.grayscale900,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            desc,
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(color: AppColors.grayscale800),
-          ),
-        ],
-      ),
-    );
   }
 }

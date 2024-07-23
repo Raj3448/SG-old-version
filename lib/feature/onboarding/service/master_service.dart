@@ -1,4 +1,4 @@
-// ignore_for_file: inference_failure_on_function_invocation, one_member_abstracts
+// ignore_for_file: inference_failure_on_function_invocation, one_member_abstracts, lines_longer_than_80_chars
 
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:fpdart/fpdart.dart';
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/core/failure/failure.dart';
@@ -23,7 +25,6 @@ abstract class _MasterStoreBase with Store {
     isLoading = true;
     try {
       masterData = await masterDataService.getMasterData();
-    } catch (error) {
     } finally {
       isLoading = false;
     }

@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -109,7 +109,8 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                           pathParameters: {
                             'id': '${displayedServices[index].id}',
                             'title': displayedServices[index].attributes.name,
-                            'productCode' : displayedServices[index].attributes.code
+                            'productCode':
+                                displayedServices[index].attributes.code,
                           },
                         );
                       },
@@ -154,7 +155,9 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                           color: AppColors.grayscale900,
                         ),
                       ),
-                      const ContactSgTeamComponent(phoneNumber: '+91 0000000000',)
+                      const ContactSgTeamComponent(
+                        phoneNumber: '+91 0000000000',
+                      ),
                     ],
                   ),
                 ],

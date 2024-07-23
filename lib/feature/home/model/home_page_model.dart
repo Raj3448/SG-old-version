@@ -29,8 +29,8 @@ class BannerImageModel with _$BannerImageModel {
   const factory BannerImageModel({
     @JsonKey(name: '__component') @HiveField(4) required String component,
     @HiveField(5) required String label,
-    @HiveField(6) Cta? cta,
     @HiveField(7) required BannerImage bannerImage,
+    @HiveField(6) Cta? cta,
   }) = _BannerImageModel;
 
   factory BannerImageModel.fromJson(Map<String, dynamic> json) =>
@@ -122,9 +122,9 @@ class Data with _$Data {
 class ImageDataModel with _$ImageDataModel {
   @JsonSerializable(explicitToJson: true)
   const factory ImageDataModel({
+    @HiveField(23) required String url,
     @Default(double.infinity) @HiveField(21) double width,
     @Default(300) @HiveField(22) double height,
-    @HiveField(23) required String url,
   }) = _ImageDataModel;
 
   factory ImageDataModel.fromJson(Map<String, dynamic> json) =>

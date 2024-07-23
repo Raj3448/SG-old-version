@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, library_private_types_in_public_api, lines_longer_than_80_chars
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/notification/model/notification_model.dart';
 import 'package:silver_genie/feature/notification/services/notification_service.dart';

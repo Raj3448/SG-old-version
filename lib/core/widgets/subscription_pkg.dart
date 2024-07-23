@@ -148,9 +148,10 @@ class SubscriptionPkg extends StatelessWidget {
                 ? Color(int.parse(backgroundColorCode!, radix: 16))
                 : getContainerColor(),
             border: Border.all(
-                color: iconColorCode != null
-                    ? Color(int.parse(iconColorCode!, radix: 16))
-                    : getContainerBorderColor()),
+              color: iconColorCode != null
+                  ? Color(int.parse(iconColorCode!, radix: 16))
+                  : getContainerBorderColor(),
+            ),
             borderRadius: BorderRadius.circular(getContainerBorderRadius()),
           ),
           child: Padding(

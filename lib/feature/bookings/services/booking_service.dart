@@ -6,8 +6,7 @@ import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
 
 abstract class IBookingService {
-  Future<Either<Failure, BookingServices>>
-      getBookingServiceBasicDetails();
+  Future<Either<Failure, BookingServices>> getBookingServiceBasicDetails();
 }
 
 class BookingService extends IBookingService {

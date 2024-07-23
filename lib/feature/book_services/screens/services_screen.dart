@@ -305,7 +305,7 @@ class _ServiceListView extends StatelessWidget {
               pathParameters: {
                 'id': '${services[index].id}',
                 'title': services[index].attributes.name,
-                'productCode' : services[index].attributes.code
+                'productCode': services[index].attributes.code,
               },
             );
           },

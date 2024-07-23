@@ -133,7 +133,6 @@ abstract class _MembersStoreBase with Store {
           },
         );
       });
-    } catch (e) {
     } finally {
       isRefreshing = false;
     }
@@ -285,11 +284,13 @@ extension MemberExtension on Member {
         address.city,
         address.state,
         countries
-            .firstWhere((element) => element.isoCode == address.country,
-                orElse: () => Country('', address.country))
+            .firstWhere(
+              (element) => element.isoCode == address.country,
+              orElse: () => Country('', address.country),
+            )
             .name,
       ].where((part) => part.isNotEmpty).join(', '),
-      address.postalCode
+      address.postalCode,
     ].where((part) => part.isNotEmpty).join(' - ');
   }
 }

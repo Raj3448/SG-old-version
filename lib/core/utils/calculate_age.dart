@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 int calculateAge(DateTime dob) {
   final now = DateTime.now();
-  int age = now.year - dob.year;
+  var age = now.year - dob.year;
   if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
     age--;
   }
@@ -14,7 +14,7 @@ String formatDateTime(DateTime dateTime) {
   final today = DateTime(now.year, now.month, now.day);
   final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
-  String formattedTime = DateFormat('h:mma').format(dateTime);
+  final formattedTime = DateFormat('h:mma').format(dateTime);
 
   if (date == today) {
     return 'Today at $formattedTime';

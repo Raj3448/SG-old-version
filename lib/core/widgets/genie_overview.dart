@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, deprecated_member_use
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -335,7 +335,6 @@ class _ServiceCheckBox extends StatelessWidget {
   const _ServiceCheckBox({
     required this.servicename,
     required this.isProvide,
-    super.key,
   });
   @override
   Widget build(BuildContext context) {
@@ -405,10 +404,11 @@ class _ExpandingQuestionComponentState
                 Padding(
                   padding: const EdgeInsets.only(top: 10, right: 10),
                   child: Icon(
-                      isExpanding
-                          ? AppIcons.arrow_up_ios
-                          : AppIcons.arrow_down_ios,
-                      size: 8),
+                    isExpanding
+                        ? AppIcons.arrow_up_ios
+                        : AppIcons.arrow_down_ios,
+                    size: 8,
+                  ),
                 ),
               ],
             ),

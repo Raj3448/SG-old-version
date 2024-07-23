@@ -24,8 +24,8 @@ class HttpClient with DioMixin implements Dio {
     //     onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
     //   ),
     // );
-    httpClientAdapter = DefaultHttpClientAdapter();
-    final TokenManager tokenStorage = GetIt.I<TokenManager>();
+    httpClientAdapter = IOHttpClientAdapter();
+    final tokenStorage = GetIt.I<TokenManager>();
     interceptors.addAll([
       ErrorInterceptor(),
       AuthInterceptor(tokenStorage),

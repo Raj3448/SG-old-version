@@ -79,9 +79,7 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
       backgroundColor: AppColors.white,
       body: GestureDetector(
         onTap: () {
-          setState(() {
-            disableDropDownLists();
-          });
+          setState(disableDropDownLists);
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: Dimension.d4),
@@ -157,12 +155,17 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                                           showBtnIcon: true,
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
-                                            launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                                            launchDialer(
+                                              homeStore
+                                                      .getMasterDataModel
+                                                      ?.masterData
+                                                      .contactUs
+                                                      .contactNumber ??
+                                                  '',
+                                            ).then(
+                                              (value) =>
+                                                  GoRouter.of(context).pop(),
+                                            );
                                           },
                                         );
                                       },

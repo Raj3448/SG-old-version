@@ -12,12 +12,12 @@ import 'package:silver_genie/feature/user_profile/repository/local/user_details_
 import 'package:silver_genie/feature/user_profile/services/i_user_facade.dart';
 
 class UserDetailServices implements IUserFacades {
-  final UserDetailsCache _userDetailCache;
-  HttpClient httpClient;
   UserDetailServices(
     this._userDetailCache,
     this.httpClient,
   );
+  final UserDetailsCache _userDetailCache;
+  HttpClient httpClient;
 
   @override
   Future<Either<Failure, User>> updateUserDetails({
@@ -25,9 +25,9 @@ class UserDetailServices implements IUserFacades {
     String? imageId,
   }) async {
     try {
-      var userData = user.toJson();
+      final userData = user.toJson();
 
-      var data = {
+      final data = {
         'firstName': userData['firstName'],
         'lastName': userData['lastName'],
         'gender': userData['gender'],
@@ -58,7 +58,7 @@ class UserDetailServices implements IUserFacades {
         final updatedData = await fetchUserDetailsFromServer();
         return updatedData.fold(
           (l) => const Left(Failure.someThingWentWrong()),
-          (r) => right(r),
+          right,
         );
       } else {
         return const Left(Failure.someThingWentWrong());
@@ -104,7 +104,7 @@ class UserDetailServices implements IUserFacades {
     required User userInfo,
   }) async {
     try {
-      var formData = FormData.fromMap({
+      final formData = FormData.fromMap({
         'files': await MultipartFile.fromFile(
           fileImage.path,
         ),

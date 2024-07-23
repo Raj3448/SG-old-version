@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation
 // ignore_for_file: lines_longer_than_80_chars, one_member_abstracts
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
@@ -8,10 +8,12 @@ import 'package:silver_genie/feature/notification/model/notification_model.dart'
 
 abstract class INotificationFacade {
   Future<Either<Failure, NotificationModel>> fetchNotification();
-  Future<Either<Failure, bool>> storeFcmTokenIntoServer(
-      {required String? fcmToken});
-  Future<Either<Failure, bool>> markToReadById(
-      {required String notificationId});
+  Future<Either<Failure, bool>> storeFcmTokenIntoServer({
+    required String? fcmToken,
+  });
+  Future<Either<Failure, bool>> markToReadById({
+    required String notificationId,
+  });
 }
 
 class NotificationServices extends INotificationFacade {
@@ -26,8 +28,11 @@ class NotificationServices extends INotificationFacade {
 
       if (response.statusCode == 200) {
         if (response.data != null) {
-          return Right(NotificationModel.fromJson(
-              response.data! as Map<String, dynamic>));
+          return Right(
+            NotificationModel.fromJson(
+              response.data! as Map<String, dynamic>,
+            ),
+          );
         }
         return const Left(Failure.badResponse());
       } else {
@@ -44,8 +49,9 @@ class NotificationServices extends INotificationFacade {
   }
 
   @override
-  Future<Either<Failure, bool>> storeFcmTokenIntoServer(
-      {required String? fcmToken}) async {
+  Future<Either<Failure, bool>> storeFcmTokenIntoServer({
+    required String? fcmToken,
+  }) async {
     try {
       final response = await httpClient.post(
         '/api/auth/local/fcm',
@@ -67,9 +73,11 @@ class NotificationServices extends INotificationFacade {
       return const Left(Failure.someThingWentWrong());
     }
   }
-  
+
   @override
-  Future<Either<Failure, bool>> markToReadById({required String notificationId}) async {
+  Future<Either<Failure, bool>> markToReadById({
+    required String notificationId,
+  }) async {
     try {
       final response = await httpClient.post(
         '/api/user-notifications/$notificationId/mark-as-read',

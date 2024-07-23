@@ -15,8 +15,8 @@ class BackToHomeComponent extends StatelessWidget {
   const BackToHomeComponent({
     required this.title,
     required this.description,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,9 @@ class BackToHomeComponent extends StatelessWidget {
         Text(
           title,
           style: AppTextStyle.bodyLargeMedium.copyWith(
-              color: AppColors.grayscale900, fontWeight: FontWeight.w600),
+            color: AppColors.grayscale900,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(
           height: Dimension.d2,

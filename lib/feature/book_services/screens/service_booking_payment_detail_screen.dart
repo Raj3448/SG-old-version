@@ -24,11 +24,11 @@ import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class ServiceBookingPaymentDetailScreen extends StatefulWidget {
-  final ServiceTrackerResponse paymentDetails;
   const ServiceBookingPaymentDetailScreen({
     required this.paymentDetails,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
+  final ServiceTrackerResponse paymentDetails;
 
   @override
   State<ServiceBookingPaymentDetailScreen> createState() =>
@@ -172,7 +172,7 @@ class _ServiceBookingPaymentDetailScreenState
                         title: widget.paymentDetails.priceDetails.products.first
                             .displayName,
                         description:
-                            '₹ ${formatNumberWithCommas(widget.paymentDetails.priceDetails.products.first.price.toInt())}',
+                            '₹ ${formatNumberWithCommas(widget.paymentDetails.priceDetails.products.first.price)}',
                       ),
                       const Divider(
                         color: AppColors.line,
