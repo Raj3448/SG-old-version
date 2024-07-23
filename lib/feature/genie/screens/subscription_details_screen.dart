@@ -23,7 +23,7 @@ import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class SubscriptionDetailsScreen extends StatefulWidget {
-  SubscriptionDetailsScreen({
+  const SubscriptionDetailsScreen({
     required this.price,
     required this.subscriptionData,
     required this.isCouple,

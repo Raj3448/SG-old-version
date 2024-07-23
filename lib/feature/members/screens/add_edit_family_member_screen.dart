@@ -186,7 +186,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
                               relationContr.selectedOptions.first;
-                          Map<String, dynamic> updatedData = {
+                          final updatedData = <String, dynamic>{
                             'firstName': firstNameContr.text,
                             'lastName': lastNameContr.text,
                             'dob': dobContr.text,
@@ -206,7 +206,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             'profileImg':
                                 memberStore.activeMember!.profileImg?.id,
                           };
-                          print(updatedData);
                           if (storeImageFile != null) {
                             memberStore.updateMemberDataWithProfileImg(
                               id: _member.id.toString(),
@@ -337,9 +336,11 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               const SizedBox(height: 8),
                               MultiSelectFormField(
                                 showClear: false,
-                                selectedOptions: (widget.edit || widget.isSelf) && (selectedGenderIndex != -1)
-                                    ? [_genderItems[selectedGenderIndex!]]
-                                    : null,
+                                selectedOptions:
+                                    (widget.edit || widget.isSelf) &&
+                                            (selectedGenderIndex != -1)
+                                        ? [_genderItems[selectedGenderIndex!]]
+                                        : null,
                                 controller: genderContr,
                                 values: _genderItems,
                                 validator: (value) {
@@ -404,13 +405,14 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           showBtnIcon: true,
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
-                                            launchDialer(homeStore
-                                                        .getMasterDataModel
-                                                        ?.masterData
-                                                        .contactUs
-                                                        .contactNumber ??
-                                                    '')
-                                                .then(
+                                            launchDialer(
+                                              homeStore
+                                                      .getMasterDataModel
+                                                      ?.masterData
+                                                      .contactUs
+                                                      .contactNumber ??
+                                                  '',
+                                            ).then(
                                               (value) =>
                                                   GoRouter.of(context).pop(),
                                             );
@@ -464,13 +466,14 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                           showBtnIcon: true,
                                           btnIconPath: AppIcons.phone,
                                           onTap: () {
-                                            launchDialer(homeStore
-                                                        .getMasterDataModel
-                                                        ?.masterData
-                                                        .contactUs
-                                                        .contactNumber ??
-                                                    '')
-                                                .then(
+                                            launchDialer(
+                                              homeStore
+                                                      .getMasterDataModel
+                                                      ?.masterData
+                                                      .contactUs
+                                                      .contactNumber ??
+                                                  '',
+                                            ).then(
                                               (value) =>
                                                   GoRouter.of(context).pop(),
                                             );

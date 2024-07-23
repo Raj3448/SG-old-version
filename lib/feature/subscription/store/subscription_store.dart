@@ -1,4 +1,4 @@
-// ignore_for_file: inference_failure_on_instance_creation
+// ignore_for_file: inference_failure_on_instance_creation, library_private_types_in_public_api, lines_longer_than_80_chars
 
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/subscription/model/subscription_member_model.dart';

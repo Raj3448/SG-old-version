@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -13,8 +15,8 @@ import 'package:silver_genie/core/widgets/form_components.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class LoginPage extends StatefulWidget {
-  final String? redirectRouteName;
   const LoginPage({required this.redirectRouteName, super.key});
+  final String? redirectRouteName;
 
   @override
   State<LoginPage> createState() => _LoginPageState();

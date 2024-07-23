@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, inference_failure_on_function_invocation, lines_longer_than_80_chars, avoid_dynamic_calls
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -80,7 +80,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     super.initState();
   }
 
-  List<Map<String, dynamic>> _controllers = [];
+  final List<Map<String, dynamic>> _controllers = [];
   @override
   void dispose() {
     store
@@ -146,7 +146,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                       );
                   final widgetList = <Widget>[];
                   final components = formDetailModel.attributes.productForm;
-                  int order = 0;
+                  var order = 0;
                   for (var i = 0;
                       i < components.data.attributes.form.length;
                       i++) {
@@ -177,9 +177,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                 if (member != null &&
                                     member.subscriptions != null &&
                                     member.subscriptions!.isEmpty) {
-                                      setState(() {
-                                        selectedMember = null;
-                                      });
+                                  setState(() {
+                                    selectedMember = null;
+                                  });
                                   showDialog(
                                     context: context,
                                     builder: (context) => _BuyPlanComponent(),
@@ -193,7 +193,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                     controlType: component.controlType,
                                     hint: component.formDetails.hint,
                                     valueReference: [
-                                      '${member?.id.toString()}',
+                                      '${member?.id}',
                                     ],
                                     forDId: component.formDetails.id.toString(),
                                   );
@@ -203,12 +203,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             ),
                           ]);
                         }
-                        break;
                       case 'form-field-type.text-question':
                         if (component.type == 'text') {
                           order++;
-                          final TextEditingController controller =
-                              TextEditingController();
+                          final controller = TextEditingController();
                           _controllers
                               .add({component.formDetails.title: controller});
                           widgetList.addAll([
@@ -260,7 +258,6 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             ),
                           ]);
                         }
-                        break;
                       case 'form-field-type.choice-question':
                         if (component.type == 'choice') {
                           order++;
@@ -323,7 +320,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                   title: component.formDetails.title,
                                   type: component.type,
                                   valueChoice: [
-                                    '${newValue!.first.value.toString().trim()}',
+                                    newValue!.first.value.toString().trim(),
                                   ],
                                   controlType: component.controlType,
                                   hint: component.formDetails.hint,
@@ -345,7 +342,6 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             ),
                           ]);
                         }
-                        break;
                       case 'form-field-type.date-question':
                         if (component.type == 'date') {
                           order++;
@@ -391,12 +387,12 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             ),
                           ]);
                         }
-                        break;
                       case 'form-field-type.integer-question':
                         if (component.type == 'integer') {
                           order++;
                           final controller = TextEditingController(
-                              text: component.defaultValue.toString());
+                            text: component.defaultValue.toString(),
+                          );
                           _controllers
                               .add({component.formDetails.title: controller});
                           widgetList.addAll([
@@ -466,9 +462,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: Dimension.d4),
-                            const BookingStatus(
-                              currentStep: BookingStep.serviceDetails,
-                            ),
+                            const BookingStatus(),
                             ...widgetList,
                             const SizedBox(height: Dimension.d20),
                             const SizedBox(height: Dimension.d4),
@@ -493,11 +487,11 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   }
 
   String? applyValidations({
-    String? value,
     required List<Validations> validations,
+    String? value,
     bool isNum = false,
   }) {
-    for (var validation in validations) {
+    for (final validation in validations) {
       if (validation.type == 'minValue' &&
           (isNum ? int.tryParse(value!) ?? 1 : value!.length) <
               (int.tryParse(validation.valueMsg.value) ?? 1)) {
@@ -516,14 +510,14 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     required int id,
     required String title,
     required String type,
+    required String? hint,
+    required String forDId,
     List<String>? valueChoice,
     String? valueInteger,
     String? valueDate,
     String? valueText,
     String? controlType,
-    required String? hint,
     List<String>? valueReference,
-    required String forDId,
   }) {
     final existingIndex =
         formAnswers.indexWhere((element) => element.forDId == forDId);
@@ -600,10 +594,11 @@ class _BuyPlanComponent extends StatelessWidget {
                   .copyWith(color: AppColors.grayscale900, height: 2.4),
             ),
             Text(
-                'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
-                textAlign: TextAlign.center,
-                style: AppTextStyle.bodyLargeMedium
-                    .copyWith(color: AppColors.grayscale900)),
+              'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
+              textAlign: TextAlign.center,
+              style: AppTextStyle.bodyLargeMedium
+                  .copyWith(color: AppColors.grayscale900),
+            ),
             const SizedBox(height: Dimension.d2),
             if (store.getSubscriptActiveProdList.isNotEmpty)
               ProductListingCareComponent(

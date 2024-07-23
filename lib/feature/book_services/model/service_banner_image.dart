@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'service_banner_image.g.dart';
 part 'service_banner_image.freezed.dart';
@@ -31,8 +33,7 @@ class Datum with _$Datum {
     required int id,
     required Attributes attributes,
   }) = _Datum;
-  factory Datum.fromJson(Map<String, dynamic> json) =>
-      _$DatumFromJson(json);
+  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
 }
 
 @freezed
@@ -57,6 +58,5 @@ class Cta with _$Cta {
     required String target,
     required bool downloadLink,
   }) = _Cta;
-  factory Cta.fromJson(Map<String, dynamic> json) =>
-      _$CtaFromJson(json);
+  factory Cta.fromJson(Map<String, dynamic> json) => _$CtaFromJson(json);
 }

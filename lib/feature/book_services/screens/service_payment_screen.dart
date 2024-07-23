@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, deprecated_member_use, lines_longer_than_80_chars
+
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -28,16 +30,15 @@ import 'package:silver_genie/feature/bookings/store/booking_service_store.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 
 class ServicePaymentScreen extends StatefulWidget {
+  ServicePaymentScreen({
+    required this.servicePaymentStatusModel,
+    required this.priceDetails,
+    required this.id,
+    super.key,
+  });
   ServicePaymentStatusModel? servicePaymentStatusModel;
   final PriceDetails? priceDetails;
   final String id;
-
-  ServicePaymentScreen(
-      {required this.servicePaymentStatusModel,
-      required this.priceDetails,
-      required this.id,
-      Key? key})
-      : super(key: key);
 
   @override
   State<ServicePaymentScreen> createState() => _PaymentScreenState();
@@ -57,7 +58,8 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
         ? PaymentStatus.failure
         : getPaymentStatus(
             paymentStatus: widget.servicePaymentStatusModel!.paymentStatus,
-            status: widget.servicePaymentStatusModel!.status);
+            status: widget.servicePaymentStatusModel!.status,
+          );
     if (store.servicePaymentStatus == PaymentStatus.pending) {
       _startPaymentStatusPolling();
     }
@@ -121,11 +123,12 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                 floatingActionButton: FixedButton(
                   ontap: () {
                     if (widget.servicePaymentStatusModel != null) {
-                      GetIt.I<ProductListingStore>().servicePaymentInfoGotSuccess =
-                          null;
+                      GetIt.I<ProductListingStore>()
+                          .servicePaymentInfoGotSuccess = null;
                       context.pushNamed(
-                          RoutesConstants.servicePaymentStatusTrackingPage,
-                          pathParameters: {'id': widget.id});
+                        RoutesConstants.servicePaymentStatusTrackingPage,
+                        pathParameters: {'id': widget.id},
+                      );
                     } else {
                       context.pop();
                     }
@@ -142,15 +145,18 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                     child: Column(
                       children: [
                         const BookingStatus(
-                            currentStep: BookingStep.bookingDetails),
+                          currentStep: BookingStep.bookingDetails,
+                        ),
                         const SizedBox(height: Dimension.d4),
                         SvgPicture.asset(
                           store.servicePaymentStatus == PaymentStatus.success
                               ? 'assets/icon/success.svg'
-                              : store.servicePaymentStatus == PaymentStatus.pending
+                              : store.servicePaymentStatus ==
+                                      PaymentStatus.pending
                                   ? 'assets/icon/pending.svg'
                                   : 'assets/icon/failure.svg',
-                          color: store.servicePaymentStatus == PaymentStatus.success
+                          color: store.servicePaymentStatus ==
+                                  PaymentStatus.success
                               ? Colors.green
                               : null,
                         ),
@@ -166,7 +172,9 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                             Text(
                               'Order Info',
                               style: AppTextStyle.bodyXLSemiBold.copyWith(
-                                  color: AppColors.grayscale900, height: 2.6),
+                                color: AppColors.grayscale900,
+                                height: 2.6,
+                              ),
                             ),
                             const Divider(
                               color: AppColors.grayscale300,
@@ -174,13 +182,14 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                             ElementSpaceBetween(
                               title: store.servicePaymentStatus ==
                                       PaymentStatus.failure
-                                  ? widget.priceDetails!.products.first.displayName
-                                  : widget.servicePaymentStatusModel!.priceDetails
-                                      .products.first.displayName,
+                                  ? widget
+                                      .priceDetails!.products.first.displayName
+                                  : widget.servicePaymentStatusModel!
+                                      .priceDetails.products.first.displayName,
                               description: store.servicePaymentStatus ==
                                       PaymentStatus.failure
-                                  ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price.toInt())}'
-                                  : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.priceDetails.products.first.price.toInt())}',
+                                  ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price)}'
+                                  : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.priceDetails.products.first.price)}',
                             ),
                             const Divider(
                               color: AppColors.grayscale300,
@@ -192,8 +201,8 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                                   : 'Total paid',
                               description: store.servicePaymentStatus ==
                                       PaymentStatus.failure
-                                  ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount.toInt())}'
-                                  : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.amount.toInt())}',
+                                  ? '₹ ${formatNumberWithCommas(widget.priceDetails!.totalAmount)}'
+                                  : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.amount)}',
                               isTitleBold: true,
                             ),
                             const Divider(
@@ -207,22 +216,23 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                                 (widget.servicePaymentStatusModel
                                         ?.paymentTansactions.isNotEmpty ??
                                     false) &&
-                                widget.servicePaymentStatusModel?.paymentTansactions
-                                        .first.invoice !=
+                                widget.servicePaymentStatusModel
+                                        ?.paymentTansactions.first.invoice !=
                                     null) ...[
                               CustomButton(
                                 ontap: () {
                                   startDownloadInvoice(
                                     invoice: widget.servicePaymentStatusModel!
                                         .paymentTansactions.first.invoice!,
-                                    scaffoldMessenger: ScaffoldMessenger.of(context),
+                                    scaffoldMessenger:
+                                        ScaffoldMessenger.of(context),
                                     isTimerTrigger: (p0) {
                                       isTimerTrigger = p0;
                                     },
                                     getTimer: (p0) => _timer2,
                                     fileDownloading: (loading) {
-                                      bookingServiceStore.isFileInDownloadProcess =
-                                          loading;
+                                      bookingServiceStore
+                                          .isFileInDownloadProcess = loading;
                                     },
                                   );
                                 },
@@ -239,33 +249,36 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                               ),
                             ],
                             CustomButton(
-                                ontap: () async {
-                                  await launchDialer(homeStore.getMasterDataModel
-                                          ?.masterData.contactUs.contactNumber ??
-                                      '');
-                                },
-                                title: 'Help-Contact customer care',
-                                showIcon: true,
-                                iconPath: AppIcons.phone,
-                                size: ButtonSize.normal,
-                                type: ButtonType.secondary,
-                                expanded: true,
-                                iconColor: AppColors.primary)
+                              ontap: () async {
+                                await launchDialer(
+                                  homeStore.getMasterDataModel?.masterData
+                                          .contactUs.contactNumber ??
+                                      '',
+                                );
+                              },
+                              title: 'Help-Contact customer care',
+                              showIcon: true,
+                              iconPath: AppIcons.phone,
+                              size: ButtonSize.normal,
+                              type: ButtonType.secondary,
+                              expanded: true,
+                              iconColor: AppColors.primary,
+                            ),
                           ],
                         ),
                         const SizedBox(
                           height: Dimension.d20,
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-              if(bookingServiceStore.isFileInDownloadProcess)
-              const Material(
-                color: Colors.transparent,
-                child: LoadingWidget(),
-              )
+              if (bookingServiceStore.isFileInDownloadProcess)
+                const Material(
+                  color: Colors.transparent,
+                  child: LoadingWidget(),
+                ),
             ],
           ),
         );
@@ -285,8 +298,10 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
   }
 }
 
-PaymentStatus getPaymentStatus(
-    {required String paymentStatus, required String status}) {
+PaymentStatus getPaymentStatus({
+  required String paymentStatus,
+  required String status,
+}) {
   if (paymentStatus == 'due') {
     return PaymentStatus.pending;
   }

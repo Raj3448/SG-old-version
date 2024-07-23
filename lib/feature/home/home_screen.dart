@@ -220,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _HomeScreenComponents extends StatelessWidget {
-  const _HomeScreenComponents({super.key});
+  const _HomeScreenComponents();
 
   @override
   Widget build(BuildContext context) {
@@ -489,8 +489,7 @@ class _TestmonialsCard extends StatelessWidget {
     required this.testifierName,
     required this.content,
     this.imgUrl,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final String testifierName;
   final String content;
@@ -1128,7 +1127,7 @@ class _NewsletterComponentState extends State<_NewsletterComponent> {
 
   @override
   void dispose() {
-    if(isTimerTrigger){
+    if (isTimerTrigger) {
       _timer.cancel();
     }
     super.dispose();

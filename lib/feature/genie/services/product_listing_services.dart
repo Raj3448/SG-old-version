@@ -96,8 +96,8 @@ class ProductListingServices extends IProductListingService {
   ) {
     if (data['data'] != null) {
       final receivedList = data['data'] as List;
-      var allProductList = <ProductBasicDetailsModel>[];
-      for (var item in receivedList) {
+      final allProductList = <ProductBasicDetailsModel>[];
+      for (final item in receivedList) {
         allProductList.add(
           ProductBasicDetailsModel.fromJson(item as Map<String, dynamic>),
         );
@@ -186,7 +186,7 @@ class ProductListingServices extends IProductListingService {
         '/api/service-tracker/request-new',
         data: formData.toJson(),
       );
-      
+
       if (response.statusCode == 200) {
         final data = response.data['data'];
         if (data != null) {
@@ -196,11 +196,11 @@ class ProductListingServices extends IProductListingService {
         }
         return const Left(MemberServiceFailure.badResponse());
       }
-      if(response.statusCode == 404 && response.data['error']['details']['name'] ==
-          'SERVICE_NOT_AVAILABLE_FOR_SELECTED_MEMBER'){
-          return const Left(MemberServiceFailure.serviceNotAvailbaleForUser());
-      }
-      else {
+      if (response.statusCode == 404 &&
+          response.data['error']['details']['name'] ==
+              'SERVICE_NOT_AVAILABLE_FOR_SELECTED_MEMBER') {
+        return const Left(MemberServiceFailure.serviceNotAvailbaleForUser());
+      } else {
         return const Left(MemberServiceFailure.badResponse());
       }
     } on DioException catch (dioError) {

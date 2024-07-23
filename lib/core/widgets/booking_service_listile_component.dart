@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,13 +14,13 @@ import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
 enum BookingServiceStatus { requested, active, completed }
 
 class BookingListTileComponent extends StatelessWidget {
-  final BookingServiceStatus bookingServiceStatus;
-  final Service bookingServiceModel;
   const BookingListTileComponent({
     required this.bookingServiceStatus,
     required this.bookingServiceModel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
+  final BookingServiceStatus bookingServiceStatus;
+  final Service bookingServiceModel;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class BookingListTileComponent extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +87,7 @@ class BookingListTileComponent extends StatelessWidget {
                           Container(
                             height: 24,
                             width: 105,
-                            alignment: const Alignment(0, 0),
+                            alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
                               horizontal: Dimension.d1,
                             ),
@@ -137,7 +139,8 @@ class BookingListTileComponent extends StatelessWidget {
                             ),
                             TextSpan(
                               text: formatDateTimeWithMin(
-                                  bookingServiceModel.requestedAt.toLocal()),
+                                bookingServiceModel.requestedAt.toLocal(),
+                              ),
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.grayscale900),
                             ),
@@ -156,21 +159,21 @@ class BookingListTileComponent extends StatelessWidget {
 }
 
 String formatDateTime(DateTime dateTime) {
-  final DateFormat dayFormat = DateFormat('d MMM');
-  final DateFormat timeFormat = DateFormat('h a');
+  final dayFormat = DateFormat('d MMM');
+  final timeFormat = DateFormat('h a');
 
-  String formattedDay = dayFormat.format(dateTime);
-  String formattedTime = timeFormat.format(dateTime).toUpperCase();
+  final formattedDay = dayFormat.format(dateTime);
+  final formattedTime = timeFormat.format(dateTime).toUpperCase();
 
   return '$formattedDay, $formattedTime';
 }
 
 String formatDateTimeWithMin(DateTime dateTime) {
-  final DateFormat dayFormat = DateFormat('d MMM');
-  final DateFormat timeFormat = DateFormat('h:mm a');
+  final dayFormat = DateFormat('d MMM');
+  final timeFormat = DateFormat('h:mm a');
 
-  String formattedDay = dayFormat.format(dateTime);
-  String formattedTime = timeFormat.format(dateTime).toUpperCase();
+  final formattedDay = dayFormat.format(dateTime);
+  final formattedTime = timeFormat.format(dateTime).toUpperCase();
 
   return '$formattedDay, $formattedTime';
 }

@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, inference_failure_on_function_invocation
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -139,50 +139,53 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
               : null,
           child: isExpanding
               ? SingleChildScrollView(
-                  child: Column(children: [
-                    ...List.generate(
-                      widget.memberList.length,
-                      (index) => GestureDetector(
-                        onTap: widget.selectedMembers.any(
-                          (selectedMember) =>
-                              selectedMember.id == widget.memberList[index].id,
-                        )
-                            ? () {
-                                widget.updateMember(null);
-                                setState(() {
-                                  isExpanding = !isExpanding;
-                                });
-                              }
-                            : () {
-                                widget.updateMember(
-                                  widget.memberList[index],
-                                );
-                                widget.memberName =
-                                    widget.memberList[index].name;
-                                setState(() {
-                                  isExpanding = !isExpanding;
-                                  showError = false;
-                                });
-                              },
-                        child: _MemeberListTileComponent(
-                          disable: widget.selectedMembers.any(
+                  child: Column(
+                    children: [
+                      ...List.generate(
+                        widget.memberList.length,
+                        (index) => GestureDetector(
+                          onTap: widget.selectedMembers.any(
                             (selectedMember) =>
                                 selectedMember.id ==
                                 widget.memberList[index].id,
+                          )
+                              ? () {
+                                  widget.updateMember(null);
+                                  setState(() {
+                                    isExpanding = !isExpanding;
+                                  });
+                                }
+                              : () {
+                                  widget.updateMember(
+                                    widget.memberList[index],
+                                  );
+                                  widget.memberName =
+                                      widget.memberList[index].name;
+                                  setState(() {
+                                    isExpanding = !isExpanding;
+                                    showError = false;
+                                  });
+                                },
+                          child: _MemeberListTileComponent(
+                            disable: widget.selectedMembers.any(
+                              (selectedMember) =>
+                                  selectedMember.id ==
+                                  widget.memberList[index].id,
+                            ),
+                            name: widget.memberList[index].name,
+                            imgPath:
+                                widget.memberList[index].profileImg?.url ?? '',
+                            iconUrl: widget
+                                    .memberList[index].subscriptions!.isNotEmpty
+                                ? widget.memberList[index].subscriptions![0]
+                                    .product.icon?.url
+                                : null,
                           ),
-                          name: widget.memberList[index].name,
-                          imgPath:
-                              widget.memberList[index].profileImg?.url ?? '',
-                          iconUrl:
-                              widget.memberList[index].subscriptions!.isNotEmpty
-                                  ? widget.memberList[index].subscriptions![0]
-                                      .product.icon?.url
-                                  : null,
                         ),
                       ),
-                    ),
-                    _AddNewMemberComponent()
-                  ]),
+                      _AddNewMemberComponent(),
+                    ],
+                  ),
                 )
               : null,
         ),
@@ -324,7 +327,7 @@ class _MemeberListTileComponent extends StatelessWidget {
               imgPath: iconUrl == null ? '' : '${Env.serverUrl}$iconUrl',
               size: AvatarSize.size9,
               isImageSquare: true,
-            )
+            ),
         ],
       ),
     );

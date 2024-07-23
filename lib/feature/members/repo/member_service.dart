@@ -310,6 +310,7 @@ class MemberServices implements IMemberService {
     }
   }
 
+  @override
   Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
     required String memberPhrId,
   }) async {

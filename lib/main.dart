@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:async';
 
 import 'package:dio/dio.dart';
@@ -50,7 +52,7 @@ void main() async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
       await Firebase.initializeApp();
-      
+
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
       FlutterError.onError = (errorDetails) {
@@ -65,7 +67,7 @@ void main() async {
       await setupHiveBox();
       // Initialize SharedPreferences asynchronously
       GetIt.instance.registerSingletonAsync<SharedPreferences>(
-        () => SharedPreferences.getInstance(),
+        SharedPreferences.getInstance,
       );
 
       // Wait for all asynchronous singletons (like SharedPreferences) to be ready
@@ -77,8 +79,7 @@ void main() async {
 
       GetIt.instance.registerSingleton<TokenManager>(TokenManager());
       GetIt.instance.registerSingleton<UserDetailsCache>(UserDetailsCache());
-      GetIt.instance
-          .registerLazySingleton(() => HomePageComponentDetailscache());
+      GetIt.instance.registerLazySingleton(HomePageComponentDetailscache.new);
       GetIt.instance.registerSingleton<AuthStore>(
         AuthStore(
           tokenManager: GetIt.instance.get<TokenManager>(),
@@ -136,7 +137,7 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(() => SubscriptionStore());
+      GetIt.instance.registerLazySingleton(SubscriptionStore.new);
       GetIt.instance.registerLazySingleton(
         () =>
             HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData(),
@@ -164,12 +165,15 @@ void main() async {
       GetIt.instance.registerLazySingleton(
         () => BookingService(httpClient: GetIt.I<HttpClient>()),
       );
-      GetIt.instance.registerLazySingleton(() =>
-          BookingServiceStore(ibookingService: GetIt.I<BookingService>()));
-      GetIt.instance.registerLazySingleton(() => PaymentService(
-            httpClient: GetIt.I<HttpClient>(),
-            productListingStore: GetIt.I<ProductListingStore>(),
-          ));
+      GetIt.instance.registerLazySingleton(
+        () => BookingServiceStore(ibookingService: GetIt.I<BookingService>()),
+      );
+      GetIt.instance.registerLazySingleton(
+        () => PaymentService(
+          httpClient: GetIt.I<HttpClient>(),
+          productListingStore: GetIt.I<ProductListingStore>(),
+        ),
+      );
       await FlutterDownloader.initialize(
         debug: true,
         ignoreSsl: true,

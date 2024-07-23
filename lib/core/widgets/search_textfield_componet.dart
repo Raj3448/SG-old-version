@@ -8,8 +8,8 @@ class SearchTextfield extends StatefulWidget {
   const SearchTextfield({
     required this.textEditingController,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final TextEditingController textEditingController;
   final void Function(String)? onChanged;
 

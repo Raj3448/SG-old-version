@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
 // ignore_for_file: strict_raw_type, library_private_types_in_public_api
 
 import 'package:easy_localization/easy_localization.dart';
@@ -20,7 +20,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
     super.validator,
     bool enabled = true,
     bool showClear = true,
-    String? hint
+    String? hint,
   }) : super(
           initialValue: selectedOptions,
           builder: (FormFieldState<List<ValueItem<dynamic>>> state) {
@@ -33,9 +33,10 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     color: !enabled ? AppColors.grayscale200 : null,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: state.hasError && !state.isValid
-                            ? AppColors.error
-                            : AppColors.line),
+                      color: state.hasError && !state.isValid
+                          ? AppColors.error
+                          : AppColors.line,
+                    ),
                   ),
                   padding: const EdgeInsets.only(right: 10),
                   child: IgnorePointer(
@@ -55,11 +56,12 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                       optionTextStyle: AppTextStyle.bodyLargeMedium,
                       hintStyle: AppTextStyle.bodyLargeMedium
                           .copyWith(color: AppColors.grayscale600),
-                      singleSelectItemStyle: AppTextStyle.bodyLargeMedium
-                          .copyWith(
-                              color: !enabled
-                                  ? AppColors.grayscale700
-                                  : AppColors.grayscale900),
+                      singleSelectItemStyle:
+                          AppTextStyle.bodyLargeMedium.copyWith(
+                        color: !enabled
+                            ? AppColors.grayscale700
+                            : AppColors.grayscale900,
+                      ),
                       dropdownHeight:
                           values.length > 4 ? 160 : values.length * 50,
                       borderRadius: 8,
@@ -90,7 +92,9 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                 if (state.errorText != null && !state.isValid)
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: Dimension.d2, left: Dimension.d4),
+                      top: Dimension.d2,
+                      left: Dimension.d4,
+                    ),
                     child: Text(
                       state.errorText!,
                       style: const TextStyle(
@@ -184,8 +188,12 @@ class DateDropdown extends FormField<DateTime> {
                                   : () async {
                                       final pickedDate = await showDatePicker(
                                         context: state.context,
-                                        firstDate: futureDates ? DateTime.now() : DateTime(1950),
-                                        lastDate: futureDates ? DateTime(3000) :DateTime.now(),
+                                        firstDate: futureDates
+                                            ? DateTime.now()
+                                            : DateTime(1950),
+                                        lastDate: futureDates
+                                            ? DateTime(3000)
+                                            : DateTime.now(),
                                         initialDate:
                                             state.value ?? DateTime.now(),
                                       );

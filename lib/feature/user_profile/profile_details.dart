@@ -276,9 +276,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             controller: _genderController,
                             showClear: false,
                             values: _genderItems,
-                            selectedOptions: selectedGenderIndex == -1 ? null : [
-                              _genderItems[selectedGenderIndex!],
-                            ],
+                            selectedOptions: selectedGenderIndex == -1
+                                ? null
+                                : [
+                                    _genderItems[selectedGenderIndex!],
+                                  ],
                             validator: (selectedItems) {
                               if (selectedItems == null) {
                                 return 'Please select a gender';
@@ -309,12 +311,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                     showBtnIcon: true,
                                     btnIconPath: AppIcons.phone,
                                     onTap: () {
-                                      launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                                      launchDialer(
+                                        homeStore.getMasterDataModel?.masterData
+                                                .contactUs.contactNumber ??
+                                            '',
+                                      ).then(
+                                        (value) => GoRouter.of(context).pop(),
+                                      );
                                     },
                                   );
                                 },
@@ -345,12 +348,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                     showBtnIcon: true,
                                     btnIconPath: AppIcons.phone,
                                     onTap: () {
-                                      launchDialer(homeStore
-                                                  .getMasterDataModel
-                                                  ?.masterData
-                                                  .contactUs.contactNumber ??
-                                              '')
-                                          .then((value) => GoRouter.of(context).pop(),);
+                                      launchDialer(
+                                        homeStore.getMasterDataModel?.masterData
+                                                .contactUs.contactNumber ??
+                                            '',
+                                      ).then(
+                                        (value) => GoRouter.of(context).pop(),
+                                      );
                                     },
                                   );
                                 },

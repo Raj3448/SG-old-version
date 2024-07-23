@@ -31,17 +31,17 @@ class Avatar extends StatelessWidget {
     this.isNetworkImage = false,
     this.isImageSquare = false,
     this.fit = BoxFit.cover,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   factory Avatar.fromSize({
+    required String imgPath,
+    required AvatarSize size,
     bool isnetworkImage = false,
     bool isImageSquare = false,
     BoxFit fit = BoxFit.cover,
-    required String imgPath,
-    required AvatarSize size,
   }) {
     double radius;
-    bool isNetworkImage = isnetworkImage;
+    final isNetworkImage = isnetworkImage;
     switch (size) {
       case AvatarSize.size16:
         radius = 16;

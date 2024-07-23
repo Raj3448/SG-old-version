@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -66,13 +68,13 @@ Future<void> initializeBoxForUserDetails() async {
 }
 
 Future<void> initializeBoxForToken() async {
-  String? existingKey = await storage.read(key: 'hive_key');
+  var existingKey = await storage.read(key: 'hive_key');
   if (existingKey == null) {
-    var newKey = Hive.generateSecureKey();
+    final newKey = Hive.generateSecureKey();
     await storage.write(key: 'hive_key', value: base64UrlEncode(newKey));
     existingKey = base64UrlEncode(newKey);
   }
-  var key = base64Url.decode(existingKey);
+  final key = base64Url.decode(existingKey);
   // ignore: inference_failure_on_function_invocation
   await Hive.openBox(TOKEN_BOX_NAME, encryptionCipher: HiveAesCipher(key));
 }

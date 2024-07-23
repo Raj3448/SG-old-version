@@ -122,7 +122,7 @@ class FamilyScreen extends StatelessWidget {
                                 );
                               },
                               name: '${member.firstName} ${member.lastName}',
-                              relation: member.relation ?? 'Self',
+                              relation: member.relation,
                               memberDetails: member,
                               imgPath: member.profileImg != null
                                   ? '${Env.serverUrl}${member.profileImg!.url}'

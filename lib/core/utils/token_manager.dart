@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation
+
 import 'package:hive/hive.dart';
 import 'package:silver_genie/setup_hive_boxes.dart';
 
