@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, inference_failure_on_function_invocation
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars, inference_failure_on_function_invocation, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fpdart/fpdart.dart' hide State;
@@ -102,8 +102,7 @@ class EPRViewScreen extends StatelessWidget {
                   );
                 }
 
-                final EprDataModel eprData =
-                    data.getOrElse((l) => throw 'Error');
+                final eprData = data.getOrElse((l) => throw 'Error');
 
                 return Column(
                   children: [
@@ -167,10 +166,11 @@ class EPRViewScreen extends StatelessWidget {
                       showBtnIcon: true,
                       btnIconPath: AppIcons.phone,
                       onTap: () {
-                        launchDialer(homeStore.getMasterDataModel?.masterData
-                                                  .contactUs.contactNumber ??
-                                '')
-                            .then(
+                        launchDialer(
+                          homeStore.getMasterDataModel?.masterData.contactUs
+                                  .contactNumber ??
+                              '',
+                        ).then(
                           (value) => GoRouter.of(context).pop(),
                         );
                       },
@@ -471,7 +471,7 @@ class _EmergencyContactComponent extends StatelessWidget {
           ),
           ExpandedAnalogComponent(
             label: 'Relation',
-            value: assignedElements.relation as String,
+            value: assignedElements.relation!,
           ),
           ExpandedAnalogComponent(
             label: 'Email',
@@ -525,7 +525,7 @@ class _PreferredServiceComponent extends StatelessWidget {
           ExpandedAnalogComponent(
             label: 'Contact Of Ambulance',
             value: assignedElements.ambulanceContact != null
-                ? assignedElements.ambulanceContact as String
+                ? assignedElements.ambulanceContact!
                 : 'N/A',
           ),
           if (!isLast)

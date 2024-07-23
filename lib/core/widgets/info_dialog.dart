@@ -49,10 +49,11 @@ class InfoDialog extends StatelessWidget {
                     height: 88,
                   ),
                   SizedBox(
-                      height: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? 10
-                          : 30),
+                    height: MediaQuery.of(context).orientation ==
+                            Orientation.landscape
+                        ? 10
+                        : 30,
+                  ),
                 ],
               )
             else
@@ -69,10 +70,11 @@ class InfoDialog extends StatelessWidget {
               style: AppTextStyle.bodyLargeMedium,
             ),
             SizedBox(
-                height:
-                    MediaQuery.of(context).orientation == Orientation.landscape
-                        ? 10
-                        : 20),
+              height:
+                  MediaQuery.of(context).orientation == Orientation.landscape
+                      ? 10
+                      : 20,
+            ),
             CustomButton(
               ontap: onTap,
               title: btnTitle.tr(),

@@ -1,9 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable, inference_failure_on_function_return_type, use_build_context_synchronously, empty_catches
 // ignore_for_file: inference_failure_on_function_invocation, deprecated_member_use, lines_longer_than_80_chars
 
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -160,44 +161,43 @@ class ChangePicDialog extends StatelessWidget {
 
   Future<void> takePhoto() async {
     try {
-      final XFile? receivedImage =
+      final receivedImage =
           await ImagePicker().pickImage(source: ImageSource.camera);
       if (receivedImage == null) {
         return;
       }
-      File imageFile = File(receivedImage.path);
+      final imageFile = File(receivedImage.path);
       storedProfileImage = imageFile;
 
-      CroppedFile? croppedFile = await _cropImage(storedProfileImage!);
+      final croppedFile = await _cropImage(storedProfileImage!);
       if (croppedFile != null) {
         storedProfileImage = File(croppedFile.path);
         onImageSelected(await saveImageToDirectory(storedProfileImage!));
       }
     } catch (e) {
-      print("Error taking photo: $e");
+      if (kDebugMode) {
+        print('Error taking photo: $e');
+      }
     }
   }
 
   Future<void> chooseImage() async {
     try {
-      final XFile? receivedImage =
+      final receivedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (receivedImage == null) {
         return;
       }
-      File imageFile = File(receivedImage.path);
+      final imageFile = File(receivedImage.path);
       storedProfileImage = imageFile;
 
-      CroppedFile? croppedFile = await _cropImage(storedProfileImage!);
+      final croppedFile = await _cropImage(storedProfileImage!);
       if (croppedFile != null) {
         storedProfileImage = File(croppedFile.path);
         onImageSelected(await saveImageToDirectory(storedProfileImage!));
-        if (!storedProfileImage!.existsSync()) {
-        }
+        if (!storedProfileImage!.existsSync()) {}
       }
-    } catch (e) {
-      print("Error choosing image: $e");
-    }
+    } catch (e) {}
   }
 
   Future<void> removeProfileImage() async {
@@ -205,24 +205,25 @@ class ChangePicDialog extends StatelessWidget {
   }
 
   Future<CroppedFile?> _cropImage(File imageFile) async {
-    CroppedFile? croppedImage = await ImageCropper().cropImage(
+    final croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
         CropAspectRatioPreset.original,
         CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
+        CropAspectRatioPreset.ratio16x9,
       ],
       uiSettings: [
         AndroidUiSettings(
-            toolbarTitle: 'Crop Profile Image',
-            backgroundColor: AppColors.secondary,
-            toolbarColor: AppColors.primary,
-            toolbarWidgetColor: Colors.white,
-            cropFrameColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false)
+          toolbarTitle: 'Crop Profile Image',
+          backgroundColor: AppColors.secondary,
+          toolbarColor: AppColors.primary,
+          toolbarWidgetColor: Colors.white,
+          cropFrameColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
       ],
     );
 

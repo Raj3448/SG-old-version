@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
@@ -83,9 +85,10 @@ abstract class _UserDetailStoreBase with Store {
         .then((userDetailsResult) {
       userDetailsResult.fold((l) {
         updateFailureMessage = l.maybeMap(
-            socketError: (_) =>
-                'Failed to update, check your internet connection!',
-            orElse: () => 'Failed to update the user data');
+          socketError: (_) =>
+              'Failed to update, check your internet connection!',
+          orElse: () => 'Failed to update the user data',
+        );
       }, (r) {
         userDetails = r;
         updateSuccess = true;
@@ -109,21 +112,27 @@ abstract class _UserDetailStoreBase with Store {
   }
 
   @action
-  void updateUserDataWithProfileImg(
-      {required File fileImage, required User userInstance}) {
+  void updateUserDataWithProfileImg({
+    required File fileImage,
+    required User userInstance,
+  }) {
     isUpdatingUserInfo = true;
     updateSuccess = false;
     updateFailureMessage = null;
     userDetailServices
         .updateUserDataWithProfileImg(
-            fileImage: fileImage, userInfo: userInstance)
+      fileImage: fileImage,
+      userInfo: userInstance,
+    )
         .then((user) {
       user.fold((l) {
         updateFailureMessage = l.maybeMap(
-            entityTooLargeError: (_) => 'Image upload failed: size exceeded the limit',
-            socketError: (_) =>
-                'Failed to update, check your internet connection!',
-            orElse: () => 'Failed to update the user data');
+          entityTooLargeError: (_) =>
+              'Image upload failed: size exceeded the limit',
+          socketError: (_) =>
+              'Failed to update, check your internet connection!',
+          orElse: () => 'Failed to update the user data',
+        );
       }, (r) {
         userDetails = r;
         updateSuccess = true;

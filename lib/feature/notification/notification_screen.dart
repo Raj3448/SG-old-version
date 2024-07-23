@@ -50,15 +50,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 !store.notificationsLoaded) {
               store.notificationfailure = null;
               return const ErrorStateComponent(
-                  errorType: ErrorType.somethinWentWrong);
+                errorType: ErrorType.somethinWentWrong,
+              );
             }
 
             if (store.getTodayNotifications.isEmpty &&
                 store.getEarlierNotifications.isEmpty) {
               return Center(
-                  child: EmptyStateComponent(
-                emptyDescription: "You haven't any notification yet.",
-              ));
+                child: EmptyStateComponent(
+                  emptyDescription: "You haven't any notification yet.",
+                ),
+              );
             }
 
             return Padding(
@@ -68,17 +70,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (store.getTodayNotifications.isNotEmpty)
-                    Text(
-                      'Today',
-                      style: AppTextStyle.bodyMediumMedium.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primary,
+                      Text(
+                        'Today',
+                        style: AppTextStyle.bodyMediumMedium.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
                     ...List.generate(store.getTodayNotifications.length,
                         (index) {
                       return NotificationComponent(
-                          notification: store.getTodayNotifications[index]);
+                        notification: store.getTodayNotifications[index],
+                      );
                     }),
                     if (store.getEarlierNotifications.isNotEmpty)
                       Text(
@@ -91,11 +94,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ...List.generate(store.getEarlierNotifications.length,
                         (index) {
                       return NotificationComponent(
-                          notification: store.getEarlierNotifications[index]);
+                        notification: store.getEarlierNotifications[index],
+                      );
                     }),
                     const SizedBox(
                       height: Dimension.d3,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -170,7 +174,8 @@ class NotificationComponent extends StatelessWidget {
                 ),
                 Text(
                   notificationFormatDateTime(
-                      notification.notificationMetaData.createdAt.toLocal()),
+                    notification.notificationMetaData.createdAt.toLocal(),
+                  ),
                   style: AppTextStyle.bodyMediumMedium
                       .copyWith(fontSize: 12, color: AppColors.grayscale700),
                 ),

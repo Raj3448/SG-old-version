@@ -39,7 +39,6 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
       (Tuple3<bool, bool, bool> loaded) async {
         final isHomepageDataLoaded = loaded.item1;
         final isAuthenticated = loaded.item2;
-        final isProductLoaded = loaded.item3;
 
         if (isAuthenticated) {
           await GetIt.I<UserDetailStore>().fetchUserDetailsFromCache();
@@ -65,15 +64,17 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Observer(builder: (ctx) {
-          return homeStore.isHomepageComponentInitialloading ||
-                  homeStore.isHomepageDataLoaded ||
-                  productStore.fetchProductLoading
-              ? const LoadingWidget()
-              : const ErrorStateComponent(
-                  errorType: ErrorType.somethinWentWrong,
-                );
-        }),
+        body: Observer(
+          builder: (ctx) {
+            return homeStore.isHomepageComponentInitialloading ||
+                    homeStore.isHomepageDataLoaded ||
+                    productStore.fetchProductLoading
+                ? const LoadingWidget()
+                : const ErrorStateComponent(
+                    errorType: ErrorType.somethinWentWrong,
+                  );
+          },
+        ),
       ),
     );
   }

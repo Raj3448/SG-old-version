@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
@@ -27,19 +29,19 @@ class User with _$User {
     @HiveField(0) required int id,
     @HiveField(1) required String username,
     @HiveField(2) required String email,
-    @HiveField(3) dynamic provider,
     @HiveField(4) required bool confirmed,
     @HiveField(5) required bool blocked,
     @HiveField(6) required String gender,
     @HiveField(7) required String phoneNumber,
     @HiveField(8) required DateTime dateOfBirth,
-    @HiveField(9) @Default('Self') String relation,
     @HiveField(10) required String uniqueKey,
     @HiveField(11) required String firstName,
     @HiveField(12) required String lastName,
-    @HiveField(13) dynamic userTags,
     @HiveField(14) required DateTime createdAt,
     @HiveField(15) required DateTime updatedAt,
+    @HiveField(3) dynamic provider,
+    @HiveField(9) @Default('Self') String relation,
+    @HiveField(13) dynamic userTags,
     @HiveField(16) Address? address,
     @HiveField(17) ProfileImg? profileImg,
     @HiveField(18) @Default([]) List<UserDetails> members,

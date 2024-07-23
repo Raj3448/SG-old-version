@@ -1,4 +1,4 @@
-// ignore_for_file: inference_failure_on_function_invocation, avoid_dynamic_calls
+// ignore_for_file: inference_failure_on_function_invocation, avoid_dynamic_calls, lines_longer_than_80_chars
 
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
@@ -15,10 +15,10 @@ abstract class IHomeServices {
 }
 
 class HomeService implements IHomeServices {
-  HomeService(
-      {required this.httpClient,
-      required this.homePageComponentDetailscache,
-      });
+  HomeService({
+    required this.httpClient,
+    required this.homePageComponentDetailscache,
+  });
 
   final HttpClient httpClient;
   final HomePageComponentDetailscache homePageComponentDetailscache;
@@ -32,16 +32,19 @@ class HomeService implements IHomeServices {
         if (response.data['data']['attributes']['content'] != null) {
           final componetList = <dynamic>[];
           final masterData = await getMasterData();
-          masterData.fold((l) {
-            l.maybeMap(
-              socketError: (value) {
-                return const Failure.socketError();
-              },
-              orElse: () {
-                return const Failure.someThingWentWrong();
-              },
-            );
-          }, (r) => componetList.add(r));
+          masterData.fold(
+            (l) {
+              l.maybeMap(
+                socketError: (value) {
+                  return const Failure.socketError();
+                },
+                orElse: () {
+                  return const Failure.someThingWentWrong();
+                },
+              );
+            },
+            componetList.add,
+          );
           for (final component in response.data['data']['attributes']['content']
               as List<dynamic>) {
             if (component['__component'] == 'mobile-ui.banner' &&
@@ -121,6 +124,4 @@ class HomeService implements IHomeServices {
       return const Left(Failure.badResponse());
     }
   }
-
-  
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars, invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:silver_genie/feature/book_services/model/service_tracking_response.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -21,8 +23,10 @@ class ServicePaymentStatusModel with _$ServicePaymentStatusModel {
     required Product product,
     required RequestedBy requestedBy,
     required List<RequestedFor> requestedFor,
-    @JsonKey(name: 'payment_transactions') @Default([]) List<PaymentTansactions> paymentTansactions,
     required PriceDetails priceDetails,
+    @JsonKey(name: 'payment_transactions')
+    @Default([])
+    List<PaymentTansactions> paymentTansactions,
   }) = _ServicePaymentStatusModel;
   factory ServicePaymentStatusModel.fromJson(Map<String, dynamic> json) =>
       _$ServicePaymentStatusModelFromJson(json);
@@ -30,26 +34,28 @@ class ServicePaymentStatusModel with _$ServicePaymentStatusModel {
 
 @freezed
 class PaymentTansactions with _$PaymentTansactions {
-    const factory PaymentTansactions({
-        required int id,
-        required dynamic vendorInvoiceId,
-        required Invoice? invoice,
-    }) = _PaymentTansactions;
+  const factory PaymentTansactions({
+    required int id,
+    required dynamic vendorInvoiceId,
+    required Invoice? invoice,
+  }) = _PaymentTansactions;
 
-    factory PaymentTansactions.fromJson(Map<String, dynamic> json) => _$PaymentTansactionsFromJson(json);
+  factory PaymentTansactions.fromJson(Map<String, dynamic> json) =>
+      _$PaymentTansactionsFromJson(json);
 }
 
 @freezed
 class Invoice with _$Invoice {
-    const factory Invoice({
-        required int id,
-        required String name,
-        required String url,
-        required DateTime createdAt,
-        required DateTime updatedAt,
-    }) = _Invoice;
+  const factory Invoice({
+    required int id,
+    required String name,
+    required String url,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _Invoice;
 
-    factory Invoice.fromJson(Map<String, dynamic> json) => _$InvoiceFromJson(json);
+  factory Invoice.fromJson(Map<String, dynamic> json) =>
+      _$InvoiceFromJson(json);
 }
 
 @freezed

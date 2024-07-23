@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_positional_boolean_parameters
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -29,10 +31,9 @@ Future<void> startDownloadInvoice({
       ),
     );
 
-    Timer timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    final timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
       final tasks = await FlutterDownloader.loadTasksWithRawQuery(
         query: "SELECT * FROM task WHERE task_id='$taskId'",
-        
       );
 
       if (tasks != null && tasks.isNotEmpty) {

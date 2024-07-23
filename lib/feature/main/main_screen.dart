@@ -14,8 +14,8 @@ class MainScreen extends StatefulWidget {
   const MainScreen({
     required this.child,
     required this.path,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget child;
   final String path;

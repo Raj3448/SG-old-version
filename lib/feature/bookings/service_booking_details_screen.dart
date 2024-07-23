@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, lines_longer_than_80_chars
 // ignore_for_file: must_be_immutable
 
 import 'dart:async';
@@ -26,17 +26,18 @@ import 'package:silver_genie/feature/genie/services/product_listing_services.dar
 class ServiceBookingDetailsScreen extends StatefulWidget {
   final String serviceId;
 
-  ServiceBookingDetailsScreen({
+  const ServiceBookingDetailsScreen({
     required this.serviceId,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<ServiceBookingDetailsScreen> createState() =>
       _ServiceBookingDetailsScreenState();
 }
 
-class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScreen> {
+class _ServiceBookingDetailsScreenState
+    extends State<ServiceBookingDetailsScreen> {
   final service = GetIt.I<ProductListingServices>();
   final bookingServiceStore = GetIt.I<BookingServiceStore>();
   late Timer _timer;
@@ -66,32 +67,38 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
                   child: servicePaymentStatusModel == null
                       ? FutureBuilder(
-                          future: service.getPaymentStatus(id: widget.serviceId),
+                          future:
+                              service.getPaymentStatus(id: widget.serviceId),
                           builder: (context, snapShot) {
-                            if (snapShot.connectionState == ConnectionState.waiting) {
+                            if (snapShot.connectionState ==
+                                ConnectionState.waiting) {
                               return const Center(
                                 child: LoadingWidget(showShadow: false),
                               );
                             }
                             if (snapShot.hasError) {
                               return const ErrorStateComponent(
-                                  errorType: ErrorType.somethinWentWrong);
+                                errorType: ErrorType.somethinWentWrong,
+                              );
                             }
                             if (!snapShot.hasData) {
                               return const SizedBox();
                             }
                             if (snapShot.data!.isLeft()) {
                               return const ErrorStateComponent(
-                                  errorType: ErrorType.somethinWentWrong);
+                                errorType: ErrorType.somethinWentWrong,
+                              );
                             }
 
                             try {
-                              servicePaymentStatusModel = snapShot.data!.getOrElse(
+                              servicePaymentStatusModel =
+                                  snapShot.data!.getOrElse(
                                 (l) => throw 'Error',
                               );
                             } catch (e) {
                               return const ErrorStateComponent(
-                                  errorType: ErrorType.somethinWentWrong);
+                                errorType: ErrorType.somethinWentWrong,
+                              );
                             }
 
                             return buildDetails(context);
@@ -104,7 +111,7 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
                 const Material(
                   color: Colors.transparent,
                   child: LoadingWidget(),
-                )
+                ),
             ],
           );
         },
@@ -126,7 +133,8 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
           ),
           Text(
             'Service type: ${servicePaymentStatusModel!.product.category} ${servicePaymentStatusModel!.product.type}',
-            style: AppTextStyle.bodyLargeMedium.copyWith(color: AppColors.grayscale600),
+            style: AppTextStyle.bodyLargeMedium
+                .copyWith(color: AppColors.grayscale600),
           ),
           const SizedBox(height: Dimension.d2),
           Container(
@@ -143,7 +151,10 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Booking Status', style: AppTextStyle.bodyMediumMedium),
+                const Text(
+                  'Booking Status',
+                  style: AppTextStyle.bodyMediumMedium,
+                ),
                 Row(
                   children: [
                     Icon(
@@ -151,7 +162,9 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
                         servicePaymentStatusModel!.paymentStatus,
                         servicePaymentStatusModel!.status,
                       ),
-                      size: _getStatusIconSize(servicePaymentStatusModel!.paymentStatus),
+                      size: _getStatusIconSize(
+                        servicePaymentStatusModel!.paymentStatus,
+                      ),
                       color: _getStatusIconColor(
                         servicePaymentStatusModel!.paymentStatus,
                         servicePaymentStatusModel!.status,
@@ -171,7 +184,7 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -197,7 +210,8 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
                 !servicePaymentStatusModel!.metadata[index].private
                     ? AssigningComponent(
                         name: servicePaymentStatusModel!.metadata[index].key,
-                        initializeElement: servicePaymentStatusModel!.metadata[index].value,
+                        initializeElement:
+                            servicePaymentStatusModel!.metadata[index].value,
                       )
                     : const SizedBox(),
             separatorBuilder: (context, index) =>
@@ -216,9 +230,10 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
             ),
           ),
           ElementSpaceBetween(
-            title: servicePaymentStatusModel!.priceDetails.products.first.displayName,
+            title: servicePaymentStatusModel!
+                .priceDetails.products.first.displayName,
             description:
-                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price.toInt())}',
+                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price)}',
           ),
           const Divider(color: AppColors.line),
           const SizedBox(height: Dimension.d2),
@@ -228,16 +243,18 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
               servicePaymentStatusModel!.status,
             ),
             description:
-                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price.toInt())}',
+                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price)}',
             isTitleBold: true,
           ),
           const SizedBox(height: Dimension.d5),
           if (servicePaymentStatusModel!.paymentTansactions.isNotEmpty &&
-              servicePaymentStatusModel!.paymentTansactions.first.invoice != null) ...[
+              servicePaymentStatusModel!.paymentTansactions.first.invoice !=
+                  null) ...[
             CustomButton(
               ontap: () {
                 startDownloadInvoice(
-                  invoice: servicePaymentStatusModel!.paymentTansactions.first.invoice!,
+                  invoice: servicePaymentStatusModel!
+                      .paymentTansactions.first.invoice!,
                   isTimerTrigger: (p0) {
                     isTimerTrigger = p0;
                   },
@@ -262,9 +279,11 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
           ],
           CustomButton(
             ontap: () async {
-              await launchDialer(homeStore.getMasterDataModel
-                      ?.masterData.contactUs.contactNumber ??
-                  '');
+              await launchDialer(
+                homeStore.getMasterDataModel?.masterData.contactUs
+                        .contactNumber ??
+                    '',
+              );
             },
             title: 'Help-Contact customer care',
             showIcon: true,
@@ -281,7 +300,9 @@ class _ServiceBookingDetailsScreenState extends State<ServiceBookingDetailsScree
   }
 
   IconData _getStatusIcon(String paymentStatus, String status) {
-    if (paymentStatus == 'due' || paymentStatus == 'expired' || status == 'rejected') {
+    if (paymentStatus == 'due' ||
+        paymentStatus == 'expired' ||
+        status == 'rejected') {
       return AppIcons.warning;
     }
     if (status == 'requested' || status == 'processing') {
@@ -309,7 +330,7 @@ String _getStatusText(String paymentStatus, String status) {
   if (paymentStatus == 'expired') {
     return 'Payment failure';
   }
-  if(status == 'active' || status == 'processed'){
+  if (status == 'active' || status == 'processed') {
     return 'Service scheduled';
   }
   if (status == 'requested' || status == 'processing') {
@@ -343,6 +364,7 @@ class ElementSpaceBetween extends StatelessWidget {
     required this.title,
     required this.description,
     this.isTitleBold = false,
+    super.key,
   });
 
   final String title;

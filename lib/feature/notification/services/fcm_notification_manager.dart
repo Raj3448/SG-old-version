@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls, lines_longer_than_80_chars
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -15,11 +17,11 @@ import 'package:silver_genie/feature/notification/services/notification_service.
 import 'package:silver_genie/feature/notification/store/notification_store.dart';
 
 class FcmNotificationManager {
-  FcmNotificationManager._internal();
   factory FcmNotificationManager(BuildContext cntxt) {
     _notificationService.context = cntxt;
     return _notificationService;
   }
+  FcmNotificationManager._internal();
   BuildContext? context;
   RemoteMessage? message;
   bool isFcmStored = false;
@@ -35,16 +37,10 @@ class FcmNotificationManager {
       return;
     }
     // Initialize Firebase Messaging
-    final settings = await _firebaseMessaging.requestPermission(
-      alert: true,
+    await _firebaseMessaging.requestPermission(
       announcement: true,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
+
     await _setupFlutterNotifications();
     await setupToken();
     isFcmStored = true;
@@ -53,16 +49,16 @@ class FcmNotificationManager {
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
 
     // Get the initial message if the app is opened from a terminated state
-    var initialMessage = await _firebaseMessaging.getInitialMessage();
+    final initialMessage = await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
-      _handleMessage(initialMessage);
+      await _handleMessage(initialMessage);
     }
   }
 
   Future<void> setupToken() async {
     try {
       // Get the token each time the application loads
-      String? token = await FirebaseMessaging.instance.getToken();
+      final token = await FirebaseMessaging.instance.getToken();
       debugPrint('FCM device token $token');
       // Save the initial token to the database
       await saveTokenToOurDatabase(token!);
@@ -83,7 +79,8 @@ class FcmNotificationManager {
   }
 
   Future<void> saveTokenToOurDatabase(String token) async {
-    GetIt.I<NotificationServices>().storeFcmTokenIntoServer(fcmToken: token);
+    await GetIt.I<NotificationServices>()
+        .storeFcmTokenIntoServer(fcmToken: token);
   }
 
   Future<void> _setupFlutterNotifications() async {
@@ -100,8 +97,9 @@ class FcmNotificationManager {
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
     const initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: DarwinInitializationSettings());
+      android: initializationSettingsAndroid,
+      iOS: DarwinInitializationSettings(),
+    );
 
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -110,14 +108,14 @@ class FcmNotificationManager {
       onDidReceiveNotificationResponse: (details) async {
         debugPrint('Notification Details : ${details.payload}');
         if (Platform.isAndroid) {
-          _handleMessage(message);
+          await _handleMessage(message);
         }
       },
     );
   }
 
   void _onMessageReceived(RemoteMessage _message) {
-    var notification = _message.notification;
+    final notification = _message.notification;
     message = _message;
     if (_message.data.isNotEmpty) {
       GetIt.I<NotificationStore>().refresh();
@@ -139,24 +137,26 @@ class FcmNotificationManager {
 
   void showNotification(RemoteNotification? notification) {
     final androidNotificationChannel = AndroidNotificationChannel(
-        Random.secure().nextInt(100000).toString(),
-        'High Importance Notifications',
-        importance: Importance.max,
-        playSound: true);
+      Random.secure().nextInt(100000).toString(),
+      'High Importance Notifications',
+      importance: Importance.max,
+    );
     const darwinNotificationDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
     final androidNotificationdetails = AndroidNotificationDetails(
-        androidNotificationChannel.id, androidNotificationChannel.name,
-        channelDescription: 'your channel description',
-        icon: notification?.android?.smallIcon,
-        importance: Importance.high,
-        priority: Priority.high,
-        fullScreenIntent: true,
-        visibility: NotificationVisibility.public,
-        ticker: 'ticker');
+      androidNotificationChannel.id,
+      androidNotificationChannel.name,
+      channelDescription: 'your channel description',
+      icon: notification?.android?.smallIcon,
+      importance: Importance.high,
+      priority: Priority.high,
+      fullScreenIntent: true,
+      visibility: NotificationVisibility.public,
+      ticker: 'ticker',
+    );
     final notificationDetails = NotificationDetails(
       iOS: darwinNotificationDetails,
       android: androidNotificationdetails,
@@ -164,10 +164,11 @@ class FcmNotificationManager {
 
     Future.delayed(Duration.zero, () {
       _flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification?.title.toString(),
-          notification?.body.toString(),
-          notificationDetails);
+        notification.hashCode,
+        notification?.title.toString(),
+        notification?.body.toString(),
+        notificationDetails,
+      );
     });
   }
 
@@ -185,7 +186,7 @@ class FcmNotificationManager {
         if (isBottomNavScreen(msg.data['actionUrl'] as String)) {
           context?.go(msg.data['actionUrl'].toString());
         } else {
-          context?.push(msg.data['actionUrl'].toString());
+          await context?.push(msg.data['actionUrl'].toString());
         }
       }
     }
@@ -193,14 +194,16 @@ class FcmNotificationManager {
 
   @pragma('vm:entry-point')
   static void _onSelectNotificationBackground(
-      NotificationResponse notificationResponse) {
+    NotificationResponse notificationResponse,
+  ) {
     debugPrint('Notification (${notificationResponse.id}) action tapped: '
         '${notificationResponse.actionId} with '
         'Payload ${notificationResponse.payload}');
     if (notificationResponse.input?.isNotEmpty ?? false) {
-      // ignore: avoid_print, lines_longer_than_80_chars
+      // ignore: avoid_print
       print(
-          'Notification action tapped with input : ${notificationResponse.input}');
+        'Notification action tapped with input : ${notificationResponse.input}',
+      );
     }
   }
 

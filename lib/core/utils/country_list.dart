@@ -1,8 +1,7 @@
 class Country {
+  const Country(this.name, this.isoCode);
   final String name;
   final String isoCode;
-
-  const Country(this.name, this.isoCode);
 }
 
 List<Country> countries = [
@@ -121,11 +120,11 @@ List<Country> countries = [
   const Country('Kazakhstan', 'KZ'),
   const Country('Kenya', 'KE'),
   const Country('Kiribati', 'KI'),
-  const Country('Korea (Democratic People\'s Republic of)', 'KP'),
+  const Country("Korea (Democratic People's Republic of)", 'KP'),
   const Country('Korea, Republic of', 'KR'),
   const Country('Kuwait', 'KW'),
   const Country('Kyrgyzstan', 'KG'),
-  const Country('Lao People\'s Democratic Republic', 'LA'),
+  const Country("Lao People's Democratic Republic", 'LA'),
   const Country('Latvia', 'LV'),
   const Country('Lebanon', 'LB'),
   const Country('Lesotho', 'LS'),

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/payment/payment_services.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -20,9 +19,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     router = routes;
-    
   }
-  
+
   @override
   void dispose() {
     super.dispose();

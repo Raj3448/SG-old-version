@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:mobx/mobx.dart';
 import 'package:silver_genie/feature/bookings/model/booking_service_model.dart';
 import 'package:silver_genie/feature/bookings/services/booking_service.dart';

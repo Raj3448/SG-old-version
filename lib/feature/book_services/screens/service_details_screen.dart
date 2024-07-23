@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation
+// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation, avoid_dynamic_calls
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -145,46 +145,56 @@ class ServiceDetailsScreen extends StatelessWidget {
                           Text(
                             component.label,
                             style: AppTextStyle.bodyXLBold.copyWith(
-                                color: AppColors.grayscale900, height: 2),
+                              color: AppColors.grayscale900,
+                              height: 2,
+                            ),
                           ),
                           const SizedBox(
                             height: Dimension.d2,
                           ),
                           ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => GestureDetector(
-                                    onTap: () async {
-                                      if (component.cta != null) {
-                                        if (component.cta!.isExternal &&
-                                            await canLaunchUrl(Uri.parse(
-                                                component.cta!.href))) {
-                                          await launchUrl(
-                                              Uri.parse(component.cta!.href));
-                                        }
-                                      }
-                                    },
-                                    child: BannerImageComponent(
-                                        imageUrl: component.bannerImage
-                                            .data[index].attributes.url),
-                                  ),
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                    height: Dimension.d2,
-                                  ),
-                              itemCount: component.bannerImage.data.length)
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () async {
+                                if (component.cta != null) {
+                                  if (component.cta!.isExternal &&
+                                      await canLaunchUrl(
+                                        Uri.parse(
+                                          component.cta!.href,
+                                        ),
+                                      )) {
+                                    await launchUrl(
+                                      Uri.parse(component.cta!.href),
+                                    );
+                                  }
+                                }
+                              },
+                              child: BannerImageComponent(
+                                imageUrl: component
+                                    .bannerImage.data[index].attributes.url,
+                              ),
+                            ),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: Dimension.d2,
+                            ),
+                            itemCount: component.bannerImage.data.length,
+                          ),
                         ]);
                       }
                       continue;
                     }
                     if (component is ServicePriceModel) {
-                      widgetList.add(_PriceTile(
-                        price:
-                            '₹ ${formatNumberWithCommas(component.startPrice)}${component.endPrice == null ? '' : ' - ${formatNumberWithCommas(component.endPrice!)}'}',
-                        subscript: component.priceSuperscript,
-                        desc: component.priceDescription,
-                        label: component.label,
-                      ));
+                      widgetList.add(
+                        _PriceTile(
+                          price:
+                              '₹ ${formatNumberWithCommas(component.startPrice)}${component.endPrice == null ? '' : ' - ${formatNumberWithCommas(component.endPrice!)}'}',
+                          subscript: component.priceSuperscript,
+                          desc: component.priceDescription,
+                          label: component.label,
+                        ),
+                      );
                     }
                   }
                   return Column(
@@ -215,8 +225,8 @@ class ServiceDetailsScreen extends StatelessWidget {
                                           ),
                                           const ContactSgTeamComponent(
                                             phoneNumber: '+91 0000000000',
-                                          )
-                                        ]
+                                          ),
+                                        ],
                                       ],
                                     ),
                                     if (store.isLoading) const LoadingWidget(),
@@ -249,7 +259,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                                 RoutesConstants.bookServiceScreen,
                                 pathParameters: {
                                   'id': id,
-                                  'productCode': productCode
+                                  'productCode': productCode,
                                 },
                               );
                             },

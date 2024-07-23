@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_positional_boolean_parameters
+
 import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -5,15 +7,16 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 enum BookingStep { serviceDetails, payment, bookingDetails }
 
 class BookingStatus extends StatefulWidget {
-  const BookingStatus({this.currentStep =  BookingStep.serviceDetails,Key? key}) : super(key: key);
+  const BookingStatus({
+    this.currentStep = BookingStep.serviceDetails,
+    super.key,
+  });
   final BookingStep currentStep;
   @override
   State<BookingStatus> createState() => _BookingStatusState();
 }
 
 class _BookingStatusState extends State<BookingStatus> {
-  
-
   Widget buildStatusCircle(int step, bool isEnabled) {
     return Container(
       decoration: BoxDecoration(
@@ -48,8 +51,6 @@ class _BookingStatusState extends State<BookingStatus> {
         return widget.currentStep.index >= BookingStep.payment.index;
       case BookingStep.bookingDetails:
         return widget.currentStep.index >= BookingStep.bookingDetails.index;
-      default:
-        return false;
     }
   }
 
@@ -80,9 +81,15 @@ class _BookingStatusState extends State<BookingStatus> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildStatusText('Service details', isStepEnabled(BookingStep.serviceDetails)),
+            buildStatusText(
+              'Service details',
+              isStepEnabled(BookingStep.serviceDetails),
+            ),
             buildStatusText('Payment', isStepEnabled(BookingStep.payment)),
-            buildStatusText('Booking details', isStepEnabled(BookingStep.bookingDetails)),
+            buildStatusText(
+              'Booking details',
+              isStepEnabled(BookingStep.bookingDetails),
+            ),
           ],
         ),
       ],

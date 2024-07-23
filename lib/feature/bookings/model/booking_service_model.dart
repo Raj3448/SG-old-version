@@ -20,35 +20,35 @@ class BookingServiceModel with _$BookingServiceModel {
 
 @freezed
 class BookingServices with _$BookingServices {
-    const factory BookingServices({
-        required List<Service> services,
-    }) = _BookingServices;
-    factory BookingServices.fromJson(Map<String, dynamic> json) =>
+  const factory BookingServices({
+    required List<Service> services,
+  }) = _BookingServices;
+  factory BookingServices.fromJson(Map<String, dynamic> json) =>
       _$BookingServicesFromJson(json);
 }
 
 @freezed
 class Service with _$Service {
-    const factory Service({
-        required int id,
-        required String paymentStatus,
-        required String status,
-        required ServiceProduct product,
-        required DateTime requestedAt,
-        required List<RequestedFor> requestedFor,
-    }) = _Service;
-    factory Service.fromJson(Map<String, dynamic> json) =>
+  const factory Service({
+    required int id,
+    required String paymentStatus,
+    required String status,
+    required ServiceProduct product,
+    required DateTime requestedAt,
+    required List<RequestedFor> requestedFor,
+  }) = _Service;
+  factory Service.fromJson(Map<String, dynamic> json) =>
       _$ServiceFromJson(json);
 }
 
 @freezed
 class ServiceProduct with _$ServiceProduct {
-    const factory ServiceProduct({
-        required int id,
-        required String category,
-        required String name,
-        required String type,
-    }) = _ServiceProduct;
-    factory ServiceProduct.fromJson(Map<String, dynamic> json) =>
+  const factory ServiceProduct({
+    required int id,
+    required String category,
+    required String name,
+    required String type,
+  }) = _ServiceProduct;
+  factory ServiceProduct.fromJson(Map<String, dynamic> json) =>
       _$ServiceProductFromJson(json);
 }

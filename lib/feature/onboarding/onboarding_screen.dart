@@ -121,8 +121,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 class _PageView extends StatelessWidget {
-  const _PageView(
-      {required this.isLandscape, required this.imgPath, required this.desc});
+  const _PageView({
+    required this.isLandscape,
+    required this.imgPath,
+    required this.desc,
+  });
 
   final String imgPath;
   final String desc;

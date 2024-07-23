@@ -9,8 +9,8 @@ class PlanDisplayComponent extends StatefulWidget {
   const PlanDisplayComponent({
     required this.planPriceDetails,
     required this.isSelected,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Price? planPriceDetails;
   final bool isSelected;
@@ -106,7 +106,7 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
 }
 
 String removeLastLy(String input) {
-  int lastIndex = input.lastIndexOf('ly');
+  final lastIndex = input.lastIndexOf('ly');
   if (lastIndex == -1) return input;
   return input.substring(0, lastIndex) + input.substring(lastIndex + 2);
 }
