@@ -19,6 +19,7 @@ import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
+import 'package:silver_genie/core/widgets/note_component.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
@@ -159,6 +160,17 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                           style: AppTextStyle.bodyXLSemiBold
                               .copyWith(fontSize: 20, height: 2.8),
                         ),
+                        const SizedBox(height: Dimension.d5),
+                  if (store.servicePaymentStatus != PaymentStatus.success)
+                    ...[
+                        NoteComponent(
+                          desc: store.servicePaymentStatus ==
+                                  PaymentStatus.failure
+                              ? 'PaymentFailureStatusNote'.tr()
+                              : 'PaymentPendingStatusNote'.tr(),
+                        ),
+                        const SizedBox(height: Dimension.d6),
+                      ],
                         const SizedBox(height: Dimension.d2),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
