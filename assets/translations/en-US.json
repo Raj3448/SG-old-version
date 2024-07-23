@@ -53,5 +53,9 @@
         "one": "Your plan Expires in {} day.",
         "many": "Your plan Expires in {} days.",
         "other": "Your plan Expires in {} days."
-    }
+    },
+    "Today" : "Today",
+    "Earlier" : "Earlier",
+    "You haven't any notification yet." : "You haven't any notification yet.",
+    "Notifications" : "Notifications"
 }

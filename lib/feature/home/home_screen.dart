@@ -525,11 +525,15 @@ class _TestmonialsCard extends StatelessWidget {
               const SizedBox(
                 width: Dimension.d2,
               ),
-              Text(
-                testifierName,
-                style: AppTextStyle.bodyMediumMedium.copyWith(
-                  color: AppColors.grayscale800,
-                  fontWeight: FontWeight.w500,
+              Container(
+                constraints: BoxConstraints.loose(const Size(160, 20)),
+                child: Text(
+                  testifierName,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.bodyMediumMedium.copyWith(
+                    color: AppColors.grayscale800,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -1128,7 +1132,7 @@ class _NewsletterComponentState extends State<_NewsletterComponent> {
 
   @override
   void dispose() {
-    if(isTimerTrigger){
+    if (isTimerTrigger) {
       _timer.cancel();
     }
     super.dispose();

@@ -39,5 +39,9 @@
     "Requested" : "",
     "Active" : "",
     "Completed" : "",
-    "'Family" : "परिवार"
+    "'Family" : "परिवार",
+    "Today" : "",
+    "Earlier" : "",
+    "You haven't any notification yet." : "",
+    "Notifications" : ""
 }
