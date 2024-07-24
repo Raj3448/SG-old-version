@@ -569,7 +569,6 @@ class PaymentTransaction with _$PaymentTransaction {
     required Invoice? invoice,
     required DateTime? transactionDate,
     required String? status,
-    required VendorResponse? vendorResponse,
     required dynamic request,
     required String? paymentFor,
     required int? value,
@@ -611,45 +610,6 @@ class Invoice with _$Invoice {
 }
 
 @freezed
-class VendorResponse with _$VendorResponse {
-  const factory VendorResponse({
-    required String id,
-    required int fee,
-    required int tax,
-    required dynamic vpa,
-    required dynamic bank,
-    required Card card,
-    required String email,
-    required List<dynamic> notes,
-    required int amount,
-    required String entity,
-    required String method,
-    required String status,
-    required dynamic wallet,
-    required String card_id,
-    required String contact,
-    required String captured,
-    required String currency,
-    required String order_id,
-    required String token_id,
-    required int created_at,
-    required dynamic error_code,
-    required String invoice_id,
-    required dynamic customer_id,
-    required String description,
-    required AcquirerData acquirer_data,
-    required bool international,
-    required dynamic refund_status,
-    required int amount_refunded,
-    required dynamic error_description,
-    required int amount_transferred,
-  }) = _VendorResponse;
-
-  factory VendorResponse.fromJson(Map<String, dynamic> json) =>
-      _$VendorResponseFromJson(json);
-}
-
-@freezed
 class AcquirerData with _$AcquirerData {
   const factory AcquirerData({
     required String auth_code,
@@ -669,13 +629,13 @@ class Card with _$Card {
     required String color,
     required String last4,
     required String entity,
-    required String issuer,
+    required String? issuer,
     required String number,
     required String network,
     required String sub_type,
     required dynamic token_iin,
-    required String expiry_year,
-    required String expiry_month,
+    required dynamic expiry_year,
+    required dynamic expiry_month,
     required bool international,
   }) = _Card;
 
