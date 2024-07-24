@@ -117,6 +117,7 @@ class _TestmonialsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              const Spacer(),
               Avatar.fromSize(
                 imgPath: imgUrl == null ? '' : '${Env.serverUrl}${imgUrl!}',
                 size: AvatarSize.size12,
@@ -124,11 +125,15 @@ class _TestmonialsCard extends StatelessWidget {
               const SizedBox(
                 width: Dimension.d2,
               ),
-              Text(
-                testifierName,
-                style: AppTextStyle.bodyMediumMedium.copyWith(
-                  color: AppColors.grayscale800,
-                  fontWeight: FontWeight.w500,
+              Flexible(
+                child: Text(
+                  testifierName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.bodyMediumMedium.copyWith(
+                    color: AppColors.grayscale800,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],

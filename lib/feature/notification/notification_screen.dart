@@ -35,7 +35,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const PageAppbar(title: 'Notification'),
+        appBar: PageAppbar(title: 'Notification'.tr()),
         backgroundColor: AppColors.white,
         body: Observer(
           builder: (context) {
@@ -58,7 +58,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 store.getEarlierNotifications.isEmpty) {
               return Center(
                 child: EmptyStateComponent(
-                  emptyDescription: "You haven't any notification yet.",
+                  emptyDescription: "You haven't any notification yet.".tr(),
                 ),
               );
             }
@@ -70,13 +70,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (store.getTodayNotifications.isNotEmpty)
-                      Text(
-                        'Today',
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
+                        Text(
+                          'Today'.tr(),
+                          style: AppTextStyle.bodyMediumMedium.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary,
+                          ),
                         ),
-                      ),
                     ...List.generate(store.getTodayNotifications.length,
                         (index) {
                       return NotificationComponent(
@@ -85,7 +85,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     }),
                     if (store.getEarlierNotifications.isNotEmpty)
                       Text(
-                        'Earlier',
+                        'Earlier'.tr(),
                         style: AppTextStyle.bodyMediumMedium.copyWith(
                           fontWeight: FontWeight.w500,
                           color: AppColors.primary,
