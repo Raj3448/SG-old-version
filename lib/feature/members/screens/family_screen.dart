@@ -24,6 +24,8 @@ class FamilyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetIt.I<MembersStore>()..init();
+    // ignore: cascade_invocations
+    store.refresh();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Padding(
