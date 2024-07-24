@@ -13,7 +13,6 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
-import 'package:silver_genie/core/utils/image_store/image_store.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/selector.dart';
 
@@ -172,7 +171,7 @@ class ChangePicDialog extends StatelessWidget {
       final croppedFile = await _cropImage(storedProfileImage!);
       if (croppedFile != null) {
         storedProfileImage = File(croppedFile.path);
-        onImageSelected(await saveImageToDirectory(storedProfileImage!));
+        onImageSelected(storedProfileImage);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -194,8 +193,7 @@ class ChangePicDialog extends StatelessWidget {
       final croppedFile = await _cropImage(storedProfileImage!);
       if (croppedFile != null) {
         storedProfileImage = File(croppedFile.path);
-        onImageSelected(await saveImageToDirectory(storedProfileImage!));
-        if (!storedProfileImage!.existsSync()) {}
+        onImageSelected(storedProfileImage);
       }
     } catch (e) {}
   }
