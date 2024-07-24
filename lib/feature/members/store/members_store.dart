@@ -122,6 +122,9 @@ abstract class _MembersStoreBase with Store {
 
   @action
   void refresh() {
+    if (!initialLoaded) {
+      return;
+    }
     isRefreshing = true;
     try {
       memberService.getMembers().then((membersOrFailure) {
