@@ -175,9 +175,6 @@ class CustomPhoneField extends StatelessWidget {
             onChanged: (countryCode) {
               store..selectCountryDialCode = countryCode.dialCode
               ..selectCountryCode = countryCode.code;
-              if (kDebugMode) {
-                print(countryCode.code);
-              }
             },
             onInit: (value) {
               store.selectCountryDialCode == value!.dialCode;
