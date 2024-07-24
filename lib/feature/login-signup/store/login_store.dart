@@ -19,6 +19,9 @@ abstract class _LoginStoreBase with Store {
   String? selectCountryDialCode;
 
   @observable
+  String? selectCountryCode;
+
+  @observable
   bool isLoading = false;
 
   @observable
