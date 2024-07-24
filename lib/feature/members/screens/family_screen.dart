@@ -18,24 +18,14 @@ import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/member_card.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
-class FamilyScreen extends StatefulWidget {
+class FamilyScreen extends StatelessWidget {
   const FamilyScreen({super.key});
 
   @override
-  State<FamilyScreen> createState() => _FamilyScreenState();
-}
-
-class _FamilyScreenState extends State<FamilyScreen> {
-  late MembersStore store;
-  @override
-  void initState() {
-    store = GetIt.I<MembersStore>()..init();
-    store.refresh();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final store = GetIt.I<MembersStore>()..init();
+    // ignore: cascade_invocations
+    store.refresh();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Padding(
