@@ -23,15 +23,18 @@ class ExpandedAnalogComponent extends StatelessWidget {
   const ExpandedAnalogComponent({
     required this.label,
     required this.value,
+    this.maxLines = 1,
     super.key,
   });
 
   final String label;
   final String value;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 2,
@@ -44,6 +47,8 @@ class ExpandedAnalogComponent extends StatelessWidget {
           flex: 3,
           child: Text(
             ':  $value',
+            overflow: TextOverflow.ellipsis,
+            maxLines: maxLines,
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale700),
           ),
@@ -200,6 +205,15 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
           );
     }).toList();
 
+    final hasPHR = widget.activeMember.subscriptions?[0].benefits?.any(
+          (benefits) => benefits.code == 'PHR' && benefits.isActive == true,
+        ) ??
+        false;
+    final hasEPR = widget.activeMember.subscriptions?[0].benefits?.any(
+          (benefits) => benefits.code == 'EPR' && benefits.isActive == true,
+        ) ??
+        false;
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.line),
@@ -213,9 +227,12 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
-                  style: AppTextStyle.bodyLargeBold,
+                Flexible(
+                  child: Text(
+                    '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.bodyLargeBold,
+                  ),
                 ),
                 if (widget.activeMember.subscriptions!.isEmpty)
                   SubscriptionPkg(
@@ -292,28 +309,13 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
-            Observer(
-              builder: (_) {
-                final hasPHR = widget.activeMember.subscriptions?[0].benefits
-                        ?.any(
-                      (benefits) =>
-                          benefits.code == 'PHR' && benefits.isActive == true,
-                    ) ??
-                    false;
-                final hasEPR = widget.activeMember.subscriptions?[0].benefits
-                        ?.any(
-                      (benefits) =>
-                          benefits.code == 'EPR' && benefits.isActive == true,
-                    ) ??
-                    false;
-
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        ontap: hasPHR == false ||
-                                widget.activeMember.phrModel == null
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    ontap:
+                        hasPHR == false || widget.activeMember.phrModel == null
                             ? null
                             : () {
                                 GoRouter.of(context).pushNamed(
@@ -324,45 +326,43 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                                   },
                                 );
                               },
-                        title: 'View PHR',
-                        showIcon: false,
-                        iconPath: Icons.not_interested,
-                        size: ButtonSize.small,
-                        type: hasPHR == false ||
-                                widget.activeMember.phrModel == null
+                    title: 'View PHR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type:
+                        hasPHR == false || widget.activeMember.phrModel == null
                             ? ButtonType.disable
                             : ButtonType.secondary,
-                        expanded: true,
-                        iconColor: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(width: Dimension.d4),
-                    Expanded(
-                      child: CustomButton(
-                        ontap: hasEPR == false
-                            ? null
-                            : () {
-                                GoRouter.of(context).pushNamed(
-                                  RoutesConstants.eprRoute,
-                                  pathParameters: {
-                                    'memberId': '${widget.activeMember.id}',
-                                  },
-                                );
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(width: Dimension.d4),
+                Expanded(
+                  child: CustomButton(
+                    ontap: hasEPR == false
+                        ? null
+                        : () {
+                            GoRouter.of(context).pushNamed(
+                              RoutesConstants.eprRoute,
+                              pathParameters: {
+                                'memberId': '${widget.activeMember.id}',
                               },
-                        title: 'View EPR',
-                        showIcon: false,
-                        iconPath: Icons.not_interested,
-                        size: ButtonSize.small,
-                        type: hasEPR == false
-                            ? ButtonType.disable
-                            : ButtonType.secondary,
-                        expanded: true,
-                        iconColor: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                );
-              },
+                            );
+                          },
+                    title: 'View EPR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type: hasEPR == false
+                        ? ButtonType.disable
+                        : ButtonType.secondary,
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
+                ),
+              ],
             ),
             _buildRenewalAndExpirationInfo(member),
             if (memberStore.activeMember != null &&

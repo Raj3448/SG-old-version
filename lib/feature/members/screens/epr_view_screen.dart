@@ -279,7 +279,7 @@ class _PersonalDetailsComponent extends StatelessWidget {
                     icon: AppIcons.home,
                     title: 'Address',
                     details: streetAddress ?? '---',
-                    detailsTextOverflow: null,
+                    maxLines: 3,
                   ),
                 ],
               ],
@@ -431,6 +431,7 @@ class _UserInsuranceComponent extends StatelessWidget {
           ExpandedAnalogComponent(
             label: 'Contact Of Address',
             value: assignedElements.insuranceProvider!,
+            maxLines: 3,
           ),
           if (!isLast)
             const Divider(

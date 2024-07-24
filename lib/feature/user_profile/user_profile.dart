@@ -92,10 +92,9 @@ class _UserProfileState extends State<UserProfile> {
                                               widget.userDetailStore.userDetails
                                                       ?.name ??
                                                   '',
-                                              style: AppTextStyle.bodyXLSemiBold
-                                                  .copyWith(
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppTextStyle.bodyXLSemiBold,
                                             ),
                                             Text.rich(
                                               TextSpan(

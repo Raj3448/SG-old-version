@@ -42,13 +42,15 @@ class CoachContact extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                      style: AppTextStyle.bodyLargeSemiBold,
+                    SizedBox(
+                      width: 180,
+                      child: Text(
+                        name,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.bodyLargeSemiBold,
+                      ),
                     ),
-                    const SizedBox(
-                      height: Dimension.d1,
-                    ),
+                    const SizedBox(height: Dimension.d1),
                     Text(
                       'Health coach',
                       style: AppTextStyle.bodyMediumMedium
