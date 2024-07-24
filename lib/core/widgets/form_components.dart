@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use, lines_longer_than_80_chars, unnecessary_statements
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 
 class TextLabel extends StatelessWidget {
@@ -171,10 +173,15 @@ class CustomPhoneField extends StatelessWidget {
                 .copyWith(color: AppColors.grayscale900),
             barrierColor: AppColors.black.withOpacity(0.25),
             onChanged: (countryCode) {
-              store.selectCountryDialCode = countryCode.dialCode;
+              store..selectCountryDialCode = countryCode.dialCode
+              ..selectCountryCode = countryCode.code;
+              if (kDebugMode) {
+                print(countryCode.code);
+              }
             },
             onInit: (value) {
               store.selectCountryDialCode == value!.dialCode;
+              store.selectCountryCode = value.code;
             },
           ),
         ),
@@ -182,10 +189,13 @@ class CustomPhoneField extends StatelessWidget {
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter your phone number';
-        } else if (value.length < 7) {
-          return 'Please enter atleast 7 digits phone number';
-        } else if (value.length > 15) {
-          return 'Please enter 15 digits phone number';
+        }
+        final countryCode = store.selectCountryCode ?? 'IN';
+        final requiredLength = countryMobileDigitCount[countryCode];
+        if (requiredLength == null) {
+          return 'Invalid country code';
+        } else if (value.length != requiredLength) {
+          return 'Please enter a valid phone number with $requiredLength digits';
         }
         return null;
       },

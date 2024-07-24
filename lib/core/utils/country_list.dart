@@ -1,7 +1,8 @@
 class Country {
-  const Country(this.name, this.isoCode);
+  const Country(this.name, this.isoCode,);
   final String name;
   final String isoCode;
+  
 }
 
 List<Country> countries = [
@@ -251,3 +252,37 @@ List<Country> countries = [
   const Country('Zambia', 'ZM'),
   const Country('Zimbabwe', 'ZW'),
 ];
+
+const Map<String, int> countryMobileDigitCount = {
+  'AF': 9, 'AX': 7, 'AL': 9, 'DZ': 9, 'AS': 10, 'AD': 9, 'AO': 9, 'AI': 10,
+  'AQ': 6, 'AG': 10, 'AR': 10, 'AM': 8, 'AW': 7, 'AU': 9, 'AT': 9, 'AZ': 9,
+  'BS': 10, 'BH': 8, 'BD': 10, 'BB': 10, 'BY': 9, 'BE': 9, 'BZ': 7, 'BJ': 8,
+  'BM': 10, 'BT': 8, 'BO': 8, 'BA': 8, 'BW': 8, 'BV': 9, 'BR': 11, 'IO': 7,
+  'BN': 7, 'BG': 9, 'BF': 8, 'BI': 8, 'CV': 7, 'KH': 9, 'CM': 9, 'CA': 10,
+  'KY': 10, 'CF': 8, 'TD': 8, 'CL': 9, 'CN': 11, 'CX': 6, 'CC': 6, 'CO': 10,
+  'KM': 7, 'CG': 9, 'CD': 9, 'CK': 5, 'CR': 8, 'HR': 9, 'CU': 8, 'CY': 8,
+  'CZ': 9, 'DK': 8, 'DJ': 8, 'DM': 10, 'DO': 10, 'EC': 9, 'EG': 10, 'SV': 8,
+  'GQ': 9, 'ER': 7, 'EE': 9, 'SZ': 8, 'ET': 9, 'FK': 9, 'FO': 9, 'FJ': 7,
+  'FI': 9, 'FR': 9, 'GF': 9, 'PF': 6, 'TF': 9, 'GA': 8, 'GM': 7, 'GE': 9,
+  'DE': 10, 'GH': 9, 'GI': 8, 'GR': 10, 'GL': 6, 'GD': 10, 'GP': 9, 'GU': 10,
+  'GT': 8, 'GG': 6, 'GN': 9, 'GW': 7, 'GY': 7, 'HT': 8, 'HM': 7, 'VA': 9,
+  'HN': 8, 'HK': 8, 'HU': 9, 'IS': 7, 'IN': 10, 'ID': 10, 'IR': 10, 'IQ': 10,
+  'IE': 9, 'IM': 9, 'IL': 10, 'IT': 10, 'JM': 10, 'JP': 10, 'JE': 6, 'JO': 9,
+  'KZ': 10, 'KE': 10, 'KI': 7, 'KP': 10, 'KR': 10, 'KW': 8, 'KG': 9, 'LA': 9,
+  'LV': 8, 'LB': 8, 'LS': 8, 'LR': 7, 'LY': 9, 'LI': 9, 'LT': 8, 'LU': 9,
+  'MO': 8, 'MG': 9, 'MW': 8, 'MY': 10, 'MV': 7, 'ML': 8, 'MT': 8, 'MH': 7,
+  'MQ': 9, 'MR': 8, 'MU': 8, 'YT': 9, 'MX': 10, 'FM': 7, 'MD': 8, 'MC': 8,
+  'MN': 8, 'ME': 8, 'MS': 10, 'MA': 9, 'MZ': 9, 'MM': 9, 'NA': 9, 'NR': 7,
+  'NP': 10, 'NL': 9, 'NC': 6, 'NZ': 9, 'NI': 8, 'NE': 8, 'NG': 10, 'NU': 4,
+  'NF': 6, 'MK': 8, 'MP': 10, 'NO': 8, 'OM': 8, 'PK': 10, 'PW': 7, 'PS': 9,
+  'PA': 8, 'PG': 8, 'PY': 9, 'PE': 9, 'PH': 10, 'PN': 4, 'PL': 9, 'PT': 9,
+  'PR': 10, 'QA': 8, 'RE': 9, 'RO': 10, 'RU': 10, 'RW': 9, 'BL': 9, 'SH': 7,
+  'KN': 10, 'LC': 10, 'MF': 9, 'PM': 6, 'VC': 10, 'WS': 7, 'SM': 9, 'ST': 7,
+  'SA': 9, 'SN': 9, 'RS': 8, 'SC': 7, 'SL': 8, 'SG': 8, 'SX': 10, 'SK': 9,
+  'SI': 8, 'SB': 7, 'SO': 8, 'ZA': 10, 'GS': 0, 'SS': 9, 'ES': 9, 'LK': 9,
+  'SD': 9, 'SR': 7, 'SJ': 0, 'SE': 9, 'CH': 9, 'SY': 9, 'TW': 9, 'TJ': 9,
+  'TZ': 9, 'TH': 9, 'TL': 8, 'TG': 8, 'TK': 5, 'TO': 5, 'TT': 10, 'TN': 8,
+  'TR': 10, 'TM': 8, 'TC': 10, 'TV': 5, 'UG': 9, 'UA': 9, 'AE': 9, 'GB': 10,
+  'US': 10, 'UY': 8, 'UZ': 9, 'VU': 7, 'VE': 10, 'VN': 9, 'EH': 9, 'YE': 9,
+  'ZM': 9, 'ZW': 9,
+};
