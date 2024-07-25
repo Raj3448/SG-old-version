@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     FcmNotificationManager(context).init();
     memberStore = GetIt.I<MembersStore>()..init();
+    memberStore.refresh();
     bookingServiceStore.initGetAllServices();
     GetIt.I<NotificationStore>().fetchNotifications();
     reaction((_) => memberStore.errorMessage, (loaded) {

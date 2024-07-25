@@ -36,9 +36,10 @@ abstract class _NotificationStoreBase with Store {
       ? notifications!.data
           .where(
             (element) =>
-                !_isNotification24Ago(element.notificationMetaData.createdAt),
+                _isTodayNotification(element.notificationMetaData.createdAt),
           )
           .toList()
+          
       : [];
 
   @computed
@@ -95,6 +96,13 @@ abstract class _NotificationStoreBase with Store {
       });
       isNotificationRefreshLoading = false;
     });
+  }
+
+  bool _isTodayNotification(DateTime createdAt) {
+    final now = DateTime.now();
+    return createdAt.year == now.year &&
+        createdAt.month == now.month &&
+        createdAt.day == now.day;
   }
 
   bool _isNotification24Ago(DateTime createdAt) {

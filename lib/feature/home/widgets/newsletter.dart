@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -27,9 +28,10 @@ class NewsletterComponentState extends State<NewsletterComponent> {
   bool isTimerTrigger = false;
 
   Future<void> startDownload(int index) async {
+    final iOSDirPath = await getApplicationDocumentsDirectory();
     _taskId = await FlutterDownloader.enqueue(
       url: widget.newsletterModel.newsletters[index].link.href,
-      savedDir: '/storage/emulated/0/Download/',
+      savedDir: iOSDirPath.path,
       fileName: '${widget.newsletterModel.newsletters[index].link.label}',
       saveInPublicStorage: true,
     );

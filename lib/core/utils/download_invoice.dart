@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
 
@@ -16,11 +17,12 @@ Future<void> startDownloadInvoice({
 }) async {
   try {
     fileDownloading(true);
+    final iOSDirPath = await getApplicationDocumentsDirectory();
 
     // Enqueue the download task
     final taskId = await FlutterDownloader.enqueue(
       url: '${Env.serverUrl}${invoice.url}',
-      savedDir: '/storage/emulated/0/Download/',
+      savedDir: iOSDirPath.path,
       fileName: invoice.name.split('.').first,
       saveInPublicStorage: true,
     );
