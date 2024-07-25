@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation, avoid_dynamic_calls
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
@@ -263,7 +264,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                                 },
                               );
                             },
-                            title: 'Book now',
+                            title: 'Book now'.tr(),
                             showIcon: false,
                             iconPath: AppIcons.add,
                             size: ButtonSize.normal,
@@ -494,8 +495,7 @@ class _OfferTile extends StatelessWidget {
           ],
         ),
         const SizedBox(width: Dimension.d3),
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.85,
+        Expanded(
           child: Text(
             title,
             style: AppTextStyle.bodyMediumMedium
