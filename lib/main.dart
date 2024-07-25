@@ -215,7 +215,6 @@ void main() async {
           child: const MyApp(),
         ),
       );
-
       FlutterNativeSplash.remove();
     },
     (exception, stackTrace) {
