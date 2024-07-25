@@ -84,7 +84,7 @@ class PhrModel with _$PhrModel {
     required String bloodGroup,
     required bool downloadPhr,
     required String uniqueKey,
-    required String additionalInformation,
+    required String? additionalInformation,
     required DateTime createdAt,
     required DateTime updatedAt,
     List<DiagnosedService>? diagnosedServices,
