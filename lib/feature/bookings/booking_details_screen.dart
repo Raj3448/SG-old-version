@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -49,9 +50,10 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   bool isTimerTrigger = false;
 
   Future<void> startDownload(String url, String fileName) async {
+    final iOSDirPath = await getApplicationDocumentsDirectory();
     _taskId = await FlutterDownloader.enqueue(
       url: url,
-      savedDir: '/storage/emulated/0/Download/',
+      savedDir: iOSDirPath.path,
       fileName: fileName,
       saveInPublicStorage: true,
     );
