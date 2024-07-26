@@ -304,7 +304,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 ),
               ],
             ),
-          if (address!.isEmpty)
+          if (address?.isEmpty ?? true)
             const SizedBox()
           else
             Column(
@@ -322,8 +322,7 @@ class _BasicDetailsBox extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: Dimension.d3),
-                    SizedBox(
-                      width: 300,
+                    Expanded(
                       child: Text(
                         address!,
                         style: AppTextStyle.bodyLargeMedium
