@@ -29,160 +29,165 @@ class MemberInfoState extends State<MemberInfo> {
   Widget build(BuildContext context) {
     final memberStore = GetIt.I<MembersStore>();
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Family Members health info'.tr(),
-            style: AppTextStyle.bodyXLSemiBold,
-          ),
-          const SizedBox(height: Dimension.d4),
-          Observer(
-            builder: (_) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(
-                      decelerationRate: ScrollDecelerationRate.fast,
-                    ),
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (var i = 0;
-                            i < memberStore.familyMembers.length;
-                            i++)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 15),
-                            child: Row(
-                              children: [
-                                SelectableAvatar(
-                                  imgPath: memberStore
-                                              .familyMembers[i].profileImg !=
-                                          null
-                                      ? '${Env.serverUrl}${memberStore.familyMembers[i].profileImg!.url}'
-                                      : '',
-                                  maxRadius: 24,
-                                  isSelected: memberStore.familyMembers[i].id ==
-                                      memberStore.activeMemberId,
-                                  ontap: () => memberStore.selectMember(
-                                    memberStore.familyMembers[i].id,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Family Members health info'.tr(),
+              style: AppTextStyle.bodyXLSemiBold,
+            ),
+            const SizedBox(height: Dimension.d4),
+            Observer(
+              builder: (_) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.fast,
+                      ),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var i = 0;
+                              i < memberStore.familyMembers.length;
+                              i++)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: Row(
+                                children: [
+                                  SelectableAvatar(
+                                    imgPath: memberStore
+                                                .familyMembers[i].profileImg !=
+                                            null
+                                        ? '${Env.serverUrl}${memberStore.familyMembers[i].profileImg!.url}'
+                                        : '',
+                                    maxRadius: 24,
+                                    isSelected:
+                                        memberStore.familyMembers[i].id ==
+                                            memberStore.activeMemberId,
+                                    ontap: () => memberStore.selectMember(
+                                      memberStore.familyMembers[i].id,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: Dimension.d4),
-                              ],
+                                  const SizedBox(width: Dimension.d4),
+                                ],
+                              ),
                             ),
+                          SelectableAvatar(
+                            imgPath: 'assets/icon/44Px.png',
+                            maxRadius: 24,
+                            isSelected: false,
+                            ontap: () {
+                              final user =
+                                  GetIt.I<UserDetailStore>().userDetails;
+                              final member = memberStore.memberById(user!.id);
+                              if (member != null) {
+                                context.pushNamed(
+                                  RoutesConstants.addEditFamilyMemberRoute,
+                                  pathParameters: {
+                                    'edit': 'false',
+                                    'isSelf': 'false',
+                                  },
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return MemberCreation(
+                                      selfOnTap: () {
+                                        context.pushNamed(
+                                          RoutesConstants
+                                              .addEditFamilyMemberRoute,
+                                          pathParameters: {
+                                            'edit': 'false',
+                                            'isSelf': 'true',
+                                          },
+                                        );
+                                      },
+                                      memberOnTap: () {
+                                        context.pushNamed(
+                                          RoutesConstants
+                                              .addEditFamilyMemberRoute,
+                                          pathParameters: {
+                                            'edit': 'false',
+                                            'isSelf': 'false',
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                            },
                           ),
-                        SelectableAvatar(
-                          imgPath: 'assets/icon/44Px.png',
-                          maxRadius: 24,
-                          isSelected: false,
-                          ontap: () {
-                            final user = GetIt.I<UserDetailStore>().userDetails;
-                            final member = memberStore.memberById(user!.id);
-                            if (member != null) {
-                              context.pushNamed(
-                                RoutesConstants.addEditFamilyMemberRoute,
-                                pathParameters: {
-                                  'edit': 'false',
-                                  'isSelf': 'false',
-                                },
-                              );
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return MemberCreation(
-                                    selfOnTap: () {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'true',
-                                        },
-                                      );
-                                    },
-                                    memberOnTap: () {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'false',
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  if (memberStore.selectedIndex != -1)
+                    if (memberStore.selectedIndex != -1)
+                      Observer(
+                        builder: (context) {
+                          final activeMember = memberStore.activeMember;
+                          if (activeMember != null &&
+                              activeMember.subscriptions!.isNotEmpty) {
+                            return ActivePlanComponent(
+                              activeMember: activeMember,
+                            );
+                          }
+                          if (activeMember != null &&
+                              activeMember.subscriptions!.isEmpty) {
+                            return InactivePlanComponent(member: activeMember);
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
                     Observer(
                       builder: (context) {
                         final activeMember = memberStore.activeMember;
                         if (activeMember != null &&
-                            activeMember.subscriptions!.isNotEmpty) {
-                          return ActivePlanComponent(
-                            activeMember: activeMember,
-                          );
-                        }
-                        if (activeMember != null &&
-                            activeMember.subscriptions!.isEmpty) {
-                          return InactivePlanComponent(member: activeMember);
+                            activeMember.subscriptions != null &&
+                            activeMember.subscriptions!.isNotEmpty &&
+                            activeMember.careCoach != null) {
+                          final hasCCFP =
+                              activeMember.subscriptions?[0].benefits?.any(
+                                    (benefit) =>
+                                        benefit.code == 'CCFP' &&
+                                        benefit.isActive == true,
+                                  ) ??
+                                  false;
+
+                          if (hasCCFP) {
+                            return Column(
+                              children: [
+                                const SizedBox(height: Dimension.d4),
+                                CoachContact(
+                                  imgpath:
+                                      '${Env.serverUrl}${activeMember.careCoach?.profileImg?.url ?? ''}',
+                                  name:
+                                      '${activeMember.careCoach?.firstName ?? ''} ${activeMember.careCoach?.lastName ?? ''}',
+                                  phoneNo:
+                                      activeMember.careCoach?.contactNo ?? '',
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
                         } else {
                           return const SizedBox();
                         }
                       },
                     ),
-                  Observer(
-                    builder: (context) {
-                      final activeMember = memberStore.activeMember;
-                      if (activeMember != null &&
-                          activeMember.subscriptions != null &&
-                          activeMember.subscriptions!.isNotEmpty &&
-                          activeMember.careCoach != null) {
-                        final hasCCFP =
-                            activeMember.subscriptions?[0].benefits?.any(
-                                  (benefit) =>
-                                      benefit.code == 'CCFP' &&
-                                      benefit.isActive == true,
-                                ) ??
-                                false;
-
-                        if (hasCCFP) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: Dimension.d4),
-                              CoachContact(
-                                imgpath:
-                                    '${Env.serverUrl}${activeMember.careCoach?.profileImg?.url ?? ''}',
-                                name:
-                                    '${activeMember.careCoach?.firstName ?? ''} ${activeMember.careCoach?.lastName ?? ''}',
-                                phoneNo:
-                                    activeMember.careCoach?.contactNo ?? '',
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const SizedBox();
-                        }
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

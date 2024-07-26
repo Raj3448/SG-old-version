@@ -18,22 +18,24 @@ class TestmonialsComponent extends StatelessWidget {
   final TestimonialsModel testimonialsModel;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          testimonialsModel.title,
-          style: AppTextStyle.bodyXLSemiBold.copyWith(
-            color: AppColors.grayscale900,
-            height: 2.6,
-            fontWeight: FontWeight.w500,
-            fontSize: 18,
+    return Container(
+      decoration: const BoxDecoration(color: AppColors.secondary),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimension.d4,
+        vertical: Dimension.d2,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: Dimension.d2),
+          Text(
+            testimonialsModel.title,
+            style: AppTextStyle.bodyXLSemiBold.copyWith(
+              color: AppColors.grayscale900,
+            ),
           ),
-        ),
-        Container(
-          color: AppColors.secondary,
-          padding: const EdgeInsets.symmetric(horizontal: Dimension.d1),
-          child: Column(
+          const SizedBox(height: Dimension.d4),
+          Column(
             children: [
               SizedBox(
                 height: 132,
@@ -54,9 +56,7 @@ class TestmonialsComponent extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: Dimension.d3,
-              ),
+              const SizedBox(height: Dimension.d4),
               Center(
                 child: SmoothPageIndicator(
                   controller: _testimonialsCardController,
@@ -69,16 +69,11 @@ class TestmonialsComponent extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: Dimension.d3,
-              ),
+              const SizedBox(height: Dimension.d2),
             ],
           ),
-        ),
-        const SizedBox(
-          height: Dimension.d3,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
