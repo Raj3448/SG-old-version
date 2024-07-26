@@ -24,78 +24,81 @@ class EmergencyActivation extends StatelessWidget {
   final EmergencyHelpline emergencyHelpline;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: Dimension.d2),
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dimension.d2,
-        vertical: Dimension.d3,
-      ),
-      height: 170,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.grayscale300),
-        borderRadius: BorderRadius.circular(Dimension.d2),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Emergency'.tr(),
-            style: AppTextStyle.bodyXLMedium.copyWith(
-              fontWeight: FontWeight.w500,
-              color: AppColors.grayscale900,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+      child: Container(
+        margin: const EdgeInsets.only(top: Dimension.d2),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimension.d2,
+          vertical: Dimension.d3,
+        ),
+        height: 170,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.grayscale300),
+          borderRadius: BorderRadius.circular(Dimension.d2),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Emergency'.tr(),
+              style: AppTextStyle.bodyXLMedium.copyWith(
+                fontWeight: FontWeight.w500,
+                color: AppColors.grayscale900,
+              ),
             ),
-          ),
-          Text(
-            'When the button is pressed, all emergency services will be activated.'
-                .tr(),
-            style: AppTextStyle.bodyMediumMedium
-                .copyWith(color: AppColors.grayscale900),
-          ),
-          SizedBox(
-            height: 48,
-            child: CustomButton(
-              ontap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return SingleChildScrollView(
-                      physics: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? null
-                          : const NeverScrollableScrollPhysics(),
-                      child: _EmergencyActivateBottomSheet(
-                        memberStore: memberStore,
-                        emergencyHelpline: emergencyHelpline,
+            Text(
+              'When the button is pressed, all emergency services will be activated.'
+                  .tr(),
+              style: AppTextStyle.bodyMediumMedium
+                  .copyWith(color: AppColors.grayscale900),
+            ),
+            SizedBox(
+              height: 48,
+              child: CustomButton(
+                ontap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return SingleChildScrollView(
+                        physics: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? null
+                            : const NeverScrollableScrollPhysics(),
+                        child: _EmergencyActivateBottomSheet(
+                          memberStore: memberStore,
+                          emergencyHelpline: emergencyHelpline,
+                        ),
+                      );
+                    },
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(Dimension.d3),
+                        topRight: Radius.circular(Dimension.d3),
                       ),
-                    );
-                  },
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(Dimension.d3),
-                      topRight: Radius.circular(Dimension.d3),
                     ),
-                  ),
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).orientation ==
-                            Orientation.landscape
-                        ? 400
-                        : 320,
-                  ),
-                  backgroundColor: AppColors.white,
-                );
-              },
-              title: 'Activate Emergency'.tr(),
-              showIcon: false,
-              iconPath: Icons.not_interested,
-              size: ButtonSize.large,
-              type: ButtonType.activation,
-              expanded: true,
-              iconColor: AppColors.white,
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? 400
+                          : 320,
+                    ),
+                    backgroundColor: AppColors.white,
+                  );
+                },
+                title: 'Activate Emergency'.tr(),
+                showIcon: false,
+                iconPath: Icons.not_interested,
+                size: ButtonSize.large,
+                type: ButtonType.activation,
+                expanded: true,
+                iconColor: AppColors.white,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

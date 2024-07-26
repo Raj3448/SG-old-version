@@ -68,139 +68,144 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Observer(
               builder: (_) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: memberStore.isLoading
-                            ? const SizedBox(
-                                height: Dimension.d20,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primary,
-                                  ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: memberStore.isLoading
+                          ? const SizedBox(
+                              height: Dimension.d20,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
                                 ),
-                              )
-                            : memberStore.familyMembers.isEmpty
-                                ? NoMember(
-                                    ontap: () {
-                                      final user = GetIt.I<UserDetailStore>()
-                                          .userDetails;
-                                      final member =
-                                          memberStore.memberById(user!.id);
-                                      if (member != null) {
-                                        context.pushNamed(
-                                          RoutesConstants
-                                              .addEditFamilyMemberRoute,
-                                          pathParameters: {
-                                            'edit': 'false',
-                                            'isSelf': 'false',
-                                          },
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return MemberCreation(
-                                              selfOnTap: () {
-                                                context.pushNamed(
-                                                  RoutesConstants
-                                                      .addEditFamilyMemberRoute,
-                                                  pathParameters: {
-                                                    'edit': 'false',
-                                                    'isSelf': 'true',
-                                                  },
-                                                );
-                                              },
-                                              memberOnTap: () {
-                                                context.pushNamed(
-                                                  RoutesConstants
-                                                      .addEditFamilyMemberRoute,
-                                                  pathParameters: {
-                                                    'edit': 'false',
-                                                    'isSelf': 'false',
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                  )
-                                : const MemberInfo(),
+                              ),
+                            )
+                          : memberStore.familyMembers.isEmpty
+                              ? NoMember(
+                                  ontap: () {
+                                    final user =
+                                        GetIt.I<UserDetailStore>().userDetails;
+                                    final member =
+                                        memberStore.memberById(user!.id);
+                                    if (member != null) {
+                                      context.pushNamed(
+                                        RoutesConstants
+                                            .addEditFamilyMemberRoute,
+                                        pathParameters: {
+                                          'edit': 'false',
+                                          'isSelf': 'false',
+                                        },
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return MemberCreation(
+                                            selfOnTap: () {
+                                              context.pushNamed(
+                                                RoutesConstants
+                                                    .addEditFamilyMemberRoute,
+                                                pathParameters: {
+                                                  'edit': 'false',
+                                                  'isSelf': 'true',
+                                                },
+                                              );
+                                            },
+                                            memberOnTap: () {
+                                              context.pushNamed(
+                                                RoutesConstants
+                                                    .addEditFamilyMemberRoute,
+                                                pathParameters: {
+                                                  'edit': 'false',
+                                                  'isSelf': 'false',
+                                                },
+                                              );
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                )
+                              : const MemberInfo(),
+                    ),
+                    if (memberStore.members.isNotEmpty &&
+                        homeStore.getMasterDataModel != null)
+                      EmergencyActivation(
+                        memberStore: memberStore,
+                        emergencyHelpline: homeStore
+                            .getMasterDataModel!.masterData.emergencyHelpline,
                       ),
-                      if (memberStore.members.isNotEmpty &&
-                          homeStore.getMasterDataModel != null)
-                        EmergencyActivation(
-                          memberStore: memberStore,
-                          emergencyHelpline: homeStore
-                              .getMasterDataModel!.masterData.emergencyHelpline,
-                        ),
-                      if (bookingServiceStore.isAllServiceLoaded)
-                        _ActiveBookingComponent(store: bookingServiceStore),
-                      Text(
-                        'Book service'.tr(),
-                        style: AppTextStyle.bodyXLSemiBold.copyWith(
-                          color: AppColors.grayscale900,
-                          height: 2.6,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    if (bookingServiceStore.isAllServiceLoaded)
+                      _ActiveBookingComponent(store: bookingServiceStore),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: Dimension.d4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          BookServiceButton(
-                            iconImagePath: 'assets/icon/volunteer_activism.png',
-                            buttonName: 'Health Care',
-                            onTap: () {
-                              context.pushNamed(
-                                RoutesConstants.allServicesScreen,
-                                pathParameters: {
-                                  'isHealthCare': 'true',
-                                  'isHomeCare': 'false',
-                                  'isConvenience': 'false',
-                                },
-                              );
-                            },
+                          Text(
+                            'Book service'.tr(),
+                            style: AppTextStyle.bodyXLSemiBold.copyWith(
+                              color: AppColors.grayscale900,
+                              height: 2.6,
+                            ),
                           ),
-                          BookServiceButton(
-                            iconImagePath: 'assets/icon/home_health.png',
-                            buttonName: 'Home Care',
-                            onTap: () {
-                              context.pushNamed(
-                                RoutesConstants.allServicesScreen,
-                                pathParameters: {
-                                  'isHealthCare': 'false',
-                                  'isHomeCare': 'true',
-                                  'isConvenience': 'false',
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              BookServiceButton(
+                                iconImagePath:
+                                    'assets/icon/volunteer_activism.png',
+                                buttonName: 'Health Care',
+                                onTap: () {
+                                  context.pushNamed(
+                                    RoutesConstants.allServicesScreen,
+                                    pathParameters: {
+                                      'isHealthCare': 'true',
+                                      'isHomeCare': 'false',
+                                      'isConvenience': 'false',
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
-                          BookServiceButton(
-                            iconImagePath: 'assets/icon/prescriptions.png',
-                            buttonName: 'Wellness & Convenience',
-                            onTap: () {
-                              context.pushNamed(
-                                RoutesConstants.allServicesScreen,
-                                pathParameters: {
-                                  'isHealthCare': 'false',
-                                  'isHomeCare': 'false',
-                                  'isConvenience': 'true',
+                              ),
+                              BookServiceButton(
+                                iconImagePath: 'assets/icon/home_health.png',
+                                buttonName: 'Home Care',
+                                onTap: () {
+                                  context.pushNamed(
+                                    RoutesConstants.allServicesScreen,
+                                    pathParameters: {
+                                      'isHealthCare': 'false',
+                                      'isHomeCare': 'true',
+                                      'isConvenience': 'false',
+                                    },
+                                  );
                                 },
-                              );
-                            },
+                              ),
+                              BookServiceButton(
+                                iconImagePath: 'assets/icon/prescriptions.png',
+                                buttonName: 'Wellness & Convenience',
+                                onTap: () {
+                                  context.pushNamed(
+                                    RoutesConstants.allServicesScreen,
+                                    pathParameters: {
+                                      'isHealthCare': 'false',
+                                      'isHomeCare': 'false',
+                                      'isConvenience': 'true',
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: Dimension.d2,
-                      ),
-                      const _HomeScreenComponents(),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: Dimension.d2),
+                    const _HomeScreenComponents(),
+                  ],
                 );
               },
             ),
@@ -224,25 +229,31 @@ class _HomeScreenComponents extends StatelessWidget {
     for (final component in componentDetailsList) {
       if (component is AboutUsOfferModel) {
         widgetList.add(
-          AboutUsOfferComponent(
-            aboutUsOfferModel: component,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+            child: AboutUsOfferComponent(
+              aboutUsOfferModel: component,
+            ),
           ),
         );
         continue;
       }
       if (component is BannerImageModel) {
         widgetList.add(
-          GestureDetector(
-            onTap: () async {
-              final url = component.cta?.href;
-              if (url != null && await canLaunchUrl(Uri.parse(url))) {
-                await launchUrl(Uri.parse(url));
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-              child: BannerImageComponent(
-                imageUrl: component.bannerImage.data!.attributes.url,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+            child: GestureDetector(
+              onTap: () async {
+                final url = component.cta?.href;
+                if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url));
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+                child: BannerImageComponent(
+                  imageUrl: component.bannerImage.data!.attributes.url,
+                ),
               ),
             ),
           ),
@@ -251,16 +262,22 @@ class _HomeScreenComponents extends StatelessWidget {
       }
       if (component is TestimonialsModel) {
         widgetList.add(
-          TestmonialsComponent(
-            testimonialsModel: component,
+          Padding(
+            padding: const EdgeInsets.only(top: Dimension.d4),
+            child: TestmonialsComponent(
+              testimonialsModel: component,
+            ),
           ),
         );
         continue;
       }
       if (component is NewsletterModel) {
         widgetList.add(
-          NewsletterComponent(
-            newsletterModel: component,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+            child: NewsletterComponent(
+              newsletterModel: component,
+            ),
           ),
         );
         continue;
@@ -282,23 +299,26 @@ class _ActiveBookingComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return store.getAllActiveServiceList.isEmpty
         ? const SizedBox.shrink()
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Active bookings'.tr(),
-                style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
-              ),
-              ...List.generate(
-                store.getAllActiveServiceList.length > 3
-                    ? 3
-                    : store.getAllActiveServiceList.length,
-                (index) => BookingListTileComponent(
-                  bookingServiceModel: store.getAllActiveServiceList[index],
-                  bookingServiceStatus: BookingServiceStatus.active,
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Active bookings'.tr(),
+                  style: AppTextStyle.bodyXLSemiBold.copyWith(height: 2.6),
                 ),
-              ),
-            ],
+                ...List.generate(
+                  store.getAllActiveServiceList.length > 3
+                      ? 3
+                      : store.getAllActiveServiceList.length,
+                  (index) => BookingListTileComponent(
+                    bookingServiceModel: store.getAllActiveServiceList[index],
+                    bookingServiceStatus: BookingServiceStatus.active,
+                  ),
+                ),
+              ],
+            ),
           );
   }
 }
