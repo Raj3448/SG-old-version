@@ -78,10 +78,10 @@ class PhrModel with _$PhrModel {
     required int id,
     required String firstName,
     required String lastName,
-    required int age,
+    required int? age,
     required String email,
-    required String gender,
-    required String bloodGroup,
+    required String? gender,
+    required String? bloodGroup,
     required bool downloadPhr,
     required String uniqueKey,
     required String? additionalInformation,
@@ -98,12 +98,29 @@ class PhrModel with _$PhrModel {
 class DiagnosedService with _$DiagnosedService {
   const factory DiagnosedService({
     required int id,
-    required DateTime diagnosedDate,
-    required String description,
+    required DateTime? diagnosedDate,
+    required String? description,
     required String value,
     required bool publish,
+    required ServiceName? serviceName,
+    dynamic serviceProvider,
   }) = _DiagnosedService;
 
   factory DiagnosedService.fromJson(Map<String, dynamic> json) =>
       _$DiagnosedServiceFromJson(json);
+}
+
+@freezed
+class ServiceName with _$ServiceName {
+  const factory ServiceName({
+    required int id,
+    required String name,
+    required String maxValue,
+    required dynamic description,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _ServiceName;
+
+  factory ServiceName.fromJson(Map<String, dynamic> json) =>
+      _$ServiceNameFromJson(json);
 }

@@ -176,7 +176,17 @@ class MemberDetailsScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SubscribeCard(),
+                      if (activeMember!.phrModel != null ||
+                          hasEPR && activeMember!.subscriptions!.isEmpty)
+                        const SubscribeCard(
+                          desc:
+                              "Sorry, this family member does not have any active subscription.\nTo view family member's health\nrecords please subscribe to Silvergenie's care subscriptions.",
+                        )
+                      else
+                        const SubscribeCard(
+                          desc:
+                              "Sorry, No Available health records for\nthis family member. To create EPR &\nPHR please subscribe to Silvergenie's\ncare subscription.",
+                        ),
                       const SizedBox(height: Dimension.d8),
                       Text(
                         'Signup for care packages',
