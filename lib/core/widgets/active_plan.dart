@@ -185,32 +185,44 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
 
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
-      if (desiredServices.contains(service.description)) {
-        if (!latestServices.containsKey(service.description) ||
-            service.diagnosedDate
-                .isAfter(latestServices[service.description]!.diagnosedDate)) {
-          latestServices[service.description] = service;
+      final serviceName = service.serviceName?.name;
+      if (serviceName != null && desiredServices.contains(serviceName)) {
+        final currentLatestService = latestServices[serviceName];
+        if (currentLatestService == null ||
+            (service.diagnosedDate != null &&
+                service.diagnosedDate!.isAfter(
+                  currentLatestService.diagnosedDate ?? DateTime(0),
+                ))) {
+          latestServices[serviceName] = service;
         }
       }
     }
 
-    final filteredDiagnosedServices = desiredServices.map((description) {
-      return latestServices[description] ??
+    final filteredDiagnosedServices = desiredServices.map((name) {
+      return latestServices[name] ??
           DiagnosedService(
             id: 0,
-            description: description,
-            value: '---',
             diagnosedDate: DateTime.now(),
+            description: '',
+            value: '---',
             publish: false,
+            serviceName: ServiceName(
+              id: 0,
+              name: name,
+              maxValue: '',
+              description: null,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
           );
     }).toList();
 
     final hasPHR = widget.activeMember.subscriptions?[0].benefits?.any(
-          (benefits) => benefits.code == 'PHR' && benefits.isActive == true,
+          (benefit) => benefit.code == 'PHR' && benefit.isActive,
         ) ??
         false;
     final hasEPR = widget.activeMember.subscriptions?[0].benefits?.any(
-          (benefits) => benefits.code == 'EPR' && benefits.isActive == true,
+          (benefit) => benefit.code == 'EPR' && benefit.isActive,
         ) ??
         false;
 
@@ -259,9 +271,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   label: 'Relation',
                   value: widget.activeMember.relation,
                 ),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
+                const SizedBox(width: Dimension.d2),
                 AnalogComponent(
                   label: 'Age',
                   value: '${calculateAge(widget.activeMember.dateOfBirth)}',
@@ -292,9 +302,11 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   child: Tooltip(
                     key: _tooltipKeys[index],
                     enableFeedback: true,
-                    message: formatDateTime(diagnosedService.diagnosedDate),
+                    message: formatDateTime(
+                      diagnosedService.diagnosedDate ?? DateTime.now(),
+                    ),
                     child: _VitalInfoBox(
-                      label: diagnosedService.description,
+                      label: diagnosedService.serviceName?.name ?? '',
                       value: diagnosedService.value.isNotEmpty
                           ? diagnosedService.value
                           : '---',

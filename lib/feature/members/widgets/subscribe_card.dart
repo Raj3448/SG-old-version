@@ -6,7 +6,9 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 class SubscribeCard extends StatelessWidget {
-  const SubscribeCard({super.key});
+  const SubscribeCard({required this.desc, super.key});
+
+  final String desc;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class SubscribeCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "Sorry, No Available health records for\nthis family member. To create EPR &\nPHR please subscribe to Silvergenie's\nElder care",
+              desc,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyLargeMedium.copyWith(
                 color: AppColors.grayscale700,

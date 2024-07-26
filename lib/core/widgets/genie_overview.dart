@@ -98,14 +98,23 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
         const SizedBox(height: Dimension.d2),
         AnimatedContainer(
           duration: const Duration(milliseconds: 400),
-          height: isExpanded ? widget.serviceList.length * 30 : 280,
+          height: isExpanded
+              ? widget.serviceList
+                      .where((service) => service.attributes.isActive)
+                      .length *
+                  30
+              : 280,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.serviceList.length,
+            itemCount: widget.serviceList
+                .where((service) => service.attributes.isActive)
+                .length,
             itemBuilder: (context, index) {
+              final activeServices = widget.serviceList
+                  .where((service) => service.attributes.isActive)
+                  .toList();
               return _ServiceCheckBox(
-                servicename: widget.serviceList[index].attributes.label,
-                isProvide: widget.serviceList[index].attributes.isActive,
+                servicename: activeServices[index].attributes.label,
               );
             },
           ),
@@ -331,10 +340,8 @@ class FAQComponent extends StatelessWidget {
 
 class _ServiceCheckBox extends StatelessWidget {
   final String servicename;
-  final bool isProvide;
   const _ServiceCheckBox({
     required this.servicename,
-    required this.isProvide,
   });
   @override
   Widget build(BuildContext context) {
@@ -343,14 +350,14 @@ class _ServiceCheckBox extends StatelessWidget {
         SvgPicture.asset(
           'assets/icon/success.svg',
           height: 20,
-          color: isProvide ? AppColors.primary : AppColors.grayscale600,
+          color: AppColors.primary,
         ),
         const SizedBox(width: Dimension.d2),
         Text(
           servicename,
           style: AppTextStyle.bodyMediumMedium.copyWith(
             height: 2,
-            color: isProvide ? AppColors.grayscale900 : AppColors.grayscale700,
+            color: AppColors.grayscale900,
           ),
         ),
       ],
