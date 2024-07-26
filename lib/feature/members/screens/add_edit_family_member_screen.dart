@@ -496,7 +496,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                       : AutovalidateMode.disabled,
                                   validationLogic: (value) {
                                     const regex =
-                                        r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
+                                        r'^[\w\.-]+(\+[\w\.-]+)?@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
                                     if (value!.isEmpty) {
                                       return 'Please enter your email address';
                                     } else if (!RegExp(regex).hasMatch(value)) {
