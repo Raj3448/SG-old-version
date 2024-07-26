@@ -37,13 +37,10 @@ class FamilyScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: Dimension.d4),
-                    child: Text(
-                      'Your Family Members'.tr(),
-                      style: AppTextStyle.bodyLargeBold
-                          .copyWith(height: 2.4, color: AppColors.grayscale900),
-                    ),
+                  Text(
+                    'Your Family Members'.tr(),
+                    style: AppTextStyle.bodyLargeBold
+                        .copyWith(height: 2.4, color: AppColors.grayscale900),
                   ),
                   NoMember(
                     ontap: () {

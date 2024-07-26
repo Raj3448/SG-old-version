@@ -76,93 +76,91 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: PageAppbar(
-          title: widget.isConvenience
-              ? 'Convenience care services'
-              : widget.isHealthCare
-                  ? 'Health care services'
-                  : 'Home care services',
-        ),
-        backgroundColor: AppColors.white,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(Dimension.d4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SearchTextfield(
-                  textEditingController: textEditingController,
-                  onChanged: filterServices,
+    return Scaffold(
+      appBar: PageAppbar(
+        title: widget.isConvenience
+            ? 'Convenience care services'
+            : widget.isHealthCare
+                ? 'Health care services'
+                : 'Home care services',
+      ),
+      backgroundColor: AppColors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(Dimension.d4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SearchTextfield(
+                textEditingController: textEditingController,
+                onChanged: filterServices,
+              ),
+              const SizedBox(height: Dimension.d5),
+              ListView.separated(
+                itemCount: displayedServices.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      context.pushNamed(
+                        RoutesConstants.serviceDetailsScreen,
+                        pathParameters: {
+                          'id': '${displayedServices[index].id}',
+                          'title': displayedServices[index].attributes.name,
+                          'productCode':
+                              displayedServices[index].attributes.code,
+                        },
+                      );
+                    },
+                    child: ServicesListTileComponent(
+                      imagePath: displayedServices[index]
+                          .attributes
+                          .icon
+                          .data
+                          .attributes
+                          .url,
+                      title: displayedServices[index].attributes.name,
+                      subtitle: displayedServices[index]
+                          .attributes
+                          .metadata
+                          .where((m) => m.key == 'subtitle')
+                          .firstOrNull
+                          ?.value,
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 16);
+                },
+              ),
+              if (displayedServices.isEmpty)
+                NoServiceFound(
+                  title: '',
+                  ontap: () {},
+                  showTitle: false,
+                  isService: true,
                 ),
-                const SizedBox(height: Dimension.d5),
-                ListView.separated(
-                  itemCount: displayedServices.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        context.pushNamed(
-                          RoutesConstants.serviceDetailsScreen,
-                          pathParameters: {
-                            'id': '${displayedServices[index].id}',
-                            'title': displayedServices[index].attributes.name,
-                            'productCode':
-                                displayedServices[index].attributes.code,
-                          },
-                        );
-                      },
-                      child: ServicesListTileComponent(
-                        imagePath: displayedServices[index]
-                            .attributes
-                            .icon
-                            .data
-                            .attributes
-                            .url,
-                        title: displayedServices[index].attributes.name,
-                        subtitle: displayedServices[index]
-                            .attributes
-                            .metadata
-                            .where((m) => m.key == 'subtitle')
-                            .firstOrNull
-                            ?.value,
+              if (widget.isConvenience) ...[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: Dimension.d8),
+                    Text(
+                      'For other services & enquiries',
+                      style: AppTextStyle.bodyLargeMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                        height: 2.4,
+                        color: AppColors.grayscale900,
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 16);
-                  },
+                    ),
+                    const ContactSgTeamComponent(
+                      phoneNumber: '+91 0000000000',
+                    ),
+                  ],
                 ),
-                if (displayedServices.isEmpty)
-                  NoServiceFound(
-                    title: '',
-                    ontap: () {},
-                    showTitle: false,
-                    isService: true,
-                  ),
-                if (widget.isConvenience) ...[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: Dimension.d8),
-                      Text(
-                        'For other services & enquiries',
-                        style: AppTextStyle.bodyLargeMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          height: 2.4,
-                          color: AppColors.grayscale900,
-                        ),
-                      ),
-                      const ContactSgTeamComponent(
-                        phoneNumber: '+91 0000000000',
-                      ),
-                    ],
-                  ),
-                ],
               ],
-            ),
+            ],
           ),
         ),
       ),

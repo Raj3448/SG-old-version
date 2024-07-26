@@ -26,53 +26,51 @@ class _LoadingWidgetState extends State<LoadingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Center(
-        child: Container(
-          width: 200,
-          height: 143,
-          padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-          decoration: BoxDecoration(
-            color: AppColors.grayscale100,
-            borderRadius: BorderRadius.circular(Dimension.d3),
-            boxShadow: widget.showShadow
-                ? [
-                    BoxShadow(
-                      blurRadius: 2,
-                      spreadRadius: 2000,
-                      color: AppColors.black.withOpacity(0.5),
-                    ),
-                  ]
-                : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return const LinearGradient(
-                    colors: [AppColors.primary, AppColors.secondary],
-                  ).createShader(bounds);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimension.d3),
-                  child: Transform.scale(
-                    scale: 1.5,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 5,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(AppColors.secondary),
-                    ),
+    return Center(
+      child: Container(
+        width: 200,
+        height: 143,
+        padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+        decoration: BoxDecoration(
+          color: AppColors.grayscale100,
+          borderRadius: BorderRadius.circular(Dimension.d3),
+          boxShadow: widget.showShadow
+              ? [
+                  BoxShadow(
+                    blurRadius: 2,
+                    spreadRadius: 2000,
+                    color: AppColors.black.withOpacity(0.5),
+                  ),
+                ]
+              : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return const LinearGradient(
+                  colors: [AppColors.primary, AppColors.secondary],
+                ).createShader(bounds);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(Dimension.d3),
+                child: Transform.scale(
+                  scale: 1.5,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 5,
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppColors.secondary),
                   ),
                 ),
               ),
-              Text(
-                'Please Wait',
-                style: AppTextStyle.bodyLargeSemiBold
-                    .copyWith(color: AppColors.grayscale700),
-              ),
-            ],
-          ),
+            ),
+            Text(
+              'Please Wait',
+              style: AppTextStyle.bodyLargeSemiBold
+                  .copyWith(color: AppColors.grayscale700),
+            ),
+          ],
         ),
       ),
     );

@@ -44,128 +44,126 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: const PageAppbar(title: 'Subscriptions'),
-        backgroundColor: AppColors.white,
-        body: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimension.d4)
-                    .copyWith(top: Dimension.d4),
-                child: FutureBuilder(
-                  future: subService.fetchSubscriptions(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: LoadingWidget(showShadow: false),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: ErrorStateComponent(
-                          errorType: ErrorType.somethinWentWrong,
-                        ),
-                      );
-                    } else {
-                      final eitherData = snapshot.data;
-                      if (eitherData != null) {
-                        return eitherData.fold(
-                          (failure) {
-                            return const Center(
-                              child: ErrorStateComponent(
-                                errorType: ErrorType.somethinWentWrong,
-                              ),
+    return Scaffold(
+      appBar: const PageAppbar(title: 'Subscriptions'),
+      backgroundColor: AppColors.white,
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4)
+                  .copyWith(top: Dimension.d4),
+              child: FutureBuilder(
+                future: subService.fetchSubscriptions(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: LoadingWidget(showShadow: false),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: ErrorStateComponent(
+                        errorType: ErrorType.somethinWentWrong,
+                      ),
+                    );
+                  } else {
+                    final eitherData = snapshot.data;
+                    if (eitherData != null) {
+                      return eitherData.fold(
+                        (failure) {
+                          return const Center(
+                            child: ErrorStateComponent(
+                              errorType: ErrorType.somethinWentWrong,
+                            ),
+                          );
+                        },
+                        (list) {
+                          final activePlanList = list.data
+                              .where(
+                                (member) =>
+                                    member.subscriptionStatus == 'Active',
+                              )
+                              .toList();
+                          final expiredPlanList = list.data
+                              .where(
+                                (member) =>
+                                    member.subscriptionStatus == 'Expired' &&
+                                    member.paymentStatus == 'paid',
+                              )
+                              .toList();
+                          if (list.data.isEmpty) {
+                            return NoServiceFound(
+                              title: 'Subscriptions',
+                              ontap: () {},
+                              showTitle: false,
+                              isService: false,
+                              name: 'subscriptions',
                             );
-                          },
-                          (list) {
-                            final activePlanList = list.data
-                                .where(
-                                  (member) =>
-                                      member.subscriptionStatus == 'Active',
-                                )
-                                .toList();
-                            final expiredPlanList = list.data
-                                .where(
-                                  (member) =>
-                                      member.subscriptionStatus == 'Expired' &&
-                                      member.paymentStatus == 'paid',
-                                )
-                                .toList();
-                            if (list.data.isEmpty) {
-                              return NoServiceFound(
-                                title: 'Subscriptions',
-                                ontap: () {},
-                                showTitle: false,
-                                isService: false,
-                                name: 'subscriptions',
-                              );
-                            } else {
-                              return Column(
-                                children: [
-                                  CustomizeTabviewComponent(
+                          } else {
+                            return Column(
+                              children: [
+                                CustomizeTabviewComponent(
+                                  controller: controller,
+                                  tabCount: 2,
+                                  widgetList: const [
+                                    Tab(icon: Text('Current')),
+                                    Tab(icon: Text('Previous')),
+                                  ],
+                                ),
+                                const SizedBox(height: Dimension.d4),
+                                Expanded(
+                                  child: TabBarView(
                                     controller: controller,
-                                    tabCount: 2,
-                                    widgetList: const [
-                                      Tab(icon: Text('Current')),
-                                      Tab(icon: Text('Previous')),
+                                    children: [
+                                      if (activePlanList.isEmpty)
+                                        NoServiceFound(
+                                          title: 'Subscriptions',
+                                          ontap: () {},
+                                          showTitle: false,
+                                          isService: false,
+                                          name: 'subscriptions',
+                                        )
+                                      else
+                                        _SubscriptionList(
+                                          members: activePlanList,
+                                          isPrevious: false,
+                                          activePlans: activePlanList,
+                                        ),
+                                      if (expiredPlanList.isEmpty)
+                                        NoServiceFound(
+                                          title: 'Subscriptions',
+                                          ontap: () {},
+                                          showTitle: false,
+                                          isService: false,
+                                          name: 'subscriptions',
+                                        )
+                                      else
+                                        _SubscriptionList(
+                                          members: expiredPlanList,
+                                          isPrevious: true,
+                                          activePlans: activePlanList,
+                                        ),
                                     ],
                                   ),
-                                  const SizedBox(height: Dimension.d4),
-                                  Expanded(
-                                    child: TabBarView(
-                                      controller: controller,
-                                      children: [
-                                        if (activePlanList.isEmpty)
-                                          NoServiceFound(
-                                            title: 'Subscriptions',
-                                            ontap: () {},
-                                            showTitle: false,
-                                            isService: false,
-                                            name: 'subscriptions',
-                                          )
-                                        else
-                                          _SubscriptionList(
-                                            members: activePlanList,
-                                            isPrevious: false,
-                                            activePlans: activePlanList,
-                                          ),
-                                        if (expiredPlanList.isEmpty)
-                                          NoServiceFound(
-                                            title: 'Subscriptions',
-                                            ontap: () {},
-                                            showTitle: false,
-                                            isService: false,
-                                            name: 'subscriptions',
-                                          )
-                                        else
-                                          _SubscriptionList(
-                                            members: expiredPlanList,
-                                            isPrevious: true,
-                                            activePlans: activePlanList,
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        );
-                      } else {
-                        return const Center(
-                          child: ErrorStateComponent(
-                            errorType: ErrorType.unknown,
-                          ),
-                        );
-                      }
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: ErrorStateComponent(
+                          errorType: ErrorType.unknown,
+                        ),
+                      );
                     }
-                  },
-                ),
+                  }
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

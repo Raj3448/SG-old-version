@@ -20,53 +20,49 @@ class PhrPdfViewPage extends StatefulWidget {
 class _PhrPdfViewPageState extends State<PhrPdfViewPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        appBar: const PageAppbar(title: 'EPR/PHR Web view'),
-        body: FutureBuilder(
-          future: GetIt.I<MemberServices>()
-              .getPHRPdfPath(memberPhrId: widget.memberPhrId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadingWidget(
-                showShadow: false,
-              );
-            }
-            if (snapshot.hasError ||
-                !snapshot.hasData ||
-                snapshot.data == null) {
-              return const ErrorStateComponent(
-                errorType: ErrorType.pageNotFound,
-              );
-            }
-            if (snapshot.data != null) {
-              if (snapshot.data!.isLeft()) {
-                return const ErrorStateComponent(
-                  errorType: ErrorType.somethinWentWrong,
-                );
-              }
-            }
-            final pdfPath = snapshot.data!.getOrElse((l) => throw 'Error');
-            return SfPdfViewer.network(
-              pdfPath,
-              onDocumentLoadFailed: (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Failed to load PDF'),
-                    duration: const Duration(seconds: 5),
-                    action: SnackBarAction(
-                      label: 'Retry',
-                      onPressed: () {
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                );
-              },
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: const PageAppbar(title: 'EPR/PHR Web view'),
+      body: FutureBuilder(
+        future: GetIt.I<MemberServices>()
+            .getPHRPdfPath(memberPhrId: widget.memberPhrId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingWidget(
+              showShadow: false,
             );
-          },
-        ),
+          }
+          if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+            return const ErrorStateComponent(
+              errorType: ErrorType.pageNotFound,
+            );
+          }
+          if (snapshot.data != null) {
+            if (snapshot.data!.isLeft()) {
+              return const ErrorStateComponent(
+                errorType: ErrorType.somethinWentWrong,
+              );
+            }
+          }
+          final pdfPath = snapshot.data!.getOrElse((l) => throw 'Error');
+          return SfPdfViewer.network(
+            pdfPath,
+            onDocumentLoadFailed: (error) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Failed to load PDF'),
+                  duration: const Duration(seconds: 5),
+                  action: SnackBarAction(
+                    label: 'Retry',
+                    onPressed: () {
+                      setState(() {});
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

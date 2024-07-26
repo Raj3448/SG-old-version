@@ -65,56 +65,54 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColors.white,
       floatingActionButton: const _Button(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SafeArea(
-        child: OrientationBuilder(
-          builder: (context, orientation) {
-            final isLandscape = orientation == Orientation.landscape;
-            final mediaQueryContext = MediaQuery.sizeOf(context);
-            return Column(
-              children: [
-                SizedBox(
-                  height: isLandscape
-                      ? mediaQueryContext.height * 0.65
-                      : mediaQueryContext.height * 0.8,
-                  child: PageView(
-                    controller: pageController,
-                    children: [
-                      _PageView(
-                        isLandscape: isLandscape,
-                        imgPath: 'assets/onboarding/img1.png',
-                        desc:
-                            'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
-                      ),
-                      _PageView(
-                        isLandscape: isLandscape,
-                        imgPath: 'assets/onboarding/img2.png',
-                        desc:
-                            'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
-                      ),
-                      _PageView(
-                        isLandscape: isLandscape,
-                        imgPath: 'assets/onboarding/img3.png',
-                        desc:
-                            'Instant access to emergency services, ensuring peace of mind for your loved ones.',
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: isLandscape ? null : Dimension.d5),
-                SmoothPageIndicator(
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isLandscape = orientation == Orientation.landscape;
+          final mediaQueryContext = MediaQuery.sizeOf(context);
+          return Column(
+            children: [
+              SizedBox(
+                height: isLandscape
+                    ? mediaQueryContext.height * 0.65
+                    : mediaQueryContext.height * 0.8,
+                child: PageView(
                   controller: pageController,
-                  count: 3,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColors.primary,
-                    dotColor: AppColors.grayscale300,
-                    dotHeight: 8,
-                    dotWidth: 8,
-                  ),
+                  children: [
+                    _PageView(
+                      isLandscape: isLandscape,
+                      imgPath: 'assets/onboarding/img1.png',
+                      desc:
+                          'Revolutionizing elder care in India, empowering seniors to lead independent lives.',
+                    ),
+                    _PageView(
+                      isLandscape: isLandscape,
+                      imgPath: 'assets/onboarding/img2.png',
+                      desc:
+                          'Tailored healthcare concierge experiences, connecting seniors to doctors, counselors, nutritionists, and more.',
+                    ),
+                    _PageView(
+                      isLandscape: isLandscape,
+                      imgPath: 'assets/onboarding/img3.png',
+                      desc:
+                          'Instant access to emergency services, ensuring peace of mind for your loved ones.',
+                    ),
+                  ],
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+              SizedBox(height: isLandscape ? null : Dimension.d5),
+              SmoothPageIndicator(
+                controller: pageController,
+                count: 3,
+                effect: const ExpandingDotsEffect(
+                  activeDotColor: AppColors.primary,
+                  dotColor: AppColors.grayscale300,
+                  dotHeight: 8,
+                  dotWidth: 8,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

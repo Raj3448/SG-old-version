@@ -32,6 +32,7 @@ class MemberInfoState extends State<MemberInfo> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: Dimension.d3),
           Text(
             'Family Members health info'.tr(),
             style: AppTextStyle.bodyXLSemiBold,
