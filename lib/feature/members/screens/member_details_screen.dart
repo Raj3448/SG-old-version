@@ -237,27 +237,33 @@ class _BasicDetailsBox extends StatelessWidget {
             children: [
               Avatar.fromSize(imgPath: imgPath, size: AvatarSize.size32),
               const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name, style: AppTextStyle.bodyLargeMedium),
-                  const SizedBox(height: Dimension.d2),
-                  Row(
-                    children: [
-                      Text(
-                        'Age: $age',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale600),
-                      ),
-                      const SizedBox(width: Dimension.d2),
-                      Text(
-                        'Relationship: $relation',
-                        style: AppTextStyle.bodyMediumMedium
-                            .copyWith(color: AppColors.grayscale600),
-                      ),
-                    ],
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.bodyLargeMedium,
+                    ),
+                    const SizedBox(height: Dimension.d2),
+                    Row(
+                      children: [
+                        Text(
+                          'Age: $age',
+                          style: AppTextStyle.bodyMediumMedium
+                              .copyWith(color: AppColors.grayscale600),
+                        ),
+                        const SizedBox(width: Dimension.d2),
+                        Text(
+                          'Relationship: $relation',
+                          style: AppTextStyle.bodyMediumMedium
+                              .copyWith(color: AppColors.grayscale600),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -329,6 +335,8 @@ class _BasicDetailsBox extends StatelessWidget {
                     Expanded(
                       child: Text(
                         address!,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyle.bodyLargeMedium
                             .copyWith(color: AppColors.grayscale900),
                       ),

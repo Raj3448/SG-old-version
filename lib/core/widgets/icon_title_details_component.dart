@@ -10,17 +10,20 @@ class IconTitleDetailsComponent extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.details,
+    this.maxLines = 1,
     this.detailsTextOverflow = TextOverflow.ellipsis,
     super.key,
   });
   final IconData icon;
   final String title;
   final String details;
+  final int? maxLines;
   final TextOverflow? detailsTextOverflow;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(
           icon,
@@ -37,7 +40,9 @@ class IconTitleDetailsComponent extends StatelessWidget {
         Expanded(
           child: Text(
             details,
+            maxLines: maxLines,
             textAlign: TextAlign.end,
+            overflow: detailsTextOverflow,
             style: AppTextStyle.bodyLargeMedium.copyWith(
               color: AppColors.grayscale900,
               overflow: detailsTextOverflow,

@@ -72,9 +72,12 @@ class InactivePlanComponent extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  member.name,
-                  style: AppTextStyle.bodyLargeBold,
+                Flexible(
+                  child: Text(
+                    member.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.bodyLargeBold,
+                  ),
                 ),
                 SubscriptionPkg(
                   expanded: false,
@@ -82,15 +85,11 @@ class InactivePlanComponent extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(
-              height: Dimension.d1,
-            ),
+            const SizedBox(height: Dimension.d1),
             Row(
               children: [
                 AnalogComponent(label: 'Relation', value: member.relation),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
+                const SizedBox(width: Dimension.d2),
                 AnalogComponent(
                   label: 'Age',
                   value: calculateAge(member.dateOfBirth).toString(),
