@@ -63,153 +63,151 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Observer(
-              builder: (_) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: memberStore.isLoading
-                          ? const SizedBox(
-                              height: Dimension.d20,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            )
-                          : memberStore.familyMembers.isEmpty
-                              ? NoMember(
-                                  ontap: () {
-                                    final user =
-                                        GetIt.I<UserDetailStore>().userDetails;
-                                    final member =
-                                        memberStore.memberById(user!.id);
-                                    if (member != null) {
-                                      context.pushNamed(
-                                        RoutesConstants
-                                            .addEditFamilyMemberRoute,
-                                        pathParameters: {
-                                          'edit': 'false',
-                                          'isSelf': 'false',
-                                        },
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return MemberCreation(
-                                            selfOnTap: () {
-                                              context.pushNamed(
-                                                RoutesConstants
-                                                    .addEditFamilyMemberRoute,
-                                                pathParameters: {
-                                                  'edit': 'false',
-                                                  'isSelf': 'true',
-                                                },
-                                              );
+        child: Observer(
+          builder: (context) {
+            final hasActiveSub = memberStore.familyMembers.any(
+              (member) =>
+                  member.subscriptions
+                      ?.any((sub) => sub.subscriptionStatus == 'Active') ??
+                  false,
+            );
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: memberStore.isLoading
+                      ? const SizedBox(
+                          height: Dimension.d20,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        )
+                      : memberStore.familyMembers.isEmpty
+                          ? NoMember(
+                              ontap: () {
+                                final user =
+                                    GetIt.I<UserDetailStore>().userDetails;
+                                final member = memberStore.memberById(user!.id);
+                                if (member != null) {
+                                  context.pushNamed(
+                                    RoutesConstants.addEditFamilyMemberRoute,
+                                    pathParameters: {
+                                      'edit': 'false',
+                                      'isSelf': 'false',
+                                    },
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return MemberCreation(
+                                        selfOnTap: () {
+                                          context.pushNamed(
+                                            RoutesConstants
+                                                .addEditFamilyMemberRoute,
+                                            pathParameters: {
+                                              'edit': 'false',
+                                              'isSelf': 'true',
                                             },
-                                            memberOnTap: () {
-                                              context.pushNamed(
-                                                RoutesConstants
-                                                    .addEditFamilyMemberRoute,
-                                                pathParameters: {
-                                                  'edit': 'false',
-                                                  'isSelf': 'false',
-                                                },
-                                              );
+                                          );
+                                        },
+                                        memberOnTap: () {
+                                          context.pushNamed(
+                                            RoutesConstants
+                                                .addEditFamilyMemberRoute,
+                                            pathParameters: {
+                                              'edit': 'false',
+                                              'isSelf': 'false',
                                             },
                                           );
                                         },
                                       );
-                                    }
-                                  },
-                                )
-                              : const MemberInfo(),
-                    ),
-                    if (memberStore.members.isNotEmpty &&
-                        homeStore.getMasterDataModel != null)
-                      EmergencyActivation(
-                        memberStore: memberStore,
-                        emergencyHelpline: homeStore
-                            .getMasterDataModel!.masterData.emergencyHelpline,
+                                    },
+                                  );
+                                }
+                              },
+                            )
+                          : const MemberInfo(),
+                ),
+                if (memberStore.members.isNotEmpty &&
+                    hasActiveSub &&
+                    homeStore.getMasterDataModel != null)
+                  EmergencyActivation(
+                    memberStore: memberStore,
+                    emergencyHelpline: homeStore
+                        .getMasterDataModel!.masterData.emergencyHelpline,
+                  ),
+                if (bookingServiceStore.isAllServiceLoaded)
+                  _ActiveBookingComponent(store: bookingServiceStore),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Book service'.tr(),
+                        style: AppTextStyle.bodyXLSemiBold.copyWith(
+                          color: AppColors.grayscale900,
+                          height: 2.6,
+                        ),
                       ),
-                    if (bookingServiceStore.isAllServiceLoaded)
-                      _ActiveBookingComponent(store: bookingServiceStore),
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: Dimension.d4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(
-                            'Book service'.tr(),
-                            style: AppTextStyle.bodyXLSemiBold.copyWith(
-                              color: AppColors.grayscale900,
-                              height: 2.6,
-                            ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/volunteer_activism.png',
+                            buttonName: 'Health Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'true',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'false',
+                                },
+                              );
+                            },
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              BookServiceButton(
-                                iconImagePath:
-                                    'assets/icon/volunteer_activism.png',
-                                buttonName: 'Health Care',
-                                onTap: () {
-                                  context.pushNamed(
-                                    RoutesConstants.allServicesScreen,
-                                    pathParameters: {
-                                      'isHealthCare': 'true',
-                                      'isHomeCare': 'false',
-                                      'isConvenience': 'false',
-                                    },
-                                  );
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/home_health.png',
+                            buttonName: 'Home Care',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'true',
+                                  'isConvenience': 'false',
                                 },
-                              ),
-                              BookServiceButton(
-                                iconImagePath: 'assets/icon/home_health.png',
-                                buttonName: 'Home Care',
-                                onTap: () {
-                                  context.pushNamed(
-                                    RoutesConstants.allServicesScreen,
-                                    pathParameters: {
-                                      'isHealthCare': 'false',
-                                      'isHomeCare': 'true',
-                                      'isConvenience': 'false',
-                                    },
-                                  );
+                              );
+                            },
+                          ),
+                          BookServiceButton(
+                            iconImagePath: 'assets/icon/prescriptions.png',
+                            buttonName: 'Wellness & Convenience',
+                            onTap: () {
+                              context.pushNamed(
+                                RoutesConstants.allServicesScreen,
+                                pathParameters: {
+                                  'isHealthCare': 'false',
+                                  'isHomeCare': 'false',
+                                  'isConvenience': 'true',
                                 },
-                              ),
-                              BookServiceButton(
-                                iconImagePath: 'assets/icon/prescriptions.png',
-                                buttonName: 'Wellness & Convenience',
-                                onTap: () {
-                                  context.pushNamed(
-                                    RoutesConstants.allServicesScreen,
-                                    pathParameters: {
-                                      'isHealthCare': 'false',
-                                      'isHomeCare': 'false',
-                                      'isConvenience': 'true',
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: Dimension.d2),
-                    const _HomeScreenComponents(),
-                  ],
-                );
-              },
-            ),
-          ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: Dimension.d2),
+                const _HomeScreenComponents(),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -358,6 +356,8 @@ class BookServiceButton extends StatelessWidget {
             child: Text(
               buttonName,
               textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale700),
             ),
