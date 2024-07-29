@@ -24,12 +24,12 @@ class CustomTextIcon extends StatelessWidget {
           padding: const EdgeInsets.only(top: Dimension.d1),
           child: Icon(iconpath, size: 17, color: AppColors.grayscale700),
         ),
-        const SizedBox(
-          width: Dimension.d3,
-        ),
+        const SizedBox(width: Dimension.d3),
         Expanded(
           child: Text(
             title,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
             style: AppTextStyle.bodyLargeMedium,
           ),
         ),

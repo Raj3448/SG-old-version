@@ -192,7 +192,7 @@ class SubscriptionPkg extends StatelessWidget {
           ),
         ),
       );
-    } else if (type != SubscriptionsType.inActive) {
+    } else {
       return Container(
         decoration: BoxDecoration(
           color: getContainerColor(),
@@ -213,8 +213,6 @@ class SubscriptionPkg extends StatelessWidget {
           ),
         ),
       );
-    } else {
-      return const SizedBox();
     }
   }
 }

@@ -132,8 +132,12 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       const SizedBox(height: Dimension.d6),
                       Text(
-                        'We have just sent you 4 digit code to your email and phone number'
-                            .tr(),
+                        widget.isFromLoginPage && loginStore.isEmail
+                            ? 'We have just sent you 4 digit code to your email.'
+                            : widget.isFromLoginPage
+                                ? 'We have just sent you 4 digit code to your phone number.'
+                                : 'We have just sent you 4 digit code to your email and phone number.'
+                                    .tr(),
                         textAlign: TextAlign.center,
                         style: AppTextStyle.bodyMediumMedium
                             .copyWith(color: AppColors.grayscale700),

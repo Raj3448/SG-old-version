@@ -42,18 +42,20 @@ class MemberCard extends StatelessWidget {
               children: [
                 Avatar.fromSize(imgPath: imgPath, size: AvatarSize.size32),
                 const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: AppTextStyle.bodyLargeBold,
-                    ),
-                    const SizedBox(height: 5),
-                    Relationship(relation: relation),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.bodyLargeBold,
+                      ),
+                      const SizedBox(height: 5),
+                      Relationship(relation: relation),
+                    ],
+                  ),
                 ),
-                const Spacer(),
                 const Icon(
                   AppIcons.arrow_forward_ios,
                   color: AppColors.grayscale900,

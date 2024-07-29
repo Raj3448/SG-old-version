@@ -297,44 +297,54 @@ class _UserDetailsComponent extends StatelessWidget {
                     size: AvatarSize.size24,
                   ),
                 const SizedBox(width: Dimension.d3),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (hasMultipleMembers)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${familyMembers[0].firstName} & ${familyMembers[1].firstName}',
-                            style: AppTextStyle.bodyLargeBold
-                                .copyWith(color: AppColors.grayscale900),
-                          ),
-                          Text(
-                            'Relation: ${familyMembers[0].relation} & ${familyMembers[1].relation}',
-                            style: AppTextStyle.bodyMediumMedium.copyWith(
-                              color: AppColors.grayscale800,
-                              height: 1.5,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (hasMultipleMembers)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${familyMembers[0].firstName} & ${familyMembers[1].firstName}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyle.bodyLargeBold.copyWith(
+                                        color: AppColors.grayscale900),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      )
-                    else
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${memberDetails.belongsTo?.map((member) => member.firstName).join(' ') ?? []} ${memberDetails.belongsTo?.map((member) => member.lastName).join(' ') ?? []}',
-                            style: AppTextStyle.bodyLargeBold
-                                .copyWith(color: AppColors.grayscale900),
-                          ),
-                          Text(
-                            'Relation: ${memberDetails.belongsTo?.map((member) => member.relation).join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth).join(' ') ?? '')}',
-                            style: AppTextStyle.bodyMediumMedium
-                                .copyWith(color: AppColors.grayscale800),
-                          ),
-                        ],
-                      ),
-                  ],
+                            Text(
+                              'Relation: ${familyMembers[0].relation} & ${familyMembers[1].relation}',
+                              style: AppTextStyle.bodyMediumMedium.copyWith(
+                                color: AppColors.grayscale800,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${memberDetails.belongsTo?.map((member) => member.firstName).join(' ') ?? []} ${memberDetails.belongsTo?.map((member) => member.lastName).join(' ') ?? []}',
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyle.bodyLargeBold
+                                  .copyWith(color: AppColors.grayscale900),
+                            ),
+                            Text(
+                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation).join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth).join(' ') ?? '')}',
+                              style: AppTextStyle.bodyMediumMedium
+                                  .copyWith(color: AppColors.grayscale800),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),

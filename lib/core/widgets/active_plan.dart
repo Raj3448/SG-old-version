@@ -23,15 +23,18 @@ class ExpandedAnalogComponent extends StatelessWidget {
   const ExpandedAnalogComponent({
     required this.label,
     required this.value,
+    this.maxLines = 1,
     super.key,
   });
 
   final String label;
   final String value;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 2,
@@ -44,6 +47,8 @@ class ExpandedAnalogComponent extends StatelessWidget {
           flex: 3,
           child: Text(
             ':  $value',
+            overflow: TextOverflow.ellipsis,
+            maxLines: maxLines,
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale700),
           ),
@@ -180,25 +185,46 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
 
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
-      if (desiredServices.contains(service.description)) {
-        if (!latestServices.containsKey(service.description) ||
-            service.diagnosedDate
-                .isAfter(latestServices[service.description]!.diagnosedDate)) {
-          latestServices[service.description] = service;
+      final serviceName = service.serviceName?.name;
+      if (serviceName != null && desiredServices.contains(serviceName)) {
+        final currentLatestService = latestServices[serviceName];
+        if (currentLatestService == null ||
+            (service.diagnosedDate != null &&
+                service.diagnosedDate!.isAfter(
+                  currentLatestService.diagnosedDate ?? DateTime(0),
+                ))) {
+          latestServices[serviceName] = service;
         }
       }
     }
 
-    final filteredDiagnosedServices = desiredServices.map((description) {
-      return latestServices[description] ??
+    final filteredDiagnosedServices = desiredServices.map((name) {
+      return latestServices[name] ??
           DiagnosedService(
             id: 0,
-            description: description,
-            value: '---',
             diagnosedDate: DateTime.now(),
+            description: '',
+            value: '---',
             publish: false,
+            serviceName: ServiceName(
+              id: 0,
+              name: name,
+              maxValue: '',
+              description: null,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
           );
     }).toList();
+
+    final hasPHR = widget.activeMember.subscriptions?[0].benefits?.any(
+          (benefit) => benefit.code == 'PHR' && benefit.isActive,
+        ) ??
+        false;
+    final hasEPR = widget.activeMember.subscriptions?[0].benefits?.any(
+          (benefit) => benefit.code == 'EPR' && benefit.isActive,
+        ) ??
+        false;
 
     return Container(
       decoration: BoxDecoration(
@@ -213,9 +239,12 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
-                  style: AppTextStyle.bodyLargeBold,
+                Flexible(
+                  child: Text(
+                    '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.bodyLargeBold,
+                  ),
                 ),
                 if (widget.activeMember.subscriptions!.isEmpty)
                   SubscriptionPkg(
@@ -242,9 +271,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   label: 'Relation',
                   value: widget.activeMember.relation,
                 ),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
+                const SizedBox(width: Dimension.d2),
                 AnalogComponent(
                   label: 'Age',
                   value: '${calculateAge(widget.activeMember.dateOfBirth)}',
@@ -275,9 +302,11 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   child: Tooltip(
                     key: _tooltipKeys[index],
                     enableFeedback: true,
-                    message: formatDateTime(diagnosedService.diagnosedDate),
+                    message: formatDateTime(
+                      diagnosedService.diagnosedDate ?? DateTime.now(),
+                    ),
                     child: _VitalInfoBox(
-                      label: diagnosedService.description,
+                      label: diagnosedService.serviceName?.name ?? '',
                       value: diagnosedService.value.isNotEmpty
                           ? diagnosedService.value
                           : '---',
@@ -292,28 +321,13 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
             ),
             const SizedBox(height: Dimension.d2),
-            Observer(
-              builder: (_) {
-                final hasPHR = widget.activeMember.subscriptions?[0].benefits
-                        ?.any(
-                      (benefits) =>
-                          benefits.code == 'PHR' && benefits.isActive == true,
-                    ) ??
-                    false;
-                final hasEPR = widget.activeMember.subscriptions?[0].benefits
-                        ?.any(
-                      (benefits) =>
-                          benefits.code == 'EPR' && benefits.isActive == true,
-                    ) ??
-                    false;
-
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        ontap: hasPHR == false ||
-                                widget.activeMember.phrModel == null
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    ontap:
+                        hasPHR == false || widget.activeMember.phrModel == null
                             ? null
                             : () {
                                 GoRouter.of(context).pushNamed(
@@ -324,45 +338,43 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                                   },
                                 );
                               },
-                        title: 'View PHR',
-                        showIcon: false,
-                        iconPath: Icons.not_interested,
-                        size: ButtonSize.small,
-                        type: hasPHR == false ||
-                                widget.activeMember.phrModel == null
+                    title: 'View PHR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type:
+                        hasPHR == false || widget.activeMember.phrModel == null
                             ? ButtonType.disable
                             : ButtonType.secondary,
-                        expanded: true,
-                        iconColor: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(width: Dimension.d4),
-                    Expanded(
-                      child: CustomButton(
-                        ontap: hasEPR == false
-                            ? null
-                            : () {
-                                GoRouter.of(context).pushNamed(
-                                  RoutesConstants.eprRoute,
-                                  pathParameters: {
-                                    'memberId': '${widget.activeMember.id}',
-                                  },
-                                );
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(width: Dimension.d4),
+                Expanded(
+                  child: CustomButton(
+                    ontap: hasEPR == false
+                        ? null
+                        : () {
+                            GoRouter.of(context).pushNamed(
+                              RoutesConstants.eprRoute,
+                              pathParameters: {
+                                'memberId': '${widget.activeMember.id}',
                               },
-                        title: 'View EPR',
-                        showIcon: false,
-                        iconPath: Icons.not_interested,
-                        size: ButtonSize.small,
-                        type: hasEPR == false
-                            ? ButtonType.disable
-                            : ButtonType.secondary,
-                        expanded: true,
-                        iconColor: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                );
-              },
+                            );
+                          },
+                    title: 'View EPR',
+                    showIcon: false,
+                    iconPath: Icons.not_interested,
+                    size: ButtonSize.small,
+                    type: hasEPR == false
+                        ? ButtonType.disable
+                        : ButtonType.secondary,
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
+                ),
+              ],
             ),
             _buildRenewalAndExpirationInfo(member),
             if (memberStore.activeMember != null &&

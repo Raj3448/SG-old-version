@@ -2,6 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -66,51 +67,54 @@ class InactivePlanComponent extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(Dimension.d3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Observer(
+          builder: (_) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  member.name,
-                  style: AppTextStyle.bodyLargeBold,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        member.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.bodyLargeBold,
+                      ),
+                    ),
+                    SubscriptionPkg(
+                      expanded: false,
+                      type: SubscriptionsType.inActive,
+                    ),
+                  ],
                 ),
-                SubscriptionPkg(
-                  expanded: false,
-                  type: SubscriptionsType.inActive,
+                const SizedBox(height: Dimension.d1),
+                Row(
+                  children: [
+                    AnalogComponent(label: 'Relation', value: member.relation),
+                    const SizedBox(width: Dimension.d2),
+                    AnalogComponent(
+                      label: 'Age',
+                      value: calculateAge(member.dateOfBirth).toString(),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: Dimension.d3),
+                if (store.getSubscriptActiveProdList.isNotEmpty)
+                  Text(
+                    'Signup to Personalized care packages',
+                    style: AppTextStyle.bodyMediumBold
+                        .copyWith(color: AppColors.grayscale900),
+                  ),
+                if (store.getSubscriptActiveProdList.isNotEmpty)
+                  ProductListingCareComponent(
+                    productBasicDetailsList: store
+                        .getProdListRankOrder(store.getSubscriptActiveProdList),
+                    isUpgradeable: false,
+                  ),
               ],
-            ),
-            const SizedBox(
-              height: Dimension.d1,
-            ),
-            Row(
-              children: [
-                AnalogComponent(label: 'Relation', value: member.relation),
-                const SizedBox(
-                  width: Dimension.d2,
-                ),
-                AnalogComponent(
-                  label: 'Age',
-                  value: calculateAge(member.dateOfBirth).toString(),
-                ),
-              ],
-            ),
-            const SizedBox(height: Dimension.d3),
-            if (store.getSubscriptActiveProdList.isNotEmpty)
-              Text(
-                'Signup to Personalized care packages',
-                style: AppTextStyle.bodyMediumBold
-                    .copyWith(color: AppColors.grayscale900),
-              ),
-            if (store.getSubscriptActiveProdList.isNotEmpty)
-              ProductListingCareComponent(
-                productBasicDetailsList: store
-                    .getProdListRankOrder(store.getSubscriptActiveProdList),
-                isUpgradeable: false,
-              ),
-          ],
+            );
+          },
         ),
       ),
     );
