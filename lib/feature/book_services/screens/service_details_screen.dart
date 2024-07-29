@@ -117,281 +117,278 @@ class ServiceDetailsScreen extends StatelessWidget {
                   }
                 }
 
-                  final widgetList = <Widget>[];
-                  for (final component in allServiceList) {
-                    if (component is HeaderModel) {
-                      widgetList.add(_HeaderPicTitle(headerModel: component));
-                      continue;
-                    }
-                    if (component is ServiceOfferingModel) {
-                      widgetList.add(
-                        _Offerings(serviceOfferingModel: component),
-                      );
-                      continue;
-                    }
-                    if (component is FaqModelDetails) {
-                      widgetList.add(
-                        FAQComponent(
-                          heading: component.label,
-                          faqList: component.faq,
+                final widgetList = <Widget>[];
+                for (final component in allServiceList) {
+                  if (component is HeaderModel) {
+                    widgetList.add(_HeaderPicTitle(headerModel: component));
+                    continue;
+                  }
+                  if (component is ServiceOfferingModel) {
+                    widgetList.add(
+                      _Offerings(serviceOfferingModel: component),
+                    );
+                    continue;
+                  }
+                  if (component is FaqModelDetails) {
+                    widgetList.add(
+                      FAQComponent(
+                        heading: component.label,
+                        faqList: component.faq,
+                      ),
+                    );
+                    continue;
+                  }
+                  if (component is ServiceBannerImage) {
+                    if (component.isActive) {
+                      widgetList.addAll([
+                        Text(
+                          component.label,
+                          style: AppTextStyle.bodyXLBold.copyWith(
+                            color: AppColors.grayscale900,
+                            height: 2,
+                          ),
                         ),
-                      );
-                      continue;
-                    }
-                    if (component is ServiceBannerImage) {
-                      if (component.isActive) {
-                        widgetList.addAll([
-                          Text(
-                            component.label,
-                            style: AppTextStyle.bodyXLBold.copyWith(
-                              color: AppColors.grayscale900,
-                              height: 2,
+                        const SizedBox(
+                          height: Dimension.d2,
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () async {
+                              if (component.cta != null) {
+                                if (component.cta!.isExternal &&
+                                    await canLaunchUrl(
+                                      Uri.parse(
+                                        component.cta!.href,
+                                      ),
+                                    )) {
+                                  await launchUrl(
+                                    Uri.parse(component.cta!.href),
+                                  );
+                                }
+                              }
+                            },
+                            child: BannerImageComponent(
+                              imageUrl: component
+                                  .bannerImage.data[index].attributes.url,
                             ),
                           ),
-                          const SizedBox(
+                          separatorBuilder: (context, index) => const SizedBox(
                             height: Dimension.d2,
                           ),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) => GestureDetector(
-                              onTap: () async {
-                                if (component.cta != null) {
-                                  if (component.cta!.isExternal &&
-                                      await canLaunchUrl(
-                                        Uri.parse(
-                                          component.cta!.href,
-                                        ),
-                                      )) {
-                                    await launchUrl(
-                                      Uri.parse(component.cta!.href),
-                                    );
-                                  }
-                                }
-                              },
-                              child: BannerImageComponent(
-                                imageUrl: component
-                                    .bannerImage.data[index].attributes.url,
-                              ),
-                            ),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: Dimension.d2,
-                            ),
-                            itemCount: component.bannerImage.data.length,
-                          ),
-                        ]);
-                      }
-                      continue;
-                    }
-                    if (component is ServicePriceModel) {
-                      widgetList.add(
-                        _PriceTile(
-                          price:
-                              '₹ ${formatNumberWithCommas(component.startPrice)}${component.endPrice == null ? '' : ' - ${formatNumberWithCommas(component.endPrice!)}'}',
-                          subscript: component.priceSuperscript,
-                          desc: component.priceDescription,
-                          label: component.label,
+                          itemCount: component.bannerImage.data.length,
                         ),
-                      );
+                      ]);
                     }
+                    continue;
                   }
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Observer(
-                              builder: (_) {
-                                return Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ...widgetList,
-                                        if (serviceData.category ==
-                                            'homeCare') ...[
-                                          Text(
-                                            'For More enquires',
-                                            style: AppTextStyle.bodyXLSemiBold
-                                                .copyWith(
-                                              height: 2.4,
-                                              color: AppColors.grayscale900,
-                                            ),
+                  if (component is ServicePriceModel) {
+                    widgetList.add(
+                      _PriceTile(
+                        price:
+                            '₹ ${formatNumberWithCommas(component.startPrice)}${component.endPrice == null ? '' : ' - ${formatNumberWithCommas(component.endPrice!)}'}',
+                        subscript: component.priceSuperscript,
+                        desc: component.priceDescription,
+                        label: component.label,
+                      ),
+                    );
+                  }
+                }
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Observer(
+                            builder: (_) {
+                              return Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ...widgetList,
+                                      if (serviceData.category ==
+                                          'homeCare') ...[
+                                        Text(
+                                          'For More enquires',
+                                          style: AppTextStyle.bodyXLSemiBold
+                                              .copyWith(
+                                            height: 2.4,
+                                            color: AppColors.grayscale900,
                                           ),
-                                          const ContactSgTeamComponent(),
-                                        ],
+                                        ),
+                                        const ContactSgTeamComponent(),
                                       ],
-                                    ),
-                                    if (store.isLoading) const LoadingWidget(),
-                                  ],
-                                );
-                              },
-                            ),
+                                    ],
+                                  ),
+                                  if (store.isLoading) const LoadingWidget(),
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
-                      if (serviceData.category == 'homeCare')
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(0, -4),
-                                blurRadius: 4,
-                                color: AppColors.black.withOpacity(0.15),
-                              ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                          child: CustomButton(
-                            ontap: () {
-                              context.pushNamed(
-                                RoutesConstants.bookServiceScreen,
-                                pathParameters: {
-                                  'id': id,
-                                  'productCode': productCode,
-                                },
-                              );
-                            },
-                            title: 'Book now'.tr(),
-                            showIcon: false,
-                            iconPath: AppIcons.add,
-                            size: ButtonSize.normal,
-                            type: ButtonType.primary,
-                            expanded: true,
-                            iconColor: AppColors.primary,
-                          ),
-                        )
-                      else
-                        FixedButton(
+                    ),
+                    if (serviceData.category == 'homeCare')
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, -4),
+                              blurRadius: 4,
+                              color: AppColors.black.withOpacity(0.15),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        child: CustomButton(
                           ontap: () {
-                            store.isLoading = true;
-                            final userStore = GetIt.I<UserDetailStore>();
-                            service
-                                .bookService(
-                              name: userStore.userDetails?.name ?? '',
-                              phoneNumber:
-                                  userStore.userDetails?.phoneNumber ?? '',
-                              email: userStore.userDetails?.email ?? '',
-                              careType: title,
-                            )
-                                .then((result) {
-                              store.isLoading = false;
-                              result.fold(
-                                (failure) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Service booking failed!',
-                                      ),
-                                    ),
-                                  );
-                                },
-                                (success) {
-                                  showModalBottomSheet(
-                                    backgroundColor: AppColors.white,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(
-                                          Dimension.d3,
-                                        ),
-                                        topRight: Radius.circular(
-                                          Dimension.d3,
-                                        ),
-                                      ),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      maxHeight: 400,
-                                    ),
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(18),
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  '$title service',
-                                                  style: AppTextStyle
-                                                      .heading5SemiBold,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: Dimension.d9,
-                                              ),
-                                              const Text(
-                                                'Your request has been received',
-                                                style:
-                                                    AppTextStyle.bodyLargeBold,
-                                              ),
-                                              const SizedBox(
-                                                height: Dimension.d3,
-                                              ),
-                                              SvgPicture.asset(
-                                                'assets/icon/success.svg',
-                                                height: 88,
-                                              ),
-                                              const SizedBox(
-                                                height: Dimension.d3,
-                                              ),
-                                              Text(
-                                                'Thank you for your interest. The SG team will be in touch with you shortly',
-                                                textAlign: TextAlign.center,
-                                                style: AppTextStyle
-                                                    .bodyMediumMedium
-                                                    .copyWith(
-                                                  color: AppColors.grayscale700,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: Dimension.d9,
-                                              ),
-                                              CustomButton(
-                                                ontap: () {
-                                                  context
-                                                    ..pop()
-                                                    ..pop();
-                                                },
-                                                title: 'Done',
-                                                showIcon: false,
-                                                iconPath: AppIcons.add,
-                                                size: ButtonSize.normal,
-                                                type: ButtonType.primary,
-                                                expanded: true,
-                                                iconColor: AppColors.white,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            });
+                            context.pushNamed(
+                              RoutesConstants.bookServiceScreen,
+                              pathParameters: {
+                                'id': id,
+                                'productCode': productCode,
+                              },
+                            );
                           },
-                          btnTitle: 'Request service',
+                          title: 'Book now'.tr(),
                           showIcon: false,
                           iconPath: AppIcons.add,
+                          size: ButtonSize.normal,
+                          type: ButtonType.primary,
+                          expanded: true,
+                          iconColor: AppColors.primary,
                         ),
-                    ],
-                  );
-                },
-              );
-            }
-            return const Center(child: Text('No data found'));
-          },
-        ),
+                      )
+                    else
+                      FixedButton(
+                        ontap: () {
+                          store.isLoading = true;
+                          final userStore = GetIt.I<UserDetailStore>();
+                          service
+                              .bookService(
+                            name: userStore.userDetails?.name ?? '',
+                            phoneNumber:
+                                userStore.userDetails?.phoneNumber ?? '',
+                            email: userStore.userDetails?.email ?? '',
+                            careType: title,
+                          )
+                              .then((result) {
+                            store.isLoading = false;
+                            result.fold(
+                              (failure) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Service booking failed!',
+                                    ),
+                                  ),
+                                );
+                              },
+                              (success) {
+                                showModalBottomSheet(
+                                  backgroundColor: AppColors.white,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                        Dimension.d3,
+                                      ),
+                                      topRight: Radius.circular(
+                                        Dimension.d3,
+                                      ),
+                                    ),
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 400,
+                                  ),
+                                  context: context,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(18),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                '$title service',
+                                                style: AppTextStyle
+                                                    .heading5SemiBold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: Dimension.d9,
+                                            ),
+                                            const Text(
+                                              'Your request has been received',
+                                              style: AppTextStyle.bodyLargeBold,
+                                            ),
+                                            const SizedBox(
+                                              height: Dimension.d3,
+                                            ),
+                                            SvgPicture.asset(
+                                              'assets/icon/success.svg',
+                                              height: 88,
+                                            ),
+                                            const SizedBox(
+                                              height: Dimension.d3,
+                                            ),
+                                            Text(
+                                              'Thank you for your interest. The SG team will be in touch with you shortly',
+                                              textAlign: TextAlign.center,
+                                              style: AppTextStyle
+                                                  .bodyMediumMedium
+                                                  .copyWith(
+                                                color: AppColors.grayscale700,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: Dimension.d9,
+                                            ),
+                                            CustomButton(
+                                              ontap: () {
+                                                context
+                                                  ..pop()
+                                                  ..pop();
+                                              },
+                                              title: 'Done',
+                                              showIcon: false,
+                                              iconPath: AppIcons.add,
+                                              size: ButtonSize.normal,
+                                              type: ButtonType.primary,
+                                              expanded: true,
+                                              iconColor: AppColors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          });
+                        },
+                        btnTitle: 'Request service',
+                        showIcon: false,
+                        iconPath: AppIcons.add,
+                      ),
+                  ],
+                );
+              },
+            );
+          }
+          return const Center(child: Text('No data found'));
+        },
       ),
     );
   }

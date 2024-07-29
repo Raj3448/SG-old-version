@@ -154,9 +154,7 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
                         color: AppColors.grayscale900,
                       ),
                     ),
-                    const ContactSgTeamComponent(
-                      phoneNumber: '+91 0000000000',
-                    ),
+                    const ContactSgTeamComponent(),
                   ],
                 ),
               ],
