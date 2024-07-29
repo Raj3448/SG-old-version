@@ -132,7 +132,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       const SizedBox(height: Dimension.d6),
                       Text(
-                        loginStore.isEmail
+                        widget.isFromLoginPage && loginStore.isEmail
                             ? 'We have just sent you 4 digit code to your email.'
                             : widget.isFromLoginPage
                                 ? 'We have just sent you 4 digit code to your phone number.'
