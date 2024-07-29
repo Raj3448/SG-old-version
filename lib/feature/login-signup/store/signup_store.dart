@@ -53,5 +53,6 @@ abstract class _SignupStoreBase with Store {
             authFailure = value,
           },
         );
+    isLoading = false;
   }
 }
