@@ -556,8 +556,8 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   }
 
   void _submitAndNext(BuildContext context) {
-    final formValidate = !_formKey.currentState!.validate();
-    final isCustomValidate = !_customDropDownBoxKey.currentState!.validate();
+    final formValidate = ! (_formKey.currentState?.validate() ?? false);
+    final isCustomValidate = !(_customDropDownBoxKey.currentState?.validate() ?? false);
     if (formValidate || isCustomValidate) {
       return;
     }
