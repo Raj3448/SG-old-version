@@ -8,8 +8,7 @@ import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 
 class ContactSgTeamComponent extends StatelessWidget {
-  const ContactSgTeamComponent({required this.phoneNumber, super.key});
-  final String phoneNumber;
+  const ContactSgTeamComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
