@@ -440,7 +440,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                               if (value!.isEmpty) {
                                                 return 'Please enter your phone number';
                                               } else if (value.length < 7) {
-                                                return 'Please enter atleast 7 digits phone number';
+                                                return 'Please enter atleast 10 digits phone number';
                                               } else if (value.length > 15) {
                                                 return 'Please enter 15 digits phone number';
                                               }
