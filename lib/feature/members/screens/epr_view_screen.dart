@@ -124,23 +124,31 @@ class EPRViewScreen extends StatelessWidget {
                                 dateOfBirth: userInfo.dateOfBirth,
                                 streetAddress: userInfo.fullAddress,
                               ),
-                              _ExpandedButton(
-                                title: 'Insurance details',
-                                userInsurance: eprData.userInsurance,
-                              ),
-                              _ExpandedButton(
-                                title: 'Preferred Hospitals',
-                                preferredServices: eprData.getPreferredHospital,
-                              ),
-                              _ExpandedButton(
-                                title: 'Emergency Contact',
-                                emrgencyContactList: eprData.emergencyContacts,
-                              ),
-                              _ExpandedButton(
-                                title: 'Preferred Ambulance',
-                                preferredServices: eprData.getPreferredAmbulace,
-                              ),
+                              if (eprData.userInsurance.isNotEmpty)
+                                _ExpandedButton(
+                                  title: 'Insurance details',
+                                  userInsurance: eprData.userInsurance,
+                                ),
+                              if (eprData.getPreferredHospital.isNotEmpty)
+                                _ExpandedButton(
+                                  title: 'Preferred Hospitals',
+                                  preferredServices:
+                                      eprData.getPreferredHospital,
+                                ),
+                              if (eprData.emergencyContacts.isNotEmpty)
+                                _ExpandedButton(
+                                  title: 'Emergency Contact',
+                                  emrgencyContactList:
+                                      eprData.emergencyContacts,
+                                ),
+                              if (eprData.getPreferredAmbulace.isNotEmpty)
+                                _ExpandedButton(
+                                  title: 'Preferred Ambulance',
+                                  preferredServices:
+                                      eprData.getPreferredAmbulace,
+                                ),
                               const SizedBox(height: Dimension.d19),
+                              const SizedBox(height: Dimension.d10),
                             ],
                           ),
                         ),
@@ -416,21 +424,22 @@ class _UserInsuranceComponent extends StatelessWidget {
             style: AppTextStyle.bodyLargeMedium
                 .copyWith(fontWeight: FontWeight.w500, height: 2.4),
           ),
-          ExpandedAnalogComponent(
-            label: 'Policy No',
-            value: assignedElements.policyNumber!,
-          ),
+          if (assignedElements.policyNumber != null)
+            ExpandedAnalogComponent(
+              label: 'Policy No',
+              value: assignedElements.policyNumber!,
+            ),
           ExpandedAnalogComponent(
             label: 'Contact Person',
-            value: assignedElements.contactPerson!,
+            value: assignedElements.contactPerson,
           ),
           ExpandedAnalogComponent(
             label: 'Contact Of Ambulance',
-            value: assignedElements.contactNumber!,
+            value: assignedElements.contactNumber,
           ),
           ExpandedAnalogComponent(
             label: 'Contact Of Address',
-            value: assignedElements.insuranceProvider!,
+            value: assignedElements.insuranceProvider,
             maxLines: 3,
           ),
           if (!isLast)
@@ -468,20 +477,22 @@ class _EmergencyContactComponent extends StatelessWidget {
           ),
           ExpandedAnalogComponent(
             label: 'Contact No.',
-            value: assignedElements.contactNumber!,
+            value: assignedElements.contactNumber,
           ),
-          ExpandedAnalogComponent(
-            label: 'Relation',
-            value: assignedElements.relation!,
-          ),
+          if (assignedElements.relation != null)
+            ExpandedAnalogComponent(
+              label: 'Relation',
+              value: assignedElements.relation!,
+            ),
           ExpandedAnalogComponent(
             label: 'Email',
-            value: assignedElements.email!,
+            value: assignedElements.email,
           ),
-          ExpandedAnalogComponent(
-            label: 'Contact Of Address',
-            value: assignedElements.country!,
-          ),
+          if (assignedElements.country != null)
+            ExpandedAnalogComponent(
+              label: 'Contact Of Address',
+              value: assignedElements.country!,
+            ),
           if (!isLast)
             const Divider(
               color: AppColors.grayscale300,
@@ -517,18 +528,17 @@ class _PreferredServiceComponent extends StatelessWidget {
           ),
           ExpandedAnalogComponent(
             label: 'Contact Person',
-            value: assignedElements.contactPerson!,
+            value: assignedElements.contactPerson,
           ),
           ExpandedAnalogComponent(
             label: 'Contact No.',
-            value: assignedElements.contactNumber!,
+            value: assignedElements.contactNumber,
           ),
-          ExpandedAnalogComponent(
-            label: 'Contact Of Ambulance',
-            value: assignedElements.ambulanceContact != null
-                ? assignedElements.ambulanceContact!
-                : 'N/A',
-          ),
+          if (assignedElements.ambulanceContact != null)
+            ExpandedAnalogComponent(
+              label: 'Contact Of Ambulance',
+              value: assignedElements.ambulanceContact!,
+            ),
           if (!isLast)
             const Divider(
               color: AppColors.grayscale300,

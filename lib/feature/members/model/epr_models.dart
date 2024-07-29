@@ -31,13 +31,13 @@ class EprDataModel with _$EprDataModel {
 class EmergencyContact with _$EmergencyContact {
   const factory EmergencyContact({
     required int id,
-    String? contactPersonName,
-    String? email,
-    String? contactNumber,
-    String? contactType,
-    String? country,
+    required String contactPersonName,
+    required String email,
+    required String contactNumber,
+    @Default('') String? contactType,
+    @Default('') String? country,
     String? relation,
-    dynamic contactDegree,
+    @Default('') dynamic contactDegree,
   }) = _EmergencyContact;
 
   factory EmergencyContact.fromJson(Map<String, dynamic> json) =>
@@ -48,13 +48,12 @@ class EmergencyContact with _$EmergencyContact {
 class PreferredService with _$PreferredService {
   const factory PreferredService({
     required int id,
-    String? name,
-    String? contactPerson,
-    String? contactNumber,
+    required String name,
+    required String contactPerson,
+    required String contactNumber,
     int? preferredRank,
     String? ambulanceContact,
-    String? serviceType,
-    String? typeOfSupport,
+    @Default('Hospital') String? serviceType,
   }) = _PreferredService;
 
   factory PreferredService.fromJson(Map<String, dynamic> json) =>
@@ -65,11 +64,11 @@ class PreferredService with _$PreferredService {
 class UserInsurance with _$UserInsurance {
   const factory UserInsurance({
     required int id,
-    String? insuranceProvider,
+    required String insuranceProvider,
     String? policyNumber,
-    String? contactPerson,
-    String? contactNumber,
-    DateTime? expiryDate,
+    required String contactPerson,
+    required String contactNumber,
+    
   }) = _UserInsurance;
 
   factory UserInsurance.fromJson(Map<String, dynamic> json) =>
