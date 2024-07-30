@@ -106,8 +106,7 @@ class NewsletterComponentState extends State<NewsletterComponent> {
                     CustomButton(
                       ontap: () {
                         if (widget.newsletterModel.newsletters[index].link
-                                .downloadLink ==
-                            true) {
+                                .downloadLink ?? false) {
                           startDownload(index);
                         }
                         if(widget.newsletterModel.newsletters[index].link
