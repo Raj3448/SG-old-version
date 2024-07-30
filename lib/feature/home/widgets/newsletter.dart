@@ -109,7 +109,9 @@ class NewsletterComponentState extends State<NewsletterComponent> {
                                 .downloadLink ==
                             true) {
                           startDownload(index);
-                        } else {
+                        }
+                        if(widget.newsletterModel.newsletters[index].link
+                                .isExternal ?? false) {
                           launchUrl(
                             Uri.parse(
                               widget
