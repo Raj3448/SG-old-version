@@ -225,13 +225,15 @@ abstract class _MembersStoreBase with Store {
                 socketExceptionError: (value) {
                   addOrEditMemberFailure = 'No internet connection';
                 },
+                validationError: (value) {
+                  addOrEditMemberFailure = 'Phone number already in use';
+                },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
                 },
               );
             }, (r) {
-              addOrEditMemberSuccessful =
-                  'New Family Member Added Successfully';
+              addOrEditMemberSuccessful = 'New Family Member Added';
             });
             isAddOrEditLoading = false;
           })
@@ -246,13 +248,15 @@ abstract class _MembersStoreBase with Store {
                 socketExceptionError: (value) {
                   addOrEditMemberFailure = 'No internet connection';
                 },
+                validationError: (value) {
+                  addOrEditMemberFailure = 'Phone number already in use';
+                },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
                 },
               );
             }, (r) {
-              addOrEditMemberSuccessful =
-                  'New Family Member Added Successfully';
+              addOrEditMemberSuccessful = 'New Family Member Added';
             });
             isAddOrEditLoading = false;
           });
