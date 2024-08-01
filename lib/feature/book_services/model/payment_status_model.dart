@@ -113,11 +113,10 @@ class ProductMetaData with _$ProductMetaData {
     required int id,
     required String productId,
     required String displayName,
-    required String productName,
-    required int price,
-    required String priceId,
     required int quantity,
-  }) = _Products;
+    @Default('') String? productName,
+    @Default(0) int? price,
+  }) = _ProductMetaData;
   factory ProductMetaData.fromJson(Map<String, dynamic> json) =>
       _$ProductMetaDataFromJson(json);
 }

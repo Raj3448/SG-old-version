@@ -152,7 +152,7 @@ class BookingsStateComponent extends StatelessWidget {
               : Column(
                   children: List.generate(
                     bookingModelList.length,
-                    (index) => BookingListTileComponent(
+                    (index) => bookingModelList[index].requestedFor.isEmpty ? const SizedBox() : BookingListTileComponent(
                       bookingServiceStatus: bookingServiceStatus,
                       bookingServiceModel: bookingModelList[index],
                     ),

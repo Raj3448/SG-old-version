@@ -172,7 +172,7 @@ class _ServiceBookingPaymentDetailScreenState
                         title: widget.paymentDetails.priceDetails.products.first
                             .displayName,
                         description:
-                            '₹ ${formatNumberWithCommas(widget.paymentDetails.priceDetails.products.first.price)}',
+                            '₹ ${formatNumberWithCommas(widget.paymentDetails.priceDetails.products.first.price ?? 0)}',
                       ),
                       const Divider(
                         color: AppColors.line,

@@ -143,7 +143,7 @@ class _ServicePaymentStatusTrackingPageState
             height: Dimension.d4,
           ),
           Text(
-            servicePaymentStatusModel!.priceDetails.products.first.productName,
+            servicePaymentStatusModel!.priceDetails.products.first.productName!,
             style: AppTextStyle.bodyXLMedium.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -263,7 +263,7 @@ class _ServicePaymentStatusTrackingPageState
             title: servicePaymentStatusModel!
                 .priceDetails.products.first.displayName,
             description:
-                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price)}',
+                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price ?? 0)}',
           ),
           const Divider(
             color: AppColors.line,
