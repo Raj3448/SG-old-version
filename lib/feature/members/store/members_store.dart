@@ -226,7 +226,7 @@ abstract class _MembersStoreBase with Store {
                   addOrEditMemberFailure = 'No internet connection';
                 },
                 validationError: (value) {
-                  addOrEditMemberFailure = 'Phone number already in use';
+                  addOrEditMemberFailure = value.toString();
                 },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
@@ -249,7 +249,8 @@ abstract class _MembersStoreBase with Store {
                   addOrEditMemberFailure = 'No internet connection';
                 },
                 validationError: (value) {
-                  addOrEditMemberFailure = 'Phone number already in use';
+                  addOrEditMemberFailure =
+                      _handleValidationError(value.toString());
                 },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
@@ -260,6 +261,16 @@ abstract class _MembersStoreBase with Store {
             });
             isAddOrEditLoading = false;
           });
+  }
+
+  String _handleValidationError(String message) {
+    if (message.contains('phoneNumber')) {
+      return 'Phone number already in use!';
+    } else if (message.contains('email')) {
+      return 'Email already in use!';
+    } else {
+      return 'Something went wrong: $message';
+    }
   }
 
   void clear() {
