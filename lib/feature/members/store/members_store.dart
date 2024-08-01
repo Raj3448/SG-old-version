@@ -226,7 +226,8 @@ abstract class _MembersStoreBase with Store {
                   addOrEditMemberFailure = 'No internet connection';
                 },
                 validationError: (value) {
-                  addOrEditMemberFailure = value.toString();
+                  addOrEditMemberFailure =
+                      _handleValidationError(value.toString());
                 },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
