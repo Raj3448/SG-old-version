@@ -14,8 +14,8 @@ class AboutUsOfferModel with _$AboutUsOfferModel {
     @JsonKey(name: '__component') @HiveField(4) required String component,
     @HiveField(0) required String header,
     @HiveField(1) required String description,
-    @HiveField(2) required Cta cta,
-    @HiveField(3) required Offering offering,
+    @HiveField(2) required Cta? cta,
+    @HiveField(3) required Offering? offering,
   }) = _AboutUsOfferModel;
 
   factory AboutUsOfferModel.fromJson(Map<String, dynamic> json) =>
