@@ -237,25 +237,27 @@ class _HomeScreenComponents extends StatelessWidget {
         continue;
       }
       if (component is BannerImageModel) {
-        widgetList.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-            child: GestureDetector(
-              onTap: () async {
-                final url = component.cta?.href;
-                if (url != null && await canLaunchUrl(Uri.parse(url))) {
-                  await launchUrl(Uri.parse(url));
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
-                child: BannerImageComponent(
-                  imageUrl: component.bannerImage.data!.attributes.url,
+        if(component.bannerImage.data != null) {
+            widgetList.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+              child: GestureDetector(
+                onTap: () async {
+                  final url = component.cta?.href;
+                  if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url));
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Dimension.d2),
+                  child: BannerImageComponent(
+                    imageUrl: component.bannerImage.data!.attributes.url,
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        }
         continue;
       }
       if (component is TestimonialsModel) {

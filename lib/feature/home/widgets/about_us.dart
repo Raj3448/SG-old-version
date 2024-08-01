@@ -35,8 +35,10 @@ class AboutUsOfferComponent extends StatelessWidget {
             color: AppColors.grayscale700,
           ),
         ),
+        if(aboutUsOfferModel.offering != null)
+        ...[
         Text(
-          aboutUsOfferModel.offering.header,
+          aboutUsOfferModel.offering!.header,
           style: AppTextStyle.bodyXLSemiBold.copyWith(
             color: AppColors.grayscale900,
             height: 2.4,
@@ -52,13 +54,13 @@ class AboutUsOfferComponent extends StatelessWidget {
             controller: _offerPageController,
             scrollDirection: Axis.horizontal,
             children: List.generate(
-              aboutUsOfferModel.offering.offers.length,
+              aboutUsOfferModel.offering!.offers.length,
               (index) => _HomeScreenOfferCard(
-                offerTitle: aboutUsOfferModel.offering.offers[index].title,
+                offerTitle: aboutUsOfferModel.offering!.offers[index].title,
                 content: List.generate(
-                  aboutUsOfferModel.offering.offers[index].values.length,
+                  aboutUsOfferModel.offering!.offers[index].values.length,
                   (i) =>
-                      aboutUsOfferModel.offering.offers[index].values[i].value,
+                      aboutUsOfferModel.offering!.offers[index].values[i].value,
                 ),
               ),
             ),
@@ -70,7 +72,7 @@ class AboutUsOfferComponent extends StatelessWidget {
         Center(
           child: SmoothPageIndicator(
             controller: _offerPageController,
-            count: aboutUsOfferModel.offering.offers.length,
+            count: aboutUsOfferModel.offering!.offers.length,
             effect: const ExpandingDotsEffect(
               activeDotColor: AppColors.primary,
               dotColor: AppColors.grayscale300,
@@ -79,18 +81,21 @@ class AboutUsOfferComponent extends StatelessWidget {
             ),
           ),
         ),
+        ],
+        if(aboutUsOfferModel.cta != null)
+        ...[
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Dimension.d3),
           child: CustomButton(
             ontap: () async {
               String url;
-              url = aboutUsOfferModel.cta.href ??
-                  aboutUsOfferModel.cta.link!.href;
+              url = aboutUsOfferModel.cta!.href ??
+                  aboutUsOfferModel.cta!.link!.href;
               if (await canLaunchUrl(Uri.parse(url))) {
                 await launchUrl(Uri.parse(url));
               }
             },
-            title: aboutUsOfferModel.cta.label ?? '',
+            title: aboutUsOfferModel.cta!.label ?? '',
             showIcon: false,
             iconColor: AppColors.error,
             iconPath: Icons.not_interested,
@@ -99,6 +104,7 @@ class AboutUsOfferComponent extends StatelessWidget {
             expanded: true,
           ),
         ),
+        ]
       ],
     );
   }
