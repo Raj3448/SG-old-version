@@ -33,79 +33,75 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: PageAppbar(title: 'Notification'.tr()),
-        backgroundColor: AppColors.white,
-        body: Observer(
-          builder: (context) {
-            if (store.isNotificationLoading) {
-              return const Center(
-                child: LoadingWidget(
-                  showShadow: false,
-                ),
-              );
-            }
-            if (store.notificationfailure != null ||
-                !store.notificationsLoaded) {
-              store.notificationfailure = null;
-              return const ErrorStateComponent(
-                errorType: ErrorType.somethinWentWrong,
-              );
-            }
-
-            if (store.getTodayNotifications.isEmpty &&
-                store.getEarlierNotifications.isEmpty) {
-              return Center(
-                child: EmptyStateComponent(
-                  emptyDescription: "You haven't any notification yet.".tr(),
-                ),
-              );
-            }
-
-            return Padding(
-              padding: const EdgeInsets.all(Dimension.d3),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (store.getTodayNotifications.isNotEmpty)
-                        Text(
-                          'Today'.tr(),
-                          style: AppTextStyle.bodyMediumMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                    ...List.generate(store.getTodayNotifications.length,
-                        (index) {
-                      return NotificationComponent(
-                        notification: store.getTodayNotifications[index],
-                      );
-                    }),
-                    if (store.getEarlierNotifications.isNotEmpty)
-                      Text(
-                        'Earlier'.tr(),
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ...List.generate(store.getEarlierNotifications.length,
-                        (index) {
-                      return NotificationComponent(
-                        notification: store.getEarlierNotifications[index],
-                      );
-                    }),
-                    const SizedBox(
-                      height: Dimension.d3,
-                    ),
-                  ],
-                ),
+    return Scaffold(
+      appBar: PageAppbar(title: 'Notification'.tr()),
+      backgroundColor: AppColors.white,
+      body: Observer(
+        builder: (context) {
+          if (store.isNotificationLoading) {
+            return const Center(
+              child: LoadingWidget(
+                showShadow: false,
               ),
             );
-          },
-        ),
+          }
+          if (store.notificationfailure != null || !store.notificationsLoaded) {
+            store.notificationfailure = null;
+            return const ErrorStateComponent(
+              errorType: ErrorType.somethinWentWrong,
+            );
+          }
+
+          if (store.getTodayNotifications.isEmpty &&
+              store.getEarlierNotifications.isEmpty) {
+            return Center(
+              child: EmptyStateComponent(
+                emptyDescription: "You haven't any notification yet.".tr(),
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(Dimension.d3),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (store.getTodayNotifications.isNotEmpty)
+                    Text(
+                      'Today'.tr(),
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ...List.generate(store.getTodayNotifications.length, (index) {
+                    return NotificationComponent(
+                      notification: store.getTodayNotifications[index],
+                    );
+                  }),
+                  if (store.getEarlierNotifications.isNotEmpty)
+                    Text(
+                      'Earlier'.tr(),
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ...List.generate(store.getEarlierNotifications.length,
+                      (index) {
+                    return NotificationComponent(
+                      notification: store.getEarlierNotifications[index],
+                    );
+                  }),
+                  const SizedBox(
+                    height: Dimension.d3,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

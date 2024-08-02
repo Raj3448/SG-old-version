@@ -109,19 +109,20 @@ class _SubscriptionDetailsScreenState extends State<SubscriptionDetailsScreen> {
             Scaffold(
               backgroundColor: AppColors.white,
               appBar: const PageAppbar(title: 'Book subscription'),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FixedButton(
-                ontap: () {
-                  GetIt.I<PaymentService>().openCheckout(
-                    orderId: widget.subscriptionData.razorpaySubscriptionId,
-                    razorpayApiKey: widget.subscriptionData.razorpayApiKey,
-                    isSubscription: true,
-                  );
-                },
-                btnTitle: 'Proceed to Pay',
-                showIcon: false,
-                iconPath: AppIcons.add,
+              bottomNavigationBar: SafeArea(
+                top: false,
+                child: FixedButton(
+                  ontap: () {
+                    GetIt.I<PaymentService>().openCheckout(
+                      orderId: widget.subscriptionData.razorpaySubscriptionId,
+                      razorpayApiKey: widget.subscriptionData.razorpayApiKey,
+                      isSubscription: true,
+                    );
+                  },
+                  btnTitle: 'Proceed to Pay',
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                ),
               ),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16)
