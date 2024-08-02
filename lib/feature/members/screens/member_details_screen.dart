@@ -57,38 +57,40 @@ class MemberDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const PageAppbar(title: 'Member details'),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: activeMember!.subscriptions!.isEmpty
+      bottomNavigationBar: activeMember!.subscriptions!.isEmpty
           ? const SizedBox()
-          : FixedButton(
-              ontap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return InfoDialog(
-                      showIcon: false,
-                      title: 'Hi there!!',
-                      desc:
-                          'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                      btnTitle: 'Contact Genie',
-                      showBtnIcon: true,
-                      btnIconPath: AppIcons.phone,
-                      onTap: () {
-                        launchDialer(
-                          homeStore.getMasterDataModel?.masterData.contactUs
-                                  .contactNumber ??
-                              '',
-                        ).then(
-                          (value) => GoRouter.of(context).pop(),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-              btnTitle: 'Update Health record',
-              showIcon: false,
-              iconPath: AppIcons.clinical_notes,
+          : SafeArea(
+              top: false,
+              child: FixedButton(
+                ontap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return InfoDialog(
+                        showIcon: false,
+                        title: 'Hi there!!',
+                        desc:
+                            'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                        btnTitle: 'Contact Genie',
+                        showBtnIcon: true,
+                        btnIconPath: AppIcons.phone,
+                        onTap: () {
+                          launchDialer(
+                            homeStore.getMasterDataModel?.masterData.contactUs
+                                    .contactNumber ??
+                                '',
+                          ).then(
+                            (value) => GoRouter.of(context).pop(),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+                btnTitle: 'Update Health record',
+                showIcon: false,
+                iconPath: AppIcons.clinical_notes,
+              ),
             ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(

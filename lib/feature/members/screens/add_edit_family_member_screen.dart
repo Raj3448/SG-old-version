@@ -170,102 +170,108 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     ? 'Member details'.tr()
                     : 'Add new family member'.tr(),
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: widget.edit
-                  ? FixedButton(
-                      ontap: () {
-                        setState(() {
-                          autoValidate = true;
-                        });
-                        if (!formKey.currentState!.validate()) {
-                          return;
-                        }
-                        final genderSelectedValue =
-                            genderContr.selectedOptions.first;
-                        final relationSelectedValue =
-                            relationContr.selectedOptions.first;
-                        final updatedData = <String, dynamic>{
-                          'firstName': firstNameContr.text,
-                          'lastName': lastNameContr.text,
-                          'dob': dobContr.text,
-                          'relation':
-                              relationSelectedValue.value.toString().trim(),
-                          'gender': genderSelectedValue.value.toString().trim(),
-                          'address': {
-                            'state': stateContr.text,
-                            'city': cityContr.text,
-                            'streetAddress': memberAddressContr.text,
-                            'postalCode': postalCodeContr.text,
-                            'country': countryContr.selectedOptions.first.value
-                                .toString(),
+              resizeToAvoidBottomInset: false,
+              bottomNavigationBar: SafeArea(
+                  top: false,
+                  child: widget.edit
+                      ? FixedButton(
+                          ontap: () {
+                            setState(() {
+                              autoValidate = true;
+                            });
+                            if (!formKey.currentState!.validate()) {
+                              return;
+                            }
+                            final genderSelectedValue =
+                                genderContr.selectedOptions.first;
+                            final relationSelectedValue =
+                                relationContr.selectedOptions.first;
+                            final updatedData = <String, dynamic>{
+                              'firstName': firstNameContr.text,
+                              'lastName': lastNameContr.text,
+                              'dob': dobContr.text,
+                              'relation':
+                                  relationSelectedValue.value.toString().trim(),
+                              'gender':
+                                  genderSelectedValue.value.toString().trim(),
+                              'address': {
+                                'state': stateContr.text,
+                                'city': cityContr.text,
+                                'streetAddress': memberAddressContr.text,
+                                'postalCode': postalCodeContr.text,
+                                'country': countryContr
+                                    .selectedOptions.first.value
+                                    .toString(),
+                              },
+                              'profileImg':
+                                  memberStore.activeMember!.profileImg?.id,
+                            };
+                            if (storeImageFile != null) {
+                              memberStore.updateMemberDataWithProfileImg(
+                                id: _member.id.toString(),
+                                fileImage: storeImageFile!,
+                                memberInstance: updatedData,
+                              );
+                              return;
+                            }
+                            if (isAlreadyhaveProfileImg && isImageUpdate) {
+                              if (storeImageFile == null) {
+                                updatedData['profileImg'] = null;
+                              }
+                            }
+                            memberStore.updateMember(
+                              id: _member.id,
+                              updatedData: updatedData,
+                            );
                           },
-                          'profileImg':
-                              memberStore.activeMember!.profileImg?.id,
-                        };
-                        if (storeImageFile != null) {
-                          memberStore.updateMemberDataWithProfileImg(
-                            id: _member.id.toString(),
-                            fileImage: storeImageFile!,
-                            memberInstance: updatedData,
-                          );
-                          return;
-                        }
-                        if (isAlreadyhaveProfileImg && isImageUpdate) {
-                          if (storeImageFile == null) {
-                            updatedData['profileImg'] = null;
-                          }
-                        }
-                        memberStore.updateMember(
-                          id: _member.id,
-                          updatedData: updatedData,
-                        );
-                      },
-                      btnTitle: 'Save details',
-                      showIcon: false,
-                      iconPath: AppIcons.check,
-                    )
-                  : FixedButton(
-                      ontap: () async {
-                        setState(() {
-                          autoValidate = true;
-                        });
-                        if (!formKey.currentState!.validate()) {
-                          return;
-                        }
-                        final genderSelectedValue =
-                            genderContr.selectedOptions.first;
-                        final relationSelectedValue =
-                            relationContr.selectedOptions.first;
-                        memberStore.addNewFamilyMember(
-                          memberData: {
-                            'self': widget.isSelf ? true : false,
-                            'relation':
-                                relationSelectedValue.value.toString().trim(),
-                            'gender':
-                                genderSelectedValue.value.toString().trim(),
-                            'firstName': firstNameContr.text,
-                            'lastName': lastNameContr.text,
-                            'dob': dobContr.text,
-                            'email': emailContr.text,
-                            'phoneNumber': '91 ${phoneNumberContr.text.trim()}',
-                            'address': {
-                              'state': stateContr.text.trim(),
-                              'city': cityContr.text.trim(),
-                              'streetAddress': memberAddressContr.text.trim(),
-                              'postalCode': postalCodeContr.text.trim(),
-                              'country': countryContr
-                                  .selectedOptions.first.value
-                                  .toString(),
-                            },
+                          btnTitle: 'Save details',
+                          showIcon: false,
+                          iconPath: AppIcons.check,
+                        )
+                      : FixedButton(
+                          ontap: () async {
+                            setState(() {
+                              autoValidate = true;
+                            });
+                            if (!formKey.currentState!.validate()) {
+                              return;
+                            }
+                            final genderSelectedValue =
+                                genderContr.selectedOptions.first;
+                            final relationSelectedValue =
+                                relationContr.selectedOptions.first;
+                            memberStore.addNewFamilyMember(
+                              memberData: {
+                                'self': widget.isSelf ? true : false,
+                                'relation': relationSelectedValue.value
+                                    .toString()
+                                    .trim(),
+                                'gender':
+                                    genderSelectedValue.value.toString().trim(),
+                                'firstName': firstNameContr.text,
+                                'lastName': lastNameContr.text,
+                                'dob': dobContr.text,
+                                'email': emailContr.text,
+                                'phoneNumber':
+                                    '91 ${phoneNumberContr.text.trim()}',
+                                'address': {
+                                  'state': stateContr.text.trim(),
+                                  'city': cityContr.text.trim(),
+                                  'streetAddress':
+                                      memberAddressContr.text.trim(),
+                                  'postalCode': postalCodeContr.text.trim(),
+                                  'country': countryContr
+                                      .selectedOptions.first.value
+                                      .toString(),
+                                },
+                              },
+                              fileImage: storeImageFile,
+                            );
                           },
-                          fileImage: storeImageFile,
-                        );
-                      },
-                      btnTitle: 'Add new member',
-                      showIcon: false,
-                      iconPath: AppIcons.check,
-                    ),
+                          btnTitle: 'Add new member',
+                          showIcon: false,
+                          iconPath: AppIcons.check,
+                        )),
               body: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast,
