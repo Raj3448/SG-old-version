@@ -44,14 +44,14 @@ class EmergencyActivation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Emergency'.tr(),
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline.label ?? '',
               style: AppTextStyle.bodyXLMedium.copyWith(
                 fontWeight: FontWeight.w500,
                 color: AppColors.grayscale900,
               ),
             ),
             Text(
-              'When the button is pressed, all emergency services will be activated.'
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline.message ?? ''
                   .tr(),
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale900),
