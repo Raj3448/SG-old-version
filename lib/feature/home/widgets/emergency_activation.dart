@@ -8,6 +8,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -44,15 +45,15 @@ class EmergencyActivation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Emergency'.tr(),
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline.label ?? 'Emergency'.tr(),
               style: AppTextStyle.bodyXLMedium.copyWith(
                 fontWeight: FontWeight.w500,
                 color: AppColors.grayscale900,
               ),
             ),
             Text(
-              'When the button is pressed, all emergency services will be activated.'
-                  .tr(),
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline.message ?? 'When the button is pressed, all emergency services will be activated.'
+                  ,
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale900),
             ),
