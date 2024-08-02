@@ -37,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: AppColors.white,
       body: widget.child,
       bottomNavigationBar: SizedBox(
-        height: 70,
         child: DecoratedBox(
           position: DecorationPosition.foreground,
           decoration: BoxDecoration(
