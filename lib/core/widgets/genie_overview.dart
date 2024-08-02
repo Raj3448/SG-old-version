@@ -90,9 +90,12 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
     final activeServiceCount = widget.serviceList
         .where((service) => service.attributes.isActive)
         .length;
-
-    final calculatedHeight = (activeServiceCount * 30 ) as double;
-    final defaultHeight = (activeServiceCount >= 10 ? 280 : calculatedHeight) as double;
+    if (activeServiceCount == 0) {
+      return const SizedBox();
+    }
+    final calculatedHeight = double.parse((activeServiceCount * 30).toString()) ;
+    final defaultHeight =
+        double.parse((activeServiceCount >= 10 ? 280 : calculatedHeight).toString());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +150,6 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
     );
   }
 }
-
 
 class PlanPricingDetailsComponent extends StatefulWidget {
   const PlanPricingDetailsComponent({
