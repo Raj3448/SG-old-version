@@ -189,9 +189,9 @@ class _CouplePlanPageState extends State<CouplePlanPage> {
                                               (failure) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
-                                                  SnackBar(
+                                                  const SnackBar(
                                                     content: Text(
-                                                      'Subscription booking failed: $failure.',
+                                                      'Subscription booking failed!.',
                                                     ),
                                                   ),
                                                 );

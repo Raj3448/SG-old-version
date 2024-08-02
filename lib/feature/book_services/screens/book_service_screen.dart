@@ -173,31 +173,46 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               memberName: selectedMember?.name,
                               memberList: GetIt.I<MembersStore>().familyMembers,
                               placeHolder: component.formDetails.placeholder,
+                              validationMessage: component.formDetails.required
+                                  ? component.formDetails.requiredMsg
+                                  : null,
                               updateMember: (member) {
-                                if (member != null &&
-                                    member.subscriptions != null &&
-                                    member.subscriptions!.isEmpty) {
-                                  setState(() {
-                                    selectedMember = null;
-                                  });
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => _BuyPlanComponent(),
-                                  );
-                                } else {
-                                  selectedMember = member;
-                                  _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    valueReference: [
-                                      '${member?.id}',
-                                    ],
-                                    forDId: component.formDetails.id.toString(),
-                                  );
-                                }
+                                selectedMember = member;
+                                _updateFormValues1(
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  valueReference: [
+                                    '${member?.id}',
+                                  ],
+                                  forDId: component.formDetails.id.toString(),
+                                );
+                                // if (member != null &&
+                                //     member.subscriptions != null &&
+                                //     member.subscriptions!.isEmpty) {
+                                //   setState(() {
+                                //     selectedMember = null;
+                                //   });
+                                //   showDialog(
+                                //     context: context,
+                                //     builder: (context) => _BuyPlanComponent(),
+                                //   );
+                                // } else {
+                                //   selectedMember = member;
+                                //   _updateFormValues1(
+                                //     id: component.id,
+                                //     title: component.formDetails.title,
+                                //     type: component.type,
+                                //     controlType: component.controlType,
+                                //     hint: component.formDetails.hint,
+                                //     valueReference: [
+                                //       '${member?.id}',
+                                //     ],
+                                //     forDId: component.formDetails.id.toString(),
+                                //   );
+                                // }
                               },
                               isRequired: component.formDetails.required,
                             ),
@@ -231,6 +246,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       return applyValidations(
@@ -330,6 +349,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validator: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       return applyValidations(
@@ -376,6 +399,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validator: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       return applyValidations(
@@ -417,6 +444,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       if (int.tryParse(value) == null) {
@@ -556,8 +587,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   }
 
   void _submitAndNext(BuildContext context) {
-    final formValidate = !_formKey.currentState!.validate();
-    final isCustomValidate = !_customDropDownBoxKey.currentState!.validate();
+    final formValidate = !(_formKey.currentState?.validate() ?? false);
+    final isCustomValidate =
+        !(_customDropDownBoxKey.currentState?.validate() ?? false);
     if (formValidate || isCustomValidate) {
       return;
     }
@@ -570,46 +602,46 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   }
 }
 
-class _BuyPlanComponent extends StatelessWidget {
-  final store = GetIt.I<ProductListingStore>();
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(Dimension.d2),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dimension.d4,
-          vertical: Dimension.d6,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Hi there!!',
-              style: AppTextStyle.bodyXLSemiBold
-                  .copyWith(color: AppColors.grayscale900, height: 2.4),
-            ),
-            Text(
-              'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
-              textAlign: TextAlign.center,
-              style: AppTextStyle.bodyLargeMedium
-                  .copyWith(color: AppColors.grayscale900),
-            ),
-            const SizedBox(height: Dimension.d2),
-            if (store.getSubscriptActiveProdList.isNotEmpty)
-              ProductListingCareComponent(
-                productBasicDetailsList: store.getProdListRankOrder(
-                  store.getSubscriptActiveProdList,
-                ),
-                isUpgradeable: false,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class _BuyPlanComponent extends StatelessWidget {
+//   final store = GetIt.I<ProductListingStore>();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog(
+//       insetPadding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+//       child: Container(
+//         decoration: BoxDecoration(
+//           color: AppColors.white,
+//           borderRadius: BorderRadius.circular(Dimension.d2),
+//         ),
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: Dimension.d4,
+//           vertical: Dimension.d6,
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Text(
+//               'Hi there!!',
+//               style: AppTextStyle.bodyXLSemiBold
+//                   .copyWith(color: AppColors.grayscale900, height: 2.4),
+//             ),
+//             Text(
+//               'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
+//               textAlign: TextAlign.center,
+//               style: AppTextStyle.bodyLargeMedium
+//                   .copyWith(color: AppColors.grayscale900),
+//             ),
+//             const SizedBox(height: Dimension.d2),
+//             if (store.getSubscriptActiveProdList.isNotEmpty)
+//               ProductListingCareComponent(
+//                 productBasicDetailsList: store.getProdListRankOrder(
+//                   store.getSubscriptActiveProdList,
+//                 ),
+//                 isUpgradeable: false,
+//               ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

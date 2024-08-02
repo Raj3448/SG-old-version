@@ -100,39 +100,39 @@ class NewsletterComponentState extends State<NewsletterComponent> {
             children: List.generate(
               widget.newsletterModel.newsletters.length > 1 ? 2 : 1,
               (index) => Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomButton(
-                      ontap: () {
-                        if (widget.newsletterModel.newsletters[index].link
-                                .downloadLink ==
-                            true) {
-                          startDownload(index);
-                        } else {
-                          launchUrl(
-                            Uri.parse(
-                              widget
-                                  .newsletterModel.newsletters[index].link.href,
-                            ),
-                          );
-                        }
-                      },
-                      title: widget.newsletterModel.newsletters[index].label,
-                      showIcon: false,
-                      iconPath: AppIcons.add,
-                      size: ButtonSize.normal,
-                      type: widget.newsletterModel.newsletters[index].theme ==
-                              'secondary'
-                          ? ButtonType.secondary
-                          : widget.newsletterModel.newsletters[index].theme ==
-                                  'primary'
-                              ? ButtonType.primary
-                              : ButtonType.tertiary,
-                      expanded: true,
-                      iconColor: AppColors.primary,
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
+                  child: CustomButton(
+                    ontap: () {
+                      if (widget.newsletterModel.newsletters[index].link
+                              .downloadLink ??
+                          false) {
+                        startDownload(index);
+                      }
+                      if (widget.newsletterModel.newsletters[index].link
+                              .isExternal ??
+                          false) {
+                        launchUrl(
+                          Uri.parse(
+                            widget.newsletterModel.newsletters[index].link.href,
+                          ),
+                        );
+                      }
+                    },
+                    title: widget.newsletterModel.newsletters[index].label,
+                    showIcon: false,
+                    iconPath: AppIcons.add,
+                    size: ButtonSize.normal,
+                    type: widget.newsletterModel.newsletters[index].theme ==
+                            'secondary'
+                        ? ButtonType.secondary
+                        : widget.newsletterModel.newsletters[index].theme ==
+                                'primary'
+                            ? ButtonType.primary
+                            : ButtonType.tertiary,
+                    expanded: true,
+                    iconColor: AppColors.primary,
+                  ),
                 ),
               ),
             ),

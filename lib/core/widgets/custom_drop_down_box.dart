@@ -23,11 +23,13 @@ class CustomDropDownBox extends StatefulWidget {
     this.selectedMembers = const [],
     this.isRequired = false,
     this.placeHolder,
+    this.validationMessage,
     super.key,
   });
   final List<Member> memberList;
   String? memberName;
   String? placeHolder;
+  String? validationMessage;
   List<Member> selectedMembers = [];
   void Function(Member?) updateMember;
   final bool isRequired;
@@ -103,12 +105,12 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
         ),
         Visibility(
           visible: showError && widget.isRequired,
-          child: const Padding(
-            padding: EdgeInsets.only(top: Dimension.d2, left: Dimension.d4),
+          child: Padding(
+            padding: const EdgeInsets.only(top: Dimension.d2, left: Dimension.d4),
             child: Text(
-              'Please select a member',
+              widget.validationMessage ?? 'Please select a member',
               textAlign: TextAlign.left,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.error,
                 fontSize: 12,
               ),

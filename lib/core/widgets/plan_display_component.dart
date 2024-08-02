@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/feature/book_services/screens/service_booking_payment_detail_screen.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 
 class PlanDisplayComponent extends StatefulWidget {
@@ -84,14 +85,14 @@ class _PlanDisplayComponentState extends State<PlanDisplayComponent> {
                 children: [
                   if (widget.planPriceDetails!.amountWithoutDiscount != null)
                     Text(
-                      ' ${widget.planPriceDetails!.amountWithoutDiscount?.toStringAsFixed(2)} Rs',
+                      ' ${formatNumberWithCommas(widget.planPriceDetails?.amountWithoutDiscount ?? 0)} Rs',
                       style: AppTextStyle.bodyMediumMedium.copyWith(
                         color: AppColors.grayscale700,
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
                   Text(
-                    '${widget.planPriceDetails!.unitAmount.toStringAsFixed(2)} Rs',
+                    ' ${formatNumberWithCommas(widget.planPriceDetails?.unitAmount ?? 0)} Rs',
                     style: AppTextStyle.bodyXLBold
                         .copyWith(color: AppColors.grayscale900),
                   ),

@@ -43,12 +43,20 @@ class ExpandedAnalogComponent extends StatelessWidget {
             style: AppTextStyle.bodyMediumMedium,
           ),
         ),
+        Text(
+          ':',
+          style: AppTextStyle.bodyMediumMedium
+              .copyWith(color: AppColors.grayscale700),
+        ),
+        const SizedBox(
+          width: Dimension.d2,
+        ),
         Expanded(
           flex: 3,
           child: Text(
-            ':  $value',
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines,
+            value,
+            //overflow: TextOverflow.ellipsis,
+            //maxLines: maxLines,
             style: AppTextStyle.bodyMediumMedium
                 .copyWith(color: AppColors.grayscale700),
           ),
@@ -209,7 +217,6 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             serviceName: ServiceName(
               id: 0,
               name: name,
-              maxValue: '',
               description: null,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),

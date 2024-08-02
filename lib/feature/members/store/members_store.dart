@@ -225,13 +225,16 @@ abstract class _MembersStoreBase with Store {
                 socketExceptionError: (value) {
                   addOrEditMemberFailure = 'No internet connection';
                 },
+                validationError: (value) {
+                  addOrEditMemberFailure =
+                      _handleValidationError(value.toString());
+                },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
                 },
               );
             }, (r) {
-              addOrEditMemberSuccessful =
-                  'New Family Member Added Successfully';
+              addOrEditMemberSuccessful = 'New Family Member Added';
             });
             isAddOrEditLoading = false;
           })
@@ -246,16 +249,29 @@ abstract class _MembersStoreBase with Store {
                 socketExceptionError: (value) {
                   addOrEditMemberFailure = 'No internet connection';
                 },
+                validationError: (value) {
+                  addOrEditMemberFailure =
+                      _handleValidationError(value.toString());
+                },
                 orElse: () {
                   addOrEditMemberFailure = 'Something went wrong';
                 },
               );
             }, (r) {
-              addOrEditMemberSuccessful =
-                  'New Family Member Added Successfully';
+              addOrEditMemberSuccessful = 'New Family Member Added';
             });
             isAddOrEditLoading = false;
           });
+  }
+
+  String _handleValidationError(String message) {
+    if (message.contains('phoneNumber')) {
+      return 'Phone number already in use!';
+    } else if (message.contains('email')) {
+      return 'Email already in use!';
+    } else {
+      return 'Something went wrong: $message';
+    }
   }
 
   void clear() {

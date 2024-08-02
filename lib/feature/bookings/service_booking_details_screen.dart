@@ -230,7 +230,7 @@ class _ServiceBookingDetailsScreenState
             title: servicePaymentStatusModel!
                 .priceDetails.products.first.displayName,
             description:
-                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price)}',
+                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price!)}',
           ),
           const Divider(color: AppColors.line),
           const SizedBox(height: Dimension.d2),
@@ -240,7 +240,7 @@ class _ServiceBookingDetailsScreenState
               servicePaymentStatusModel!.status,
             ),
             description:
-                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.products.first.price)}',
+                '₹ ${formatNumberWithCommas(servicePaymentStatusModel!.priceDetails.totalAmount)}',
             isTitleBold: true,
           ),
           const SizedBox(height: Dimension.d5),

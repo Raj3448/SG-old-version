@@ -360,6 +360,7 @@ class ServicesListTileComponent extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: '${Env.serverUrl}$imagePath',
                 fit: BoxFit.cover,
+                errorWidget: (context, url, error) => const SizedBox(),
               ),
             ),
             const SizedBox(

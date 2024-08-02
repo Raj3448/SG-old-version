@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -130,69 +131,84 @@ class _EmergencyActivateBottomSheetState
       child: isActivate
           ? const BackToHomeComponent(
               title: 'Emergency Alert Activated',
-              description: 'You will get a Callback from our team very soon',
+              description: '',
+              showDesc: false,
             )
-          : Column(
-              children: [
-                Row(
+          : Observer(
+              builder: (_) {
+                final activeMembers = widget.memberStore.familyMembers
+                    .where(
+                      (member) =>
+                          member.subscriptions?.any(
+                            (sub) =>
+                                sub.benefits?.any(
+                                  (benefit) => benefit.code.contains('ES'),
+                                ) ??
+                                false,
+                          ) ??
+                          false,
+                    )
+                    .toList();
+                return Column(
                   children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Emergency',
+                          style: AppTextStyle.bodyXLSemiBold.copyWith(
+                            fontSize: 20,
+                            color: AppColors.grayscale900,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          child: Text(
+                            'Cancel',
+                            style: AppTextStyle.bodyMediumMedium.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          onPressed: () {
+                            context.pop();
+                          },
+                        ),
+                      ],
+                    ),
                     Text(
-                      'Emergency',
-                      style: AppTextStyle.bodyXLSemiBold.copyWith(
-                        fontSize: 20,
-                        color: AppColors.grayscale900,
-                        fontWeight: FontWeight.w600,
+                      'Please select the member who require emergency assistance',
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale700,
                       ),
                     ),
-                    const Spacer(),
-                    TextButton(
-                      child: Text(
-                        'Cancel',
-                        style: AppTextStyle.bodyMediumMedium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
+                    const SizedBox(height: Dimension.d2),
+                    SizedBox(
+                      height: 180,
+                      child: ListView.builder(
+                        itemCount: activeMembers.length,
+                        itemBuilder: (context, index) =>
+                            _ActivateListileComponent(
+                          memberName: activeMembers[index].name,
+                          relation: activeMembers[index].relation,
+                          onPressed: () async {
+                            await launchDialer(
+                              widget.emergencyHelpline.contactNumber,
+                            ).then(
+                              (value) {
+                                setState(() {
+                                  isActivate = true;
+                                });
+                              },
+                            );
+                          },
+                          imgUrl: activeMembers[index].profileImg?.url ?? '',
                         ),
                       ),
-                      onPressed: () {
-                        context.pop();
-                      },
                     ),
                   ],
-                ),
-                Text(
-                  'Please select the member who require emergency assistance',
-                  style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: AppColors.grayscale700,
-                  ),
-                ),
-                const SizedBox(
-                  height: Dimension.d2,
-                ),
-                SizedBox(
-                  height: 180,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) => _ActivateListileComponent(
-                      memberName: widget.memberStore.familyMembers[index].name,
-                      relation:
-                          widget.memberStore.familyMembers[index].relation,
-                      onPressed: () async {
-                        await launchDialer(
-                          widget.emergencyHelpline.contactNumber,
-                        ).then(
-                          (value) {
-                            setState(() {
-                              isActivate = true;
-                            });
-                          },
-                        );
-                      },
-                      imgUrl: widget
-                          .memberStore.familyMembers[index].profileImg?.url,
-                    ),
-                    itemCount: widget.memberStore.familyMembers.length,
-                  ),
-                ),
-              ],
+                );
+              },
             ),
     );
   }

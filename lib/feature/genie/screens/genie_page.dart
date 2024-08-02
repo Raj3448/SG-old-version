@@ -158,6 +158,16 @@ class _GeniePageState extends State<GeniePage> {
                                             );
                                           }
                                         : () {
+                                            if (store.planDetails == null) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Please select a plan!',
+                                                  ),
+                                                ),
+                                              );
+                                            }
                                             if (store.planDetails != null) {
                                               setState(() {
                                                 store.isLoading = true;

@@ -112,7 +112,7 @@ class EPRViewScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: Dimension.d3),
+                            const SizedBox(height: Dimension.d7),
                             _PersonalDetailsComponent(
                               name: userInfo.name,
                               email: userInfo.email,
@@ -121,23 +121,28 @@ class EPRViewScreen extends StatelessWidget {
                               dateOfBirth: userInfo.dateOfBirth,
                               streetAddress: userInfo.fullAddress,
                             ),
-                            _ExpandedButton(
-                              title: 'Insurance details',
-                              userInsurance: eprData.userInsurance,
-                            ),
-                            _ExpandedButton(
-                              title: 'Preferred Hospitals',
-                              preferredServices: eprData.getPreferredHospital,
-                            ),
-                            _ExpandedButton(
-                              title: 'Emergency Contact',
-                              emrgencyContactList: eprData.emergencyContacts,
-                            ),
-                            _ExpandedButton(
-                              title: 'Preferred Ambulance',
-                              preferredServices: eprData.getPreferredAmbulace,
-                            ),
+                            if (eprData.userInsurance.isNotEmpty)
+                              _ExpandedButton(
+                                title: 'Insurance details',
+                                userInsurance: eprData.userInsurance,
+                              ),
+                            if (eprData.getPreferredHospital.isNotEmpty)
+                              _ExpandedButton(
+                                title: 'Preferred Hospitals',
+                                preferredServices: eprData.getPreferredHospital,
+                              ),
+                            if (eprData.emergencyContacts.isNotEmpty)
+                              _ExpandedButton(
+                                title: 'Emergency Contact',
+                                emrgencyContactList: eprData.emergencyContacts,
+                              ),
+                            if (eprData.getPreferredAmbulace.isNotEmpty)
+                              _ExpandedButton(
+                                title: 'Preferred Ambulance',
+                                preferredServices: eprData.getPreferredAmbulace,
+                              ),
                             const SizedBox(height: Dimension.d19),
+                            const SizedBox(height: Dimension.d10),
                           ],
                         ),
                       ),
@@ -317,71 +322,88 @@ class _ExpandedButtonState extends State<_ExpandedButton> {
           },
           child: ColoredBox(
             color: Colors.transparent,
-            child: Row(
-              children: [
-                Text(
-                  widget.title,
-                  style: AppTextStyle.bodyLargeMedium.copyWith(
-                    height: 2.4,
-                    color: AppColors.grayscale900,
-                    fontWeight: FontWeight.w500,
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Text(
+                    widget.title,
+                    style: AppTextStyle.bodyXLMedium.copyWith(
+                      color: AppColors.grayscale900,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: Dimension.d5),
-                  child: Icon(
-                    _isExpand ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
-                    size: 8,
-                    color: AppColors.grayscale900,
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: Dimension.d5),
+                    child: Icon(
+                      _isExpand
+                          ? AppIcons.arrow_up_ios
+                          : AppIcons.arrow_down_ios,
+                      size: 8,
+                      color: AppColors.grayscale900,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
+        if (_isExpand) const SizedBox(height: Dimension.d2),
         if (_isExpand)
-          const SizedBox(
-            height: Dimension.d2,
-          ),
-        if (_isExpand)
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grayscale300),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Column(
-              children: List.generate(
-                widget.userInsurance != null
-                    ? widget.userInsurance!.length
-                    : widget.emrgencyContactList != null
-                        ? widget.emrgencyContactList!.length
-                        : widget.preferredServices!.length,
-                (index) => (widget.userInsurance != null)
-                    ? _UserInsuranceComponent(
-                        titleName:
-                            '${index + 1}. ${widget.userInsurance![index].contactPerson}',
-                        assignedElements: widget.userInsurance![index],
-                        isLast: index == widget.userInsurance!.length - 1,
-                      )
-                    : (widget.preferredServices != null)
-                        ? _PreferredServiceComponent(
-                            titleName:
-                                '${index + 1}. ${widget.preferredServices![index].name}',
-                            assignedElements: widget.preferredServices![index],
-                            isLast:
-                                index == widget.preferredServices!.length - 1,
+          Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.grayscale300),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  children: List.generate(
+                    widget.userInsurance != null
+                        ? widget.userInsurance!.length
+                        : widget.emrgencyContactList != null
+                            ? widget.emrgencyContactList!.length
+                            : widget.preferredServices!.length,
+                    (index) => (widget.userInsurance != null)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: _UserInsuranceComponent(
+                              titleName:
+                                  '${index + 1}. ${widget.userInsurance![index].contactPerson}',
+                              assignedElements: widget.userInsurance![index],
+                              isLast: index == widget.userInsurance!.length - 1,
+                            ),
                           )
-                        : _EmergencyContactComponent(
-                            titleName:
-                                '${index + 1}. ${widget.emrgencyContactList![index].contactPersonName}',
-                            assignedElements:
-                                widget.emrgencyContactList![index],
-                            isLast:
-                                index == widget.emrgencyContactList!.length - 1,
-                          ),
+                        : (widget.preferredServices != null)
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: _PreferredServiceComponent(
+                                  titleName:
+                                      '${index + 1}. ${widget.preferredServices![index].name}',
+                                  assignedElements:
+                                      widget.preferredServices![index],
+                                  isLast: index ==
+                                      widget.preferredServices!.length - 1,
+                                ),
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: _EmergencyContactComponent(
+                                  titleName:
+                                      '${index + 1}. ${widget.emrgencyContactList![index].contactPersonName}',
+                                  assignedElements:
+                                      widget.emrgencyContactList![index],
+                                  isLast: index ==
+                                      widget.emrgencyContactList!.length - 1,
+                                ),
+                              ),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: Dimension.d4),
+            ],
           ),
         if (!_isExpand) const Divider(color: AppColors.line),
       ],
@@ -402,39 +424,36 @@ class _UserInsuranceComponent extends StatelessWidget {
   final bool isLast;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            titleName,
-            style: AppTextStyle.bodyLargeMedium
-                .copyWith(fontWeight: FontWeight.w500, height: 2.4),
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: Dimension.d3),
+        Text(titleName, style: AppTextStyle.bodyLargeMedium),
+        const SizedBox(height: Dimension.d3),
+        if (assignedElements.policyNumber != null)
           ExpandedAnalogComponent(
             label: 'Policy No',
             value: assignedElements.policyNumber!,
           ),
-          ExpandedAnalogComponent(
-            label: 'Contact Person',
-            value: assignedElements.contactPerson!,
+        ExpandedAnalogComponent(
+          label: 'Contact Person',
+          value: assignedElements.contactPerson,
+        ),
+        ExpandedAnalogComponent(
+          label: 'Contact Of Ambulance',
+          value: assignedElements.contactNumber,
+        ),
+        ExpandedAnalogComponent(
+          label: 'Contact Of Address',
+          value: assignedElements.insuranceProvider,
+          maxLines: 3,
+        ),
+        const SizedBox(height: Dimension.d3),
+        if (!isLast)
+          const Divider(
+            color: AppColors.grayscale300,
           ),
-          ExpandedAnalogComponent(
-            label: 'Contact Of Ambulance',
-            value: assignedElements.contactNumber!,
-          ),
-          ExpandedAnalogComponent(
-            label: 'Contact Of Address',
-            value: assignedElements.insuranceProvider!,
-            maxLines: 3,
-          ),
-          if (!isLast)
-            const Divider(
-              color: AppColors.grayscale300,
-            ),
-        ],
-      ),
+      ],
     );
   }
 }
@@ -452,38 +471,36 @@ class _EmergencyContactComponent extends StatelessWidget {
   final bool isLast;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            titleName,
-            style: AppTextStyle.bodyLargeMedium
-                .copyWith(fontWeight: FontWeight.w500, height: 2.4),
-          ),
-          ExpandedAnalogComponent(
-            label: 'Contact No.',
-            value: assignedElements.contactNumber!,
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: Dimension.d3),
+        Text(titleName, style: AppTextStyle.bodyLargeMedium),
+        const SizedBox(height: Dimension.d3),
+        ExpandedAnalogComponent(
+          label: 'Contact No.',
+          value: assignedElements.contactNumber,
+        ),
+        if (assignedElements.relation != null)
           ExpandedAnalogComponent(
             label: 'Relation',
             value: assignedElements.relation!,
           ),
-          ExpandedAnalogComponent(
-            label: 'Email',
-            value: assignedElements.email!,
-          ),
+        ExpandedAnalogComponent(
+          label: 'Email',
+          value: assignedElements.email,
+        ),
+        if (assignedElements.country != null)
           ExpandedAnalogComponent(
             label: 'Contact Of Address',
             value: assignedElements.country!,
           ),
-          if (!isLast)
-            const Divider(
-              color: AppColors.grayscale300,
-            ),
-        ],
-      ),
+        const SizedBox(height: Dimension.d3),
+        if (!isLast)
+          const Divider(
+            color: AppColors.grayscale300,
+          ),
+      ],
     );
   }
 }
@@ -501,36 +518,34 @@ class _PreferredServiceComponent extends StatelessWidget {
   final bool isLast;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            titleName,
-            style: AppTextStyle.bodyLargeMedium
-                .copyWith(fontWeight: FontWeight.w500, height: 2.4),
-          ),
-          ExpandedAnalogComponent(
-            label: 'Contact Person',
-            value: assignedElements.contactPerson!,
-          ),
-          ExpandedAnalogComponent(
-            label: 'Contact No.',
-            value: assignedElements.contactNumber!,
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: Dimension.d3),
+        Text(
+          titleName,
+          style: AppTextStyle.bodyLargeMedium,
+        ),
+        const SizedBox(height: Dimension.d3),
+        ExpandedAnalogComponent(
+          label: 'Contact Person',
+          value: assignedElements.contactPerson,
+        ),
+        ExpandedAnalogComponent(
+          label: 'Contact No.',
+          value: assignedElements.contactNumber,
+        ),
+        if (assignedElements.ambulanceContact != null)
           ExpandedAnalogComponent(
             label: 'Contact Of Ambulance',
-            value: assignedElements.ambulanceContact != null
-                ? assignedElements.ambulanceContact!
-                : 'N/A',
+            value: assignedElements.ambulanceContact!,
           ),
-          if (!isLast)
-            const Divider(
-              color: AppColors.grayscale300,
-            ),
-        ],
-      ),
+        const SizedBox(height: Dimension.d3),
+        if (!isLast)
+          const Divider(
+            color: AppColors.grayscale300,
+          ),
+      ],
     );
   }
 }

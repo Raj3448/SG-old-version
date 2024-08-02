@@ -200,8 +200,8 @@ class _PaymentScreenState extends State<ServicePaymentScreen> {
                                       .priceDetails.products.first.displayName,
                               description: store.servicePaymentStatus ==
                                       PaymentStatus.failure
-                                  ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price)}'
-                                  : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.priceDetails.products.first.price)}',
+                                  ? '₹ ${formatNumberWithCommas(widget.priceDetails!.products.first.price!)}'
+                                  : '₹ ${formatNumberWithCommas(widget.servicePaymentStatusModel!.priceDetails.products.first.price!)}',
                             ),
                             const Divider(
                               color: AppColors.grayscale300,
