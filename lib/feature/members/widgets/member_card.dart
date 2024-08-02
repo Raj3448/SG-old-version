@@ -52,7 +52,9 @@ class MemberCard extends StatelessWidget {
                         style: AppTextStyle.bodyLargeBold,
                       ),
                       const SizedBox(height: 5),
-                      Relationship(relation: relation),
+                      Relationship(
+                        relation: relation == 'self' ? 'Self' : relation,
+                      ),
                     ],
                   ),
                 ),

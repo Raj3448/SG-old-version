@@ -18,6 +18,9 @@ class TestmonialsComponent extends StatelessWidget {
   final TestimonialsModel testimonialsModel;
   @override
   Widget build(BuildContext context) {
+    if (testimonialsModel.testimonials.data.isEmpty) {
+      return const SizedBox();
+    }
     return Container(
       decoration: const BoxDecoration(color: AppColors.secondary),
       padding: const EdgeInsets.symmetric(
