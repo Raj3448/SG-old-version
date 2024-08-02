@@ -17,7 +17,7 @@ class AsteriskLabel extends StatelessWidget {
         ),
         Text(
           '*',
-          style: AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.error),
+          style: AppTextStyle.bodyMediumMedium.copyWith(color: AppColors.formValidationError),
         ),
       ],
     );

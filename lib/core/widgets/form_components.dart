@@ -98,7 +98,7 @@ class CustomTextField extends StatelessWidget {
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimension.d2),
           borderSide: const BorderSide(
-            color: AppColors.error,
+            color: AppColors.formValidationError,
           ),
         ),
         filled: !enabled ? true : null,
@@ -159,7 +159,7 @@ class CustomPhoneField extends StatelessWidget {
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimension.d2),
           borderSide: const BorderSide(
-            color: AppColors.error,
+            color: AppColors.formValidationError,
           ),
         ),
         prefixIcon: SizedBox(
