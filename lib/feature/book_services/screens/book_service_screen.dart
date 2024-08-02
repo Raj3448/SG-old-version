@@ -16,7 +16,6 @@ import 'package:silver_genie/core/widgets/custom_drop_down_box.dart';
 import 'package:silver_genie/core/widgets/error_state_component.dart';
 import 'package:silver_genie/core/widgets/fixed_button.dart';
 import 'package:silver_genie/core/widgets/form_components.dart';
-import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/loading_widget.dart';
 import 'package:silver_genie/core/widgets/multidropdown.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
@@ -109,15 +108,16 @@ class _BookServiceScreenState extends State<BookServiceScreen>
             Scaffold(
               backgroundColor: AppColors.white,
               appBar: PageAppbar(title: 'Book Service'.tr()),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FixedButton(
-                ontap: () {
-                  _submitAndNext(context);
-                },
-                btnTitle: 'Submit & next',
-                showIcon: false,
-                iconPath: AppIcons.add,
+              bottomNavigationBar: SafeArea(
+                top: false,
+                child: FixedButton(
+                  ontap: () {
+                    _submitAndNext(context);
+                  },
+                  btnTitle: 'Submit & next',
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                ),
               ),
               body: FutureBuilder(
                 future: service.getBookingServiceDetailsById(
@@ -248,7 +248,8 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                       if (value == null) {
                                         if (component.formDetails.requiredMsg !=
                                             null) {
-                                          return component.formDetails.requiredMsg;
+                                          return component
+                                              .formDetails.requiredMsg;
                                         }
                                         return '${component.formDetails.title} must not be empty';
                                       }
@@ -351,7 +352,8 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                       if (value == null) {
                                         if (component.formDetails.requiredMsg !=
                                             null) {
-                                          return component.formDetails.requiredMsg;
+                                          return component
+                                              .formDetails.requiredMsg;
                                         }
                                         return '${component.formDetails.title} must not be empty';
                                       }
@@ -401,7 +403,8 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                       if (value == null) {
                                         if (component.formDetails.requiredMsg !=
                                             null) {
-                                          return component.formDetails.requiredMsg;
+                                          return component
+                                              .formDetails.requiredMsg;
                                         }
                                         return '${component.formDetails.title} must not be empty';
                                       }
@@ -446,7 +449,8 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                                       if (value == null) {
                                         if (component.formDetails.requiredMsg !=
                                             null) {
-                                          return component.formDetails.requiredMsg;
+                                          return component
+                                              .formDetails.requiredMsg;
                                         }
                                         return '${component.formDetails.title} must not be empty';
                                       }

@@ -234,153 +234,160 @@ class ServiceDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     if (serviceData.category == 'homeCare')
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0, -4),
-                              blurRadius: 4,
-                              color: AppColors.black.withOpacity(0.15),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        child: CustomButton(
-                          ontap: () {
-                            context.pushNamed(
-                              RoutesConstants.bookServiceScreen,
-                              pathParameters: {
-                                'id': id,
-                                'productCode': productCode,
-                              },
-                            );
-                          },
-                          title: 'Book now'.tr(),
-                          showIcon: false,
-                          iconPath: AppIcons.add,
-                          size: ButtonSize.normal,
-                          type: ButtonType.primary,
-                          expanded: true,
-                          iconColor: AppColors.primary,
+                      SafeArea(
+                        top: false,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(0, -4),
+                                blurRadius: 4,
+                                color: AppColors.black.withOpacity(0.15),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          child: CustomButton(
+                            ontap: () {
+                              context.pushNamed(
+                                RoutesConstants.bookServiceScreen,
+                                pathParameters: {
+                                  'id': id,
+                                  'productCode': productCode,
+                                },
+                              );
+                            },
+                            title: 'Book now'.tr(),
+                            showIcon: false,
+                            iconPath: AppIcons.add,
+                            size: ButtonSize.normal,
+                            type: ButtonType.primary,
+                            expanded: true,
+                            iconColor: AppColors.primary,
+                          ),
                         ),
                       )
                     else
-                      FixedButton(
-                        ontap: () {
-                          store.isLoading = true;
-                          final userStore = GetIt.I<UserDetailStore>();
-                          service
-                              .bookService(
-                            name: userStore.userDetails?.name ?? '',
-                            phoneNumber:
-                                userStore.userDetails?.phoneNumber ?? '',
-                            email: userStore.userDetails?.email ?? '',
-                            careType: title,
-                          )
-                              .then((result) {
-                            store.isLoading = false;
-                            result.fold(
-                              (failure) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Service booking failed!',
-                                    ),
-                                  ),
-                                );
-                              },
-                              (success) {
-                                showModalBottomSheet(
-                                  backgroundColor: AppColors.white,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                        Dimension.d3,
-                                      ),
-                                      topRight: Radius.circular(
-                                        Dimension.d3,
+                      SafeArea(
+                        top: false,
+                        child: FixedButton(
+                          ontap: () {
+                            store.isLoading = true;
+                            final userStore = GetIt.I<UserDetailStore>();
+                            service
+                                .bookService(
+                              name: userStore.userDetails?.name ?? '',
+                              phoneNumber:
+                                  userStore.userDetails?.phoneNumber ?? '',
+                              email: userStore.userDetails?.email ?? '',
+                              careType: title,
+                            )
+                                .then((result) {
+                              store.isLoading = false;
+                              result.fold(
+                                (failure) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Service booking failed!',
                                       ),
                                     ),
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    maxHeight: 400,
-                                  ),
-                                  context: context,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(18),
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                '$title service',
-                                                style: AppTextStyle
-                                                    .heading5SemiBold,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: Dimension.d9,
-                                            ),
-                                            const Text(
-                                              'Your request has been received',
-                                              style: AppTextStyle.bodyLargeBold,
-                                            ),
-                                            const SizedBox(
-                                              height: Dimension.d3,
-                                            ),
-                                            SvgPicture.asset(
-                                              'assets/icon/success.svg',
-                                              height: 88,
-                                            ),
-                                            const SizedBox(
-                                              height: Dimension.d3,
-                                            ),
-                                            Text(
-                                              'Thank you for your interest. The SG team will be in touch with you shortly',
-                                              textAlign: TextAlign.center,
-                                              style: AppTextStyle
-                                                  .bodyMediumMedium
-                                                  .copyWith(
-                                                color: AppColors.grayscale700,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: Dimension.d9,
-                                            ),
-                                            CustomButton(
-                                              ontap: () {
-                                                context
-                                                  ..pop()
-                                                  ..pop();
-                                              },
-                                              title: 'Done',
-                                              showIcon: false,
-                                              iconPath: AppIcons.add,
-                                              size: ButtonSize.normal,
-                                              type: ButtonType.primary,
-                                              expanded: true,
-                                              iconColor: AppColors.white,
-                                            ),
-                                          ],
+                                  );
+                                },
+                                (success) {
+                                  showModalBottomSheet(
+                                    backgroundColor: AppColors.white,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(
+                                          Dimension.d3,
+                                        ),
+                                        topRight: Radius.circular(
+                                          Dimension.d3,
                                         ),
                                       ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          });
-                        },
-                        btnTitle: 'Request service',
-                        showIcon: false,
-                        iconPath: AppIcons.add,
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      maxHeight: 400,
+                                    ),
+                                    context: context,
+                                    builder: (context) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(18),
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  '$title service',
+                                                  style: AppTextStyle
+                                                      .heading5SemiBold,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d9,
+                                              ),
+                                              const Text(
+                                                'Your request has been received',
+                                                style:
+                                                    AppTextStyle.bodyLargeBold,
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d3,
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/icon/success.svg',
+                                                height: 88,
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d3,
+                                              ),
+                                              Text(
+                                                'Thank you for your interest. The SG team will be in touch with you shortly',
+                                                textAlign: TextAlign.center,
+                                                style: AppTextStyle
+                                                    .bodyMediumMedium
+                                                    .copyWith(
+                                                  color: AppColors.grayscale700,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: Dimension.d9,
+                                              ),
+                                              CustomButton(
+                                                ontap: () {
+                                                  context
+                                                    ..pop()
+                                                    ..pop();
+                                                },
+                                                title: 'Done',
+                                                showIcon: false,
+                                                iconPath: AppIcons.add,
+                                                size: ButtonSize.normal,
+                                                type: ButtonType.primary,
+                                                expanded: true,
+                                                iconColor: AppColors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            });
+                          },
+                          btnTitle: 'Request service',
+                          showIcon: false,
+                          iconPath: AppIcons.add,
+                        ),
                       ),
                   ],
                 );
