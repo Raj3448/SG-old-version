@@ -68,7 +68,13 @@ void main() async {
       GetIt.instance.registerSingletonAsync<SharedPreferences>(
         SharedPreferences.getInstance,
       );
-
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: AppColors.white,
+          systemNavigationBarColor: AppColors.white,
+          systemNavigationBarDividerColor: AppColors.white,
+        ),
+      );
       // Wait for all asynchronous singletons (like SharedPreferences) to be ready
       await GetIt.instance.allReady();
 
