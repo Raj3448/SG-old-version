@@ -107,7 +107,7 @@ class ServiceName with _$ServiceName {
   const factory ServiceName({
     required int id,
     required String name,
-    required String? maxValue,
+    @Default('') String? maxValue,
     required dynamic description,
     required DateTime createdAt,
     required DateTime updatedAt,
