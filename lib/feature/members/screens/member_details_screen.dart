@@ -40,10 +40,8 @@ class MemberDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activeMember == null) {
-      return SafeArea(
-        child: Scaffold(
-          body: Container(),
-        ),
+      return Scaffold(
+        body: Container(),
       );
     }
     var hasEPR = false;
@@ -56,14 +54,14 @@ class MemberDetailsScreen extends StatelessWidget {
       }
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        appBar: const PageAppbar(title: 'Member details'),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: activeMember!.subscriptions!.isEmpty
-            ? const SizedBox()
-            : FixedButton(
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: const PageAppbar(title: 'Member details'),
+      bottomNavigationBar: activeMember!.subscriptions!.isEmpty
+          ? const SizedBox()
+          : SafeArea(
+              top: false,
+              child: FixedButton(
                 ontap: () {
                   showDialog(
                     context: context,
@@ -93,119 +91,119 @@ class MemberDetailsScreen extends StatelessWidget {
                 showIcon: false,
                 iconPath: AppIcons.clinical_notes,
               ),
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(
-            decelerationRate: ScrollDecelerationRate.fast,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Basic details'.tr(),
-                  style: AppTextStyle.bodyXLMedium
-                      .copyWith(color: AppColors.grayscale900),
-                ),
-                const SizedBox(height: 16),
-                _BasicDetailsBox(
-                  name: [
-                    activeMember?.firstName ?? '',
-                    activeMember?.lastName ?? '',
-                  ].join(' ').trim(),
-                  age: '${calculateAge(activeMember!.dateOfBirth)}',
-                  gender: activeMember!.gender,
-                  relation: activeMember!.relation,
-                  mobileNo: activeMember!.phoneNumber,
-                  address: activeMember?.fullAddress ?? 'n/a',
-                  imgPath: activeMember!.profileImg != null
-                      ? '${Env.serverUrl}${activeMember!.profileImg!.url}'
-                      : '',
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Health Records',
-                  style: AppTextStyle.bodyXLMedium
-                      .copyWith(color: AppColors.grayscale900),
-                ),
-                const SizedBox(height: 16),
-                if (activeMember!.subscriptions!.isNotEmpty)
-                  Column(
-                    children: [
+            ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+          decelerationRate: ScrollDecelerationRate.fast,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Basic details'.tr(),
+                style: AppTextStyle.bodyXLMedium
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+              const SizedBox(height: 16),
+              _BasicDetailsBox(
+                name: [
+                  activeMember?.firstName ?? '',
+                  activeMember?.lastName ?? '',
+                ].join(' ').trim(),
+                age: '${calculateAge(activeMember!.dateOfBirth)}',
+                gender: activeMember!.gender,
+                relation: activeMember!.relation,
+                mobileNo: activeMember!.phoneNumber,
+                address: activeMember?.fullAddress ?? 'n/a',
+                imgPath: activeMember!.profileImg != null
+                    ? '${Env.serverUrl}${activeMember!.profileImg!.url}'
+                    : '',
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Health Records',
+                style: AppTextStyle.bodyXLMedium
+                    .copyWith(color: AppColors.grayscale900),
+              ),
+              const SizedBox(height: 16),
+              if (activeMember!.subscriptions!.isNotEmpty)
+                Column(
+                  children: [
+                    HealthCard(
+                      isEpr: true,
+                      dateUpdated: activeMember?.updatedAt == null
+                          ? 'n/a'
+                          : formatDateTime(activeMember!.updatedAt),
+                      ontap: hasEPR == false
+                          ? null
+                          : () {
+                              GoRouter.of(context).pushNamed(
+                                RoutesConstants.eprRoute,
+                                pathParameters: {
+                                  'memberId': '$memberId',
+                                },
+                              );
+                            },
+                    ),
+                    const SizedBox(height: 16),
+                    if (activeMember!.phrModel != null)
                       HealthCard(
-                        isEpr: true,
-                        dateUpdated: activeMember?.updatedAt == null
+                        isEpr: false,
+                        dateUpdated: activeMember?.phrModel?.updatedAt == null
                             ? 'n/a'
-                            : formatDateTime(activeMember!.updatedAt),
-                        ontap: hasEPR == false
+                            : formatDateTime(
+                                activeMember!.phrModel!.updatedAt,
+                              ),
+                        ontap: activeMember!.phrModel == null
                             ? null
                             : () {
                                 GoRouter.of(context).pushNamed(
-                                  RoutesConstants.eprRoute,
+                                  RoutesConstants.phrPdfViewPage,
                                   pathParameters: {
-                                    'memberId': '$memberId',
+                                    'memberPhrId':
+                                        activeMember!.phrModel!.id.toString(),
                                   },
                                 );
                               },
                       ),
-                      const SizedBox(height: 16),
-                      if (activeMember!.phrModel != null)
-                        HealthCard(
-                          isEpr: false,
-                          dateUpdated: activeMember?.phrModel?.updatedAt == null
-                              ? 'n/a'
-                              : formatDateTime(
-                                  activeMember!.phrModel!.updatedAt,
-                                ),
-                          ontap: activeMember!.phrModel == null
-                              ? null
-                              : () {
-                                  GoRouter.of(context).pushNamed(
-                                    RoutesConstants.phrPdfViewPage,
-                                    pathParameters: {
-                                      'memberPhrId':
-                                          activeMember!.phrModel!.id.toString(),
-                                    },
-                                  );
-                                },
-                        ),
-                      const SizedBox(height: Dimension.d17),
-                    ],
-                  )
-                else
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (activeMember!.phrModel != null ||
-                          hasEPR && activeMember!.subscriptions!.isEmpty)
-                        const SubscribeCard(
-                          desc:
-                              "Sorry, this family member does not have any active subscription.\nTo view family member's health\nrecords please subscribe to Silvergenie's care subscriptions.",
-                        )
-                      else
-                        const SubscribeCard(
-                          desc:
-                              "Sorry, No Available health records for\nthis family member. To create EPR &\nPHR please subscribe to Silvergenie's\ncare subscription.",
-                        ),
-                      const SizedBox(height: Dimension.d8),
-                      Text(
-                        'Signup for care packages',
-                        style: AppTextStyle.bodyXLBold
-                            .copyWith(color: AppColors.grayscale900),
+                    const SizedBox(height: Dimension.d17),
+                  ],
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (activeMember!.phrModel != null ||
+                        hasEPR && activeMember!.subscriptions!.isEmpty)
+                      const SubscribeCard(
+                        desc:
+                            "Sorry, this family member does not have any active subscription.\nTo view family member's health\nrecords please subscribe to Silvergenie's care subscriptions.",
+                      )
+                    else
+                      const SubscribeCard(
+                        desc:
+                            "Sorry, No Available health records for\nthis family member. To create EPR &\nPHR please subscribe to Silvergenie's\ncare subscription.",
                       ),
-                      const SizedBox(height: Dimension.d4),
-                      if (store.getSubscriptActiveProdList.isNotEmpty)
-                        ProductListingCareComponent(
-                          productBasicDetailsList: store.getProdListRankOrder(
-                            store.getSubscriptActiveProdList,
-                          ),
-                          isUpgradeable: false,
+                    const SizedBox(height: Dimension.d8),
+                    Text(
+                      'Signup for care packages',
+                      style: AppTextStyle.bodyXLBold
+                          .copyWith(color: AppColors.grayscale900),
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                    if (store.getSubscriptActiveProdList.isNotEmpty)
+                      ProductListingCareComponent(
+                        productBasicDetailsList: store.getProdListRankOrder(
+                          store.getSubscriptActiveProdList,
                         ),
-                      const SizedBox(height: Dimension.d20),
-                    ],
-                  ),
-              ],
-            ),
+                        isUpgradeable: false,
+                      ),
+                    const SizedBox(height: Dimension.d20),
+                  ],
+                ),
+            ],
           ),
         ),
       ),

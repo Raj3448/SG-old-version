@@ -8,6 +8,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/back_to_home_component.dart';
@@ -44,15 +45,15 @@ class EmergencyActivation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Emergency'.tr(),
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline.label ?? 'Emergency'.tr(),
               style: AppTextStyle.bodyXLMedium.copyWith(
                 fontWeight: FontWeight.w500,
                 color: AppColors.grayscale900,
               ),
             ),
             Text(
-              'When the button is pressed, all emergency services will be activated.'
-                  .tr(),
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline.message ?? 'When the button is pressed, all emergency services will be activated.'
+                  ,
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale900),
             ),
@@ -134,77 +135,82 @@ class _EmergencyActivateBottomSheetState
               description: '',
               showDesc: false,
             )
-          : Observer(builder: (_) {
-              final activeMembers = widget.memberStore.familyMembers
-                  .where(
-                    (member) =>
-                        member.subscriptions?.any(
-                          (sub) => sub.subscriptionStatus == 'Active',
-                        ) ??
-                        false,
-                  )
-                  .toList();
-
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Emergency',
-                        style: AppTextStyle.bodyXLSemiBold.copyWith(
-                          fontSize: 20,
-                          color: AppColors.grayscale900,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        child: Text(
-                          'Cancel',
-                          style: AppTextStyle.bodyMediumMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary,
+          : Observer(
+              builder: (_) {
+                final activeMembers = widget.memberStore.familyMembers
+                    .where(
+                      (member) =>
+                          member.subscriptions?.any(
+                            (sub) =>
+                                sub.benefits?.any(
+                                  (benefit) => benefit.code.contains('ES'),
+                                ) ??
+                                false,
+                          ) ??
+                          false,
+                    )
+                    .toList();
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Emergency',
+                          style: AppTextStyle.bodyXLSemiBold.copyWith(
+                            fontSize: 20,
+                            color: AppColors.grayscale900,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onPressed: () {
-                          context.pop();
-                        },
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Please select the member who require emergency assistance',
-                    style: AppTextStyle.bodyMediumMedium.copyWith(
-                      color: AppColors.grayscale700,
+                        const Spacer(),
+                        TextButton(
+                          child: Text(
+                            'Cancel',
+                            style: AppTextStyle.bodyMediumMedium.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          onPressed: () {
+                            context.pop();
+                          },
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: Dimension.d2),
-                  SizedBox(
-                    height: 180,
-                    child: ListView.builder(
-                      itemCount: activeMembers.length,
-                      itemBuilder: (context, index) =>
-                          _ActivateListileComponent(
-                        memberName: activeMembers[index].name,
-                        relation: activeMembers[index].relation,
-                        onPressed: () async {
-                          await launchDialer(
-                            widget.emergencyHelpline.contactNumber,
-                          ).then(
-                            (value) {
-                              setState(() {
-                                isActivate = true;
-                              });
-                            },
-                          );
-                        },
-                        imgUrl: activeMembers[index].profileImg?.url ?? '',
+                    Text(
+                      'Please select the member who require emergency assistance',
+                      style: AppTextStyle.bodyMediumMedium.copyWith(
+                        color: AppColors.grayscale700,
                       ),
                     ),
-                  ),
-                ],
-              );
-            }),
+                    const SizedBox(height: Dimension.d2),
+                    SizedBox(
+                      height: 180,
+                      child: ListView.builder(
+                        itemCount: activeMembers.length,
+                        itemBuilder: (context, index) =>
+                            _ActivateListileComponent(
+                          memberName: activeMembers[index].name,
+                          relation: activeMembers[index].relation,
+                          onPressed: () async {
+                            await launchDialer(
+                              widget.emergencyHelpline.contactNumber,
+                            ).then(
+                              (value) {
+                                setState(() {
+                                  isActivate = true;
+                                });
+                              },
+                            );
+                          },
+                          imgUrl: activeMembers[index].profileImg?.url ?? '',
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
     );
   }
 }

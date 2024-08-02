@@ -58,79 +58,76 @@ class _ServicePaymentStatusTrackingPageState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Observer(
-        builder: (context) {
-          return Stack(
-            children: [
-              Scaffold(
-                appBar: const PageAppbar(title: 'Booking Details'),
-                backgroundColor: AppColors.white,
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-                  child: servicePaymentStatusModel == null
-                      ? FutureBuilder(
-                          future: service.getPaymentStatus(id: widget.id),
-                          builder: (context, snapShot) {
-                            if (snapShot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: LoadingWidget(
-                                  showShadow: false,
-                                ),
-                              );
-                            }
-                            if (snapShot.hasError) {
-                              return const ErrorStateComponent(
-                                errorType: ErrorType.somethinWentWrong,
-                              );
-                            }
-                            if (!snapShot.hasData) {
-                              return const SizedBox();
-                            }
-                            if (snapShot.data!.isLeft()) {
-                              return const ErrorStateComponent(
-                                errorType: ErrorType.somethinWentWrong,
-                              );
-                            }
-                            try {
-                              servicePaymentStatusModel =
-                                  snapShot.data!.getOrElse(
-                                (l) => throw 'Error',
-                              );
-                            } catch (e) {
-                              return const ErrorStateComponent(
-                                errorType: ErrorType.somethinWentWrong,
-                              );
-                            }
-                            final paymentStatus = getPaymentStatus(
-                              paymentStatus:
-                                  servicePaymentStatusModel?.paymentStatus ??
-                                      '',
-                              status: servicePaymentStatusModel?.status ?? '',
+    return Observer(
+      builder: (context) {
+        return Stack(
+          children: [
+            Scaffold(
+              appBar: const PageAppbar(title: 'Booking Details'),
+              backgroundColor: AppColors.white,
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+                child: servicePaymentStatusModel == null
+                    ? FutureBuilder(
+                        future: service.getPaymentStatus(id: widget.id),
+                        builder: (context, snapShot) {
+                          if (snapShot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: LoadingWidget(
+                                showShadow: false,
+                              ),
                             );
-                            return buildDetail(context, paymentStatus);
-                          },
-                        )
-                      : buildDetail(
-                          context,
-                          getPaymentStatus(
+                          }
+                          if (snapShot.hasError) {
+                            return const ErrorStateComponent(
+                              errorType: ErrorType.somethinWentWrong,
+                            );
+                          }
+                          if (!snapShot.hasData) {
+                            return const SizedBox();
+                          }
+                          if (snapShot.data!.isLeft()) {
+                            return const ErrorStateComponent(
+                              errorType: ErrorType.somethinWentWrong,
+                            );
+                          }
+                          try {
+                            servicePaymentStatusModel =
+                                snapShot.data!.getOrElse(
+                              (l) => throw 'Error',
+                            );
+                          } catch (e) {
+                            return const ErrorStateComponent(
+                              errorType: ErrorType.somethinWentWrong,
+                            );
+                          }
+                          final paymentStatus = getPaymentStatus(
                             paymentStatus:
-                                servicePaymentStatusModel!.paymentStatus,
-                            status: servicePaymentStatusModel!.status,
-                          ),
+                                servicePaymentStatusModel?.paymentStatus ?? '',
+                            status: servicePaymentStatusModel?.status ?? '',
+                          );
+                          return buildDetail(context, paymentStatus);
+                        },
+                      )
+                    : buildDetail(
+                        context,
+                        getPaymentStatus(
+                          paymentStatus:
+                              servicePaymentStatusModel!.paymentStatus,
+                          status: servicePaymentStatusModel!.status,
                         ),
-                ),
+                      ),
               ),
-              if (bookingServiceStore.isFileInDownloadProcess)
-                const Material(
-                  color: Colors.transparent,
-                  child: LoadingWidget(),
-                ),
-            ],
-          );
-        },
-      ),
+            ),
+            if (bookingServiceStore.isFileInDownloadProcess)
+              const Material(
+                color: Colors.transparent,
+                child: LoadingWidget(),
+              ),
+          ],
+        );
+      },
     );
   }
 

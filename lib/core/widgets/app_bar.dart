@@ -24,7 +24,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -87,6 +87,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 15),
               ],
             ),
           ),
@@ -96,7 +97,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
 }
 
 class _IconContainer extends StatelessWidget {

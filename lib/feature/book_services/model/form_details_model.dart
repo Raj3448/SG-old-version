@@ -91,7 +91,7 @@ class FormDetails with _$FormDetails {
     required int id,
     required String title,
     required bool required,
-    required String requiredMsg,
+    @Default(null) String? requiredMsg,
     required String? placeholder,
     required bool hidden,
     required String? hint,

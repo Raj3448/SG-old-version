@@ -98,13 +98,14 @@ class _ServiceBookingPaymentDetailScreenState
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FixedButton(
-                ontap: _proceedToPay,
-                btnTitle: 'Proceed to pay',
-                showIcon: false,
-                iconPath: AppIcons.add,
+              bottomNavigationBar: SafeArea(
+                top: false,
+                child: FixedButton(
+                  ontap: _proceedToPay,
+                  btnTitle: 'Proceed to pay',
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                ),
               ),
               appBar: PageAppbar(title: 'Book Service'.tr()),
               body: Padding(

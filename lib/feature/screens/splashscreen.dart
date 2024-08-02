@@ -62,19 +62,17 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Observer(
-          builder: (ctx) {
-            return homeStore.isHomepageComponentInitialloading ||
-                    homeStore.isHomepageDataLoaded ||
-                    productStore.fetchProductLoading
-                ? const LoadingWidget()
-                : const ErrorStateComponent(
-                    errorType: ErrorType.somethinWentWrong,
-                  );
-          },
-        ),
+    return Scaffold(
+      body: Observer(
+        builder: (ctx) {
+          return homeStore.isHomepageComponentInitialloading ||
+                  homeStore.isHomepageDataLoaded ||
+                  productStore.fetchProductLoading
+              ? const LoadingWidget()
+              : const ErrorStateComponent(
+                  errorType: ErrorType.somethinWentWrong,
+                );
+        },
       ),
     );
   }
