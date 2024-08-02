@@ -69,8 +69,8 @@ class GenieOverviewComponent extends StatelessWidget {
 
 class ServiceProvideComponent extends StatefulWidget {
   final String heading;
-
   final List<Datum> serviceList;
+
   const ServiceProvideComponent({
     required this.heading,
     required this.serviceList,
@@ -87,6 +87,13 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
 
   @override
   Widget build(BuildContext context) {
+    final activeServiceCount = widget.serviceList
+        .where((service) => service.attributes.isActive)
+        .length;
+
+    final calculatedHeight = (activeServiceCount * 30 ) as double;
+    final defaultHeight = (activeServiceCount >= 10 ? 280 : calculatedHeight) as double;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -98,17 +105,10 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
         const SizedBox(height: Dimension.d2),
         AnimatedContainer(
           duration: const Duration(milliseconds: 400),
-          height: isExpanded
-              ? widget.serviceList
-                      .where((service) => service.attributes.isActive)
-                      .length *
-                  30
-              : 280,
+          height: isExpanded ? calculatedHeight : defaultHeight,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.serviceList
-                .where((service) => service.attributes.isActive)
-                .length,
+            itemCount: activeServiceCount,
             itemBuilder: (context, index) {
               final activeServices = widget.serviceList
                   .where((service) => service.attributes.isActive)
@@ -119,33 +119,35 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
             },
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              isExpanded = !isExpanded;
-            });
-          },
-          child: Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.white,
-                  blurRadius: 20,
-                  spreadRadius: 20,
-                ),
-              ],
-            ),
-            child: Icon(
-              isExpanded ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
-              size: 10,
+        if (activeServiceCount >= 10)
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isExpanded = !isExpanded;
+              });
+            },
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.white,
+                    blurRadius: 20,
+                    spreadRadius: 20,
+                  ),
+                ],
+              ),
+              child: Icon(
+                isExpanded ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
+                size: 10,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
 }
+
 
 class PlanPricingDetailsComponent extends StatefulWidget {
   const PlanPricingDetailsComponent({
