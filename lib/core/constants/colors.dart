@@ -7,7 +7,8 @@ abstract class AppColors {
 
   //--- Alerts ----------------------------
   static const success = Color(0xFF00C566);
-  static const error = Color(0xFFB00020);
+  static const error = Color(0xFFE53935);
+  static const formValidationError = Color(0xFFB00020);
   static const warning = Color(0xFFFACC15);
   static const warning2 = Color(0xFFFF784B);
 
