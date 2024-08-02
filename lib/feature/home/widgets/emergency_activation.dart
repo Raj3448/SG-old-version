@@ -131,7 +131,8 @@ class _EmergencyActivateBottomSheetState
       child: isActivate
           ? const BackToHomeComponent(
               title: 'Emergency Alert Activated',
-              description: 'You will get a Callback from our team very soon',
+              description: '',
+              showDesc: false,
             )
           : Observer(builder: (_) {
               final activeMembers = widget.memberStore.familyMembers

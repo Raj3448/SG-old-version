@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
@@ -9,12 +10,13 @@ import 'package:silver_genie/core/widgets/buttons.dart';
 
 class BackToHomeComponent extends StatelessWidget {
   final String title;
-
   final String description;
+  final bool showDesc;
 
   const BackToHomeComponent({
     required this.title,
     required this.description,
+    required this.showDesc,
     super.key,
   });
 
@@ -27,31 +29,26 @@ class BackToHomeComponent extends StatelessWidget {
           'assets/icon/success.svg',
           height: 92,
         ),
-        const SizedBox(
-          height: Dimension.d4,
-        ),
+        const SizedBox(height: Dimension.d4),
         Text(
           title,
-          style: AppTextStyle.bodyLargeMedium.copyWith(
-            color: AppColors.grayscale900,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyle.bodyLargeBold
+              .copyWith(color: AppColors.grayscale900),
         ),
-        const SizedBox(
-          height: Dimension.d2,
-        ),
-        Text(
-          description,
-          style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColors.grayscale700,
-          ),
-        ),
-        const SizedBox(
-          height: Dimension.d6,
-        ),
+        const SizedBox(height: Dimension.d2),
+        if (showDesc)
+          Text(
+            description,
+            style: AppTextStyle.bodyMediumMedium.copyWith(
+              color: AppColors.grayscale700,
+            ),
+          )
+        else
+          const SizedBox(),
+        const SizedBox(height: Dimension.d6),
         CustomButton(
           ontap: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
           title: 'Back to Home',
           showIcon: false,

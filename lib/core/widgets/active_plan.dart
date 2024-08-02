@@ -217,7 +217,6 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             serviceName: ServiceName(
               id: 0,
               name: name,
-              maxValue: '',
               description: null,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
