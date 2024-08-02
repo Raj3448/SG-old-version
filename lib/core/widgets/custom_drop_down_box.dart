@@ -76,7 +76,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
                 const EdgeInsets.only(left: Dimension.d3, right: Dimension.d6),
             decoration: BoxDecoration(
               border: Border.all(
-                color: showError ? AppColors.error : AppColors.grayscale300,
+                color: showError ? AppColors.formValidationError : AppColors.grayscale300,
               ),
               borderRadius: BorderRadius.circular(Dimension.d2),
             ),
@@ -109,7 +109,7 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
               'Please select a member',
               textAlign: TextAlign.left,
               style: TextStyle(
-                color: AppColors.error,
+                color: AppColors.formValidationError,
                 fontSize: 12,
               ),
             ),

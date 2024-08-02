@@ -34,7 +34,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: state.hasError && !state.isValid
-                          ? AppColors.error
+                          ? AppColors.formValidationError
                           : AppColors.line,
                     ),
                   ),
@@ -98,7 +98,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                     child: Text(
                       state.errorText!,
                       style: const TextStyle(
-                        color: AppColors.error,
+                        color: AppColors.formValidationError,
                         fontSize: 12,
                       ),
                     ),
@@ -159,7 +159,7 @@ class DateDropdown extends FormField<DateTime> {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: state.hasError && !state.isValid
-                          ? AppColors.error
+                          ? AppColors.formValidationError
                           : AppColors.grayscale300,
                     ),
                   ),
@@ -233,7 +233,7 @@ class DateDropdown extends FormField<DateTime> {
                     child: Text(
                       state.errorText!,
                       style: const TextStyle(
-                        color: AppColors.error,
+                        color: AppColors.formValidationError,
                         fontSize: 12,
                       ),
                     ),
