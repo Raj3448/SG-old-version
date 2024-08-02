@@ -67,8 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context) {
             final hasActiveSub = memberStore.familyMembers.any(
               (member) =>
-                  member.subscriptions
-                      ?.any((sub) => sub.subscriptionStatus == 'Active') ??
+                  member.subscriptions?.any(
+                    (sub) =>
+                        sub.benefits?.any(
+                          (benefit) => benefit.code.contains('ES'),
+                        ) ??
+                        false,
+                  ) ??
                   false,
             );
             return Column(
@@ -237,8 +242,8 @@ class _HomeScreenComponents extends StatelessWidget {
         continue;
       }
       if (component is BannerImageModel) {
-        if(component.bannerImage.data != null) {
-            widgetList.add(
+        if (component.bannerImage.data != null) {
+          widgetList.add(
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
               child: GestureDetector(
