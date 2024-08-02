@@ -28,68 +28,71 @@ class FamilyScreen extends StatelessWidget {
     store.refresh();
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-        child: Observer(
-          builder: (context) {
-            if (store.familyMembers.isEmpty) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: Dimension.d4),
-                    child: Text(
-                      'Your Family Members'.tr(),
-                      style: AppTextStyle.bodyLargeBold
-                          .copyWith(height: 2.4, color: AppColors.grayscale900),
-                    ),
+      body: Observer(
+        builder: (context) {
+          if (store.familyMembers.isEmpty) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Dimension.d4)
+                      .copyWith(
+                    top: Dimension.d4,
                   ),
-                  NoMember(
-                    ontap: () {
-                      final user = GetIt.I<UserDetailStore>().userDetails;
-                      final member = store.memberById(user!.id);
-                      if (member != null) {
-                        context.pushNamed(
-                          RoutesConstants.addEditFamilyMemberRoute,
-                          pathParameters: {
-                            'edit': 'false',
-                            'isSelf': 'false',
-                          },
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return MemberCreation(
-                              selfOnTap: () {
-                                context.pushNamed(
-                                  RoutesConstants.addEditFamilyMemberRoute,
-                                  pathParameters: {
-                                    'edit': 'false',
-                                    'isSelf': 'true',
-                                  },
-                                );
-                              },
-                              memberOnTap: () {
-                                context.pushNamed(
-                                  RoutesConstants.addEditFamilyMemberRoute,
-                                  pathParameters: {
-                                    'edit': 'false',
-                                    'isSelf': 'false',
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        );
-                      }
-                    },
+                  child: Text(
+                    'Your Family Members'.tr(),
+                    style: AppTextStyle.bodyLargeBold
+                        .copyWith(height: 2.4, color: AppColors.grayscale900),
                   ),
-                ],
-              );
-            } else {
-              return SingleChildScrollView(
+                ),
+                NoMember(
+                  ontap: () {
+                    final user = GetIt.I<UserDetailStore>().userDetails;
+                    final member = store.memberById(user!.id);
+                    if (member != null) {
+                      context.pushNamed(
+                        RoutesConstants.addEditFamilyMemberRoute,
+                        pathParameters: {
+                          'edit': 'false',
+                          'isSelf': 'false',
+                        },
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return MemberCreation(
+                            selfOnTap: () {
+                              context.pushNamed(
+                                RoutesConstants.addEditFamilyMemberRoute,
+                                pathParameters: {
+                                  'edit': 'false',
+                                  'isSelf': 'true',
+                                },
+                              );
+                            },
+                            memberOnTap: () {
+                              context.pushNamed(
+                                RoutesConstants.addEditFamilyMemberRoute,
+                                pathParameters: {
+                                  'edit': 'false',
+                                  'isSelf': 'false',
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
+              child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast,
                 ),
@@ -188,10 +191,10 @@ class FamilyScreen extends StatelessWidget {
                     );
                   },
                 ),
-              );
-            }
-          },
-        ),
+              ),
+            );
+          }
+        },
       ),
     );
   }
