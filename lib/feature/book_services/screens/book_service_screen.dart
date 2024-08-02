@@ -173,19 +173,22 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               memberName: selectedMember?.name,
                               memberList: GetIt.I<MembersStore>().familyMembers,
                               placeHolder: component.formDetails.placeholder,
+                              validationMessage: component.formDetails.required
+                                  ? component.formDetails.requiredMsg
+                                  : null,
                               updateMember: (member) {
                                 selectedMember = member;
-                                  _updateFormValues1(
-                                    id: component.id,
-                                    title: component.formDetails.title,
-                                    type: component.type,
-                                    controlType: component.controlType,
-                                    hint: component.formDetails.hint,
-                                    valueReference: [
-                                      '${member?.id}',
-                                    ],
-                                    forDId: component.formDetails.id.toString(),
-                                  );
+                                _updateFormValues1(
+                                  id: component.id,
+                                  title: component.formDetails.title,
+                                  type: component.type,
+                                  controlType: component.controlType,
+                                  hint: component.formDetails.hint,
+                                  valueReference: [
+                                    '${member?.id}',
+                                  ],
+                                  forDId: component.formDetails.id.toString(),
+                                );
                                 // if (member != null &&
                                 //     member.subscriptions != null &&
                                 //     member.subscriptions!.isEmpty) {
@@ -243,6 +246,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       return applyValidations(
@@ -342,6 +349,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validator: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       return applyValidations(
@@ -388,6 +399,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validator: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       return applyValidations(
@@ -429,6 +444,10 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                               validationLogic: component.formDetails.required
                                   ? (value) {
                                       if (value == null) {
+                                        if (component.formDetails.requiredMsg !=
+                                            null) {
+                                          return component.formDetails.requiredMsg;
+                                        }
                                         return '${component.formDetails.title} must not be empty';
                                       }
                                       if (int.tryParse(value) == null) {
@@ -568,8 +587,9 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   }
 
   void _submitAndNext(BuildContext context) {
-    final formValidate = ! (_formKey.currentState?.validate() ?? false);
-    final isCustomValidate = !(_customDropDownBoxKey.currentState?.validate() ?? false);
+    final formValidate = !(_formKey.currentState?.validate() ?? false);
+    final isCustomValidate =
+        !(_customDropDownBoxKey.currentState?.validate() ?? false);
     if (formValidate || isCustomValidate) {
       return;
     }
