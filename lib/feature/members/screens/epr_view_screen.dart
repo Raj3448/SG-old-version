@@ -152,37 +152,38 @@ class EPRViewScreen extends StatelessWidget {
               );
             },
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FixedButton(
-            ontap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return InfoDialog(
-                    showIcon: false,
-                    title: 'Hi there!!',
-                    desc:
-                        'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                    btnTitle: 'Contact Genie',
-                    showBtnIcon: true,
-                    btnIconPath: AppIcons.phone,
-                    onTap: () {
-                      launchDialer(
-                        homeStore.getMasterDataModel?.masterData.contactUs
-                                .contactNumber ??
-                            '',
-                      ).then(
-                        (value) => GoRouter.of(context).pop(),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-            btnTitle: 'Update EPR',
-            showIcon: false,
-            iconPath: AppIcons.add,
+          bottomNavigationBar: SafeArea(
+            top: false,
+            child: FixedButton(
+              ontap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return InfoDialog(
+                      showIcon: false,
+                      title: 'Hi there!!',
+                      desc:
+                          'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                      btnTitle: 'Contact Genie',
+                      showBtnIcon: true,
+                      btnIconPath: AppIcons.phone,
+                      onTap: () {
+                        launchDialer(
+                          homeStore.getMasterDataModel?.masterData.contactUs
+                                  .contactNumber ??
+                              '',
+                        ).then(
+                          (value) => GoRouter.of(context).pop(),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+              btnTitle: 'Update EPR',
+              showIcon: false,
+              iconPath: AppIcons.add,
+            ),
           ),
         );
       },

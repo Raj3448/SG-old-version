@@ -157,57 +157,58 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FixedButton(
-                ontap: () async {
-                  setState(() {
-                    autoValidate = true;
-                  });
-                  if (!globalkey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please fill all the fields'),
-                        duration: Duration(seconds: 3),
+              bottomNavigationBar: SafeArea(
+                top: false,
+                child: FixedButton(
+                  ontap: () async {
+                    setState(() {
+                      autoValidate = true;
+                    });
+                    if (!globalkey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please fill all the fields'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                      return;
+                    }
+                    user = user!.copyWith(
+                      firstName: _firstNameController.text,
+                      lastName: _lastNameController.text,
+                      email: _emailController.text,
+                      phoneNumber: _mobileController.text,
+                      dateOfBirth: DateTime.parse(_dobController.text),
+                      gender: _genderController.selectedOptions.first.value
+                          .toString(),
+                      address: Address(
+                        id: user!.address?.id ?? -1,
+                        state: _stateController.text,
+                        city: _cityController.text,
+                        streetAddress: _addressController.text,
+                        postalCode: _postalController.text,
+                        country: _countryController.selectedOptions.first.value
+                            .toString(),
                       ),
                     );
-                    return;
-                  }
-                  user = user!.copyWith(
-                    firstName: _firstNameController.text,
-                    lastName: _lastNameController.text,
-                    email: _emailController.text,
-                    phoneNumber: _mobileController.text,
-                    dateOfBirth: DateTime.parse(_dobController.text),
-                    gender: _genderController.selectedOptions.first.value
-                        .toString(),
-                    address: Address(
-                      id: user!.address?.id ?? -1,
-                      state: _stateController.text,
-                      city: _cityController.text,
-                      streetAddress: _addressController.text,
-                      postalCode: _postalController.text,
-                      country: _countryController.selectedOptions.first.value
-                          .toString(),
-                    ),
-                  );
-                  if (storedImageFile != null) {
-                    store.updateUserDataWithProfileImg(
-                      fileImage: storedImageFile!,
-                      userInstance: user!,
-                    );
-                    return;
-                  }
-                  if (isAlreadyhaveProfileImg && isImageUpdate) {
-                    if (storedImageFile == null) {
-                      user = user?.copyWith(profileImg: null);
+                    if (storedImageFile != null) {
+                      store.updateUserDataWithProfileImg(
+                        fileImage: storedImageFile!,
+                        userInstance: user!,
+                      );
+                      return;
                     }
-                  }
-                  store.updateUserDetails(user!);
-                },
-                btnTitle: 'Save details',
-                showIcon: false,
-                iconPath: AppIcons.add,
+                    if (isAlreadyhaveProfileImg && isImageUpdate) {
+                      if (storedImageFile == null) {
+                        user = user?.copyWith(profileImg: null);
+                      }
+                    }
+                    store.updateUserDetails(user!);
+                  },
+                  btnTitle: 'Save details',
+                  showIcon: false,
+                  iconPath: AppIcons.add,
+                ),
               ),
               appBar: const PageAppbar(title: 'Personal Details'),
               body: SingleChildScrollView(
