@@ -182,6 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 TextLabel(title: 'Mobile Number'.tr()),
                                 const SizedBox(height: Dimension.d2),
                                 CustomPhoneField(
+                                  isSignUpComponent: true,
                                   controller: phoneNumbContr,
                                   title: 'Enter Mobile Number'.tr(),
                                   autovalidate: autoValidate

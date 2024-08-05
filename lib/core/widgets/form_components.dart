@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use, lines_longer_than_80_chars, unnecessary_statements
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
@@ -9,6 +8,7 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
+import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 
 class TextLabel extends StatelessWidget {
   const TextLabel({required this.title, super.key});
@@ -121,16 +121,19 @@ class CustomPhoneField extends StatelessWidget {
     required this.title,
     required this.autovalidate,
     this.controller,
+    this.isSignUpComponent = false,
     super.key,
   });
 
   final String title;
   final TextEditingController? controller;
   final AutovalidateMode autovalidate;
+  final bool isSignUpComponent;
 
   @override
   Widget build(BuildContext context) {
-    final store = GetIt.I<LoginStore>();
+    final loginStore = GetIt.I<LoginStore>();
+    final signUpStore = GetIt.I<SignupStore>();
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
@@ -166,19 +169,33 @@ class CustomPhoneField extends StatelessWidget {
           child: CountryCodePicker(
             padding: EdgeInsets.zero,
             showDropDownButton: true,
-            initialSelection: store.selectCountryDialCode ?? '+91',
+            initialSelection: isSignUpComponent
+                ? signUpStore.selectCountryDialCode ?? '+91'
+                : loginStore.selectCountryDialCode ?? '+91',
             flagWidth: 25,
             favorite: const ['+91', 'IN'],
             textStyle: AppTextStyle.bodyLargeMedium
                 .copyWith(color: AppColors.grayscale900),
             barrierColor: AppColors.black.withOpacity(0.25),
             onChanged: (countryCode) {
-              store..selectCountryDialCode = countryCode.dialCode
-              ..selectCountryCode = countryCode.code;
+              if (isSignUpComponent) {
+                signUpStore
+                ..selectCountryDialCode = countryCode.dialCode
+                ..selectCountryCode = countryCode.code;
+              } else {
+                loginStore
+                  ..selectCountryDialCode = countryCode.dialCode
+                  ..selectCountryCode = countryCode.code;
+              }
             },
             onInit: (value) {
-              store.selectCountryDialCode == value!.dialCode;
-              store.selectCountryCode = value.code;
+              if(isSignUpComponent){
+                signUpStore.selectCountryDialCode == value!.dialCode;
+                signUpStore.selectCountryCode = value.code;
+              }else{
+                loginStore.selectCountryDialCode == value!.dialCode;
+                loginStore.selectCountryCode = value.code;
+              }
             },
           ),
         ),
@@ -187,7 +204,7 @@ class CustomPhoneField extends StatelessWidget {
         if (value!.isEmpty) {
           return 'Please enter your phone number';
         }
-        final countryCode = store.selectCountryCode ?? 'IN';
+        final countryCode = isSignUpComponent ? signUpStore.selectCountryCode ?? 'IN' : loginStore.selectCountryCode ?? 'IN';
         final requiredLength = countryMobileDigitCount[countryCode];
         if (requiredLength == null) {
           return 'Invalid country code';
