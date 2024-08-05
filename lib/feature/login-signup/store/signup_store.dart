@@ -37,6 +37,9 @@ abstract class _SignupStoreBase with Store {
   @observable
   String? selectCountryDialCode;
 
+  @observable
+  String? selectCountryCode;
+
   @action
   void signup(
     String firstName,
