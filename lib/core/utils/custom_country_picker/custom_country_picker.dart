@@ -122,9 +122,9 @@ class _CustomCountryPickerDialogState extends State<CustomCountryPickerDialog> {
                         widget.favorites != null && widget.favorites!.isNotEmpty
                             ? widget.favorites!.length - 1 == index &&
                                     _searchQuery.isEmpty
-                                ? AppColors.grayscale500
-                                : AppColors.grayscale200
-                            : AppColors.grayscale200,
+                                ? AppColors.grayscale600
+                                : AppColors.grayscale300
+                            : AppColors.grayscale300,
                   ),
                   itemCount: combinedList.length,
                 ),
@@ -160,13 +160,7 @@ class CountryListTileView extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              country.name,
-              style: AppTextStyle.bodyLargeMedium,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              '(${country.phoneCode})',
+              '${country.name} (${country.phoneCode})',
               style: AppTextStyle.bodyLargeMedium,
             ),
           ),
