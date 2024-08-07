@@ -40,6 +40,9 @@ abstract class _SignupStoreBase with Store {
   @observable
   String? selectCountryCode;
 
+  @observable
+  String? selectCountryFlagEmoji;
+
   @action
   void signup(
     String firstName,
