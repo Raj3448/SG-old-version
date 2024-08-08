@@ -157,6 +157,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
+              resizeToAvoidBottomInset: true,
               bottomNavigationBar: SafeArea(
                 top: false,
                 child: FixedButton(
@@ -462,8 +463,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: Dimension.d20),
-                        const SizedBox(height: Dimension.d5),
+                        const SizedBox(
+                          height: Dimension.d10,
+                        )
                       ],
                     ),
                   ),
