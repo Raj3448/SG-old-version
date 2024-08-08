@@ -170,7 +170,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                     ? 'Member details'.tr()
                     : 'Add new family member'.tr(),
               ),
-              resizeToAvoidBottomInset: false,
+              resizeToAvoidBottomInset: true,
               bottomNavigationBar: SafeArea(
                   top: false,
                   child: widget.edit
@@ -597,11 +597,12 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 return null;
                               },
                             ),
+                            const SizedBox(
+                              height: Dimension.d10,
+                            )
                           ],
                         ),
                       ),
-                      const SizedBox(height: Dimension.d20),
-                      const SizedBox(height: Dimension.d10),
                     ],
                   ),
                 ),
