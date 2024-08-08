@@ -107,6 +107,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
+              resizeToAvoidBottomInset: true,
               appBar: PageAppbar(title: 'Book Service'.tr()),
               bottomNavigationBar: SafeArea(
                 top: false,
@@ -499,9 +500,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
                             const SizedBox(height: Dimension.d4),
                             const BookingStatus(),
                             ...widgetList,
-                            const SizedBox(height: Dimension.d20),
-                            const SizedBox(height: Dimension.d4),
-                            const SizedBox(height: Dimension.d15),
+                            const SizedBox(height: Dimension.d10),
                           ],
                         ),
                       ),
