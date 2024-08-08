@@ -318,7 +318,7 @@ class _UserDetailsComponent extends StatelessWidget {
                               ],
                             ),
                             Text(
-                              'Relation: ${familyMembers[0].relation} & ${familyMembers[1].relation}',
+                              'Relation: ${familyMembers[0].relation ?? ''} & ${familyMembers[1].relation ?? ''}',
                               style: AppTextStyle.bodyMediumMedium.copyWith(
                                 color: AppColors.grayscale800,
                                 height: 1.5,
@@ -337,7 +337,7 @@ class _UserDetailsComponent extends StatelessWidget {
                                   .copyWith(color: AppColors.grayscale900),
                             ),
                             Text(
-                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation).join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth).join(' ') ?? '')}',
+                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation ?? '').join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth ?? '').join(' ') ?? '')}',
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.grayscale800),
                             ),
