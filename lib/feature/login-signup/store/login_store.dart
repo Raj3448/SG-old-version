@@ -30,6 +30,9 @@ abstract class _LoginStoreBase with Store {
   @observable
   Either<AuthFailure, void>? authFailure;
 
+  @observable
+  String? selectCountryFlagEmoji;
+
   @action
   void login(
     String identifier,

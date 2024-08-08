@@ -305,7 +305,7 @@ extension MemberExtension on Member {
         countries
             .firstWhere(
               (element) => element.isoCode == address.country,
-              orElse: () => Country('', address.country),
+              orElse: () => Country(name: '',isoCode: address.country,flagEmoji: '', phoneCode: ''),
             )
             .name,
       ].where((part) => part.isNotEmpty).join(', '),

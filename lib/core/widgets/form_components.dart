@@ -1,12 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use, lines_longer_than_80_chars, unnecessary_statements
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/utils/country_list.dart';
+import 'package:silver_genie/core/utils/custom_country_picker/custom_country_picker.dart';
 import 'package:silver_genie/feature/login-signup/store/login_store.dart';
 import 'package:silver_genie/feature/login-signup/store/signup_store.dart';
 
@@ -165,46 +167,46 @@ class CustomPhoneField extends StatelessWidget {
             color: AppColors.formValidationError,
           ),
         ),
-        prefixIcon: SizedBox(
-          child: CountryCodePicker(
-            padding: EdgeInsets.zero,
-            showDropDownButton: true,
-            initialSelection: isSignUpComponent
-                ? signUpStore.selectCountryDialCode ?? '+91'
-                : loginStore.selectCountryDialCode ?? '+91',
-            flagWidth: 25,
-            favorite: const ['+91', 'IN'],
-            textStyle: AppTextStyle.bodyLargeMedium
-                .copyWith(color: AppColors.grayscale900),
-            barrierColor: AppColors.black.withOpacity(0.25),
-            onChanged: (countryCode) {
-              if (isSignUpComponent) {
-                signUpStore
-                ..selectCountryDialCode = countryCode.dialCode
-                ..selectCountryCode = countryCode.code;
-              } else {
-                loginStore
-                  ..selectCountryDialCode = countryCode.dialCode
-                  ..selectCountryCode = countryCode.code;
-              }
-            },
-            onInit: (value) {
-              if(isSignUpComponent){
-                signUpStore.selectCountryDialCode == value!.dialCode;
-                signUpStore.selectCountryCode = value.code;
-              }else{
-                loginStore.selectCountryDialCode == value!.dialCode;
-                loginStore.selectCountryCode = value.code;
-              }
-            },
-          ),
-        ),
+        prefixIcon: SizedBox(child: Observer(
+          builder: (context) {
+            return GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => CustomCountryPickerDialog(
+                    favorites: [
+                      CountryApi.getCountryByIsoCode('IN'),
+                    ],
+                    onCountrySelection: (Country country) {
+                      if (isSignUpComponent) {
+                        signUpStore
+                          ..selectCountryDialCode = country.phoneCode
+                          ..selectCountryCode = country.isoCode
+                          ..selectCountryFlagEmoji = country.flagEmoji;
+                      } else {
+                        loginStore
+                          ..selectCountryDialCode = country.phoneCode
+                          ..selectCountryCode = country.isoCode
+                          ..selectCountryFlagEmoji = country.flagEmoji;
+                      }
+                    },
+                  ),
+                );
+              },
+              child: CountryCodeButtonComponent(
+                isSignUpComponent: isSignUpComponent,
+              ),
+            );
+          },
+        )),
       ),
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter your phone number';
         }
-        final countryCode = isSignUpComponent ? signUpStore.selectCountryCode ?? 'IN' : loginStore.selectCountryCode ?? 'IN';
+        final countryCode = isSignUpComponent
+            ? signUpStore.selectCountryCode ?? 'IN'
+            : loginStore.selectCountryCode ?? 'IN';
         final requiredLength = countryMobileDigitCount[countryCode];
         if (requiredLength == null) {
           return 'Invalid country code';
@@ -212,6 +214,52 @@ class CustomPhoneField extends StatelessWidget {
           return 'Please enter a valid phone number with $requiredLength digits';
         }
         return null;
+      },
+    );
+  }
+}
+
+class CountryCodeButtonComponent extends StatelessWidget {
+  final bool isSignUpComponent;
+  CountryCodeButtonComponent({
+    required this.isSignUpComponent,
+    Key? key,
+  }) : super(key: key);
+
+  final signUpStore = GetIt.I<SignupStore>();
+  final loginStore = GetIt.I<LoginStore>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Observer(
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: Dimension.d2),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                isSignUpComponent
+                    ? (signUpStore.selectCountryFlagEmoji ?? '🇮🇳')
+                    : (loginStore.selectCountryFlagEmoji ?? '🇮🇳'),
+                style: AppTextStyle.bodyXLMedium,
+              ),
+              const SizedBox(width: Dimension.d2),
+              Text(
+                  isSignUpComponent
+                      ? (signUpStore.selectCountryDialCode ?? '91')
+                      : (loginStore.selectCountryDialCode ?? '91'),
+                  style: AppTextStyle.bodyLargeMedium
+                      .copyWith(color: AppColors.grayscale900)),
+              const SizedBox(width: Dimension.d2),
+              const Icon(
+                AppIcons.arrow_down_ios,
+                size: 5,
+              ),
+              const SizedBox(width: Dimension.d2),
+            ],
+          ),
+        );
       },
     );
   }
