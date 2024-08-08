@@ -527,9 +527,9 @@ class FamilyMember with _$FamilyMember {
     required int id,
     required String firstName,
     required String lastName,
-    required String gender,
-    required String relation,
-    required String dateOfBirth,
+    @Default('') String? gender,
+    @Default('') String? relation,
+    @Default('') String? dateOfBirth,
     required IconImgMetaData? profileImg,
   }) = _FamilyMember;
 
