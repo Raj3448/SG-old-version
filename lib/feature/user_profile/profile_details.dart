@@ -119,7 +119,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     _firstNameController.text = userDetails.firstName;
     _lastNameController.text = userDetails.lastName;
     _dobController.text =
-        DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
+        DateFormat('dd/MM/yyyy').format(userDetails.dateOfBirth);
     _mobileController.text = userDetails.phoneNumber;
     _emailController.text = userDetails.email;
 
