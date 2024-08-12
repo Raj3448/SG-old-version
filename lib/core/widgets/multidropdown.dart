@@ -190,7 +190,7 @@ class DateDropdown extends FormField<DateTime> {
                                         context: state.context,
                                         firstDate: futureDates
                                             ? DateTime.now()
-                                            : DateTime(1950),
+                                            : DateTime(1900),
                                         lastDate: futureDates
                                             ? DateTime(3000)
                                             : DateTime.now(),
