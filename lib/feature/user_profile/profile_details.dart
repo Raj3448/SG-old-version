@@ -120,7 +120,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     _lastNameController.text = userDetails.lastName;
     _dobController.text =
         DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
-    _mobileController.text = userDetails.phoneNumber;
+    _mobileController.text = '+${userDetails.phoneNumber}';
     _emailController.text = userDetails.email;
 
     // Set profile image if available
@@ -178,7 +178,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       firstName: _firstNameController.text,
                       lastName: _lastNameController.text,
                       email: _emailController.text,
-                      phoneNumber: _mobileController.text,
+                      phoneNumber: _mobileController.text.startsWith('+')
+                      ? _mobileController.text.replaceFirst('+', '').trim()
+                      : _mobileController.text.trim(),
                       dateOfBirth: DateTime.parse(_dobController.text),
                       gender: _genderController.selectedOptions.first.value
                           .toString(),

@@ -253,7 +253,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 'dob': dobContr.text,
                                 'email': emailContr.text,
                                 'phoneNumber':
-                                    '91 ${phoneNumberContr.text.trim()}',
+                                    '91 ${phoneNumberContr.text.startsWith('+') ? phoneNumberContr.text.replaceFirst('+', '').trim()
+                                  : phoneNumberContr.text.trim()}',
                                 'address': {
                                   'state': stateContr.text.trim(),
                                   'city': cityContr.text.trim(),
@@ -632,7 +633,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = _member.phoneNumber;
+    phoneNumberContr.text = '+${_member.phoneNumber}';
     emailContr.text = _member.email;
     if (_member.profileImg != null) {
       isAlreadyhaveProfileImg = true;
@@ -662,7 +663,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = user.phoneNumber;
+    phoneNumberContr.text = '+${user.phoneNumber}';
     emailContr.text = user.email;
     if (user.profileImg != null) {
       isAlreadyhaveProfileImg = true;
