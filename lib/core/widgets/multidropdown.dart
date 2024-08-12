@@ -140,7 +140,7 @@ class DateDropdown extends FormField<DateTime> {
     required TextEditingController controller,
     bool disable = false,
     super.key,
-    String dateFormat = 'yyyy-MM-dd',
+    String dateFormat = 'dd/MM/yyyy',
     void Function(String?)? onSaved,
     void Function(DateTime)? onChanged,
     bool futureDates = false,
