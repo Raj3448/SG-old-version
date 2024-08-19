@@ -253,8 +253,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 'dob': dobContr.text,
                                 'email': emailContr.text,
                                 'phoneNumber':
-                                    '91 ${phoneNumberContr.text.startsWith('+') ? phoneNumberContr.text.replaceFirst('+', '').trim()
-                                  : phoneNumberContr.text.trim()}',
+                                    '91 ${phoneNumberContr.text.trim()}',
                                 'address': {
                                   'state': stateContr.text.trim(),
                                   'city': cityContr.text.trim(),
@@ -421,27 +420,45 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   );
                                 }
                               },
-                              child: CustomTextField(
-                                hintText: 'Enter mobile number',
-                                keyboardType: TextInputType.number,
-                                controller: phoneNumberContr,
-                                large: false,
-                                enabled:
-                                    widget.edit || widget.isSelf ? false : true,
-                                autovalidateMode: autoValidate
-                                    ? AutovalidateMode.onUserInteraction
-                                    : AutovalidateMode.disabled,
-                                validationLogic: (widget.edit || widget.isSelf)
-                                    ? null
-                                    : (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter your phone number';
-                                        }
-                                        if (value.length != 10) {
-                                          return 'Please enter atleast 10 digits phone number';
-                                        }
-                                        return null;
-                                      },
+                              child: Stack(
+                                children: [
+                                  CustomTextField(
+                                    hintText: 'Enter mobile number',
+                                    keyboardType: TextInputType.number,
+                                    controller: phoneNumberContr,
+                                    large: false,
+                                    enabled: widget.edit || widget.isSelf
+                                        ? false
+                                        : true,
+                                    autovalidateMode: autoValidate
+                                        ? AutovalidateMode.onUserInteraction
+                                        : AutovalidateMode.disabled,
+                                    validationLogic:
+                                        (widget.edit || widget.isSelf)
+                                            ? null
+                                            : (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Please enter your phone number';
+                                                }
+                                                if (value.length != 10) {
+                                                  return 'Please enter atleast 10 digits phone number';
+                                                }
+                                                return null;
+                                              },
+                                  ),
+                                  if (widget.edit || widget.isSelf)
+                                    const Positioned(
+                                      left: 14,
+                                      top: 14,
+                                      child: Text(
+                                        '+',
+                                        style: TextStyle(
+                                          color: AppColors.grayscale700,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -633,7 +650,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = '+${_member.phoneNumber}';
+    phoneNumberContr.text = '  ${_member.phoneNumber}';
     emailContr.text = _member.email;
     if (_member.profileImg != null) {
       isAlreadyhaveProfileImg = true;
@@ -663,7 +680,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = '+${user.phoneNumber}';
+    phoneNumberContr.text = '  ${user.phoneNumber}';
     emailContr.text = user.email;
     if (user.profileImg != null) {
       isAlreadyhaveProfileImg = true;

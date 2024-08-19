@@ -120,7 +120,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     _lastNameController.text = userDetails.lastName;
     _dobController.text =
         DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
-    _mobileController.text = '+${userDetails.phoneNumber}';
+    _mobileController.text = '  ${userDetails.phoneNumber}';
     _emailController.text = userDetails.email;
 
     // Set profile image if available
@@ -175,21 +175,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       return;
                     }
                     user = user!.copyWith(
-                      firstName: _firstNameController.text,
-                      lastName: _lastNameController.text,
-                      email: _emailController.text,
-                      phoneNumber: _mobileController.text.startsWith('+')
-                      ? _mobileController.text.replaceFirst('+', '').trim()
-                      : _mobileController.text.trim(),
-                      dateOfBirth: DateTime.parse(_dobController.text),
+                      firstName: _firstNameController.text.trim(),
+                      lastName: _lastNameController.text.trim(),
+                      email: _emailController.text.trim(),
+                      phoneNumber: _mobileController.text.trim(),
+                      dateOfBirth: DateTime.parse(_dobController.text.trim()),
                       gender: _genderController.selectedOptions.first.value
                           .toString(),
                       address: Address(
                         id: user!.address?.id ?? -1,
-                        state: _stateController.text,
-                        city: _cityController.text,
-                        streetAddress: _addressController.text,
-                        postalCode: _postalController.text,
+                        state: _stateController.text.trim(),
+                        city: _cityController.text.trim(),
+                        streetAddress: _addressController.text.trim(),
+                        postalCode: _postalController.text.trim(),
                         country: _countryController.selectedOptions.first.value
                             .toString(),
                       ),
@@ -324,12 +322,27 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               },
                             );
                           },
-                          child: CustomTextField(
-                            hintText: 'Mobile Field',
-                            keyboardType: TextInputType.number,
-                            large: false,
-                            enabled: false,
-                            controller: _mobileController,
+                          child: Stack(
+                            children: [
+                              CustomTextField(
+                                hintText: 'Mobile Field',
+                                keyboardType: TextInputType.number,
+                                large: false,
+                                enabled: false,
+                                controller: _mobileController,
+                              ),
+                              const Positioned(
+                                      left: 14,
+                                      top: 14,
+                                      child: Text(
+                                        '+',
+                                        style: TextStyle(
+                                          color: AppColors.grayscale700,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
