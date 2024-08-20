@@ -242,6 +242,8 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 genderContr.selectedOptions.first;
                             final relationSelectedValue =
                                 relationContr.selectedOptions.first;
+                            final dateObject = DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate = DateFormat('yyyy-MM-dd').format(dateObject);
                             memberStore.addNewFamilyMember(
                               memberData: {
                                 'self': widget.isSelf ? true : false,
@@ -252,7 +254,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                     genderSelectedValue.value.toString().trim(),
                                 'firstName': firstNameContr.text,
                                 'lastName': lastNameContr.text,
-                                'dob': dobContr.text,
+                                'dob': formattedDate,
                                 'email': emailContr.text,
                                 'phoneNumber':
                                     '91 ${phoneNumberContr.text.trim()}',
