@@ -179,7 +179,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       lastName: _lastNameController.text.trim(),
                       email: _emailController.text.trim(),
                       phoneNumber: _mobileController.text.trim(),
-                      dateOfBirth: DateTime.parse(_dobController.text),
+                      dateOfBirth: DateFormat('dd/MM/yyyy').parse(_dobController.text),
                       gender: _genderController.selectedOptions.first.value
                           .toString(),
                       address: Address(
