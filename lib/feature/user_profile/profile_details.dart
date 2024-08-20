@@ -119,7 +119,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     _firstNameController.text = userDetails.firstName;
     _lastNameController.text = userDetails.lastName;
     _dobController.text =
-        DateFormat('yyyy-MM-dd').format(userDetails.dateOfBirth);
+        DateFormat('dd/MM/yyyy').format(userDetails.dateOfBirth);
     _mobileController.text = '  ${userDetails.phoneNumber}';
     _emailController.text = userDetails.email;
 
@@ -179,7 +179,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       lastName: _lastNameController.text.trim(),
                       email: _emailController.text.trim(),
                       phoneNumber: _mobileController.text.trim(),
-                      dateOfBirth: DateTime.parse(_dobController.text.trim()),
+                      dateOfBirth: DateTime.parse(_dobController.text),
                       gender: _genderController.selectedOptions.first.value
                           .toString(),
                       address: Address(
@@ -332,16 +332,16 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                 controller: _mobileController,
                               ),
                               const Positioned(
-                                      left: 14,
-                                      top: 14,
-                                      child: Text(
-                                        '+',
-                                        style: TextStyle(
-                                          color: AppColors.grayscale700,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
+                                left: 14,
+                                top: 14,
+                                child: Text(
+                                  '+',
+                                  style: TextStyle(
+                                    color: AppColors.grayscale700,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

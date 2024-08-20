@@ -140,7 +140,7 @@ class DateDropdown extends FormField<DateTime> {
     required TextEditingController controller,
     bool disable = false,
     super.key,
-    String dateFormat = 'yyyy-MM-dd',
+    String dateFormat = 'dd/MM/yyyy',
     void Function(String?)? onSaved,
     void Function(DateTime)? onChanged,
     bool futureDates = false,
@@ -177,9 +177,11 @@ class DateDropdown extends FormField<DateTime> {
                                     ? AppColors.grayscale700
                                     : AppColors.grayscale900,
                               ),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 hintText: 'Select',
                                 border: InputBorder.none,
+                                hintStyle: AppTextStyle.bodyLargeMedium
+                                        .copyWith(color: AppColors.grayscale600),
                               ),
                               readOnly: true,
                               onSaved: onSaved,
@@ -190,7 +192,7 @@ class DateDropdown extends FormField<DateTime> {
                                         context: state.context,
                                         firstDate: futureDates
                                             ? DateTime.now()
-                                            : DateTime(1950),
+                                            : DateTime(1900),
                                         lastDate: futureDates
                                             ? DateTime(3000)
                                             : DateTime.now(),

@@ -643,7 +643,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
         _genderItems.indexWhere((element) => element.value == _member.gender);
     firstNameContr.text = _member.firstName;
     lastNameContr.text = _member.lastName;
-    dobContr.text = DateFormat('yyyy-MM-dd').format(_member.dateOfBirth);
+    dobContr.text = DateFormat('dd/MM/yyyy').format(_member.dateOfBirth);
     relationIndex = _relationList
         .indexWhere((element) => element.value == _member.relation);
     if (relationIndex == -1) {
@@ -673,7 +673,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
         _genderItems.indexWhere((element) => element.value == user!.gender);
     firstNameContr.text = user!.firstName;
     lastNameContr.text = user.lastName;
-    dobContr.text = DateFormat('yyyy-MM-dd').format(user.dateOfBirth);
+    dobContr.text = DateFormat('dd/MM/yyyy').format(user.dateOfBirth);
     relationIndex =
         _relationList.indexWhere((element) => element.value == user.relation);
     if (relationIndex == -1) {
