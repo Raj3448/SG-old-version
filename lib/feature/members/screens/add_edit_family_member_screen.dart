@@ -186,10 +186,12 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 genderContr.selectedOptions.first;
                             final relationSelectedValue =
                                 relationContr.selectedOptions.first;
+                                final dateObject = DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate = DateFormat('yyyy-MM-dd').format(dateObject);
                             final updatedData = <String, dynamic>{
                               'firstName': firstNameContr.text,
                               'lastName': lastNameContr.text,
-                              'dob': dobContr.text,
+                              'dob': formattedDate,
                               'relation':
                                   relationSelectedValue.value.toString().trim(),
                               'gender':
