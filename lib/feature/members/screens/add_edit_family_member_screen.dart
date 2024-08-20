@@ -310,6 +310,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 if (value!.isEmpty) {
                                   return 'Please enter your first name';
                                 }
+                                if (value.length > 26) {
+                                  return "First name shouldn't be more than 26 characters";
+                                }
                                 return null;
                               },
                             ),
@@ -328,6 +331,9 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               validationLogic: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please enter your last name';
+                                }
+                                if (value.length > 26) {
+                                  return "Last name shouldn't be more than 26 characters";
                                 }
                                 return null;
                               },
@@ -493,8 +499,12 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                       r'^[\w\.-]+(\+[\w\.-]+)?@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$';
                                   if (value!.isEmpty) {
                                     return 'Please enter your email address';
-                                  } else if (!RegExp(regex).hasMatch(value)) {
+                                  }
+                                  if (!RegExp(regex).hasMatch(value)) {
                                     return 'Please enter a valid email address';
+                                  }
+                                  if (value.length > 200) {
+                                    return "Email shouldn't be more than 200 characters";
                                   }
                                   return null;
                                 },
