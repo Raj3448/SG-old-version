@@ -180,6 +180,7 @@ abstract class _MembersStoreBase with Store {
         .then((value) {
       value.fold((l) {
         l.maybeMap(
+          uploadImageEntityTooLarge: (value) => addOrEditMemberFailure = 'Image upload failed: size exceeded the limit',
           socketExceptionError: (value) {
             addOrEditMemberFailure = 'No internet connection';
             return null;
