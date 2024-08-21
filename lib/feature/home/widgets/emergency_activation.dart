@@ -45,15 +45,18 @@ class EmergencyActivation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              homeStore.getMasterDataModel?.masterData.emergencyHelpline.label ?? 'Emergency'.tr(),
+              homeStore
+                      .getMasterDataModel?.masterData.emergencyHelpline.label ??
+                  'Emergency'.tr(),
               style: AppTextStyle.bodyXLMedium.copyWith(
                 fontWeight: FontWeight.w500,
                 color: AppColors.grayscale900,
               ),
             ),
             Text(
-              homeStore.getMasterDataModel?.masterData.emergencyHelpline.message ?? 'When the button is pressed, all emergency services will be activated.'
-                  ,
+              homeStore.getMasterDataModel?.masterData.emergencyHelpline
+                      .message ??
+                  'When the button is pressed, all emergency services will be activated.',
               style: AppTextStyle.bodyMediumMedium
                   .copyWith(color: AppColors.grayscale900),
             ),
@@ -241,22 +244,27 @@ class _ActivateListileComponent extends StatelessWidget {
           const SizedBox(
             width: Dimension.d2,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                memberName,
-                style: AppTextStyle.bodyLargeMedium
-                    .copyWith(fontWeight: FontWeight.w500),
-              ),
-              Text(
-                relation,
-                style: AppTextStyle.bodyMediumMedium
-                    .copyWith(color: AppColors.grayscale700),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  memberName,
+                  style: AppTextStyle.bodyLargeMedium.copyWith(
+                      fontWeight: FontWeight.w500,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                Text(
+                  relation,
+                  style: AppTextStyle.bodyMediumMedium
+                      .copyWith(color: AppColors.grayscale700),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
+          const SizedBox(
+            width: Dimension.d1,
+          ),
           SizedBox(
             height: 48,
             width: 120,

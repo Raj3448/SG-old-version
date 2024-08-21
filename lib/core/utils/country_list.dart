@@ -34,6 +34,7 @@ const List<Country> countries = [
   Country(
       name: 'Australia', isoCode: 'AU', flagEmoji: '🇦🇺', phoneCode: '+61'),
   Country(name: 'Austria', isoCode: 'AT', flagEmoji: '🇦🇹', phoneCode: '+43'),
+  Country(name: 'Åland Islands', isoCode: 'AX', flagEmoji: '🇦🇽', phoneCode: '+358'),
   Country(
       name: 'Azerbaijan', isoCode: 'AZ', flagEmoji: '🇦🇿', phoneCode: '+994'),
   Country(

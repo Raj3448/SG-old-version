@@ -276,7 +276,7 @@ class _BasicDetailsBox extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 18),
-          if (activeMember!.subscriptions!.isNotEmpty)
+          if (activeMember?.subscriptions?.isNotEmpty ?? false)
             Row(
               children: [
                 Text(
@@ -287,7 +287,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 const SizedBox(width: Dimension.d2),
                 SubscriptionPkg(
                   expanded: false,
-                  type: (activeMember.subscriptions != null &&
+                  type: (activeMember!.subscriptions != null &&
                           activeMember.subscriptions!.isNotEmpty)
                       ? activeMember.subscriptions![0].product.name ==
                               'Companion Genie'
@@ -304,7 +304,7 @@ class _BasicDetailsBox extends StatelessWidget {
               ],
             ),
           const SizedBox(height: Dimension.d3),
-          if (mobileNo!.isEmpty)
+          if (mobileNo?.isEmpty ?? true)
             const SizedBox()
           else
             Row(
@@ -316,7 +316,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 ),
                 const SizedBox(width: Dimension.d3),
                 Text(
-                  mobileNo!,
+                  '+${mobileNo!}',
                   style: AppTextStyle.bodyLargeMedium
                       .copyWith(color: AppColors.grayscale900),
                 ),
@@ -360,7 +360,7 @@ class _BasicDetailsBox extends StatelessWidget {
                 RoutesConstants.addEditFamilyMemberRoute,
                 pathParameters: {
                   'edit': 'true',
-                  'isSelf': user!.id == activeMember.id ? 'true' : 'false',
+                  'isSelf': user!.id == activeMember?.id ? 'true' : 'false',
                 },
               );
             },

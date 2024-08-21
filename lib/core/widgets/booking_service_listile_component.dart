@@ -74,10 +74,14 @@ class BookingListTileComponent extends StatelessWidget {
                         const SizedBox(
                           width: Dimension.d2,
                         ),
-                        Text(
-                          '${bookingServiceModel.requestedFor.first.firstName} ${bookingServiceModel.requestedFor.first.lastName}',
-                          style: AppTextStyle.bodyMediumMedium
-                              .copyWith(color: AppColors.grayscale700),
+                        Expanded(
+                          child: Text(
+                            '${bookingServiceModel.requestedFor.first.firstName} ${bookingServiceModel.requestedFor.first.lastName}',
+                            style: AppTextStyle.bodyMediumMedium.copyWith(
+                              color: AppColors.grayscale700,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                         const Spacer(),
                         if (!(bookingServiceModel.paymentStatus == 'paid' &&

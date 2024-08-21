@@ -186,10 +186,14 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 genderContr.selectedOptions.first;
                             final relationSelectedValue =
                                 relationContr.selectedOptions.first;
+                            final dateObject =
+                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(dateObject);
                             final updatedData = <String, dynamic>{
                               'firstName': firstNameContr.text,
                               'lastName': lastNameContr.text,
-                              'dob': dobContr.text,
+                              'dob': formattedDate,
                               'relation':
                                   relationSelectedValue.value.toString().trim(),
                               'gender':
@@ -240,6 +244,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 genderContr.selectedOptions.first;
                             final relationSelectedValue =
                                 relationContr.selectedOptions.first;
+                            final dateObject =
+                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(dateObject);
                             memberStore.addNewFamilyMember(
                               memberData: {
                                 'self': widget.isSelf ? true : false,
@@ -250,7 +258,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                     genderSelectedValue.value.toString().trim(),
                                 'firstName': firstNameContr.text,
                                 'lastName': lastNameContr.text,
-                                'dob': dobContr.text,
+                                'dob': formattedDate,
                                 'email': emailContr.text,
                                 'phoneNumber':
                                     '91 ${phoneNumberContr.text.trim()}',
@@ -423,24 +431,29 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               child: CustomTextField(
                                 hintText: 'Enter mobile number',
                                 keyboardType: TextInputType.number,
-                                controller: phoneNumberContr,
+                                controller: widget.edit || widget.isSelf
+                                    ? null
+                                    : phoneNumberContr,
+                                initialValue:  widget.edit || widget.isSelf ? '+${phoneNumberContr.text}' : null,
                                 large: false,
-                                enabled:
-                                    widget.edit || widget.isSelf ? false : true,
+                                enabled: widget.edit || widget.isSelf
+                                    ? false
+                                    : true,
                                 autovalidateMode: autoValidate
                                     ? AutovalidateMode.onUserInteraction
                                     : AutovalidateMode.disabled,
-                                validationLogic: (widget.edit || widget.isSelf)
-                                    ? null
-                                    : (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter your phone number';
-                                        }
-                                        if (value.length != 10) {
-                                          return 'Please enter atleast 10 digits phone number';
-                                        }
-                                        return null;
-                                      },
+                                validationLogic:
+                                    (widget.edit || widget.isSelf)
+                                        ? null
+                                        : (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your phone number';
+                                            }
+                                            if (value.length != 10) {
+                                              return 'Please enter atleast 10 digits phone number';
+                                            }
+                                            return null;
+                                          },
                               ),
                             ),
                             const SizedBox(height: 16),

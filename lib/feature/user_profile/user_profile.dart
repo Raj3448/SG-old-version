@@ -130,8 +130,8 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                                 CustomTextIcon(
                                   iconpath: AppIcons.phone,
-                                  title: widget
-                                      .userDetailStore.userDetails!.phoneNumber,
+                                  title: '+${widget
+                                      .userDetailStore.userDetails!.phoneNumber}',
                                 ),
                                 const SizedBox(
                                   height: Dimension.d4,
