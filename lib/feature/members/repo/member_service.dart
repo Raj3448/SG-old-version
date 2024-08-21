@@ -237,11 +237,13 @@ class MemberServices implements IMemberService {
         } else {
           return const Left(MemberServiceFailure.badResponse());
         }
-      } else if (response.statusCode == 400) {
+      } if(response.statusCode == 413 && response.statusMessage == 'Request Entity Too Large'){ 
+        return const Left(MemberServiceFailure.uploadImageEntityTooLarge());
+      }if (response.statusCode == 400) {
         return const Left(MemberServiceFailure.badResponse());
-      } else if (response.statusCode == 500) {
+      } if (response.statusCode == 500) {
         return const Left(MemberServiceFailure.internalServerError());
-      } else if (response.statusCode == 502) {
+      } if (response.statusCode == 502) {
         return const Left(MemberServiceFailure.badGatewayError());
       } else {
         return const Left(MemberServiceFailure.badResponse());
