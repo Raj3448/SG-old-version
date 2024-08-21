@@ -212,11 +212,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     });
                                     if (formKey.currentState!.validate() &&
                                         firstNameContr.text.isNotEmpty) {
+                                      final dateObject =
+                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(dateObject);
                                       store
                                         ..signup(
                                           firstNameContr.text,
                                           lastNameContr.text,
-                                          dobContr.text,
+                                          formattedDate,
                                           emailContr.text,
                                           '${store.selectCountryDialCode ?? '91'} ${phoneNumbContr.text}'
                                               .replaceFirst('+', ''),
