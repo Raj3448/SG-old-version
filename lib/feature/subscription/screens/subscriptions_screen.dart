@@ -182,7 +182,11 @@ class _SubscriptionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activePlanList = members
-        .where((member) => member.subscriptionStatus == 'Active')
+        .where(
+          (member) =>
+              member.subscriptionStatus == 'Active' &&
+              member.paymentStatus != 'expired',
+        )
         .toList();
     final expiredPlanList = members
         .where(
@@ -337,7 +341,7 @@ class _UserDetailsComponent extends StatelessWidget {
                                   .copyWith(color: AppColors.grayscale900),
                             ),
                             Text(
-                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation ?? '').join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth ?? '').join(' ') ?? '')}',
+                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation ?? '').join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth ?? '').join(' ') ?? '', null)}',
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.grayscale800),
                             ),
@@ -452,8 +456,8 @@ class _UserDetailsComponent extends StatelessWidget {
   }
 }
 
-int calculateAgeFromString(String dobString) {
-  final dob = DateFormat('yyyy-MM-dd').parse(dobString);
+int calculateAgeFromString(String dobString, String? dateFormat) {
+  final dob = DateFormat(dateFormat ?? 'yyyy-MM-dd').parse(dobString);
   final now = DateTime.now();
   var age = now.year - dob.year;
   if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
