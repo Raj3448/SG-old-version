@@ -85,14 +85,19 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.memberName ?? widget.placeHolder ?? 'Select',
-                  style: AppTextStyle.bodyLargeMedium.copyWith(
-                    height: 2.4,
-                    color: widget.memberName == null
-                        ? AppColors.grayscale600
-                        : AppColors.grayscale900,
+                Expanded(
+                  child: Text(
+                    widget.memberName ?? widget.placeHolder ?? 'Select',
+                    style: AppTextStyle.bodyLargeMedium.copyWith(
+                        height: 2.4,
+                        color: widget.memberName == null
+                            ? AppColors.grayscale600
+                            : AppColors.grayscale900,
+                        overflow: TextOverflow.ellipsis),
                   ),
+                ),
+                const SizedBox(
+                  width: Dimension.d1,
                 ),
                 Icon(
                   isExpanding ? AppIcons.arrow_up_ios : AppIcons.arrow_down_ios,
@@ -106,7 +111,8 @@ class CustomDropDownBoxState extends State<CustomDropDownBox> {
         Visibility(
           visible: showError && widget.isRequired,
           child: Padding(
-            padding: const EdgeInsets.only(top: Dimension.d2, left: Dimension.d4),
+            padding:
+                const EdgeInsets.only(top: Dimension.d2, left: Dimension.d4),
             child: Text(
               widget.validationMessage ?? 'Please select a member',
               textAlign: TextAlign.left,
