@@ -27,6 +27,7 @@ import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
+import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class AddEditFamilyMemberScreen extends StatefulWidget {
@@ -172,114 +173,113 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
               ),
               resizeToAvoidBottomInset: true,
               bottomNavigationBar: SafeArea(
-                  top: false,
-                  child: widget.edit
-                      ? FixedButton(
-                          ontap: () {
-                            setState(() {
-                              autoValidate = true;
-                            });
-                            if (!formKey.currentState!.validate()) {
-                              return;
+                top: false,
+                child: widget.edit
+                    ? FixedButton(
+                        ontap: () {
+                          setState(() {
+                            autoValidate = true;
+                          });
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
+                          final genderSelectedValue =
+                              genderContr.selectedOptions.first;
+                          final relationSelectedValue =
+                              relationContr.selectedOptions.first;
+                          final dateObject =
+                              DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                          final formattedDate =
+                              DateFormat('yyyy-MM-dd').format(dateObject);
+                          final updatedData = <String, dynamic>{
+                            'firstName': firstNameContr.text,
+                            'lastName': lastNameContr.text,
+                            'dob': formattedDate,
+                            'relation':
+                                relationSelectedValue.value.toString().trim(),
+                            'gender':
+                                genderSelectedValue.value.toString().trim(),
+                            'address': {
+                              'state': stateContr.text,
+                              'city': cityContr.text,
+                              'streetAddress': memberAddressContr.text,
+                              'postalCode': postalCodeContr.text,
+                              'country': countryContr
+                                  .selectedOptions.first.value
+                                  .toString(),
+                            },
+                            'profileImg':
+                                memberStore.activeMember!.profileImg?.id,
+                          };
+                          if (storeImageFile != null) {
+                            memberStore.updateMemberDataWithProfileImg(
+                              id: _member.id.toString(),
+                              fileImage: storeImageFile!,
+                              memberInstance: updatedData,
+                            );
+                            return;
+                          }
+                          if (isAlreadyhaveProfileImg && isImageUpdate) {
+                            if (storeImageFile == null) {
+                              updatedData['profileImg'] = null;
                             }
-                            final genderSelectedValue =
-                                genderContr.selectedOptions.first;
-                            final relationSelectedValue =
-                                relationContr.selectedOptions.first;
-                            final dateObject =
-                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
-                            final formattedDate =
-                                DateFormat('yyyy-MM-dd').format(dateObject);
-                            final updatedData = <String, dynamic>{
-                              'firstName': firstNameContr.text,
-                              'lastName': lastNameContr.text,
-                              'dob': formattedDate,
+                          }
+                          memberStore.updateMember(
+                            id: _member.id,
+                            updatedData: updatedData,
+                          );
+                        },
+                        btnTitle: 'Save details',
+                        showIcon: false,
+                        iconPath: AppIcons.check,
+                      )
+                    : FixedButton(
+                        ontap: () async {
+                          setState(() {
+                            autoValidate = true;
+                          });
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
+                          final genderSelectedValue =
+                              genderContr.selectedOptions.first;
+                          final relationSelectedValue =
+                              relationContr.selectedOptions.first;
+                          final dateObject =
+                              DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                          final formattedDate =
+                              DateFormat('yyyy-MM-dd').format(dateObject);
+                          memberStore.addNewFamilyMember(
+                            memberData: {
+                              'self': widget.isSelf ? true : false,
                               'relation':
                                   relationSelectedValue.value.toString().trim(),
                               'gender':
                                   genderSelectedValue.value.toString().trim(),
+                              'firstName': firstNameContr.text,
+                              'lastName': lastNameContr.text,
+                              'dob': formattedDate,
+                              'email': emailContr.text,
+                              'phoneNumber':
+                                  '91 ${phoneNumberContr.text.trim()}',
                               'address': {
-                                'state': stateContr.text,
-                                'city': cityContr.text,
-                                'streetAddress': memberAddressContr.text,
-                                'postalCode': postalCodeContr.text,
+                                'state': stateContr.text.trim(),
+                                'city': cityContr.text.trim(),
+                                'streetAddress': memberAddressContr.text.trim(),
+                                'postalCode': postalCodeContr.text.trim(),
                                 'country': countryContr
                                     .selectedOptions.first.value
                                     .toString(),
                               },
-                              'profileImg':
-                                  memberStore.activeMember!.profileImg?.id,
-                            };
-                            if (storeImageFile != null) {
-                              memberStore.updateMemberDataWithProfileImg(
-                                id: _member.id.toString(),
-                                fileImage: storeImageFile!,
-                                memberInstance: updatedData,
-                              );
-                              return;
-                            }
-                            if (isAlreadyhaveProfileImg && isImageUpdate) {
-                              if (storeImageFile == null) {
-                                updatedData['profileImg'] = null;
-                              }
-                            }
-                            memberStore.updateMember(
-                              id: _member.id,
-                              updatedData: updatedData,
-                            );
-                          },
-                          btnTitle: 'Save details',
-                          showIcon: false,
-                          iconPath: AppIcons.check,
-                        )
-                      : FixedButton(
-                          ontap: () async {
-                            setState(() {
-                              autoValidate = true;
-                            });
-                            if (!formKey.currentState!.validate()) {
-                              return;
-                            }
-                            final genderSelectedValue =
-                                genderContr.selectedOptions.first;
-                            final relationSelectedValue =
-                                relationContr.selectedOptions.first;
-                            final dateObject =
-                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
-                            final formattedDate =
-                                DateFormat('yyyy-MM-dd').format(dateObject);
-                            memberStore.addNewFamilyMember(
-                              memberData: {
-                                'self': widget.isSelf ? true : false,
-                                'relation': relationSelectedValue.value
-                                    .toString()
-                                    .trim(),
-                                'gender':
-                                    genderSelectedValue.value.toString().trim(),
-                                'firstName': firstNameContr.text,
-                                'lastName': lastNameContr.text,
-                                'dob': formattedDate,
-                                'email': emailContr.text,
-                                'phoneNumber':
-                                    '91 ${phoneNumberContr.text.trim()}',
-                                'address': {
-                                  'state': stateContr.text.trim(),
-                                  'city': cityContr.text.trim(),
-                                  'streetAddress':
-                                      memberAddressContr.text.trim(),
-                                  'postalCode': postalCodeContr.text.trim(),
-                                  'country': countryContr
-                                      .selectedOptions.first.value
-                                      .toString(),
-                                },
-                              },
-                              fileImage: storeImageFile,
-                            );
-                          },
-                          btnTitle: 'Add new member',
-                          showIcon: false,
-                          iconPath: AppIcons.check,
-                        )),
+                            },
+                            fileImage: storeImageFile,
+                          );
+                        },
+                        btnTitle: 'Add new member',
+                        showIcon: false,
+                        iconPath: AppIcons.check,
+                      ),
+              ),
               body: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(
                   decelerationRate: ScrollDecelerationRate.fast,
@@ -367,6 +367,13 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 if (value == null) {
                                   return 'Please select the DOB';
                                 }
+                                if (_isRelationAgeValid(
+                                  relationContr.selectedOptions.first.value
+                                      .toString(),
+                                  dobContr.text,
+                                )) {
+                                  return 'Age must be greater than 18 for this relation!';
+                                }
                                 return null;
                               },
                             ),
@@ -434,26 +441,26 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 controller: widget.edit || widget.isSelf
                                     ? null
                                     : phoneNumberContr,
-                                initialValue:  widget.edit || widget.isSelf ? '+${phoneNumberContr.text}' : null,
+                                initialValue: widget.edit || widget.isSelf
+                                    ? '+${phoneNumberContr.text}'
+                                    : null,
                                 large: false,
-                                enabled: widget.edit || widget.isSelf
-                                    ? false
-                                    : true,
+                                enabled:
+                                    widget.edit || widget.isSelf ? false : true,
                                 autovalidateMode: autoValidate
                                     ? AutovalidateMode.onUserInteraction
                                     : AutovalidateMode.disabled,
-                                validationLogic:
-                                    (widget.edit || widget.isSelf)
-                                        ? null
-                                        : (value) {
-                                            if (value!.isEmpty) {
-                                              return 'Please enter your phone number';
-                                            }
-                                            if (value.length != 10) {
-                                              return 'Please enter atleast 10 digits phone number';
-                                            }
-                                            return null;
-                                          },
+                                validationLogic: (widget.edit || widget.isSelf)
+                                    ? null
+                                    : (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your phone number';
+                                        }
+                                        if (value.length != 10) {
+                                          return 'Please enter atleast 10 digits phone number';
+                                        }
+                                        return null;
+                                      },
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -612,7 +619,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             ),
                             const SizedBox(
                               height: Dimension.d10,
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -690,5 +697,13 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       );
       postalCodeContr.text = user.address!.postalCode;
     }
+  }
+
+  bool _isRelationAgeValid(String relation, String dob) {
+    final isUnderAge = calculateAgeFromString(dob, 'dd/MM/yyyy') < 18;
+    if (relation == 'Mother' || relation == 'Father' || relation == 'Wife') {
+      return isUnderAge;
+    }
+    return false;
   }
 }
