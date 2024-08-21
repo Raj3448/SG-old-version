@@ -428,36 +428,32 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   );
                                 }
                               },
-                              child: Stack(
-                                children: [
-                                  CustomTextField(
-                                    hintText: 'Enter mobile number',
-                                    keyboardType: TextInputType.number,
-                                    controller: widget.edit || widget.isSelf
+                              child: CustomTextField(
+                                hintText: 'Enter mobile number',
+                                keyboardType: TextInputType.number,
+                                controller: widget.edit || widget.isSelf
+                                    ? null
+                                    : phoneNumberContr,
+                                initialValue:  widget.edit || widget.isSelf ? '+${phoneNumberContr.text}' : null,
+                                large: false,
+                                enabled: widget.edit || widget.isSelf
+                                    ? false
+                                    : true,
+                                autovalidateMode: autoValidate
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
+                                validationLogic:
+                                    (widget.edit || widget.isSelf)
                                         ? null
-                                        : phoneNumberContr,
-                                    initialValue:  widget.edit || widget.isSelf ? '+${phoneNumberContr.text}' : null,
-                                    large: false,
-                                    enabled: widget.edit || widget.isSelf
-                                        ? false
-                                        : true,
-                                    autovalidateMode: autoValidate
-                                        ? AutovalidateMode.onUserInteraction
-                                        : AutovalidateMode.disabled,
-                                    validationLogic:
-                                        (widget.edit || widget.isSelf)
-                                            ? null
-                                            : (value) {
-                                                if (value!.isEmpty) {
-                                                  return 'Please enter your phone number';
-                                                }
-                                                if (value.length != 10) {
-                                                  return 'Please enter atleast 10 digits phone number';
-                                                }
-                                                return null;
-                                              },
-                                  ),
-                                ],
+                                        : (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your phone number';
+                                            }
+                                            if (value.length != 10) {
+                                              return 'Please enter atleast 10 digits phone number';
+                                            }
+                                            return null;
+                                          },
                               ),
                             ),
                             const SizedBox(height: 16),
