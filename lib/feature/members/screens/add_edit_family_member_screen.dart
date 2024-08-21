@@ -186,8 +186,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 genderContr.selectedOptions.first;
                             final relationSelectedValue =
                                 relationContr.selectedOptions.first;
-                                final dateObject = DateFormat('dd/MM/yyyy').parse(dobContr.text);
-                            final formattedDate = DateFormat('yyyy-MM-dd').format(dateObject);
+                            final dateObject =
+                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(dateObject);
                             final updatedData = <String, dynamic>{
                               'firstName': firstNameContr.text,
                               'lastName': lastNameContr.text,
@@ -242,8 +244,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                 genderContr.selectedOptions.first;
                             final relationSelectedValue =
                                 relationContr.selectedOptions.first;
-                            final dateObject = DateFormat('dd/MM/yyyy').parse(dobContr.text);
-                            final formattedDate = DateFormat('yyyy-MM-dd').format(dateObject);
+                            final dateObject =
+                                DateFormat('dd/MM/yyyy').parse(dobContr.text);
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(dateObject);
                             memberStore.addNewFamilyMember(
                               memberData: {
                                 'self': widget.isSelf ? true : false,
@@ -429,7 +433,10 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                   CustomTextField(
                                     hintText: 'Enter mobile number',
                                     keyboardType: TextInputType.number,
-                                    controller: phoneNumberContr,
+                                    controller: widget.edit || widget.isSelf
+                                        ? null
+                                        : phoneNumberContr,
+                                    initialValue:  widget.edit || widget.isSelf ? '+${phoneNumberContr.text}' : null,
                                     large: false,
                                     enabled: widget.edit || widget.isSelf
                                         ? false
@@ -450,18 +457,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                                                 return null;
                                               },
                                   ),
-                                  if (widget.edit || widget.isSelf)
-                                    const Positioned(
-                                      left: 14,
-                                      top: 14,
-                                      child: Text(
-                                        '+',
-                                        style: TextStyle(
-                                          color: AppColors.grayscale700,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
                                 ],
                               ),
                             ),
@@ -654,7 +649,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = '  ${_member.phoneNumber}';
+    phoneNumberContr.text = _member.phoneNumber;
     emailContr.text = _member.email;
     if (_member.profileImg != null) {
       isAlreadyhaveProfileImg = true;
@@ -684,7 +679,7 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
       relationIndex = null;
     }
 
-    phoneNumberContr.text = '  ${user.phoneNumber}';
+    phoneNumberContr.text = user.phoneNumber;
     emailContr.text = user.email;
     if (user.profileImg != null) {
       isAlreadyhaveProfileImg = true;

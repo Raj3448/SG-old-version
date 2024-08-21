@@ -76,7 +76,7 @@ class BookingListTileComponent extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            '${bookingServiceModel.requestedFor.first.firstName} ${bookingServiceModel.requestedFor.first.lastName} erirjfejfejrfirfijijfefjeirjwifjwjfiqjfajfiafrajiaffijfea',
+                            '${bookingServiceModel.requestedFor.first.firstName} ${bookingServiceModel.requestedFor.first.lastName}',
                             style: AppTextStyle.bodyMediumMedium.copyWith(
                               color: AppColors.grayscale700,
                               overflow: TextOverflow.ellipsis,

@@ -120,7 +120,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     _lastNameController.text = userDetails.lastName;
     _dobController.text =
         DateFormat('dd/MM/yyyy').format(userDetails.dateOfBirth);
-    _mobileController.text = '  ${userDetails.phoneNumber}';
+    _mobileController.text = userDetails.phoneNumber;
     _emailController.text = userDetails.email;
 
     // Set profile image if available
@@ -179,7 +179,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       lastName: _lastNameController.text.trim(),
                       email: _emailController.text.trim(),
                       phoneNumber: _mobileController.text.trim(),
-                      dateOfBirth: DateFormat('dd/MM/yyyy').parse(_dobController.text),
+                      dateOfBirth:
+                          DateFormat('dd/MM/yyyy').parse(_dobController.text),
                       gender: _genderController.selectedOptions.first.value
                           .toString(),
                       address: Address(
@@ -322,27 +323,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               },
                             );
                           },
-                          child: Stack(
-                            children: [
-                              CustomTextField(
-                                hintText: 'Mobile Field',
-                                keyboardType: TextInputType.number,
-                                large: false,
-                                enabled: false,
-                                controller: _mobileController,
-                              ),
-                              const Positioned(
-                                left: 14,
-                                top: 14,
-                                child: Text(
-                                  '+',
-                                  style: TextStyle(
-                                    color: AppColors.grayscale700,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          child: CustomTextField(
+                            hintText: 'Mobile Field',
+                            keyboardType: TextInputType.number,
+                            large: false,
+                            initialValue: '+${_mobileController.text.trim()}',
+                            enabled: false,
                           ),
                         ),
                         const SizedBox(height: Dimension.d4),
