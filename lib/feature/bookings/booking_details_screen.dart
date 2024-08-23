@@ -176,26 +176,22 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                             Icon(
                               _getStatusIcon(
                                 subscriptionDetails.paymentStatus,
-                                subscriptionDetails.status,
                               ),
                               size: _getStatusIconSize(
                                 subscriptionDetails.paymentStatus,
                               ),
                               color: _getStatusIconColor(
                                 subscriptionDetails.paymentStatus,
-                                subscriptionDetails.status,
                               ),
                             ),
                             const SizedBox(width: Dimension.d2),
                             Text(
                               _getStatusText(
                                 subscriptionDetails.paymentStatus,
-                                subscriptionDetails.status,
                               ),
                               style: AppTextStyle.bodyMediumBold.copyWith(
                                 color: _getStatusTextColor(
                                   subscriptionDetails.paymentStatus,
-                                  subscriptionDetails.status,
                                 ),
                               ),
                             ),
@@ -370,45 +366,11 @@ class ElementSpaceBetween extends StatelessWidget {
   }
 }
 
-class _PaymentStatus extends StatelessWidget {
-  const _PaymentStatus({
-    required this.icon,
-    required this.label,
-    required this.isBlack,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool isBlack;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: isBlack ? AppColors.grayscale900 : AppColors.warning2,
-          size: icon == Icons.check ? 24 : 18,
-        ),
-        const SizedBox(width: Dimension.d2),
-        Text(
-          label,
-          style: AppTextStyle.bodyMediumBold.copyWith(
-            color: isBlack ? AppColors.grayscale900 : AppColors.warning2,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-IconData _getStatusIcon(String paymentStatus, String status) {
-  if (paymentStatus == 'due' ||
-      paymentStatus == 'expired' ||
-      status == 'rejected') {
+IconData _getStatusIcon(String paymentStatus) {
+  if (paymentStatus == 'due' || paymentStatus == 'expired') {
     return AppIcons.warning;
   }
-  if (status == 'requested' || status == 'processing') {
+  if (paymentStatus == 'paid' || paymentStatus == 'partiallyPaid') {
     return AppIcons.medical_services;
   }
   return AppIcons.check;
@@ -418,36 +380,27 @@ double _getStatusIconSize(String paymentStatus) {
   return paymentStatus == 'due' || paymentStatus == 'expired' ? 16 : 14;
 }
 
-Color _getStatusIconColor(String paymentStatus, String status) {
+Color _getStatusIconColor(String paymentStatus) {
   if (paymentStatus == 'due' || paymentStatus == 'expired') {
     return AppColors.warning2;
   }
   return AppColors.grayscale800;
 }
 
-String _getStatusText(String paymentStatus, String status) {
+String _getStatusText(String paymentStatus) {
   if (paymentStatus == 'due') {
     return 'Payment processing';
   }
   if (paymentStatus == 'expired') {
     return 'Payment failure';
   }
-  if (status == 'active' || status == 'processed') {
-    return 'Service scheduled';
+  if (paymentStatus == 'paid' || paymentStatus == 'partiallyPaid') {
+    return 'Completed';
   }
-  if (status == 'requested' || status == 'processing') {
-    return 'Service in progress';
-  }
-  if (status == 'rejected') {
-    return 'Service rejected';
-  }
-  if (status == 'completed') {
-    return 'Service completed';
-  }
-  return 'Unknown';
+  return 'n/a';
 }
 
-Color _getStatusTextColor(String paymentStatus, String status) {
+Color _getStatusTextColor(String paymentStatus) {
   if (paymentStatus == 'due' || paymentStatus == 'expired') {
     return AppColors.warning2;
   }
