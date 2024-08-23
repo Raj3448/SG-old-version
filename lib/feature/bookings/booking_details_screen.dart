@@ -11,6 +11,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
@@ -172,29 +173,33 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                         const SizedBox(height: Dimension.d1),
                         Row(
                           children: [
-                            if (subscriptionDetails.paymentStatus == 'paid' &&
-                                subscriptionDetails.subscriptionStatus ==
-                                    'Expired')
-                              const _PaymentStatus(
-                                icon: Icons.error_outline_rounded,
-                                label: 'Payment Expired',
-                                isBlack: false,
-                              )
-                            else if (subscriptionDetails.paymentStatus ==
-                                    'paid' ||
-                                subscriptionDetails.paymentStatus ==
-                                    'partiallyPaid')
-                              const _PaymentStatus(
-                                icon: Icons.check,
-                                label: 'Payment Done',
-                                isBlack: true,
-                              )
-                            else if (subscriptionDetails.paymentStatus == 'due')
-                              const _PaymentStatus(
-                                icon: Icons.watch_later_outlined,
-                                label: 'In Progress',
-                                isBlack: true,
+                            Icon(
+                              _getStatusIcon(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
                               ),
+                              size: _getStatusIconSize(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
+                              ),
+                              color: _getStatusIconColor(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
+                              ),
+                            ),
+                            const SizedBox(width: Dimension.d2),
+                            Text(
+                              _getStatusText(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
+                              ),
+                              style: AppTextStyle.bodyMediumBold.copyWith(
+                                color: _getStatusTextColor(
+                                  subscriptionDetails.paymentStatus,
+                                  subscriptionDetails.status,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -366,34 +371,56 @@ class ElementSpaceBetween extends StatelessWidget {
   }
 }
 
-class _PaymentStatus extends StatelessWidget {
-  const _PaymentStatus({
-    required this.icon,
-    required this.label,
-    required this.isBlack,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool isBlack;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: isBlack ? AppColors.grayscale900 : AppColors.warning2,
-          size: icon == Icons.check ? 24 : 18,
-        ),
-        const SizedBox(width: Dimension.d2),
-        Text(
-          label,
-          style: AppTextStyle.bodyMediumBold.copyWith(
-            color: isBlack ? AppColors.grayscale900 : AppColors.warning2,
-          ),
-        ),
-      ],
-    );
+IconData _getStatusIcon(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
+    return AppIcons.warning;
   }
+  if (paymentStatus == 'paid' || paymentStatus == 'partiallyPaid') {
+    return AppIcons.medical_services;
+  }
+  return AppIcons.check;
+}
+
+double _getStatusIconSize(String paymentStatus, String status) {
+  return paymentStatus == 'due' ||
+          paymentStatus == 'expired' ||
+          status == 'rejected'
+      ? 16
+      : 14;
+}
+
+Color _getStatusIconColor(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
+    return AppColors.warning2;
+  }
+  return AppColors.grayscale800;
+}
+
+String _getStatusText(String paymentStatus, String status) {
+  if (paymentStatus == 'due') {
+    return 'Payment processing';
+  }
+  if (paymentStatus == 'expired') {
+    return 'Payment failure';
+  }
+  if (status == 'rejected') {
+    return 'Rejected';
+  }
+  if (paymentStatus == 'paid' || paymentStatus == 'partiallyPaid') {
+    return 'Completed';
+  }
+  return 'n/a';
+}
+
+Color _getStatusTextColor(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
+    return AppColors.warning2;
+  }
+  return AppColors.grayscale800;
 }
