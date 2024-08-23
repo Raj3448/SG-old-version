@@ -11,6 +11,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
@@ -172,29 +173,32 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                         const SizedBox(height: Dimension.d1),
                         Row(
                           children: [
-                            if (subscriptionDetails.paymentStatus == 'paid' &&
-                                subscriptionDetails.subscriptionStatus ==
-                                    'Expired')
-                              const _PaymentStatus(
-                                icon: Icons.error_outline_rounded,
-                                label: 'Payment Expired',
-                                isBlack: false,
-                              )
-                            else if (subscriptionDetails.paymentStatus ==
-                                    'paid' ||
-                                subscriptionDetails.paymentStatus ==
-                                    'partiallyPaid')
-                              const _PaymentStatus(
-                                icon: Icons.check,
-                                label: 'Payment Done',
-                                isBlack: true,
-                              )
-                            else if (subscriptionDetails.paymentStatus == 'due')
-                              const _PaymentStatus(
-                                icon: Icons.watch_later_outlined,
-                                label: 'In Progress',
-                                isBlack: true,
+                            Icon(
+                              _getStatusIcon(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
                               ),
+                              size: _getStatusIconSize(
+                                subscriptionDetails.paymentStatus,
+                              ),
+                              color: _getStatusIconColor(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
+                              ),
+                            ),
+                            const SizedBox(width: Dimension.d2),
+                            Text(
+                              _getStatusText(
+                                subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
+                              ),
+                              style: AppTextStyle.bodyMediumBold.copyWith(
+                                color: _getStatusTextColor(
+                                  subscriptionDetails.paymentStatus,
+                                  subscriptionDetails.status,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -396,4 +400,56 @@ class _PaymentStatus extends StatelessWidget {
       ],
     );
   }
+}
+
+IconData _getStatusIcon(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
+    return AppIcons.warning;
+  }
+  if (status == 'requested' || status == 'processing') {
+    return AppIcons.medical_services;
+  }
+  return AppIcons.check;
+}
+
+double _getStatusIconSize(String paymentStatus) {
+  return paymentStatus == 'due' || paymentStatus == 'expired' ? 16 : 14;
+}
+
+Color _getStatusIconColor(String paymentStatus, String status) {
+  if (paymentStatus == 'due' || paymentStatus == 'expired') {
+    return AppColors.warning2;
+  }
+  return AppColors.grayscale800;
+}
+
+String _getStatusText(String paymentStatus, String status) {
+  if (paymentStatus == 'due') {
+    return 'Payment processing';
+  }
+  if (paymentStatus == 'expired') {
+    return 'Payment failure';
+  }
+  if (status == 'active' || status == 'processed') {
+    return 'Service scheduled';
+  }
+  if (status == 'requested' || status == 'processing') {
+    return 'Service in progress';
+  }
+  if (status == 'rejected') {
+    return 'Service rejected';
+  }
+  if (status == 'completed') {
+    return 'Service completed';
+  }
+  return 'Unknown';
+}
+
+Color _getStatusTextColor(String paymentStatus, String status) {
+  if (paymentStatus == 'due' || paymentStatus == 'expired') {
+    return AppColors.warning2;
+  }
+  return AppColors.grayscale800;
 }
