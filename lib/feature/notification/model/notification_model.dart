@@ -37,7 +37,7 @@ class NotificationMetaData with _$NotificationMetaData {
     required String type,
     required DateTime updatedAt,
     required String actionType,
-    required String actionUrl,
+    required String? actionUrl,
     required BannerImage image,
     required List<AdditionalDatum> additionalData,
     @Default(null) DateTime? readAt,
