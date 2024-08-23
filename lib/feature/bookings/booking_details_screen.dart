@@ -176,22 +176,27 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                             Icon(
                               _getStatusIcon(
                                 subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
                               ),
                               size: _getStatusIconSize(
                                 subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
                               ),
                               color: _getStatusIconColor(
                                 subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
                               ),
                             ),
                             const SizedBox(width: Dimension.d2),
                             Text(
                               _getStatusText(
                                 subscriptionDetails.paymentStatus,
+                                subscriptionDetails.status,
                               ),
                               style: AppTextStyle.bodyMediumBold.copyWith(
                                 color: _getStatusTextColor(
                                   subscriptionDetails.paymentStatus,
+                                  subscriptionDetails.status,
                                 ),
                               ),
                             ),
@@ -366,8 +371,10 @@ class ElementSpaceBetween extends StatelessWidget {
   }
 }
 
-IconData _getStatusIcon(String paymentStatus) {
-  if (paymentStatus == 'due' || paymentStatus == 'expired') {
+IconData _getStatusIcon(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
     return AppIcons.warning;
   }
   if (paymentStatus == 'paid' || paymentStatus == 'partiallyPaid') {
@@ -376,23 +383,32 @@ IconData _getStatusIcon(String paymentStatus) {
   return AppIcons.check;
 }
 
-double _getStatusIconSize(String paymentStatus) {
-  return paymentStatus == 'due' || paymentStatus == 'expired' ? 16 : 14;
+double _getStatusIconSize(String paymentStatus, String status) {
+  return paymentStatus == 'due' ||
+          paymentStatus == 'expired' ||
+          status == 'rejected'
+      ? 16
+      : 14;
 }
 
-Color _getStatusIconColor(String paymentStatus) {
-  if (paymentStatus == 'due' || paymentStatus == 'expired') {
+Color _getStatusIconColor(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
     return AppColors.warning2;
   }
   return AppColors.grayscale800;
 }
 
-String _getStatusText(String paymentStatus) {
+String _getStatusText(String paymentStatus, String status) {
   if (paymentStatus == 'due') {
     return 'Payment processing';
   }
   if (paymentStatus == 'expired') {
     return 'Payment failure';
+  }
+  if (status == 'rejected') {
+    return 'Rejected';
   }
   if (paymentStatus == 'paid' || paymentStatus == 'partiallyPaid') {
     return 'Completed';
@@ -400,8 +416,10 @@ String _getStatusText(String paymentStatus) {
   return 'n/a';
 }
 
-Color _getStatusTextColor(String paymentStatus) {
-  if (paymentStatus == 'due' || paymentStatus == 'expired') {
+Color _getStatusTextColor(String paymentStatus, String status) {
+  if (paymentStatus == 'due' ||
+      paymentStatus == 'expired' ||
+      status == 'rejected') {
     return AppColors.warning2;
   }
   return AppColors.grayscale800;
