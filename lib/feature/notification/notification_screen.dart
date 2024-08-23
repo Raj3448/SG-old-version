@@ -130,13 +130,13 @@ class NotificationComponent extends StatelessWidget {
         final cnd2 = notification.notificationMetaData.actionUrl != '/' &&
             notification.notificationMetaData.actionUrl !=
                 '/notificationScreen';
-        if (cnd1 && cnd2) {
+        if (cnd1 && cnd2 && notification.notificationMetaData.actionUrl != null) {
           if (notification.notificationMetaData.additionalData.isEmpty) {
             context.push(
-              notification.notificationMetaData.actionUrl,
+              notification.notificationMetaData.actionUrl!,
             );
           } else {
-            context.push(notification.notificationMetaData.actionUrl);
+            context.push(notification.notificationMetaData.actionUrl!);
           }
         }
       },
