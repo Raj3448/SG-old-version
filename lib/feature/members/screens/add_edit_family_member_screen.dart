@@ -211,6 +211,18 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             'profileImg':
                                 memberStore.activeMember!.profileImg?.id,
                           };
+                          if (memberStore.hasParentAlready &&
+                              (relationSelectedValue.value.toString() ==
+                                      'Mother' ||
+                                  relationSelectedValue.value.toString() ==
+                                      'Father')) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('This relation already exists!'),
+                              ),
+                            );
+                            return;
+                          }
                           if (storeImageFile != null) {
                             memberStore.updateMemberDataWithProfileImg(
                               id: _member.id.toString(),

@@ -35,6 +35,13 @@ abstract class _MembersStoreBase with Store {
   }
 
   @computed
+  bool get hasParentAlready {
+    return familyMembers.any(
+      (member) => member.relation == 'Mother' || member.relation == 'Father',
+    );
+  }
+
+  @computed
   int? get activeMemberId => selectedMemberId ?? familyMembers.firstOrNull?.id;
 
   @computed
@@ -180,7 +187,8 @@ abstract class _MembersStoreBase with Store {
         .then((value) {
       value.fold((l) {
         l.maybeMap(
-          uploadImageEntityTooLarge: (value) => addOrEditMemberFailure = 'Image upload failed: size exceeded the limit',
+          uploadImageEntityTooLarge: (value) => addOrEditMemberFailure =
+              'Image upload failed: size exceeded the limit',
           socketExceptionError: (value) {
             addOrEditMemberFailure = 'No internet connection';
             return null;
@@ -306,7 +314,12 @@ extension MemberExtension on Member {
         countries
             .firstWhere(
               (element) => element.isoCode == address.country,
-              orElse: () => Country(name: '',isoCode: address.country,flagEmoji: '', phoneCode: ''),
+              orElse: () => Country(
+                name: '',
+                isoCode: address.country,
+                flagEmoji: '',
+                phoneCode: '',
+              ),
             )
             .name,
       ].where((part) => part.isNotEmpty).join(', '),
