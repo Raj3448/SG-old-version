@@ -261,6 +261,18 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               DateFormat('dd/MM/yyyy').parse(dobContr.text);
                           final formattedDate =
                               DateFormat('yyyy-MM-dd').format(dateObject);
+                          if (memberStore.hasParentAlready &&
+                              (relationSelectedValue.value.toString() ==
+                                      'Mother' ||
+                                  relationSelectedValue.value.toString() ==
+                                      'Father')) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('This relation already exists!'),
+                              ),
+                            );
+                            return;
+                          }
                           memberStore.addNewFamilyMember(
                             memberData: {
                               'self': widget.isSelf ? true : false,
