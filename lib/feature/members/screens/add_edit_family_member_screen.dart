@@ -96,7 +96,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   @override
   void initState() {
     super.initState();
-
     _relationList = [
       ValueItem(label: 'Father'.tr(), value: 'Father'),
       ValueItem(label: 'Mother'.tr(), value: 'Mother'),
@@ -183,25 +182,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
-                          final relationValue = relationContr
-                              .selectedOptions.first.value
-                              .toString()
-                              .trim();
-                          final isParentAlreadyPresent =
-                              memberStore.familyMembers.any(
-                            (member) => member.relation.trim() == relationValue,
-                          );
-
-                          if (isParentAlreadyPresent &&
-                              (relationValue == 'Mother' ||
-                                  relationValue == 'Father')) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('This relation already exists!'),
-                              ),
-                            );
-                            return;
-                          }
                           final genderSelectedValue =
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
@@ -258,25 +238,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             autoValidate = true;
                           });
                           if (!formKey.currentState!.validate()) {
-                            return;
-                          }
-                          final relationValue = relationContr
-                              .selectedOptions.first.value
-                              .toString()
-                              .trim();
-                          final isParentAlreadyPresent =
-                              memberStore.familyMembers.any(
-                            (member) => member.relation.trim() == relationValue,
-                          );
-
-                          if (isParentAlreadyPresent &&
-                              (relationValue == 'Mother' ||
-                                  relationValue == 'Father')) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('This relation already exists!'),
-                              ),
-                            );
                             return;
                           }
                           final genderSelectedValue =

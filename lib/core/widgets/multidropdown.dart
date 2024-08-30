@@ -3,11 +3,13 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
+import 'package:silver_genie/feature/members/store/members_store.dart';
 
 class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
   MultiSelectFormField({
@@ -24,6 +26,7 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
   }) : super(
           initialValue: selectedOptions,
           builder: (FormFieldState<List<ValueItem<dynamic>>> state) {
+            final memberStore = GetIt.I<MembersStore>();
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -52,6 +55,16 @@ class MultiSelectFormField extends FormField<List<ValueItem<dynamic>>> {
                       },
                       selectedOptions: state.value ?? [],
                       options: values,
+                      disabledOptions: values.where((item) {
+                        return memberStore.familyMembers.any(
+                                  (member) => member.relation == 'Father',
+                                ) &&
+                                item.label == 'Father' ||
+                            memberStore.familyMembers.any(
+                                  (member) => member.relation == 'Mother',
+                                ) &&
+                                item.label == 'Mother';
+                      }).toList(),
                       selectionType: SelectionType.single,
                       optionTextStyle: AppTextStyle.bodyLargeMedium,
                       hintStyle: AppTextStyle.bodyLargeMedium
@@ -181,7 +194,7 @@ class DateDropdown extends FormField<DateTime> {
                                 hintText: 'Select',
                                 border: InputBorder.none,
                                 hintStyle: AppTextStyle.bodyLargeMedium
-                                        .copyWith(color: AppColors.grayscale600),
+                                    .copyWith(color: AppColors.grayscale600),
                               ),
                               readOnly: true,
                               onSaved: onSaved,
