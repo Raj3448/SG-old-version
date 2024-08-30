@@ -183,6 +183,25 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
+                          final relationValue = relationContr
+                              .selectedOptions.first.value
+                              .toString()
+                              .trim();
+                          final isParentAlreadyPresent =
+                              memberStore.familyMembers.any(
+                            (member) => member.relation.trim() == relationValue,
+                          );
+
+                          if (isParentAlreadyPresent &&
+                              (relationValue == 'Mother' ||
+                                  relationValue == 'Father')) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('This relation already exists!'),
+                              ),
+                            );
+                            return;
+                          }
                           final genderSelectedValue =
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
@@ -211,18 +230,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                             'profileImg':
                                 memberStore.activeMember!.profileImg?.id,
                           };
-                          if (memberStore.hasParentAlready &&
-                              (relationSelectedValue.value.toString() ==
-                                      'Mother' ||
-                                  relationSelectedValue.value.toString() ==
-                                      'Father')) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('This relation already exists!'),
-                              ),
-                            );
-                            return;
-                          }
                           if (storeImageFile != null) {
                             memberStore.updateMemberDataWithProfileImg(
                               id: _member.id.toString(),
@@ -253,6 +260,25 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
+                          final relationValue = relationContr
+                              .selectedOptions.first.value
+                              .toString()
+                              .trim();
+                          final isParentAlreadyPresent =
+                              memberStore.familyMembers.any(
+                            (member) => member.relation.trim() == relationValue,
+                          );
+
+                          if (isParentAlreadyPresent &&
+                              (relationValue == 'Mother' ||
+                                  relationValue == 'Father')) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('This relation already exists!'),
+                              ),
+                            );
+                            return;
+                          }
                           final genderSelectedValue =
                               genderContr.selectedOptions.first;
                           final relationSelectedValue =
@@ -261,18 +287,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
                               DateFormat('dd/MM/yyyy').parse(dobContr.text);
                           final formattedDate =
                               DateFormat('yyyy-MM-dd').format(dateObject);
-                          if (memberStore.hasParentAlready &&
-                              (relationSelectedValue.value.toString() ==
-                                      'Mother' ||
-                                  relationSelectedValue.value.toString() ==
-                                      'Father')) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('This relation already exists!'),
-                              ),
-                            );
-                            return;
-                          }
                           memberStore.addNewFamilyMember(
                             memberData: {
                               'self': widget.isSelf ? true : false,

@@ -35,13 +35,6 @@ abstract class _MembersStoreBase with Store {
   }
 
   @computed
-  bool get hasParentAlready {
-    return familyMembers.any(
-      (member) => member.relation == 'Mother' || member.relation == 'Father',
-    );
-  }
-
-  @computed
   int? get activeMemberId => selectedMemberId ?? familyMembers.firstOrNull?.id;
 
   @computed
