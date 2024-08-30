@@ -96,7 +96,6 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
   @override
   void initState() {
     super.initState();
-
     _relationList = [
       ValueItem(label: 'Father'.tr(), value: 'Father'),
       ValueItem(label: 'Mother'.tr(), value: 'Mother'),
