@@ -54,7 +54,7 @@ class TestmonialsComponent extends StatelessWidget {
                       content: testimonialsModel
                           .testimonials.data[index].attributes.content,
                       imgUrl: testimonialsModel.testimonials.data[index]
-                          .attributes.testifierImage?.data!.attributes.url,
+                          .attributes.testifierImage?.data?.attributes.url,
                     ),
                   ),
                 ),
