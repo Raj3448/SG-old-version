@@ -26,3 +26,14 @@ String formatDateTime(DateTime dateTime) {
 String formatDate(DateTime date) {
   return DateFormat('dd/MM/yyyy').format(date);
 }
+
+
+int calculateAgeFromString(String dobString, String? dateFormat) {
+  final dob = DateFormat(dateFormat ?? 'yyyy-MM-dd').parse(dobString);
+  final now = DateTime.now();
+  var age = now.year - dob.year;
+  if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+    age--;
+  }
+  return age;
+}
