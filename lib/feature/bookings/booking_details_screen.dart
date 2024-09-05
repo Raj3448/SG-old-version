@@ -41,8 +41,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Price getPriceById(SubscriptionDetails subscriptionDetails, int id) {
     final price = subscriptionDetails.product.prices.firstWhere(
       (price) => price.id == id,
+      orElse: () => throw Exception('Price with id $id not found'),
     );
-
     return price;
   }
 
@@ -125,10 +125,13 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             );
           }
           late final SubscriptionDetails subscriptionDetails;
+          late final Price priceDetails;
           try {
             subscriptionDetails = snapshot.data!.getOrElse(
               (l) => throw 'Error',
             );
+            priceDetails =
+                getPriceById(subscriptionDetails, subscriptionDetails.priceId);
           } catch (e) {
             return const ErrorStateComponent(
               errorType: ErrorType.somethinWentWrong,
@@ -227,11 +230,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   ExpandedAnalogComponent(
                     label: 'Duration of service',
                     value:
-                        '${getPriceById(subscriptionDetails, subscriptionDetails.priceId).recurringIntervalCount} ${removeLastLy(
-                      getPriceById(
-                        subscriptionDetails,
-                        subscriptionDetails.priceId,
-                      ).recurringInterval!,
+                        '${priceDetails.recurringIntervalCount} ${removeLastLy(
+                      priceDetails.recurringInterval ?? '',
                     )}',
                   ),
                   const SizedBox(height: Dimension.d3),
