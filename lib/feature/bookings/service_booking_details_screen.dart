@@ -90,15 +90,17 @@ class _ServiceBookingDetailsScreenState
 
                           try {
                             servicePaymentStatusModel =
-                                snapShot.data!.getOrElse(
-                              (l) => throw 'Error',
+                                snapShot.data?.getOrElse(
+                              (l) => throw Exception('Error'),
                             );
+                            if (servicePaymentStatusModel == null) {
+                              throw Exception('Something went wrong');
+                            }
                           } catch (e) {
                             return const ErrorStateComponent(
                               errorType: ErrorType.somethinWentWrong,
                             );
                           }
-
                           return buildDetails(context);
                         },
                       )
