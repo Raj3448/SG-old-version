@@ -13,6 +13,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
+import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/utils/country_list.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/asterisk_label.dart';
@@ -27,7 +28,6 @@ import 'package:silver_genie/feature/members/model/member_model.dart';
 import 'package:silver_genie/feature/members/repo/member_service.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/pic_dialogs.dart';
-import 'package:silver_genie/feature/subscription/screens/subscriptions_screen.dart';
 import 'package:silver_genie/feature/user_profile/store/user_details_store.dart';
 
 class AddEditFamilyMemberScreen extends StatefulWidget {

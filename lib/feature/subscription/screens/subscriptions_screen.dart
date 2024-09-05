@@ -204,6 +204,9 @@ class _SubscriptionList extends StatelessWidget {
       itemBuilder: (context, index) {
         final plan =
             isPrevious ? expiredPlanList[index] : activePlanList[index];
+        if (plan.belongsTo?.isEmpty ?? true) {
+          return const SizedBox();
+        }
         return _UserDetailsComponent(
           memberDetails: plan,
           isPrevious: isPrevious,
@@ -341,7 +344,7 @@ class _UserDetailsComponent extends StatelessWidget {
                                   .copyWith(color: AppColors.grayscale900),
                             ),
                             Text(
-                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation ?? '').join(' ') ?? []}  Age: ${calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth ?? '').join(' ') ?? '', null)}',
+                              'Relation: ${memberDetails.belongsTo?.map((member) => member.relation ?? '').join(' ') ?? []}  Age: ${_calculateAgeFromString(memberDetails.belongsTo?.map((member) => member.dateOfBirth ?? '').join(' ') ?? '', null) ?? 'N/A'}',
                               style: AppTextStyle.bodyMediumMedium
                                   .copyWith(color: AppColors.grayscale800),
                             ),
@@ -456,7 +459,10 @@ class _UserDetailsComponent extends StatelessWidget {
   }
 }
 
-int calculateAgeFromString(String dobString, String? dateFormat) {
+int? _calculateAgeFromString(String dobString, String? dateFormat) {
+  if (dobString.isEmpty) {
+    return null;
+  }
   final dob = DateFormat(dateFormat ?? 'yyyy-MM-dd').parse(dobString);
   final now = DateTime.now();
   var age = now.year - dob.year;
