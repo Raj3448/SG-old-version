@@ -11,7 +11,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
-import 'package:silver_genie/core/failure/custom_exception.dart';
+import 'package:silver_genie/core/failure/custom_exceptions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -42,7 +42,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Price getPriceById(SubscriptionDetails subscriptionDetails, int id) {
     final price = subscriptionDetails.product.prices.firstWhere(
       (price) => price.id == id,
-      orElse: () => throw const PriceDetailsNotFoundException(),
+      orElse: () => throw PriceDetailsNotFoundException(priceId: id),
     );
     return price;
   }

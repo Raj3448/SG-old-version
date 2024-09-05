@@ -1,8 +1,8 @@
 class PriceDetailsNotFoundException implements Exception {
-
-  const PriceDetailsNotFoundException([this.message = 'Price details not found', this.priceId]);
   final String message;
   final int? priceId;
+
+  const PriceDetailsNotFoundException({this.message = 'Price details not found', this.priceId});
 
   @override
   String toString() {
