@@ -78,19 +78,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                           );
                         },
                         (list) {
-                          final activePlanList = list.data
-                              .where(
-                                (member) =>
-                                    member.subscriptionStatus == 'Active',
-                              )
-                              .toList();
-                          final expiredPlanList = list.data
-                              .where(
-                                (member) =>
-                                    member.subscriptionStatus == 'Expired' &&
-                                    member.paymentStatus == 'paid',
-                              )
-                              .toList();
                           if (list.data.isEmpty) {
                             return NoServiceFound(
                               title: 'Subscriptions',
@@ -115,34 +102,14 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
                                   child: TabBarView(
                                     controller: controller,
                                     children: [
-                                      if (activePlanList.isEmpty)
-                                        NoServiceFound(
-                                          title: 'Subscriptions',
-                                          ontap: () {},
-                                          showTitle: false,
-                                          isService: false,
-                                          name: 'subscriptions',
-                                        )
-                                      else
-                                        _SubscriptionList(
-                                          members: activePlanList,
-                                          isPrevious: false,
-                                          activePlans: activePlanList,
-                                        ),
-                                      if (expiredPlanList.isEmpty)
-                                        NoServiceFound(
-                                          title: 'Subscriptions',
-                                          ontap: () {},
-                                          showTitle: false,
-                                          isService: false,
-                                          name: 'subscriptions',
-                                        )
-                                      else
-                                        _SubscriptionList(
-                                          members: expiredPlanList,
-                                          isPrevious: true,
-                                          activePlans: activePlanList,
-                                        ),
+                                      _SubscriptionList(
+                                        members: list.data,
+                                        isPrevious: false,
+                                      ),
+                                      _SubscriptionList(
+                                        members: list.data,
+                                        isPrevious: true,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -173,10 +140,8 @@ class _SubscriptionList extends StatelessWidget {
   const _SubscriptionList({
     required this.members,
     required this.isPrevious,
-    required this.activePlans,
   });
   final List<SubscriptionDetails> members;
-  final List<SubscriptionDetails> activePlans;
   final bool isPrevious;
 
   @override
@@ -195,7 +160,21 @@ class _SubscriptionList extends StatelessWidget {
               member.paymentStatus == 'paid',
         )
         .toList();
-
+    final activePlans = members
+        .where(
+          (member) =>
+              member.subscriptionStatus == 'Active'
+        )
+        .toList();
+    if (isPrevious && expiredPlanList.isEmpty || !isPrevious && activePlanList.isEmpty) {
+      return NoServiceFound(
+        title: 'Subscriptions',
+        ontap: () {},
+        showTitle: false,
+        isService: false,
+        name: 'subscriptions',
+      );
+    }
     return ListView.builder(
       itemCount: isPrevious ? expiredPlanList.length : activePlanList.length,
       physics: const BouncingScrollPhysics(
