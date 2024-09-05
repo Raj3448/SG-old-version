@@ -11,6 +11,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/failure/custom_exceptions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -41,8 +42,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Price getPriceById(SubscriptionDetails subscriptionDetails, int id) {
     final price = subscriptionDetails.product.prices.firstWhere(
       (price) => price.id == id,
+      orElse: () => throw PriceDetailsNotFoundException(priceId: id),
     );
-
     return price;
   }
 
@@ -125,14 +126,21 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             );
           }
           late final SubscriptionDetails subscriptionDetails;
+          late Price? priceDetails;
           try {
             subscriptionDetails = snapshot.data!.getOrElse(
-              (l) => throw 'Error',
+              (l) => throw Exception('Error'),
             );
+            priceDetails =
+                getPriceById(subscriptionDetails, subscriptionDetails.priceId);
           } catch (e) {
-            return const ErrorStateComponent(
-              errorType: ErrorType.somethinWentWrong,
-            );
+            if (e is PriceDetailsNotFoundException) {
+              priceDetails = null;
+            } else {
+              return const ErrorStateComponent(
+                errorType: ErrorType.somethinWentWrong,
+              );
+            }
           }
           return SingleChildScrollView(
             child: Padding(
@@ -224,17 +232,15 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: Dimension.d3),
-                  ExpandedAnalogComponent(
+                  if(priceDetails!=null)
+                  ...[ExpandedAnalogComponent(
                     label: 'Duration of service',
                     value:
-                        '${getPriceById(subscriptionDetails, subscriptionDetails.priceId).recurringIntervalCount} ${removeLastLy(
-                      getPriceById(
-                        subscriptionDetails,
-                        subscriptionDetails.priceId,
-                      ).recurringInterval!,
+                        '${priceDetails.recurringIntervalCount} ${removeLastLy(
+                      priceDetails.recurringInterval ?? '',
                     )}',
                   ),
-                  const SizedBox(height: Dimension.d3),
+                  const SizedBox(height: Dimension.d3),],
                   ExpandedAnalogComponent(
                     label: 'Plan start date',
                     value: formatDate(subscriptionDetails.startDate),
