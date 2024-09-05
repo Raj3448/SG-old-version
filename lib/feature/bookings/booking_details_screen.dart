@@ -129,7 +129,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           late final Price priceDetails;
           try {
             subscriptionDetails = snapshot.data!.getOrElse(
-              (l) => throw 'Error',
+              (l) => throw Exception('Error'),
             );
             priceDetails =
                 getPriceById(subscriptionDetails, subscriptionDetails.priceId);
