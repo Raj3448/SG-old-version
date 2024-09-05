@@ -126,7 +126,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             );
           }
           late final SubscriptionDetails subscriptionDetails;
-          late final Price priceDetails;
+          late Price? priceDetails;
           try {
             subscriptionDetails = snapshot.data!.getOrElse(
               (l) => throw Exception('Error'),
@@ -135,14 +135,12 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 getPriceById(subscriptionDetails, subscriptionDetails.priceId);
           } catch (e) {
             if (e is PriceDetailsNotFoundException) {
+              priceDetails = null;
+            } else {
               return const ErrorStateComponent(
-                errorType: ErrorType.pageNotFound,
-                errorMessage: 'Price details not found',
+                errorType: ErrorType.somethinWentWrong,
               );
             }
-            return const ErrorStateComponent(
-              errorType: ErrorType.somethinWentWrong,
-            );
           }
           return SingleChildScrollView(
             child: Padding(
@@ -234,14 +232,15 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: Dimension.d3),
-                  ExpandedAnalogComponent(
+                  if(priceDetails!=null)
+                  ...[ExpandedAnalogComponent(
                     label: 'Duration of service',
                     value:
                         '${priceDetails.recurringIntervalCount} ${removeLastLy(
                       priceDetails.recurringInterval ?? '',
                     )}',
                   ),
-                  const SizedBox(height: Dimension.d3),
+                  const SizedBox(height: Dimension.d3),],
                   ExpandedAnalogComponent(
                     label: 'Plan start date',
                     value: formatDate(subscriptionDetails.startDate),
