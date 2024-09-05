@@ -7,36 +7,41 @@ import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 
 class ErrorStateComponent extends StatelessWidget {
-  const ErrorStateComponent({required this.errorType, super.key});
+  const ErrorStateComponent(
+      {required this.errorType, this.errorMessage, super.key});
   final ErrorType errorType;
+  final String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
-    String errorMessage;
+    String errorMessage2;
     String subcontent;
     String imagePath;
 
     switch (errorType) {
       case ErrorType.unknown:
-        errorMessage = 'Unknown Error';
+        errorMessage2 = 'Unknown Error';
         subcontent =
             'We apologise but the page you are trying to access cannot be found';
         imagePath = 'assets/icon/unknown error.svg';
       case ErrorType.pageNotFound:
-        errorMessage = 'Page Not Found';
+        errorMessage2 = 'Page Not Found';
         subcontent =
             'We apologise but the page you are trying to access cannot be found';
         imagePath = 'assets/icon/page not found.svg';
       case ErrorType.noInternetConnection:
-        errorMessage = 'No Internet Connection';
+        errorMessage2 = 'No Internet Connection';
         subcontent =
             'Please ensure you are connected to stable Wi-fi network or cellular data to continue';
         imagePath = 'assets/icon/no internet connection.svg';
       case ErrorType.somethinWentWrong:
-        errorMessage = 'Something Went Wrong';
+        errorMessage2 = 'Something Went Wrong';
         subcontent =
             'We apologise but the page you are trying to access cannot be found';
         imagePath = 'assets/icon/unknown error.svg';
+    }
+    if (errorMessage != null && errorMessage!.isNotEmpty) {
+      errorMessage2 = errorMessage!;
     }
 
     return Padding(
@@ -46,7 +51,7 @@ class ErrorStateComponent extends StatelessWidget {
           SvgPicture.asset(imagePath),
           const SizedBox(height: 16),
           Text(
-            errorMessage,
+            errorMessage2,
             style: AppTextStyle.bodyXLSemiBold.copyWith(
               height: 2.8,
               fontSize: 20,

@@ -11,6 +11,7 @@ import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
 import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/env.dart';
+import 'package:silver_genie/core/failure/custom_exception.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
@@ -41,7 +42,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Price getPriceById(SubscriptionDetails subscriptionDetails, int id) {
     final price = subscriptionDetails.product.prices.firstWhere(
       (price) => price.id == id,
-      orElse: () => throw Exception('Price with id $id not found'),
+      orElse: () => throw const PriceDetailsNotFoundException(),
     );
     return price;
   }
@@ -133,6 +134,12 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             priceDetails =
                 getPriceById(subscriptionDetails, subscriptionDetails.priceId);
           } catch (e) {
+            if (e is PriceDetailsNotFoundException) {
+              return const ErrorStateComponent(
+                errorType: ErrorType.pageNotFound,
+                errorMessage: 'Price details not found',
+              );
+            }
             return const ErrorStateComponent(
               errorType: ErrorType.somethinWentWrong,
             );
