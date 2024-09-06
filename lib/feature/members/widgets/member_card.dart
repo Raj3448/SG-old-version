@@ -7,6 +7,7 @@ import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 import 'package:silver_genie/core/widgets/relationship.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/core/widgets/subscription_plan_tag.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
 
 class MemberCard extends StatelessWidget {
@@ -69,21 +70,23 @@ class MemberCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 8),
-                SubscriptionPkg(
-                  expanded: false,
-                  type: (memberDetails.subscriptions != null &&
+                if(memberDetails.subscriptions != null &&
                           memberDetails.subscriptions!.isNotEmpty)
-                      ? memberDetails.subscriptions![0].product.name ==
+                SubscriptionPlanTag(
+                  type: memberDetails.subscriptions![0].product.name ==
                               'Companion Genie'
                           ? SubscriptionsType.companion
                           : memberDetails.subscriptions![0].product.name ==
                                   'Wellness Genie'
-                              ? SubscriptionsType.wellness
-                              : memberDetails.subscriptions![0].product.name ==
-                                      'Emergency Genie'
-                                  ? SubscriptionsType.emergency
-                                  : SubscriptionsType.inActive
-                      : SubscriptionsType.inActive,
+                              ? SubscriptionsType.wellness:
+                              SubscriptionsType.emergency,
+                    label: memberDetails.subscriptions![0].product.name , iconColorCode: '', backgroundColorCode: '',
+                ),
+                if(memberDetails.subscriptions == null &&
+                          memberDetails.subscriptions!.isEmpty)
+                const SubscriptionPlanTag(
+                  type: SubscriptionsType.inActive,
+                    label: 'In-Active',
                 ),
               ],
             ),

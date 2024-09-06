@@ -21,6 +21,7 @@ import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/info_dialog.dart';
 import 'package:silver_genie/core/widgets/page_appbar.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/core/widgets/subscription_plan_tag.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/store/members_store.dart';
 import 'package:silver_genie/feature/members/widgets/subscribe_card.dart';
@@ -285,21 +286,23 @@ class _BasicDetailsBox extends StatelessWidget {
                       .copyWith(color: AppColors.grayscale700),
                 ),
                 const SizedBox(width: Dimension.d2),
-                SubscriptionPkg(
-                  expanded: false,
-                  type: (activeMember!.subscriptions != null &&
+                if(activeMember!.subscriptions != null &&
                           activeMember.subscriptions!.isNotEmpty)
-                      ? activeMember.subscriptions![0].product.name ==
+                SubscriptionPlanTag(
+                  type: activeMember.subscriptions![0].product.name ==
                               'Companion Genie'
                           ? SubscriptionsType.companion
                           : activeMember.subscriptions![0].product.name ==
                                   'Wellness Genie'
                               ? SubscriptionsType.wellness
-                              : activeMember.subscriptions![0].product.name ==
-                                      'Emergency Genie'
-                                  ? SubscriptionsType.emergency
-                                  : SubscriptionsType.inActive
-                      : SubscriptionsType.inActive,
+                              : SubscriptionsType.emergency,
+                  label:  activeMember.subscriptions![0].product.name,
+                ),
+                if(activeMember.subscriptions == null &&
+                          activeMember.subscriptions!.isEmpty)
+                SubscriptionPlanTag(
+                  type: SubscriptionsType.inActive,
+                  label:  activeMember.subscriptions![0].product.name,
                 ),
               ],
             ),

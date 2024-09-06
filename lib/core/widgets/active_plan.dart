@@ -15,7 +15,7 @@ import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/custom_tuple.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
-import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/core/widgets/subscription_plan_tag.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
@@ -260,21 +260,12 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   ),
                 ),
                 if (widget.activeMember.subscriptions!.isEmpty)
-                  SubscriptionPkg(
-                    expanded: false,
-                    type: SubscriptionsType.inActive,
+                  const SubscriptionPlanTag(
+                    label: 'In-active',
                   )
                 else
-                  SubscriptionPkg(
-                    expanded: false,
-                    type: widget.activeMember.subscriptions![0].product.name ==
-                            'Companion Genie'
-                        ? SubscriptionsType.companion
-                        : widget.activeMember.subscriptions![0].product.name ==
-                                'Wellness Genie'
-                            ? SubscriptionsType.wellness
-                            : SubscriptionsType.emergency,
-                  ),
+                  SubscriptionPlanTag(
+                    label: widget.activeMember.subscriptions![0].product.name, backgroundColorCode: getMetadataValue(widget.activeMember.subscriptions?[0].product.metadata??[],'background_color_code'), iconColorCode: getMetadataValue(widget.activeMember.subscriptions?[0].product.metadata??[], 'icon_color_code')),
               ],
             ),
             const SizedBox(height: Dimension.d1),
