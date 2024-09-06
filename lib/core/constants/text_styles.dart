@@ -196,10 +196,10 @@ abstract class AppTextStyle {
   );
 
   static const bodyLargeMedium = TextStyle(
-    fontWeight: FontWeight.w400,
-    fontSize: 16,
-    fontFamily: FontFamily.inter,
-  );
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      fontFamily: FontFamily.inter,
+      fontFamilyFallback: ['Roboto', 'Arial']);
 
   static const bodyMediumMedium = TextStyle(
     fontWeight: FontWeight.w400,

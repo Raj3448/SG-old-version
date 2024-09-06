@@ -314,8 +314,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   child: Tooltip(
                     key: _tooltipKeys[index],
                     enableFeedback: true,
-                    message: formatDateTime(
-                      diagnosedService.item1.diagnosedDate ?? DateTime.now(),
+                    message: diagnosedService.item1.diagnosedDate == null ? 'Diagnosed date not found' : formatDateTime(
+                      diagnosedService.item1.diagnosedDate!,
                     ),
                     child: _VitalInfoBox(
                       label: diagnosedService.item1.serviceName?.name != null
