@@ -131,8 +131,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             subscriptionDetails = snapshot.data!.getOrElse(
               (l) => throw Exception('Error'),
             );
-            priceDetails =
-                getPriceById(subscriptionDetails, subscriptionDetails.priceId);
+            priceDetails = subscriptionDetails.priceId == null ? null :
+                getPriceById(subscriptionDetails, subscriptionDetails.priceId!);
           } catch (e) {
             if (e is PriceDetailsNotFoundException) {
               priceDetails = null;
