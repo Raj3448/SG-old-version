@@ -175,6 +175,9 @@ abstract class _ProductListingStoreBase with Store {
               )
               .toList()
           : [];
+  
+  @computed
+  ProductBasicDetailsModel? getProductBasicDetailsById(int id) => productBasicDetailsModelList?.firstWhere((product)=> product.id == id);
 
   @action
   List<ProductBasicDetailsModel> getUpgradeProdListById(String id) {
@@ -291,4 +294,13 @@ abstract class _ProductListingStoreBase with Store {
       },
     );
   }
+}
+
+String getMetadataValue(List<Metadatum> metadata, String key) {
+  return metadata
+      .firstWhere(
+        (element) => element.key == key,
+        orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
+      )
+      .value;
 }

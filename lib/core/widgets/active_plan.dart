@@ -15,7 +15,7 @@ import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/custom_tuple.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
-import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/core/widgets/subscription_plan_tag.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
@@ -239,174 +239,169 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
         ) ??
         false;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.line),
-        borderRadius: BorderRadius.circular(Dimension.d2),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(Dimension.d3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.bodyLargeBold,
-                  ),
-                ),
-                if (widget.activeMember.subscriptions!.isEmpty)
-                  SubscriptionPkg(
-                    expanded: false,
-                    type: SubscriptionsType.inActive,
-                  )
-                else
-                  SubscriptionPkg(
-                    expanded: false,
-                    type: widget.activeMember.subscriptions![0].product.name ==
-                            'Companion Genie'
-                        ? SubscriptionsType.companion
-                        : widget.activeMember.subscriptions![0].product.name ==
-                                'Wellness Genie'
-                            ? SubscriptionsType.wellness
-                            : SubscriptionsType.emergency,
-                  ),
-              ],
-            ),
-            const SizedBox(height: Dimension.d1),
-            Row(
-              children: [
-                AnalogComponent(
-                  label: 'Relation',
-                  value: widget.activeMember.relation,
-                ),
-                const SizedBox(width: Dimension.d2),
-                AnalogComponent(
-                  label: 'Age',
-                  value: '${calculateAge(widget.activeMember.dateOfBirth)}',
-                ),
-              ],
-            ),
-            const SizedBox(height: Dimension.d3),
-            const Text(
-              'Vital Info',
-              style: AppTextStyle.bodyMediumSemiBold,
-            ),
-            const SizedBox(height: Dimension.d2),
-            GridView.builder(
-              itemCount: 4,
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 180,
-                mainAxisExtent: 70,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-              ),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final diagnosedService = filteredDiagnosedServices[index];
-                return GestureDetector(
-                  onLongPress: () => _showTooltip(index),
-                  child: Tooltip(
-                    key: _tooltipKeys[index],
-                    enableFeedback: true,
-                    message: diagnosedService.item1.diagnosedDate == null ? 'Diagnosed date not found' : formatDateTime(
-                      diagnosedService.item1.diagnosedDate!,
-                    ),
-                    child: _VitalInfoBox(
-                      label: diagnosedService.item1.serviceName?.name != null
-                          ? diagnosedService.item1.serviceName?.name
-                              .capitalizeFirstWord()
-                          : '',
-                      value: diagnosedService.item1.value.isNotEmpty &&
-                              diagnosedService.item1.value != emptyStrValue
-                          ? '${diagnosedService.item1.value}${diagnosedService.item2 == '%' ? diagnosedService.item2 : ' ${diagnosedService.item2}'}'
-                          : emptyStrValue,
-                    ),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: Dimension.d2),
-            AnalogComponent(
-              label: 'Last Updated'.tr(),
-              value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
-            ),
-            const SizedBox(height: Dimension.d2),
-            Row(
+    return Observer(
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.line),
+            borderRadius: BorderRadius.circular(Dimension.d2),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(Dimension.d3),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: CustomButton(
-                    ontap:
-                        hasPHR == false || widget.activeMember.phrModel == null
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '${widget.activeMember.firstName} ${widget.activeMember.lastName}',
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.bodyLargeBold,
+                      ),
+                    ),
+                    if (widget.activeMember.subscriptions!.isEmpty)
+                      const SubscriptionPlanTag(
+                        label: 'In-active',
+                      )
+                    else
+                      SubscriptionPlanTag(
+                        label: widget.activeMember.subscriptions![0].product.name, backgroundColorCode: getMetadataValue(store.getProductBasicDetailsById(widget.activeMember.subscriptions![0].product.id ?? -1)?.attributes.metadata ?? [],'background_color_code'), iconColorCode: getMetadataValue(store.getProductBasicDetailsById(widget.activeMember.subscriptions![0].product.id ?? -1)?.attributes.metadata ?? [], 'icon_color_code')),
+                  ],
+                ),
+                const SizedBox(height: Dimension.d1),
+                Row(
+                  children: [
+                    AnalogComponent(
+                      label: 'Relation',
+                      value: widget.activeMember.relation,
+                    ),
+                    const SizedBox(width: Dimension.d2),
+                    AnalogComponent(
+                      label: 'Age',
+                      value: '${calculateAge(widget.activeMember.dateOfBirth)}',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Dimension.d3),
+                const Text(
+                  'Vital Info',
+                  style: AppTextStyle.bodyMediumSemiBold,
+                ),
+                const SizedBox(height: Dimension.d2),
+                GridView.builder(
+                  itemCount: 4,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 180,
+                    mainAxisExtent: 70,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                  ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final diagnosedService = filteredDiagnosedServices[index];
+                    return GestureDetector(
+                      onLongPress: () => _showTooltip(index),
+                      child: Tooltip(
+                        key: _tooltipKeys[index],
+                        enableFeedback: true,
+                        message: diagnosedService.item1.diagnosedDate == null ? 'Diagnosed date not found' : formatDateTime(
+                          diagnosedService.item1.diagnosedDate!,
+                        ),
+                        child: _VitalInfoBox(
+                          label: diagnosedService.item1.serviceName?.name != null
+                              ? diagnosedService.item1.serviceName?.name
+                                  .capitalizeFirstWord()
+                              : '',
+                          value: diagnosedService.item1.value.isNotEmpty &&
+                                  diagnosedService.item1.value != emptyStrValue
+                              ? '${diagnosedService.item1.value}${diagnosedService.item2 == '%' ? diagnosedService.item2 : ' ${diagnosedService.item2}'}'
+                              : emptyStrValue,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: Dimension.d2),
+                AnalogComponent(
+                  label: 'Last Updated'.tr(),
+                  value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
+                ),
+                const SizedBox(height: Dimension.d2),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        ontap:
+                            hasPHR == false || widget.activeMember.phrModel == null
+                                ? null
+                                : () {
+                                    GoRouter.of(context).pushNamed(
+                                      RoutesConstants.phrPdfViewPage,
+                                      pathParameters: {
+                                        'memberPhrId':
+                                            '${widget.activeMember.phrModel?.id}',
+                                      },
+                                    );
+                                  },
+                        title: 'View PHR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type:
+                            hasPHR == false || widget.activeMember.phrModel == null
+                                ? ButtonType.disable
+                                : ButtonType.secondary,
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: Dimension.d4),
+                    Expanded(
+                      child: CustomButton(
+                        ontap: hasEPR == false
                             ? null
                             : () {
                                 GoRouter.of(context).pushNamed(
-                                  RoutesConstants.phrPdfViewPage,
+                                  RoutesConstants.eprRoute,
                                   pathParameters: {
-                                    'memberPhrId':
-                                        '${widget.activeMember.phrModel?.id}',
+                                    'memberId': '${widget.activeMember.id}',
                                   },
                                 );
                               },
-                    title: 'View PHR',
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    size: ButtonSize.small,
-                    type:
-                        hasPHR == false || widget.activeMember.phrModel == null
+                        title: 'View EPR',
+                        showIcon: false,
+                        iconPath: Icons.not_interested,
+                        size: ButtonSize.small,
+                        type: hasEPR == false
                             ? ButtonType.disable
                             : ButtonType.secondary,
-                    expanded: true,
-                    iconColor: AppColors.primary,
-                  ),
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: Dimension.d4),
-                Expanded(
-                  child: CustomButton(
-                    ontap: hasEPR == false
-                        ? null
-                        : () {
-                            GoRouter.of(context).pushNamed(
-                              RoutesConstants.eprRoute,
-                              pathParameters: {
-                                'memberId': '${widget.activeMember.id}',
-                              },
-                            );
-                          },
-                    title: 'View EPR',
-                    showIcon: false,
-                    iconPath: Icons.not_interested,
-                    size: ButtonSize.small,
-                    type: hasEPR == false
-                        ? ButtonType.disable
-                        : ButtonType.secondary,
-                    expanded: true,
-                    iconColor: AppColors.primary,
+                if (member != null) _buildRenewalAndExpirationInfo(member),
+                if (memberStore.activeMember != null &&
+                    memberStore.activeMember!.subscriptions != null)
+                  Observer(
+                    builder: (context) {
+                      return _UpgradeProdLisComponent(
+                        productBasicDetailsList: store.getUpgradeProdListById(
+                          '${memberStore.activeMember!.subscriptions![0].product.id}',
+                        ),
+                      );
+                    },
                   ),
-                ),
               ],
             ),
-            if (member != null) _buildRenewalAndExpirationInfo(member),
-            if (memberStore.activeMember != null &&
-                memberStore.activeMember!.subscriptions != null)
-              Observer(
-                builder: (context) {
-                  return _UpgradeProdLisComponent(
-                    productBasicDetailsList: store.getUpgradeProdListById(
-                      '${memberStore.activeMember!.subscriptions![0].product.id}',
-                    ),
-                  );
-                },
-              ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

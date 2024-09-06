@@ -13,6 +13,7 @@ import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
+import 'package:silver_genie/core/widgets/subscription_plan_tag.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/genie/store/product_listing_store.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
@@ -82,9 +83,8 @@ class InactivePlanComponent extends StatelessWidget {
                         style: AppTextStyle.bodyLargeBold,
                       ),
                     ),
-                    SubscriptionPkg(
-                      expanded: false,
-                      type: SubscriptionsType.inActive,
+                    const SubscriptionPlanTag(
+                      label: 'In-active',
                     ),
                   ],
                 ),
@@ -133,24 +133,11 @@ class ProductListingCareComponent extends StatelessWidget {
 
   final memberStore = GetIt.I<MembersStore>();
 
-  SubscriptionsType _getSubscriptionType(String name) {
-    switch (name) {
-      case 'Companion Genie':
-        return SubscriptionsType.companion;
-      case 'Wellness Genie':
-        return SubscriptionsType.wellness;
-      default:
-        return SubscriptionsType.emergency;
-    }
-  }
-
   List<Widget> _buildBtnWidgetList(BuildContext context) {
     return productBasicDetailsList.map((product) {
       return Padding(
         padding: const EdgeInsets.only(top: Dimension.d3),
         child: SubscriptionPkg(
-          expanded: true,
-          type: _getSubscriptionType(product.attributes.name),
           buttonlabel: product.attributes.name,
           iconColorCode:
               getMetadataValue(product.attributes.metadata, 'icon_color_code'),
@@ -182,13 +169,4 @@ class ProductListingCareComponent extends StatelessWidget {
       children: _buildBtnWidgetList(context),
     );
   }
-}
-
-String getMetadataValue(List<Metadatum> metadata, String key) {
-  return metadata
-      .firstWhere(
-        (element) => element.key == key,
-        orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
-      )
-      .value;
 }
