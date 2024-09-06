@@ -68,10 +68,10 @@ class PhrModel with _$PhrModel {
   @JsonSerializable(createToJson: true)
   const factory PhrModel({
     required int id,
-    required String firstName,
-    required String lastName,
-    required int? age,
-    required String email,
+    @Default(null) String? firstName,
+    @Default(null) String? lastName,
+    @Default(null) int? age,
+    @Default(null) String? email,
     required String? gender,
     required String? bloodGroup,
     required bool downloadPhr,
