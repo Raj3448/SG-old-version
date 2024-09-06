@@ -93,9 +93,9 @@ class _ServiceProvideComponentState extends State<ServiceProvideComponent> {
     if (activeServiceCount == 0) {
       return const SizedBox();
     }
-    final calculatedHeight = double.parse((activeServiceCount * 30).toString()) ;
-    final defaultHeight =
-        double.parse((activeServiceCount >= 10 ? 280 : calculatedHeight).toString());
+    final calculatedHeight = double.parse((activeServiceCount * 30).toString());
+    final defaultHeight = double.parse(
+        (activeServiceCount >= 10 ? 280 : calculatedHeight).toString());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

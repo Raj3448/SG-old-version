@@ -11,6 +11,8 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
+import 'package:silver_genie/core/utils/custom_tuple.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
@@ -178,23 +180,26 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
     tooltip.ensureTooltipVisible();
   }
 
-  final List<String> desiredServices = [
-    'Blood Pressure',
-    'Blood Oxygen',
-    'Heart Rate',
-    'Fast Glucose',
+  final List<HealthService> healthServices = [
+    const HealthService(serviceName: 'blood pressure', unitStr: 'mmHg'),
+    const HealthService(serviceName: 'blood oxygen', unitStr: '%'),
+    const HealthService(serviceName: 'heart rate', unitStr: 'bpm'),
+    const HealthService(serviceName: 'fast glucose', unitStr: 'mg/dL'),
   ];
 
   @override
   Widget build(BuildContext context) {
+    const emptyStrValue = '---';
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
-    final member = widget.activeMember.subscriptions![0];
-
+    final member = widget.activeMember.subscriptions?[0];
+    final healthServiceNames = healthServices
+        .map((service) => service.serviceName.toLowerCase().trim())
+        .toSet();
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
-      final serviceName = service.serviceName?.name;
-      if (serviceName != null && desiredServices.contains(serviceName)) {
+      final serviceName = service.serviceName?.name.toLowerCase().trim();
+      if (serviceName != null && healthServiceNames.contains(serviceName)) {
         final currentLatestService = latestServices[serviceName];
         if (currentLatestService == null ||
             (service.diagnosedDate != null &&
@@ -206,22 +211,23 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
       }
     }
 
-    final filteredDiagnosedServices = desiredServices.map((name) {
-      return latestServices[name] ??
+    final filteredDiagnosedServices = healthServices.map((service) {
+      final diagnosedService = latestServices[service.serviceName] ??
           DiagnosedService(
             id: 0,
             diagnosedDate: DateTime.now(),
             description: '',
-            value: '---',
+            value: emptyStrValue,
             publish: false,
             serviceName: ServiceName(
               id: 0,
-              name: name,
+              name: service.serviceName.capitalizeFirstWord(),
               description: null,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
             ),
           );
+      return Tuple2(diagnosedService, service.unitStr);
     }).toList();
 
     final hasPHR = widget.activeMember.subscriptions?[0].benefits?.any(
@@ -303,20 +309,23 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 final diagnosedService = filteredDiagnosedServices[index];
-
                 return GestureDetector(
                   onLongPress: () => _showTooltip(index),
                   child: Tooltip(
                     key: _tooltipKeys[index],
                     enableFeedback: true,
-                    message: formatDateTime(
-                      diagnosedService.diagnosedDate ?? DateTime.now(),
+                    message: diagnosedService.item1.diagnosedDate == null ? 'Diagnosed date not found' : formatDateTime(
+                      diagnosedService.item1.diagnosedDate!,
                     ),
                     child: _VitalInfoBox(
-                      label: diagnosedService.serviceName?.name ?? '',
-                      value: diagnosedService.value.isNotEmpty
-                          ? diagnosedService.value
-                          : '---',
+                      label: diagnosedService.item1.serviceName?.name != null
+                          ? diagnosedService.item1.serviceName?.name
+                              .capitalizeFirstWord()
+                          : '',
+                      value: diagnosedService.item1.value.isNotEmpty &&
+                              diagnosedService.item1.value != emptyStrValue
+                          ? '${diagnosedService.item1.value}${diagnosedService.item2 == '%' ? diagnosedService.item2 : ' ${diagnosedService.item2}'}'
+                          : emptyStrValue,
                     ),
                   ),
                 );
@@ -383,7 +392,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 ),
               ],
             ),
-            _buildRenewalAndExpirationInfo(member),
+            if (member != null) _buildRenewalAndExpirationInfo(member),
             if (memberStore.activeMember != null &&
                 memberStore.activeMember!.subscriptions != null)
               Observer(

@@ -103,9 +103,9 @@ flutter:
 
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter-Bold.ttf
-        - asset: assets/fonts/Inter-Medium.ttf
-        - asset: assets/fonts/Inter-SemiBold.ttf
+        - asset: assets/fonts/InterDisplay-Bold.ttf
+        - asset: assets/fonts/InterDisplay-Medium.ttf
+        - asset: assets/fonts/InterDisplay-SemiBold.ttf
 
     - family: AppIcons
       fonts:
