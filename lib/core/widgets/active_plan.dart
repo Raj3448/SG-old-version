@@ -324,7 +324,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                           : '',
                       value: diagnosedService.item1.value.isNotEmpty &&
                               diagnosedService.item1.value != emptyStrValue
-                          ? '${diagnosedService.item1.value}${diagnosedService.item2}'
+                          ? '${diagnosedService.item1.value}${diagnosedService.item2 == '%' ? diagnosedService.item2 : ' ${diagnosedService.item2}'}'
                           : emptyStrValue,
                     ),
                   ),
