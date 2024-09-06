@@ -300,9 +300,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                             },
                           );
                         },
-                        title: 'View Plan Details',
+                        title: 'View plan info',
                         showIcon: true,
-                        iconPath: Icons.view_agenda,
+                        iconPath: Icons.info_outline,
                         size: ButtonSize.normal,
                         type: ButtonType.secondary,
                         expanded: true,

@@ -175,9 +175,9 @@ abstract class _ProductListingStoreBase with Store {
               )
               .toList()
           : [];
-  
-  @computed
-  ProductBasicDetailsModel? getProductBasicDetailsById(int id) => productBasicDetailsModelList?.firstWhere((product)=> product.id == id);
+
+  ProductBasicDetailsModel? getProductBasicDetailsById(int id) =>
+      productBasicDetailsModelList?.firstWhere((product) => product.id == id);
 
   @action
   List<ProductBasicDetailsModel> getUpgradeProdListById(String id) {
