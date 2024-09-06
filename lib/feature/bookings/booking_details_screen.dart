@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/constants/colors.dart';
 import 'package:silver_genie/core/constants/dimensions.dart';
@@ -14,6 +15,7 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/failure/custom_exceptions.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes.dart';
+import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
 import 'package:silver_genie/core/utils/launch_dialer.dart';
 import 'package:silver_genie/core/widgets/active_plan.dart';
@@ -131,8 +133,10 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             subscriptionDetails = snapshot.data!.getOrElse(
               (l) => throw Exception('Error'),
             );
-            priceDetails = subscriptionDetails.priceId == null ? null :
-                getPriceById(subscriptionDetails, subscriptionDetails.priceId!);
+            priceDetails = subscriptionDetails.priceId == null
+                ? null
+                : getPriceById(
+                    subscriptionDetails, subscriptionDetails.priceId!);
           } catch (e) {
             if (e is PriceDetailsNotFoundException) {
               priceDetails = null;
@@ -232,15 +236,16 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: Dimension.d3),
-                  if(priceDetails!=null)
-                  ...[ExpandedAnalogComponent(
-                    label: 'Duration of service',
-                    value:
-                        '${priceDetails.recurringIntervalCount} ${removeLastLy(
-                      priceDetails.recurringInterval ?? '',
-                    )}',
-                  ),
-                  const SizedBox(height: Dimension.d3),],
+                  if (priceDetails != null) ...[
+                    ExpandedAnalogComponent(
+                      label: 'Duration of service',
+                      value:
+                          '${priceDetails.recurringIntervalCount} ${removeLastLy(
+                        priceDetails.recurringInterval ?? '',
+                      )}',
+                    ),
+                    const SizedBox(height: Dimension.d3),
+                  ],
                   ExpandedAnalogComponent(
                     label: 'Plan start date',
                     value: formatDate(subscriptionDetails.startDate),
@@ -280,6 +285,32 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   const SizedBox(height: Dimension.d2),
                   const Divider(color: AppColors.grayscale300),
                   const SizedBox(height: Dimension.d8),
+                  if (subscriptionDetails.product.id != null) ...[
+                    SizedBox(
+                      height: 48,
+                      child: CustomButton(
+                        ontap: () {
+                          context.pushNamed(
+                            RoutesConstants.geniePage,
+                            pathParameters: {
+                              'pageTitle': subscriptionDetails.product.name,
+                              'id': '${subscriptionDetails.product.id}',
+                              'isUpgradeable': 'false',
+                              'activeMemberId': ' ',
+                            },
+                          );
+                        },
+                        title: 'View Plan Details',
+                        showIcon: true,
+                        iconPath: Icons.view_agenda,
+                        size: ButtonSize.normal,
+                        type: ButtonType.secondary,
+                        expanded: true,
+                        iconColor: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: Dimension.d4),
+                  ],
                   if (subscriptionDetails.payment_transactions != null &&
                       subscriptionDetails.payment_transactions!.isNotEmpty &&
                       subscriptionDetails.payment_transactions![0].invoice !=

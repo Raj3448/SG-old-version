@@ -36,7 +36,7 @@ class GeniePage extends StatefulWidget {
   final String pageTitle;
   final String id;
   final bool isUpgradable;
-  final String activeMemberId;
+  final String? activeMemberId;
 
   @override
   _GeniePageState createState() => _GeniePageState();
@@ -114,181 +114,196 @@ class _GeniePageState extends State<GeniePage> {
                                     serviceList: productListingModel
                                         .product.benefits!.data,
                                   ),
-                                  const SizedBox(height: Dimension.d4),
-                                  PlanPricingDetailsComponent(
-                                    planName: productListingModel.product
-                                        .subscriptionContent!.mainHeading,
-                                    pricingDetailsList:
-                                        services.getPlansforNonCouple(
-                                      productListingModel.product.prices,
+                                  if ((productListingModel.product.isActive ??
+                                          false) &&
+                                      widget.activeMemberId != null) ...[
+                                    const SizedBox(height: Dimension.d4),
+                                    PlanPricingDetailsComponent(
+                                      planName: productListingModel.product
+                                          .subscriptionContent!.mainHeading,
+                                      pricingDetailsList:
+                                          services.getPlansforNonCouple(
+                                        productListingModel.product.prices,
+                                      ),
+                                      onSelect: store.updatePlan,
                                     ),
-                                    onSelect: store.updatePlan,
-                                  ),
-                                  const SizedBox(height: Dimension.d4),
-                                  CustomButton(
-                                    ontap: widget.isUpgradable
-                                        ? () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return InfoDialog(
-                                                  showIcon: false,
-                                                  title: 'Hi there!!',
-                                                  desc:
-                                                      'In order to update the Health record\nof a family member, please contact\nSilvergenie',
-                                                  btnTitle: 'Contact Genie',
-                                                  showBtnIcon: true,
-                                                  btnIconPath: AppIcons.phone,
-                                                  onTap: () {
-                                                    launchDialer(
-                                                      homeStore
-                                                              .getMasterDataModel
-                                                              ?.masterData
-                                                              .contactUs
-                                                              .contactNumber ??
-                                                          '',
-                                                    ).then(
-                                                      (value) =>
-                                                          GoRouter.of(context)
-                                                              .pop(),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          }
-                                        : () {
-                                            if (store.planDetails == null) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'Please select a plan!',
-                                                  ),
-                                                ),
+                                    const SizedBox(height: Dimension.d4),
+                                    CustomButton(
+                                      ontap: widget.isUpgradable
+                                          ? () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return InfoDialog(
+                                                    showIcon: false,
+                                                    title: 'Hi there!!',
+                                                    desc:
+                                                        'In order to update the Health record\nof a family member, please contact\nSilvergenie',
+                                                    btnTitle: 'Contact Genie',
+                                                    showBtnIcon: true,
+                                                    btnIconPath: AppIcons.phone,
+                                                    onTap: () {
+                                                      launchDialer(
+                                                        homeStore
+                                                                .getMasterDataModel
+                                                                ?.masterData
+                                                                .contactUs
+                                                                .contactNumber ??
+                                                            '',
+                                                      ).then(
+                                                        (value) =>
+                                                            GoRouter.of(context)
+                                                                .pop(),
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                               );
                                             }
-                                            if (store.planDetails != null) {
-                                              setState(() {
-                                                store.isLoading = true;
-                                              });
-                                              store.createSubscription(
-                                                priceId: store.planDetails!.id,
-                                                productId: int.parse(widget.id),
-                                                familyMemberIds: [
-                                                  int.parse(
-                                                    widget.activeMemberId,
+                                          : () {
+                                              if (store.planDetails == null) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'Please select a plan!',
+                                                    ),
                                                   ),
-                                                ],
-                                              ).then((result) {
-                                                setState(() {
-                                                  store.isLoading = false;
-                                                });
-                                                result.fold(
-                                                  (failure) {
-                                                    ScaffoldMessenger.of(
-                                                      context,
-                                                    ).showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                          'Something went wrong!',
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  (right) {
-                                                    context.pushNamed(
-                                                      RoutesConstants
-                                                          .subscriptionDetailsScreen,
-                                                      pathParameters: {
-                                                        'price':
-                                                            '${store.planDetails!.unitAmount}',
-                                                        'subscriptionData':
-                                                            json.encode(
-                                                          right.toJson(),
-                                                        ),
-                                                        'isCouple': 'false',
-                                                      },
-                                                    );
-                                                  },
                                                 );
-                                              });
-                                            }
-                                          },
-                                    title: widget.isUpgradable
-                                        ? 'Upgrade care'
-                                        : 'Book Care',
-                                    showIcon: false,
-                                    iconPath: AppIcons.add,
-                                    size: ButtonSize.normal,
-                                    type: store.planDetails != null
-                                        ? ButtonType.primary
-                                        : ButtonType.disable,
-                                    expanded: true,
-                                    iconColor: AppColors.white,
-                                  ),
+                                              }
+                                              if (store.planDetails != null) {
+                                                setState(() {
+                                                  store.isLoading = true;
+                                                });
+                                                store.createSubscription(
+                                                  priceId:
+                                                      store.planDetails!.id,
+                                                  productId:
+                                                      int.parse(widget.id),
+                                                  familyMemberIds: [
+                                                    int.parse(
+                                                      widget.activeMemberId!,
+                                                    ),
+                                                  ],
+                                                ).then((result) {
+                                                  setState(() {
+                                                    store.isLoading = false;
+                                                  });
+                                                  result.fold(
+                                                    (failure) {
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        const SnackBar(
+                                                          content: Text(
+                                                            'Something went wrong!',
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    (right) {
+                                                      context.pushNamed(
+                                                        RoutesConstants
+                                                            .subscriptionDetailsScreen,
+                                                        pathParameters: {
+                                                          'price':
+                                                              '${store.planDetails!.unitAmount}',
+                                                          'subscriptionData':
+                                                              json.encode(
+                                                            right.toJson(),
+                                                          ),
+                                                          'isCouple': 'false',
+                                                        },
+                                                      );
+                                                    },
+                                                  );
+                                                });
+                                              }
+                                            },
+                                      title: widget.isUpgradable
+                                          ? 'Upgrade care'
+                                          : 'Book Care',
+                                      showIcon: false,
+                                      iconPath: AppIcons.add,
+                                      size: ButtonSize.normal,
+                                      type: store.planDetails != null
+                                          ? ButtonType.primary
+                                          : ButtonType.disable,
+                                      expanded: true,
+                                      iconColor: AppColors.white,
+                                    ),
+                                    if (productListingModel
+                                            .product
+                                            .subscriptionContent!
+                                            .showCouplePlans &&
+                                        membersStore.familyMembers.length > 1)
+                                      Column(
+                                        children: [
+                                          const SizedBox(height: Dimension.d5),
+                                          ExploreNowComponent(
+                                            id: widget.id,
+                                            isUpgradable: widget.isUpgradable,
+                                            pageTitle: widget.pageTitle,
+                                            btnLabel: productListingModel
+                                                .product
+                                                .subscriptionContent!
+                                                .exploreNowCtaLabel,
+                                            planHeading: productListingModel
+                                                .product
+                                                .subscriptionContent!
+                                                .exploreCouplePlansHeading!,
+                                            imgPath: productListingModel.product
+                                                .icon.data.attributes.url,
+                                            backgroundColor: productListingModel
+                                                .product.metadata!
+                                                .firstWhere(
+                                                  (element) =>
+                                                      element.key ==
+                                                      'background_color_code',
+                                                  orElse: () => const Metadatum(
+                                                    id: 1,
+                                                    key:
+                                                        'background_color_code',
+                                                    value: 'FFFDFDFD',
+                                                  ),
+                                                )
+                                                .value,
+                                            iconColorCode: productListingModel
+                                                .product.metadata!
+                                                .firstWhere(
+                                                  (element) =>
+                                                      element.key ==
+                                                      'icon_color_code',
+                                                  orElse: () => const Metadatum(
+                                                    id: 1,
+                                                    key: 'icon_color_code',
+                                                    value: 'FFFDFDFD',
+                                                  ),
+                                                )
+                                                .value,
+                                            plansList:
+                                                services.getPlansforCouple(
+                                              productListingModel
+                                                  .product.prices,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    const SizedBox(height: Dimension.d5),
+                                  ],
                                   if (productListingModel
                                           .product
                                           .subscriptionContent!
-                                          .showCouplePlans &&
-                                      membersStore.familyMembers.length > 1)
-                                    Column(
-                                      children: [
-                                        const SizedBox(height: Dimension.d5),
-                                        ExploreNowComponent(
-                                          id: widget.id,
-                                          isUpgradable: widget.isUpgradable,
-                                          pageTitle: widget.pageTitle,
-                                          btnLabel: productListingModel
-                                              .product
-                                              .subscriptionContent!
-                                              .exploreNowCtaLabel,
-                                          planHeading: productListingModel
-                                              .product
-                                              .subscriptionContent!
-                                              .exploreCouplePlansHeading!,
-                                          imgPath: productListingModel
-                                              .product.icon.data.attributes.url,
-                                          backgroundColor: productListingModel
-                                              .product.metadata!
-                                              .firstWhere(
-                                                (element) =>
-                                                    element.key ==
-                                                    'background_color_code',
-                                                orElse: () => const Metadatum(
-                                                  id: 1,
-                                                  key: 'background_color_code',
-                                                  value: 'FFFDFDFD',
-                                                ),
-                                              )
-                                              .value,
-                                          iconColorCode: productListingModel
-                                              .product.metadata!
-                                              .firstWhere(
-                                                (element) =>
-                                                    element.key ==
-                                                    'icon_color_code',
-                                                orElse: () => const Metadatum(
-                                                  id: 1,
-                                                  key: 'icon_color_code',
-                                                  value: 'FFFDFDFD',
-                                                ),
-                                              )
-                                              .value,
-                                          plansList: services.getPlansforCouple(
-                                            productListingModel.product.prices,
-                                          ),
-                                        ),
-                                      ],
+                                          .faq
+                                          ?.isNotEmpty ??
+                                      false)
+                                    FAQComponent(
+                                      heading: productListingModel.product
+                                          .subscriptionContent!.faqHeading,
+                                      faqList: productListingModel.product
+                                              .subscriptionContent!.faq ??
+                                          [],
                                     ),
-                                  const SizedBox(height: Dimension.d5),
-                                  FAQComponent(
-                                    heading: productListingModel.product
-                                        .subscriptionContent!.faqHeading,
-                                    faqList: productListingModel
-                                            .product.subscriptionContent!.faq ??
-                                        [],
-                                  ),
                                 ],
                               ),
                       ),

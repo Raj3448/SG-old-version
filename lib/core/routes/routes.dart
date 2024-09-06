@@ -138,11 +138,11 @@ final GoRouter routes = GoRouter(
           );
         }
         return MaterialPage(
-            child: MainScreen(
-              path: state.fullPath ?? '',
-              child: child,
-            ),
-          );
+          child: MainScreen(
+            path: state.fullPath ?? '',
+            child: child,
+          ),
+        );
       },
       routes: <RouteBase>[
         GoRoute(
@@ -349,14 +349,16 @@ final GoRouter routes = GoRouter(
         final isUpgradeableString =
             state.pathParameters['isUpgradeable'] ?? 'false';
         final isUpgradable = isUpgradeableString.toLowerCase() == 'true';
-        final activeMemberId = state.pathParameters['activeMemberId'] ?? '';
+        final activeMemberId =
+            state.pathParameters['activeMemberId']?.trim() ?? '';
 
         return MaterialPage(
           child: GeniePage(
             pageTitle: pageTitle,
             id: id,
             isUpgradable: isUpgradable,
-            activeMemberId: activeMemberId,
+            activeMemberId:
+                activeMemberId.trim().isEmpty ? null : activeMemberId,
           ),
         );
       },

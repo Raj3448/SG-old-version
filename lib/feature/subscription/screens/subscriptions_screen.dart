@@ -160,13 +160,9 @@ class _SubscriptionList extends StatelessWidget {
               member.paymentStatus == 'paid',
         )
         .toList();
-    final activePlans = members
-        .where(
-          (member) =>
-              member.subscriptionStatus == 'Active'
-        )
-        .toList();
-    if (isPrevious && expiredPlanList.isEmpty || !isPrevious && activePlanList.isEmpty) {
+
+    if (isPrevious && expiredPlanList.isEmpty ||
+        !isPrevious && activePlanList.isEmpty) {
       return NoServiceFound(
         title: 'Subscriptions',
         ontap: () {},
@@ -189,7 +185,7 @@ class _SubscriptionList extends StatelessWidget {
         return _UserDetailsComponent(
           memberDetails: plan,
           isPrevious: isPrevious,
-          activePlans: activePlans,
+          activePlans: activePlanList,
         );
       },
     );
@@ -237,7 +233,8 @@ class _UserDetailsComponent extends StatelessWidget {
 
     var hasActiveSubscription = false;
     if (isPrevious) {
-      final activePlanMemberList = extractUniqueMembers(activePlans);
+      final activePlanMemberList = extractUniqueMembers(
+          activePlans.where((a) => a.paymentStatus != 'due').toList());
       hasActiveSubscription = memberDetails.belongsTo?.any((familyMember) {
             return activePlanMemberList
                 .any((activeMember) => activeMember.id == familyMember.id);
