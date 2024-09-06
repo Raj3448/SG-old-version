@@ -29,47 +29,47 @@ class SubscriptionPkg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-      return GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Color(int.parse(backgroundColorCode, radix: 16))
-                ,
-            border: Border.all(
-              color:Color(int.parse(iconColorCode, radix: 16)),
-            ),
-            borderRadius: BorderRadius.circular(8),
+    final backGroundColor = int.tryParse(backgroundColorCode, radix: 16);
+    final iconColor = int.tryParse(iconColorCode, radix: 16);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: backGroundColor != null
+              ? Color(backGroundColor)
+              : AppColors.grayscale600,
+          border: Border.all(
+            color: iconColor != null ? Color(iconColor) : AppColors.gold,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                
-                  Avatar.fromSize(
-                    imgPath: '${Env.serverUrl}$iconUrl',
-                    size: AvatarSize.size12,
-                    isImageSquare: true,
-                    fit: BoxFit.contain,
-                  )
-                ,
-                const SizedBox(width: 10),
-                Text(
-                  buttonlabel,
-                  style: AppTextStyle.bodyMediumBold.copyWith(
-                    color:AppColors.grayscale900,
-                  ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Avatar.fromSize(
+                imgPath: '${Env.serverUrl}$iconUrl',
+                size: AvatarSize.size12,
+                isImageSquare: true,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                buttonlabel,
+                style: AppTextStyle.bodyMediumBold.copyWith(
+                  color: AppColors.grayscale900,
                 ),
-                const Spacer(),
-                Icon(
-                  AppIcons.arrow_forward,
-                  color: Color(int.parse(iconColorCode, radix: 16)),
-                  size: 14,
-                ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              Icon(
+                AppIcons.arrow_forward,
+                color: iconColor != null ? Color(iconColor) : AppColors.gold,
+                size: 14,
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }

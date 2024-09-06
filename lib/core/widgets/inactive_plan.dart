@@ -170,12 +170,3 @@ class ProductListingCareComponent extends StatelessWidget {
     );
   }
 }
-
-String getMetadataValue(List<Metadatum> metadata, String key) {
-  return metadata
-      .firstWhere(
-        (element) => element.key == key,
-        orElse: () => Metadatum(id: 1, key: key, value: 'FFFDFDFD'),
-      )
-      .value;
-}

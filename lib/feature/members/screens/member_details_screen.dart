@@ -233,6 +233,7 @@ class _BasicDetailsBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activeMember = GetIt.I<MembersStore>().activeMember;
+    final productStore = GetIt.I<ProductListingStore>();
     final user = GetIt.I<UserDetailStore>().userDetails;
     return Container(
       decoration: BoxDecoration(
@@ -289,19 +290,17 @@ class _BasicDetailsBox extends StatelessWidget {
                 if(activeMember!.subscriptions != null &&
                           activeMember.subscriptions!.isNotEmpty)
                 SubscriptionPlanTag(
-                  type: activeMember.subscriptions![0].product.name ==
-                              'Companion Genie'
-                          ? SubscriptionsType.companion
-                          : activeMember.subscriptions![0].product.name ==
-                                  'Wellness Genie'
-                              ? SubscriptionsType.wellness
-                              : SubscriptionsType.emergency,
                   label:  activeMember.subscriptions![0].product.name,
+                  backgroundColorCode: getMetadataValue(productStore.getProductBasicDetailsById(
+                      activeMember.subscriptions![0].product.id ?? -1
+                  )?.attributes.metadata ?? [], 'background_color_code'),
+                  iconColorCode: getMetadataValue(productStore.getProductBasicDetailsById(
+                      activeMember.subscriptions![0].product.id ?? -1
+                  )?.attributes.metadata ?? [], 'icon_color_code'),
                 ),
                 if(activeMember.subscriptions == null &&
                           activeMember.subscriptions!.isEmpty)
                 SubscriptionPlanTag(
-                  type: SubscriptionsType.inActive,
                   label:  activeMember.subscriptions![0].product.name,
                 ),
               ],
