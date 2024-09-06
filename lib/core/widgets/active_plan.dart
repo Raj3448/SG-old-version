@@ -179,22 +179,23 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
   }
 
   final List<String> desiredServices = [
-    'Blood Pressure',
-    'Blood Oxygen',
-    'Heart Rate',
-    'Fast Glucose',
+    'blood pressure',
+    'blood oxygen',
+    'heart rate',
+    'fast glucose',
   ];
 
   @override
   Widget build(BuildContext context) {
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
-    final member = widget.activeMember.subscriptions![0];
+    final member = widget.activeMember.subscriptions?[0];
 
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
-      final serviceName = service.serviceName?.name;
-      if (serviceName != null && desiredServices.contains(serviceName)) {
+      final serviceName = service.serviceName?.name.toLowerCase().trim();
+      if (serviceName != null &&
+          desiredServices.contains(serviceName.toLowerCase().trim())) {
         final currentLatestService = latestServices[serviceName];
         if (currentLatestService == null ||
             (service.diagnosedDate != null &&
@@ -303,7 +304,6 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 final diagnosedService = filteredDiagnosedServices[index];
-
                 return GestureDetector(
                   onLongPress: () => _showTooltip(index),
                   child: Tooltip(
@@ -313,7 +313,9 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                       diagnosedService.diagnosedDate ?? DateTime.now(),
                     ),
                     child: _VitalInfoBox(
-                      label: diagnosedService.serviceName?.name ?? '',
+                      label: diagnosedService.serviceName?.name != null
+                          ? '${diagnosedService.serviceName?.name[0].toUpperCase()}${diagnosedService.serviceName?.name.substring(1).toLowerCase()}'
+                          : '',
                       value: diagnosedService.value.isNotEmpty
                           ? diagnosedService.value
                           : '---',
@@ -383,7 +385,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 ),
               ],
             ),
-            _buildRenewalAndExpirationInfo(member),
+            if (member != null) _buildRenewalAndExpirationInfo(member),
             if (memberStore.activeMember != null &&
                 memberStore.activeMember!.subscriptions != null)
               Observer(
