@@ -189,6 +189,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
 
   @override
   Widget build(BuildContext context) {
+    const emptyStrValue = '---';
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
     final member = widget.activeMember.subscriptions?[0];
@@ -216,7 +217,7 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             id: 0,
             diagnosedDate: DateTime.now(),
             description: '',
-            value: '---',
+            value: emptyStrValue,
             publish: false,
             serviceName: ServiceName(
               id: 0,
@@ -321,9 +322,10 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                           ? diagnosedService.item1.serviceName?.name
                               .capitalizeFirstWord()
                           : '',
-                      value: diagnosedService.item1.value.isNotEmpty
+                      value: diagnosedService.item1.value.isNotEmpty &&
+                              diagnosedService.item1.value != emptyStrValue
                           ? '${diagnosedService.item1.value}${diagnosedService.item2}'
-                          : '---',
+                          : emptyStrValue,
                     ),
                   ),
                 );
