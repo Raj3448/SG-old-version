@@ -116,3 +116,15 @@ class ServiceName with _$ServiceName {
   factory ServiceName.fromJson(Map<String, dynamic> json) =>
       _$ServiceNameFromJson(json);
 }
+
+class HealthService {
+  const HealthService({required this.serviceName, required this.unitStr});
+
+  final String serviceName;
+  final String unitStr;
+  
+  @override
+  String toString() {
+    return '$serviceName ($unitStr)';
+  }
+}

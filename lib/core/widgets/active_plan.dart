@@ -11,6 +11,8 @@ import 'package:silver_genie/core/constants/text_styles.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/routes/routes_constants.dart';
 import 'package:silver_genie/core/utils/calculate_age.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
+import 'package:silver_genie/core/utils/custom_tuple.dart';
 import 'package:silver_genie/core/widgets/buttons.dart';
 import 'package:silver_genie/core/widgets/inactive_plan.dart';
 import 'package:silver_genie/core/widgets/subscription_pkg.dart';
@@ -178,11 +180,11 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
     tooltip.ensureTooltipVisible();
   }
 
-  final List<String> desiredServices = [
-    'blood pressure',
-    'blood oxygen',
-    'heart rate',
-    'fast glucose',
+  final List<HealthService> healthServices = [
+    const HealthService(serviceName: 'blood pressure', unitStr: 'mmHg'),
+    const HealthService(serviceName: 'blood oxygen', unitStr: '%'),
+    const HealthService(serviceName: 'heart rate', unitStr: 'bpm'),
+    const HealthService(serviceName: 'fast glucose', unitStr: 'mg/dL'),
   ];
 
   @override
@@ -190,12 +192,13 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
     final member = widget.activeMember.subscriptions?[0];
-
+    final healthServiceNames = healthServices
+        .map((service) => service.serviceName.toLowerCase().trim())
+        .toSet();
     final latestServices = <String, DiagnosedService>{};
     for (final service in diagnosedServices) {
       final serviceName = service.serviceName?.name.toLowerCase().trim();
-      if (serviceName != null &&
-          desiredServices.contains(serviceName.toLowerCase().trim())) {
+      if (serviceName != null && healthServiceNames.contains(serviceName)) {
         final currentLatestService = latestServices[serviceName];
         if (currentLatestService == null ||
             (service.diagnosedDate != null &&
@@ -207,8 +210,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
       }
     }
 
-    final filteredDiagnosedServices = desiredServices.map((name) {
-      return latestServices[name] ??
+    final filteredDiagnosedServices = healthServices.map((service) {
+      final diagnosedService = latestServices[service.serviceName] ??
           DiagnosedService(
             id: 0,
             diagnosedDate: DateTime.now(),
@@ -217,12 +220,13 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
             publish: false,
             serviceName: ServiceName(
               id: 0,
-              name: name,
+              name: service.serviceName.capitalizeFirstWord(),
               description: null,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
             ),
           );
+      return Tuple2(diagnosedService, service.unitStr);
     }).toList();
 
     final hasPHR = widget.activeMember.subscriptions?[0].benefits?.any(
@@ -310,14 +314,15 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                     key: _tooltipKeys[index],
                     enableFeedback: true,
                     message: formatDateTime(
-                      diagnosedService.diagnosedDate ?? DateTime.now(),
+                      diagnosedService.item1.diagnosedDate ?? DateTime.now(),
                     ),
                     child: _VitalInfoBox(
-                      label: diagnosedService.serviceName?.name != null
-                          ? '${diagnosedService.serviceName?.name[0].toUpperCase()}${diagnosedService.serviceName?.name.substring(1).toLowerCase()}'
+                      label: diagnosedService.item1.serviceName?.name != null
+                          ? diagnosedService.item1.serviceName?.name
+                              .capitalizeFirstWord()
                           : '',
-                      value: diagnosedService.value.isNotEmpty
-                          ? diagnosedService.value
+                      value: diagnosedService.item1.value.isNotEmpty
+                          ? '${diagnosedService.item1.value}${diagnosedService.item2}'
                           : '---',
                     ),
                   ),
