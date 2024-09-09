@@ -133,8 +133,8 @@ class _SubscriptionDetailsScreenState extends State<SubscriptionDetailsScreen> {
                     children: [
                       Text(
                         widget.isCouple
-                            ? '${widget.subscriptionData.product.name} Plan (Couple)'
-                            : '${widget.subscriptionData.product.name} Plan (Single)',
+                            ? '${widget.subscriptionData.product.name} (Couple)'
+                            : '${widget.subscriptionData.product.name} (Single)',
                         style: AppTextStyle.bodyXLMedium,
                       ),
                       const SizedBox(height: Dimension.d6),
