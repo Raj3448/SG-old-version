@@ -9,8 +9,6 @@ import 'package:silver_genie/core/env.dart';
 import 'package:silver_genie/core/icons/app_icons.dart';
 import 'package:silver_genie/core/widgets/avatar.dart';
 
-enum SubscriptionsType { companion, wellness, emergency, inActive }
-
 class SubscriptionPkg extends StatelessWidget {
   SubscriptionPkg({
     required this.buttonlabel,
