@@ -142,7 +142,6 @@ void main() async {
           GetIt.instance.get<HttpClient>(),
         ),
       );
-      GetIt.instance.registerLazySingleton(SubscriptionStore.new);
       GetIt.instance.registerLazySingleton(
         () =>
             HomeStore(homeServices: GetIt.I<HomeService>())..initHomePageData(),
