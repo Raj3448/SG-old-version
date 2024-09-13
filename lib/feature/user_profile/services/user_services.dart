@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/genie/model/product_listing_model.dart';
 import 'package:silver_genie/feature/user_profile/model/user_details.dart';
@@ -24,6 +25,8 @@ class UserDetailServices implements IUserFacades {
     required User user,
     String? imageId,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       final userData = user.toJson();
 
@@ -50,51 +53,92 @@ class UserDetailServices implements IUserFacades {
         data['profileImg'] = null;
       }
 
-      final response =
+      response =
           await httpClient.put<String>('/api/users/${user.id}', data: data);
 
       if (response.statusCode == 200) {
         /// WE should do single
         final updatedData = await fetchUserDetailsFromServer();
         return updatedData.fold(
-          (l) => const Left(Failure.someThingWentWrong()),
+          (l) => const Left(Failure.someThingWentWrong())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString()),
           right,
         );
       } else {
-        return const Left(Failure.someThingWentWrong());
+        return const Left(Failure.someThingWentWrong())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
   @override
   Future<Either<Failure, User>> fetchUserDetailsFromServer() async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get('/api/users/me?populate=*');
-
+      response = await httpClient.get('/api/users/me?populate=*');
       if (response.statusCode == 200) {
         if (response.data != null) {
           final userdata = User.fromJson(response.data as Map<String, dynamic>);
           await _userDetailCache.saveUserDetails(userdata);
           return Right(userdata);
         } else {
-          return const Left(Failure.badResponse());
+          return const Left(Failure.badResponse())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.badResponse());
+      return const Left(Failure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -103,13 +147,15 @@ class UserDetailServices implements IUserFacades {
     required File fileImage,
     required User userInfo,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       final formData = FormData.fromMap({
         'files': await MultipartFile.fromFile(
           fileImage.path,
         ),
       });
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/upload',
         data: formData,
         options: Options(
@@ -124,28 +170,55 @@ class UserDetailServices implements IUserFacades {
             imageId: imageId.toString(),
           );
         } else {
-          return const Left(Failure.badResponse());
+          return const Left(Failure.badResponse())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
-      }if (response.statusCode == 413 && response.statusMessage == 'Request Entity Too Large'){
-          return const Left(Failure.entityTooLargeError());
-        }  else {
-        return const Left(Failure.badResponse());
+      }
+      if (response.statusCode == 413 &&
+          response.statusMessage == 'Request Entity Too Large') {
+        return const Left(Failure.entityTooLargeError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
+      } else {
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
   @override
   Future<Either<Failure, SubscriptionModel>> fetchSubscriptions() async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get('/api/all-subscription');
-
+      response = await httpClient.get('/api/all-subscription');
       if (response.statusCode == 200) {
         if (response.data != null) {
           final data = response.data;
@@ -153,14 +226,30 @@ class UserDetailServices implements IUserFacades {
             SubscriptionModel.fromJson(data as Map<String, dynamic>),
           );
         } else {
-          return const Left(Failure.badResponse());
+          return const Left(Failure.badResponse())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } on SocketException {
-      return const Left(Failure.socketError());
+      return const Left(Failure.socketError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.badResponse());
+      return const Left(Failure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -168,9 +257,10 @@ class UserDetailServices implements IUserFacades {
   Future<Either<Failure, SubscriptionDetails>> getSubscriptionById({
     required int id,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get('/api/subscription-trackers/$id');
-
+      response = await httpClient.get('/api/subscription-trackers/$id');
       if (response.statusCode == 200) {
         if (response.data != null) {
           final data = response.data['data'];
@@ -178,14 +268,30 @@ class UserDetailServices implements IUserFacades {
             SubscriptionDetails.fromJson(data as Map<String, dynamic>),
           );
         } else {
-          return const Left(Failure.badResponse());
+          return const Left(Failure.badResponse())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } on SocketException {
-      return const Left(Failure.socketError());
+      return const Left(Failure.socketError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.badResponse());
+      return const Left(Failure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 }

@@ -50,16 +50,17 @@ void main() async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
       await Firebase.initializeApp();
-
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
-      FlutterError.onError = (errorDetails) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      };
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
       PlatformDispatcher.instance.onError = (error, stack) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
         return true;
       };
+
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      if (kDebugMode) {
+        print('Crashlytics enabled in Debug Mode');
+      }
+
       FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
       await Hive.initFlutter();
       await setupHiveBox();
@@ -222,7 +223,7 @@ void main() async {
       FlutterNativeSplash.remove();
     },
     (exception, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(exception, stackTrace);
+      FirebaseCrashlytics.instance.recordError(exception, stackTrace, fatal: true);
     },
   );
 }

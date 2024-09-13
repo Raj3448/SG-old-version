@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/home/model/home_page_model.dart';
 import 'package:silver_genie/feature/home/model/master_data_model.dart';
@@ -24,8 +25,10 @@ class HomeService implements IHomeServices {
   final HomePageComponentDetailscache homePageComponentDetailscache;
   @override
   Future<Either<Failure, List<dynamic>>> getHomePageInfo() async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/pages/1?populate[0]=content.bannerImage&populate[1]=content.cta.href&populate[2]=content.offering.offers.values&populate[3]=content.cta.link&populate[4]=content.testimonials.testifierImage&populate[5]=content.newsletters.link',
       );
       if (response.statusCode == 200) {
@@ -79,17 +82,37 @@ class HomeService implements IHomeServices {
               .storeHomePageComponentDetails(componetList);
           return Right([...componetList]);
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     } catch (er) {
-      return const Left(Failure.badResponse());
+      return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     }
   }
 
@@ -100,8 +123,10 @@ class HomeService implements IHomeServices {
 
   @override
   Future<Either<Failure, MasterDataModel>> getMasterData() async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/masterdata?populate=*',
       );
       if (response.statusCode == 200) {
@@ -111,17 +136,37 @@ class HomeService implements IHomeServices {
               MasterDataModel.fromJson(data as Map<String, dynamic>);
           return Right(masterDataModel);
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     } catch (er) {
-      return const Left(Failure.badResponse());
+      return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     }
   }
 }

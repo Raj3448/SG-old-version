@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/failure.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/notification/model/notification_model.dart';
 
@@ -22,9 +23,10 @@ class NotificationServices extends INotificationFacade {
   final HttpClient httpClient;
   @override
   Future<Either<Failure, NotificationModel>> fetchNotification() async {
-    //  API call here to fetch user details
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get('/api/user-notifications');
+      response = await httpClient.get('/api/user-notifications');
 
       if (response.statusCode == 200) {
         if (response.data != null) {
@@ -34,17 +36,37 @@ class NotificationServices extends INotificationFacade {
             ),
           );
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     }
   }
 
@@ -52,8 +74,10 @@ class NotificationServices extends INotificationFacade {
   Future<Either<Failure, bool>> storeFcmTokenIntoServer({
     required String? fcmToken,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/auth/local/fcm',
         data: {'token': fcmToken},
       );
@@ -66,11 +90,23 @@ class NotificationServices extends INotificationFacade {
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     }
   }
 
@@ -78,8 +114,10 @@ class NotificationServices extends INotificationFacade {
   Future<Either<Failure, bool>> markToReadById({
     required String notificationId,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/user-notifications/$notificationId/mark-as-read',
       );
       if (response.statusCode == 200) {
@@ -87,15 +125,31 @@ class NotificationServices extends INotificationFacade {
           true,
         );
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString()
+        );
     }
   }
 }
