@@ -56,7 +56,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
   @override
   void initState() {
     reaction((_) => store.buyServiceFailed, (buyServiceFailed) {
-      if (buyServiceFailed != null) {
+      if (buyServiceFailed != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(buyServiceFailed),
@@ -68,7 +68,7 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     });
     reaction((_) => store.servicePaymentInfoGotSuccess,
         (servicePaymentInfoGotSuccess) {
-      if (servicePaymentInfoGotSuccess != null) {
+      if (servicePaymentInfoGotSuccess != null && mounted) {
         context.pushNamed(
           RoutesConstants.serviceBookingPaymentDetailScreen,
           extra: {'paymentDetails': servicePaymentInfoGotSuccess},
@@ -604,47 +604,3 @@ class _BookServiceScreenState extends State<BookServiceScreen>
     store.buyService(formData: formAnswerModel);
   }
 }
-
-// class _BuyPlanComponent extends StatelessWidget {
-//   final store = GetIt.I<ProductListingStore>();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Dialog(
-//       insetPadding: const EdgeInsets.symmetric(horizontal: Dimension.d4),
-//       child: Container(
-//         decoration: BoxDecoration(
-//           color: AppColors.white,
-//           borderRadius: BorderRadius.circular(Dimension.d2),
-//         ),
-//         padding: const EdgeInsets.symmetric(
-//           horizontal: Dimension.d4,
-//           vertical: Dimension.d6,
-//         ),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Text(
-//               'Hi there!!',
-//               style: AppTextStyle.bodyXLSemiBold
-//                   .copyWith(color: AppColors.grayscale900, height: 2.4),
-//             ),
-//             Text(
-//               'The selected member is not subscriber of any plan. Upgrade to any plan to access our services.',
-//               textAlign: TextAlign.center,
-//               style: AppTextStyle.bodyLargeMedium
-//                   .copyWith(color: AppColors.grayscale900),
-//             ),
-//             const SizedBox(height: Dimension.d2),
-//             if (store.getSubscriptActiveProdList.isNotEmpty)
-//               ProductListingCareComponent(
-//                 productBasicDetailsList: store.getProdListRankOrder(
-//                   store.getSubscriptActiveProdList,
-//                 ),
-//                 isUpgradeable: false,
-//               ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

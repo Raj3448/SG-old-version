@@ -49,6 +49,7 @@ class _SubscriptionDetailsScreenState extends State<SubscriptionDetailsScreen> {
   void initState() {
     _reactionDisposer1 = reaction((_) => store.paymentStatus, (paymentStatus) {
       if (paymentStatus != null) {
+        if (!mounted) return;
         if (paymentStatus == PaymentStatus.failure) {
           context.pushNamed(
             RoutesConstants.subscriptionPaymentScreen,
@@ -70,6 +71,7 @@ class _SubscriptionDetailsScreenState extends State<SubscriptionDetailsScreen> {
     _reactionDisposer2 = reaction((_) => store.subscrpaymentStatusModel,
         (subscrpaymentStatusModel) {
       if (subscrpaymentStatusModel != null) {
+        if (!mounted) return;
         context.pushReplacementNamed(
           RoutesConstants.subscriptionPaymentScreen,
           extra: {

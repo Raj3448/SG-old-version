@@ -47,6 +47,7 @@ class _ServiceBookingPaymentDetailScreenState
   void initState() {
     _reactionDisposer1 = reaction((_) => store.paymentStatus, (paymentStatus) {
       if (paymentStatus != null) {
+        if (!mounted) return;
         if (paymentStatus == PaymentStatus.failure) {
           context.pushNamed(
             RoutesConstants.paymentScreen,
@@ -68,6 +69,7 @@ class _ServiceBookingPaymentDetailScreenState
     _reactionDisposer2 =
         reaction((_) => store.servicePaymentStatusModel, (paymentStatusModel) {
       if (paymentStatusModel != null) {
+        if (!mounted) return;
         context.pushReplacementNamed(
           RoutesConstants.paymentScreen,
           extra: {

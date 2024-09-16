@@ -34,6 +34,7 @@ class _BookingsScreenState extends State<BookingsScreen>
     _reactionDisposer =
         reaction((_) => store.allServiceRefreshFailure, (refreshFailure) {
       if (refreshFailure != null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(refreshFailure),

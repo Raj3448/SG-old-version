@@ -38,7 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.initState();
 
     reaction((_) => store.authFailure, (authFailure) {
-      if (store.authFailure != null) {
+      if (store.authFailure != null && mounted) {
         store.authFailure?.fold(
           (l) => {
             l.maybeWhen(
