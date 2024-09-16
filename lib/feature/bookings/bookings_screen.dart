@@ -49,6 +49,7 @@ class _BookingsScreenState extends State<BookingsScreen>
 
   @override
   void dispose() {
+    controller.dispose();
     _reactionDisposer();
     super.dispose();
   }
@@ -152,10 +153,12 @@ class BookingsStateComponent extends StatelessWidget {
               : Column(
                   children: List.generate(
                     bookingModelList.length,
-                    (index) => bookingModelList[index].requestedFor.isEmpty ? const SizedBox() : BookingListTileComponent(
-                      bookingServiceStatus: bookingServiceStatus,
-                      bookingServiceModel: bookingModelList[index],
-                    ),
+                    (index) => bookingModelList[index].requestedFor.isEmpty
+                        ? const SizedBox()
+                        : BookingListTileComponent(
+                            bookingServiceStatus: bookingServiceStatus,
+                            bookingServiceModel: bookingModelList[index],
+                          ),
                   ),
                 ),
         );

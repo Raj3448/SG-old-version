@@ -19,6 +19,13 @@ class SearchTextfield extends StatefulWidget {
 
 class _SearchTextfieldState extends State<SearchTextfield> {
   final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

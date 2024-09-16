@@ -144,6 +144,22 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   }
 
   @override
+void dispose() {
+  _firstNameController.dispose();
+  _lastNameController.dispose();
+  _emailController.dispose();
+  _genderController.dispose();
+  _countryController.dispose();
+  _cityController.dispose();
+  _stateController.dispose();
+  _mobileController.dispose();
+  _addressController.dispose();
+  _postalController.dispose();
+  _dobController.dispose();
+  super.dispose();
+}
+
+  @override
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {

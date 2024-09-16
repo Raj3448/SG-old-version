@@ -83,6 +83,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
+  void dispose() {
+    firstNameContr.dispose();
+    lastNameContr.dispose();
+    emailContr.dispose();
+    phoneNumbContr.dispose();
+    dobContr.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
