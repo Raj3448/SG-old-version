@@ -114,46 +114,56 @@ class _AddEditFamilyMemberScreenState extends State<AddEditFamilyMemberScreen> {
     }
 
     reaction((_) => memberStore.addOrEditMemberFailure, (_) {
-      if (memberStore.addOrEditMemberFailure != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(memberStore.addOrEditMemberFailure!),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-        memberStore.addOrEditMemberFailure = null;
+      if (mounted) {
+        if (memberStore.addOrEditMemberFailure != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(memberStore.addOrEditMemberFailure!),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+          memberStore.addOrEditMemberFailure = null;
+        }
       }
     });
 
     reaction((_) => memberStore.addOrEditMemberSuccessful,
         (successValue) async {
+      if (mounted) {
       if (successValue == null) return;
-
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return InfoDialog(
-            showIcon: true,
-            title: successValue,
-            desc: widget.edit
-                ? 'Family member updated successfully.'
-                : 'New family member successfully\nadded to the Health profile.',
-            btnTitle: 'Continue',
-            showBtnIcon: false,
-            btnIconPath: AppIcons.check,
-            onTap: () {
-              GoRouter.of(context).pop();
-            },
-          );
-        },
-      );
-      GetIt.I<MembersStore>().refresh();
-      GetIt.I<UserDetailStore>().refresh();
-      GetIt.I<BookingServiceStore>().refresh();
-      context
-        ..pop()
-        ..pop();
-      memberStore.addOrEditMemberSuccessful = null;
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return InfoDialog(
+              showIcon: true,
+              title: successValue,
+              desc: widget.edit
+                  ? 'Family member updated successfully.'
+                  : 'New family member successfully\nadded to the Health profile.',
+              btnTitle: 'Continue',
+              showBtnIcon: false,
+              btnIconPath: AppIcons.check,
+              onTap: () {
+                context.pop();
+              },
+            );
+          },
+        ).then(
+          (value) {
+            GetIt.I<MembersStore>().refresh();
+            GetIt.I<UserDetailStore>().refresh();
+            GetIt.I<BookingServiceStore>().refresh();
+            if (widget.edit) {
+              context
+                ..pop()
+                ..pop();
+            } else {
+              context.pop();
+            }
+            memberStore.addOrEditMemberSuccessful = null;
+          },
+        );
+      }
     });
   }
 
