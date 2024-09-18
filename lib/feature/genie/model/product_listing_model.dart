@@ -500,7 +500,7 @@ class SubscriptionDetails with _$SubscriptionDetails {
     required String paymentStatus,
     required String status,
     required DateTime expiresOn,
-    required DateTime startDate,
+    @Default(null) DateTime? startDate,
     required int amount,
     @Default(null) int? priceId,
     required String? razorpaySubscriptionId,

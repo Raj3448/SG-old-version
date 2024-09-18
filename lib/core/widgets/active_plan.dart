@@ -186,10 +186,9 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
     const HealthService(serviceName: 'heart rate', unitStr: 'bpm'),
     const HealthService(serviceName: 'fast glucose', unitStr: 'mg/dL'),
   ];
-
+  final emptyStrValue = '---';
   @override
   Widget build(BuildContext context) {
-    const emptyStrValue = '---';
     final phrModel = widget.activeMember.phrModel;
     final diagnosedServices = phrModel?.diagnosedServices ?? [];
     final member = widget.activeMember.subscriptions?[0];
@@ -267,7 +266,32 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                       )
                     else
                       SubscriptionPlanTag(
-                        label: widget.activeMember.subscriptions![0].product.name, backgroundColorCode: getMetadataValue(store.getProductBasicDetailsById(widget.activeMember.subscriptions![0].product.id ?? -1)?.attributes.metadata ?? [],'background_color_code'), iconColorCode: getMetadataValue(store.getProductBasicDetailsById(widget.activeMember.subscriptions![0].product.id ?? -1)?.attributes.metadata ?? [], 'icon_color_code')),
+                          label: widget
+                              .activeMember.subscriptions![0].product.name,
+                          backgroundColorCode: getMetadataValue(
+                              store
+                                      .getProductBasicDetailsById(widget
+                                              .activeMember
+                                              .subscriptions![0]
+                                              .product
+                                              .id ??
+                                          -1)
+                                      ?.attributes
+                                      .metadata ??
+                                  [],
+                              'background_color_code'),
+                          iconColorCode: getMetadataValue(
+                              store
+                                      .getProductBasicDetailsById(widget
+                                              .activeMember
+                                              .subscriptions![0]
+                                              .product
+                                              .id ??
+                                          -1)
+                                      ?.attributes
+                                      .metadata ??
+                                  [],
+                              'icon_color_code')),
                   ],
                 ),
                 const SizedBox(height: Dimension.d1),
@@ -307,18 +331,14 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                       child: Tooltip(
                         key: _tooltipKeys[index],
                         enableFeedback: true,
-                        message: diagnosedService.item1.diagnosedDate == null ? 'Diagnosed date not found' : formatDateTime(
-                          diagnosedService.item1.diagnosedDate!,
-                        ),
+                        message: diagnosedService.item1.diagnosedDate == null
+                            ? 'Diagnosed date not found'
+                            : formatDateTime(
+                                diagnosedService.item1.diagnosedDate!,
+                              ),
                         child: _VitalInfoBox(
-                          label: diagnosedService.item1.serviceName?.name != null
-                              ? diagnosedService.item1.serviceName?.name
-                                  .capitalizeFirstWord()
-                              : '',
-                          value: diagnosedService.item1.value.isNotEmpty &&
-                                  diagnosedService.item1.value != emptyStrValue
-                              ? '${diagnosedService.item1.value}${diagnosedService.item2 == '%' ? diagnosedService.item2 : ' ${diagnosedService.item2}'}'
-                              : emptyStrValue,
+                          label: _getLabelForHealthService(diagnosedService.item1.serviceName?.name),
+                          value: _getValueForHealthService(value: diagnosedService.item1.value, unit: diagnosedService.item2),
                         ),
                       ),
                     );
@@ -327,7 +347,8 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                 const SizedBox(height: Dimension.d2),
                 AnalogComponent(
                   label: 'Last Updated'.tr(),
-                  value: formatDateTime(widget.activeMember.updatedAt.toLocal()),
+                  value:
+                      formatDateTime(widget.activeMember.updatedAt.toLocal()),
                 ),
                 const SizedBox(height: Dimension.d2),
                 Row(
@@ -335,26 +356,26 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                   children: [
                     Expanded(
                       child: CustomButton(
-                        ontap:
-                            hasPHR == false || widget.activeMember.phrModel == null
-                                ? null
-                                : () {
-                                    GoRouter.of(context).pushNamed(
-                                      RoutesConstants.phrPdfViewPage,
-                                      pathParameters: {
-                                        'memberPhrId':
-                                            '${widget.activeMember.phrModel?.id}',
-                                      },
-                                    );
+                        ontap: hasPHR == false ||
+                                widget.activeMember.phrModel == null
+                            ? null
+                            : () {
+                                GoRouter.of(context).pushNamed(
+                                  RoutesConstants.phrPdfViewPage,
+                                  pathParameters: {
+                                    'memberPhrId':
+                                        '${widget.activeMember.phrModel?.id}',
                                   },
+                                );
+                              },
                         title: 'View PHR',
                         showIcon: false,
                         iconPath: Icons.not_interested,
                         size: ButtonSize.small,
-                        type:
-                            hasPHR == false || widget.activeMember.phrModel == null
-                                ? ButtonType.disable
-                                : ButtonType.secondary,
+                        type: hasPHR == false ||
+                                widget.activeMember.phrModel == null
+                            ? ButtonType.disable
+                            : ButtonType.secondary,
                         expanded: true,
                         iconColor: AppColors.primary,
                       ),
@@ -403,6 +424,20 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
         );
       },
     );
+  }
+  String _getLabelForHealthService(String? serviceName) {
+    return serviceName != null ? serviceName.capitalizeFirstWord() : '';
+  }
+
+  String _getValueForHealthService({required String value, required String unit}) {
+    if (value.isEmpty || value == emptyStrValue) {
+      return emptyStrValue;
+    }
+
+    bool containsUnit = value.toLowerCase().contains(unit.toLowerCase());
+    String formattedUnit = unit == '%' ? unit : ' $unit';
+
+    return containsUnit ? value : '$value$formattedUnit';
   }
 }
 
