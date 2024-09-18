@@ -93,7 +93,7 @@ class DiagnosedService with _$DiagnosedService {
     required DateTime? diagnosedDate,
     required String? description,
     required String value,
-    required bool publish,
+    @Default(null) bool? publish,
     required ServiceName? serviceName,
     dynamic serviceProvider,
   }) = _DiagnosedService;
