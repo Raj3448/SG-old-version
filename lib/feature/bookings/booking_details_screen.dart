@@ -246,10 +246,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     ),
                     const SizedBox(height: Dimension.d3),
                   ],
-                  if(subscriptionDetails.startDate != null)
                     ExpandedAnalogComponent(
                       label: 'Plan start date',
-                      value: formatDate(subscriptionDetails.startDate!),
+                      value: formatDate(subscriptionDetails.startDate),
                     ),
                   const SizedBox(height: Dimension.d3),
                   ExpandedAnalogComponent(

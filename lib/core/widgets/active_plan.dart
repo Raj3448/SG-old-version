@@ -337,8 +337,11 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
                                 diagnosedService.item1.diagnosedDate!,
                               ),
                         child: _VitalInfoBox(
-                          label: _getLabelForHealthService(diagnosedService.item1.serviceName?.name),
-                          value: _getValueForHealthService(value: diagnosedService.item1.value, unit: diagnosedService.item2),
+                          label: _getLabelForHealthService(
+                              diagnosedService.item1.serviceName?.name),
+                          value: _getValueForHealthService(
+                              value: diagnosedService.item1.value,
+                              unit: diagnosedService.item2),
                         ),
                       ),
                     );
@@ -425,11 +428,13 @@ class _ActivePlanComponentState extends State<ActivePlanComponent> {
       },
     );
   }
+
   String _getLabelForHealthService(String? serviceName) {
     return serviceName != null ? serviceName.capitalizeFirstWord() : '';
   }
 
-  String _getValueForHealthService({required String value, required String unit}) {
+  String _getValueForHealthService(
+      {required String value, required String unit}) {
     if (value.isEmpty || value == emptyStrValue) {
       return emptyStrValue;
     }
@@ -532,6 +537,7 @@ class _VitalInfoBox extends StatelessWidget {
           const SizedBox(height: Dimension.d1),
           Text(
             value!,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyle.bodyMediumBold,
           ),
         ],
