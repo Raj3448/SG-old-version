@@ -38,7 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.initState();
 
     reaction((_) => store.authFailure, (authFailure) {
-      if (store.authFailure != null) {
+      if (store.authFailure != null && mounted) {
         store.authFailure?.fold(
           (l) => {
             l.maybeWhen(
@@ -80,6 +80,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
       store.authFailure = null;
     });
+  }
+
+  @override
+  void dispose() {
+    firstNameContr.dispose();
+    lastNameContr.dispose();
+    emailContr.dispose();
+    phoneNumbContr.dispose();
+    dobContr.dispose();
+    super.dispose();
   }
 
   @override

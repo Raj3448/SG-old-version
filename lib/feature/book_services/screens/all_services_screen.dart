@@ -75,6 +75,12 @@ class _AllServicesScreenState extends State<AllServicesScreen> {
   }
 
   @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PageAppbar(

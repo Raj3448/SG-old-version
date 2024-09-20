@@ -49,7 +49,7 @@ class _OTPScreenState extends State<OTPScreen> {
     super.initState();
 
     reaction((_) => store.authFailure, (authFailure) {
-      if (store.authFailure != null) {
+      if (store.authFailure != null && mounted) {
         store.authFailure?.fold(
           (l) => {
             l.maybeWhen(
@@ -89,7 +89,7 @@ class _OTPScreenState extends State<OTPScreen> {
     });
 
     reaction((_) => store.isError, (isError) {
-      if (store.isError) {
+      if (store.isError && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid OTP!')),
         );

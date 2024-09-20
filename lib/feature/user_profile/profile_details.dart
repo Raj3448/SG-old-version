@@ -85,7 +85,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     _initializeControllers();
 
     reaction((_) => store.updateFailureMessage, (_) {
-      if (store.updateFailureMessage != null) {
+      if (store.updateFailureMessage != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(store.updateFailureMessage!),
@@ -98,7 +98,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     });
 
     reaction((_) => store.updateSuccess, (_) {
-      if (store.updateSuccess) {
+      if (store.updateSuccess && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Updated successfully!'),
@@ -142,6 +142,22 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     selectedGenderIndex =
         _genderItems.indexWhere((item) => item.value == userDetails.gender);
   }
+
+  @override
+void dispose() {
+  _firstNameController.dispose();
+  _lastNameController.dispose();
+  _emailController.dispose();
+  _genderController.dispose();
+  _countryController.dispose();
+  _cityController.dispose();
+  _stateController.dispose();
+  _mobileController.dispose();
+  _addressController.dispose();
+  _postalController.dispose();
+  _dobController.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {

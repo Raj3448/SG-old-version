@@ -43,6 +43,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PageAppbar(title: 'Subscriptions'),

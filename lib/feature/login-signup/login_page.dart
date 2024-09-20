@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
 
     reaction((_) => store.authFailure, (authFailure) {
-      if (store.authFailure != null) {
+      if (store.authFailure != null && mounted) {
         store.authFailure?.fold(
           (l) {
             l.maybeWhen(
@@ -80,6 +80,13 @@ class _LoginPageState extends State<LoginPage> {
       }
     });
   }
+
+  @override
+void dispose() {
+  phoneNumberContr.dispose();
+  emailContr.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
