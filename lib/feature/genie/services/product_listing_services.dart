@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:silver_genie/core/failure/failure.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/book_services/model/form_details_model.dart';
 import 'package:silver_genie/feature/book_services/model/payment_status_model.dart';
@@ -53,6 +54,8 @@ class ProductListingServices extends IProductListingService {
   Future<Either<Failure, List<ProductBasicDetailsModel>>>
       getAllProductBasicDetails() async {
     late HiveCacheStore cacheStore;
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       final appDocDir = await getApplicationDocumentsDirectory();
       cacheStore = HiveCacheStore(
@@ -69,33 +72,50 @@ class ProductListingServices extends IProductListingService {
 
       final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
       httpClient.interceptors.add(dioCacheInterceptor);
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/products?populate[0]=metadata&populate[1]=icon&populate[2]=upgradeable_products.icon&populate[3]=upgradeable_products.metadata',
       );
       httpClient.interceptors.remove(dioCacheInterceptor);
       switch (response.statusCode) {
         case 200:
-          return _processResponseData(response.data);
+          return _processResponseData(response);
         case 304:
-          return _processResponseData(response.data);
+          return _processResponseData(response);
         default:
-          return const Left(Failure.badResponse());
+          return const Left(Failure.badResponse())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
   Either<Failure, List<ProductBasicDetailsModel>> _processResponseData(
-    dynamic data,
+    // ignore: strict_raw_type
+    Response response,
   ) {
-    if (data['data'] != null) {
-      final receivedList = data['data'] as List;
+    if (response.data['data'] != null) {
+      final receivedList = response.data['data'] as List;
       final allProductList = <ProductBasicDetailsModel>[];
       for (final item in receivedList) {
         allProductList.add(
@@ -104,15 +124,21 @@ class ProductListingServices extends IProductListingService {
       }
       return Right([...allProductList]);
     }
-    return const Left(Failure.badResponse());
+    return const Left(Failure.badResponse())
+      ..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString());
   }
 
   @override
   Future<Either<Failure, ProductListingModel>> getProductById({
     required String id,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/products/$id?populate[0]=prices.rules&populate[1]=subscriptionContent.productImage&populate[2]=subscriptionContent.FAQ&populate[3]=icon&populate[4]=benefits&populate[5]=metadata&populate[6]=serviceContent.offerings&populate[7]=serviceContent.serviceImage&populate[8]=serviceContent.faq&populate[9]=serviceContent.servicePrice&populate[10]=serviceContent.cta&populate[11]=serviceContent.bannerImage',
       );
       if (response.statusCode == 200) {
@@ -122,17 +148,37 @@ class ProductListingServices extends IProductListingService {
             ProductListingModel.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -152,8 +198,10 @@ class ProductListingServices extends IProductListingService {
   Future<Either<Failure, FormDetailModel>> getBookingServiceDetailsById({
     required String productCode,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/products?filters[code][\$eq]=$productCode&populate[1]=product_form.form.formDetails&populate[2]=product_form.form.options&populate[3]=product_form.form.validations.valueMsg',
       );
       if (response.statusCode == 200) {
@@ -163,17 +211,37 @@ class ProductListingServices extends IProductListingService {
             FormDetailModel.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -181,8 +249,10 @@ class ProductListingServices extends IProductListingService {
   Future<Either<MemberServiceFailure, ServiceTrackerResponse>> buyService({
     required FormAnswerModel formData,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/service-tracker/request-new',
         data: formData.toJson(),
       );
@@ -194,22 +264,46 @@ class ProductListingServices extends IProductListingService {
             ServiceTrackerResponse.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
       if (response.statusCode == 404 &&
           response.data['error']['details']['name'] ==
               'SERVICE_NOT_AVAILABLE_FOR_SELECTED_MEMBER') {
-        return const Left(MemberServiceFailure.serviceNotAvailbaleForUser());
+        return const Left(MemberServiceFailure.serviceNotAvailbaleForUser())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(MemberServiceFailure.socketExceptionError());
+        return const Left(MemberServiceFailure.socketExceptionError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(MemberServiceFailure.someThingWentWrong());
+      return const Left(MemberServiceFailure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(MemberServiceFailure.someThingWentWrong());
+      return const Left(MemberServiceFailure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -244,9 +338,17 @@ class ProductListingServices extends IProductListingService {
     if (response.statusCode == 200) {
       return const Right(true);
     } else if (response.statusCode == 403) {
-      return Left(Failure.validationError('${response.statusMessage}'));
+      return Left(Failure.validationError('${response.statusMessage}'))
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
-    return const Left(Failure.badResponse());
+    return const Left(Failure.badResponse())
+      ..firebaseCrashAnalyticsLogApiFailure(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          apiUrl: response.realUri.toString());
   }
 
   @override
@@ -255,13 +357,15 @@ class ProductListingServices extends IProductListingService {
     required int productId,
     required List<int> familyMemberIds,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       final data = {
         'priceId': priceId,
         'productId': productId,
         'familyMemberIds': familyMemberIds,
       };
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/create-subscription',
         data: data,
       );
@@ -272,17 +376,37 @@ class ProductListingServices extends IProductListingService {
             SubscriptionData.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -290,8 +414,10 @@ class ProductListingServices extends IProductListingService {
   Future<Either<Failure, ServicePaymentStatusModel>> getPaymentStatus({
     required String id,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/service-trackers/$id',
       );
       if (response.statusCode == 200) {
@@ -301,17 +427,37 @@ class ProductListingServices extends IProductListingService {
             ServicePaymentStatusModel.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -319,8 +465,10 @@ class ProductListingServices extends IProductListingService {
   Future<Either<Failure, SubscriptionDetails>> getSubscriptionPaymentStatus({
     required String id,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get(
+      response = await httpClient.get(
         '/api/subscription-trackers/$id',
       );
       if (response.statusCode == 200) {
@@ -330,17 +478,37 @@ class ProductListingServices extends IProductListingService {
             SubscriptionDetails.fromJson(data as Map<String, dynamic>),
           );
         }
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(Failure.badResponse());
+        return const Left(Failure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on DioException catch (dioError) {
       if (dioError.type == DioExceptionType.connectionError) {
-        return const Left(Failure.socketError());
+        return const Left(Failure.socketError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(Failure.someThingWentWrong());
+      return const Left(Failure.someThingWentWrong())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 }

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:silver_genie/core/failure/member_services_failure.dart';
+import 'package:silver_genie/core/utils/custom_extension.dart';
 import 'package:silver_genie/core/utils/http_client.dart';
 import 'package:silver_genie/feature/members/model/epr_models.dart';
 import 'package:silver_genie/feature/members/model/member_model.dart';
@@ -29,7 +30,6 @@ abstract class IMemberService {
     required File fileImage,
     required Map<String, dynamic> memberInfo,
   });
-  Future<Either<MemberServiceFailure, Member>> memberDetails();
   Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
     required String memberId,
   });
@@ -45,8 +45,10 @@ class MemberServices implements IMemberService {
 
   @override
   Future<Either<MemberServiceFailure, List<Member>>> getMembers() async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response = await httpClient.get('/api/user/family');
+      response = await httpClient.get('/api/user/family');
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
@@ -61,18 +63,42 @@ class MemberServices implements IMemberService {
             .toList();
         return Right(parsedMembers as List<Member>);
       } else if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.fetchMemberInfoError());
+        return const Left(MemberServiceFailure.fetchMemberInfoError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (e) {
-      return const Left(MemberServiceFailure.badResponse());
+      return const Left(MemberServiceFailure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -81,11 +107,13 @@ class MemberServices implements IMemberService {
     Map<String, dynamic> memberData,
     String? imgId,
   ) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       if (imgId != null) {
         memberData['profileImg'] = imgId;
       }
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/user/add-family',
         data: memberData,
       );
@@ -107,21 +135,48 @@ class MemberServices implements IMemberService {
           final fieldErrorMessage = errorDetails[0]['message'];
           return Left(
             MemberServiceFailure.validationError('$field: $fieldErrorMessage'),
-          );
+          )..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
         } else {
-          return Left(MemberServiceFailure.validationError('$errorMessage'));
+          return Left(MemberServiceFailure.validationError('$errorMessage'))
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
       } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.addMemberError());
+        return const Left(MemberServiceFailure.addMemberError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (e) {
-      return const Left(MemberServiceFailure.badResponse());
+      return const Left(MemberServiceFailure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -130,13 +185,15 @@ class MemberServices implements IMemberService {
     required File fileImage,
     required Map<String, dynamic> memberInfo,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       final formData = FormData.fromMap({
         'files': await MultipartFile.fromFile(
           fileImage.path,
         ),
       });
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/upload',
         data: formData,
         options: Options(
@@ -151,21 +208,49 @@ class MemberServices implements IMemberService {
             imageId.toString(),
           );
         } else {
-          return const Left(MemberServiceFailure.badResponse());
+          return const Left(MemberServiceFailure.badResponse())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
       } else if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(MemberServiceFailure.badResponse());
+      return const Left(MemberServiceFailure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -175,12 +260,14 @@ class MemberServices implements IMemberService {
     Map<String, dynamic> updateData,
     String? imgId,
   ) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       if (imgId != null) {
         updateData['profileImg'] = imgId;
       }
 
-      final response = await httpClient.put(
+      response = await httpClient.put(
         '/api/family/$id/update',
         data: updateData,
       );
@@ -188,21 +275,49 @@ class MemberServices implements IMemberService {
       if (response.statusCode == 200) {
         return const Right(true);
       } else if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.memberDetailsEditError());
+        return const Left(MemberServiceFailure.memberDetailsEditError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (e) {
       if (e is SocketException) {
-        return const Left(MemberServiceFailure.socketExceptionError());
+        return const Left(MemberServiceFailure.socketExceptionError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     }
   }
@@ -213,13 +328,15 @@ class MemberServices implements IMemberService {
     required File fileImage,
     required Map<String, dynamic> memberInfo,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
       final formData = FormData.fromMap({
         'files': await MultipartFile.fromFile(
           fileImage.path,
         ),
       });
-      final response = await httpClient.post(
+      response = await httpClient.post(
         '/api/upload',
         data: formData,
         options: Options(
@@ -237,46 +354,54 @@ class MemberServices implements IMemberService {
         } else {
           return const Left(MemberServiceFailure.badResponse());
         }
-      } if(response.statusCode == 413 && response.statusMessage == 'Request Entity Too Large'){ 
-        return const Left(MemberServiceFailure.uploadImageEntityTooLarge());
-      }if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
-      } if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
-      } if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+      }
+      if (response.statusCode == 413 &&
+          response.statusMessage == 'Request Entity Too Large') {
+        return const Left(MemberServiceFailure.uploadImageEntityTooLarge())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
+      }
+      if (response.statusCode == 400) {
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
+      }
+      if (response.statusCode == 500) {
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
+      }
+      if (response.statusCode == 502) {
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(MemberServiceFailure.badResponse());
-    }
-  }
-
-  @override
-  Future<Either<MemberServiceFailure, Member>> memberDetails() async {
-    try {
-      final response = await httpClient
-          .get('https://silvergenie.com/api/v1/members/details');
-
-      if (response.statusCode == 200) {
-        final jsonList = response.data;
-        return Right(jsonList as Member);
-      } else if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
-      } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
-      } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
-      } else {
-        return const Left(MemberServiceFailure.fetchMemberInfoError());
-      }
-    } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
-    } catch (e) {
-      return const Left(MemberServiceFailure.badResponse());
+      return const Left(MemberServiceFailure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -284,31 +409,60 @@ class MemberServices implements IMemberService {
   Future<Either<MemberServiceFailure, EprDataModel>> getEPRData({
     required String memberId,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response =
-          await httpClient.get('/api/user/family/epr?userId=$memberId');
+      response = await httpClient.get('/api/user/family/epr?userId=$memberId');
       if (response.statusCode == 200) {
         final jsonList = response.data;
         if (jsonList['data'] == null &&
             jsonList['details']['name'] == 'EPR_NOT_FOUND') {
-          return const Left(MemberServiceFailure.memberDontHaveEPRInfo());
+          return const Left(MemberServiceFailure.memberDontHaveEPRInfo())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
         return Right(
           EprDataModel.fromJson(jsonList['data'] as Map<String, dynamic>),
         );
       } else if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.fetchMemberInfoError());
+        return const Left(MemberServiceFailure.fetchMemberInfoError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (e) {
-      return const Left(MemberServiceFailure.badResponse());
+      return const Left(MemberServiceFailure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 
@@ -316,31 +470,64 @@ class MemberServices implements IMemberService {
   Future<Either<MemberServiceFailure, String>> getPHRPdfPath({
     required String memberPhrId,
   }) async {
+    // ignore: strict_raw_type
+    late final Response response;
     try {
-      final response =
-          await httpClient.get('/api/phr/pdf/$memberPhrId/generate');
+      response = await httpClient.get('/api/phr/pdf/$memberPhrId/generate');
       if (response.statusCode == 200) {
         if (response.data['details'] != null &&
             response.data['details']['name'] == 'NO_PHR_FOUND') {
-          return const Left(MemberServiceFailure.memberPHRNotFound());
+          return const Left(MemberServiceFailure.memberPHRNotFound())
+            ..firebaseCrashAnalyticsLogApiFailure(
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                apiUrl: response.realUri.toString());
         }
         if (response.data['pdfPath'] != null) {
           return Right(response.data['pdfPath'] as String);
         }
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 400) {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 500) {
-        return const Left(MemberServiceFailure.internalServerError());
+        return const Left(MemberServiceFailure.internalServerError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else if (response.statusCode == 502) {
-        return const Left(MemberServiceFailure.badGatewayError());
+        return const Left(MemberServiceFailure.badGatewayError())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       } else {
-        return const Left(MemberServiceFailure.badResponse());
+        return const Left(MemberServiceFailure.badResponse())
+          ..firebaseCrashAnalyticsLogApiFailure(
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              apiUrl: response.realUri.toString());
       }
     } on SocketException {
-      return const Left(MemberServiceFailure.socketExceptionError());
+      return const Left(MemberServiceFailure.socketExceptionError())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     } catch (error) {
-      return const Left(MemberServiceFailure.badResponse());
+      return const Left(MemberServiceFailure.badResponse())
+        ..firebaseCrashAnalyticsLogApiFailure(
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            apiUrl: response.realUri.toString());
     }
   }
 }
